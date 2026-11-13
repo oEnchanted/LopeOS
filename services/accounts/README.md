@@ -16,7 +16,16 @@ Run `npm run test:accounts` for HTTP integration tests using temporary directori
 Tests cover credentials, cookies, isolation, restart persistence, quota races,
 checksums, revision conflicts, staged uploads, origin checks, and storage locks.
 
-## Production hosting
+## Automatic Windows hosting
+
+Pushes to `main` install/update this service through the Windows deployment workflow.
+The runner needs administrator rights; the account process itself runs as Local
+Service in an at-startup scheduled task named `LopeOS Accounts`. Node and source
+live under `C:/LopeOS/accounts`; persistent account and LopeDrive data lives under
+`C:/LopeOS/accounts-data`, outside website releases. Deployment verifies local
+and public `/api/accounts/session` responses. See [Windows deployment](../../docs/github-windows-deployment.md).
+
+## Manual production hosting
 
 Run a **single instance** of `node services/accounts/server.mjs` with Node 24 or
 later under your service manager. It requires no third-party packages. Use these

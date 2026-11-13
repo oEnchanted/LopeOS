@@ -41,9 +41,35 @@ jobs:
           compression-level: 0
           retention-days: 7
 
+      - name: Package account service and deployment scripts
+        run: |
+          mkdir -p deployment/accounts/windows deployment/windows
+          cp services/accounts/server.mjs deployment/accounts/
+          cp services/accounts/windows/* deployment/accounts/windows/
+          cp services/runtime/windows/Deploy-LopeFrontend.ps1 services/runtime/windows/Caddyfile.deploy.template deployment/windows/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lope-services
+          path: deployment/
+          if-no-files-found: error
+
+  windows-accounts:
+    name: Verify Windows account installation
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - name: Install, restart, and verify persistent accounts
+        shell: powershell
+        run: ./tests/accounts/windows-install.ps1
+
   deploy:
     name: Publish the tested desktop
-    needs: build
+    needs: [build, windows-accounts]
     if: github.ref == 'refs/heads/main'
     runs-on: [self-hosted, Windows, X64, lope-production]
     environment: production
@@ -63,11 +89,59 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:LOPE_SITE_ORIGIN)) {
             throw 'Set LOPE_SITE_ORIGIN in the production environment variables.'
           }
-          if (-not (Test-Path -LiteralPath 'C:/LopeOS/deploy/Deploy-LopeFrontend.ps1' -PathType Leaf)) {
-            throw 'Install the host deployment script before running this workflow.'
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - uses: actions/download-artifact@v8
+        with:
+          name: lope-services
+          path: ${{ runner.temp }}/lope-services
+          digest-mismatch: error
+      - name: Install or update the persistent account service
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & "$env:RUNNER_TEMP/lope-services/accounts/windows/Install-LopeAccounts.ps1" `
+            -SourcePath "$env:RUNNER_TEMP/lope-services/accounts" `
+            -SiteOrigin $env:LOPE_SITE_ORIGIN -NodeExe (Get-Command node).Source
+      - name: Prepare deployment configuration
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path C:/LopeOS/deploy, C:/LopeOS/releases, C:/LopeOS/shared/assets | Out-Null
+          Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Deploy-LopeFrontend.ps1" C:/LopeOS/deploy/Deploy-LopeFrontend.ps1 -Force
+          $templatePath = 'C:/Caddy/Caddyfile.template'
+          if (-not (Test-Path $templatePath)) {
+            # Refuse to replace a shared host configuration with a single-site template.
+            $adapted = & C:/Caddy/caddy.exe adapt --config C:/Caddy/Caddyfile --adapter caddyfile
+            if ($LASTEXITCODE -ne 0) { throw 'Could not inspect the current Caddy configuration.' }
+            $configuration = $adapted | ConvertFrom-Json
+            function Check-SiteHosts($value) {
+              if ($null -eq $value -or $value -is [string] -or $value -is [ValueType]) { return }
+              if ($value -is [System.Collections.IEnumerable]) { foreach ($item in $value) { Check-SiteHosts $item }; return }
+              foreach ($property in $value.PSObject.Properties) {
+                if ($property.Name -eq 'host') {
+                  foreach ($hostName in $property.Value) {
+                    if ($hostName -ne ([Uri]$env:LOPE_SITE_ORIGIN).Host) { throw 'This Caddy host serves other domains. Supply a Caddyfile.template that preserves those sites before deployment.' }
+                  }
+                } else { Check-SiteHosts $property.Value }
+              }
+            }
+            Check-SiteHosts $configuration
+            Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $templatePath
           }
-      # The production runner receives only the built site. Its publishing
-      # script and Caddy configuration are provisioned separately on the host.
+          $template = Get-Content -LiteralPath $templatePath -Raw
+          if ($template -notmatch '/api/accounts/') {
+            if ($template -notmatch '__LOPE_SITE_HOST__\s*\{') { throw 'Caddy template must identify the LopeOS site with __LOPE_SITE_HOST__.' }
+            $accountRoute = @'
+              handle /api/accounts/* {
+                  reverse_proxy 127.0.0.1:4176 {
+                      header_up X-Forwarded-For {remote_host}
+                  }
+              }
+          '@
+            $template = ([regex]'(__LOPE_SITE_HOST__\s*\{)').Replace($template, ('$1' + "`n" + $accountRoute), 1)
+            [IO.File]::WriteAllText($templatePath, $template, [Text.UTF8Encoding]::new($false))
+          }
       - uses: actions/download-artifact@v8
         with:
           name: lope-dist

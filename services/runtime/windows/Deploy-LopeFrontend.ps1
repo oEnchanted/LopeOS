@@ -120,6 +120,11 @@ try {
                     if ($live.build -cne $manifest.build -or $live.version -cne $manifest.version) { throw 'The public site is serving a different release.' }
                     $page = Invoke-WebRequest -UseBasicParsing -Uri "$SiteOrigin/" -Headers @{ 'Cache-Control' = 'no-cache' } -TimeoutSec 10
                     if ($page.StatusCode -ne 200) { throw 'The public desktop did not respond successfully.' }
+                    $accountResponse = Invoke-WebRequest -UseBasicParsing -Uri "$SiteOrigin/api/accounts/session" -TimeoutSec 10
+                    $accountSession = $accountResponse.Content | ConvertFrom-Json
+                    if ($accountResponse.Headers['Content-Type'] -notmatch 'application/json' -or $accountSession.quotaBytes -ne 1000000000 -or $null -ne $accountSession.account) {
+                        throw 'The public account route did not return a valid anonymous session.'
+                    }
                     $verified = $true
                     break
                 } catch {

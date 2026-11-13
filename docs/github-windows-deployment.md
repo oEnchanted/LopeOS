@@ -3,8 +3,8 @@
 The deployment workflow builds LopeOS on GitHub and sends the finished website to
 a runner on your Windows server. Caddy serves versioned releases from
 `C:/LopeOS/releases`; its services and user data live outside the runner checkout.
-The workflow updates the frontend. Accounts and Linux workspaces need the separate
-host setup below.
+The workflow updates the frontend and installs/updates Lope Accounts automatically.
+Linux workspace files still need the separate host setup below.
 
 These instructions assume a private repository, a Windows x64 server, and a real
 HTTPS origin such as `https://lope.example.com`. Replace that example throughout.
@@ -34,23 +34,25 @@ This installs the runtime on loopback port 4174. For this deployment, use the
 release template in step 2 instead of `Caddyfile.windows.generated`, which points
 to the checkout's `dist`. Verify the WSL startup task after a Windows reboot.
 
-Set up the account service separately using its
-[production instructions](../services/accounts/README.md#production-hosting).
-The runtime installer does not install it. Run a single Node 24+ process under a
-service manager, with these settings and a persistent private data directory:
+Lope Accounts is installed by the push workflow. The Windows runner must have
+administrator rights to register its startup task and assign directory permissions.
+The installer runs the account server as **Local Service**, independently of the
+runner, on loopback port 4176. It uses Node 24 from the workflow and copies the
+runtime and account code into versioned folders under `C:/LopeOS/accounts`.
+Accounts, password hashes, sessions, and LopeDrive sync data remain in
+`C:/LopeOS/accounts-data` across releases. Never publish or delete this directory.
 
-```text
-NODE_ENV=production
-LOPE_ACCOUNTS_ORIGINS=https://lope.example.com
-LOPE_ACCOUNTS_DATA=C:/LopeOS/accounts-data
-LOPE_ACCOUNTS_PORT=4176
-LOPE_ACCOUNTS_TRUST_PROXY=1
-```
+The installer gracefully stops its existing task before replacing code, verifies
+its local JSON session endpoint, and restores the previous service configuration
+if the new process fails to start. It refuses to take over a port occupied by a
+manually started server. Logs are at `C:/LopeOS/accounts/logs/service.log`.
+The task starts at Windows boot and restarts after failures. A stale lock is removed
+only when its recorded process no longer exists; an ambiguous/live lock is retained.
 
-That data path is for a native Windows account service. If it runs in WSL, use a
-native Linux data path such as `/var/lib/lopeos-accounts`. Caddy must reach both
-services through Windows loopback; keep ports 4174 and 4176 private. The Caddy
-template routes `/api/accounts/*` before the runtime's `/api/*` route.
+The workflow installs its reviewed frontend publisher, preserves an existing
+Caddy template, adds the account route if absent, and verifies the public account
+endpoint as well as the frontend. When creating a template, it refuses to replace
+a configuration serving other domains. Neither 4176 nor 4174 needs router forwarding.
 
 Lope Browser's public, per-visitor Chromium/Selkies deployment is a separate,
 unfinished integration. This workflow does not activate it. See the
@@ -133,8 +135,8 @@ service setup before testing sign-in.
 In your private GitHub repository, open **Settings → Actions → Runners → New
 self-hosted runner**, select Windows and x64, and follow the generated commands in
 `C:/actions-runner`. During configuration, add the `lope-production` label and
-choose installation as a Windows service. Use a dedicated normal Windows account
-for the service; the installer itself needs an elevated shell. See
+choose installation as a Windows service. Use a dedicated Windows runner account with administrator rights; the workflow
+needs to register the Local Service startup task and set private directory ACLs. See
 [GitHub's runner setup](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/add-runners)
 and [Windows service setup](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/configure-the-application).
 
@@ -142,8 +144,8 @@ The workflow uses Windows PowerShell. Give its service account write access to
 `C:/LopeOS/releases`, `C:/LopeOS/shared`, and the deployment configuration
 files in `C:/Caddy`, including the ability to create/replace configuration files.
 It needs read/execute access to Caddy and the host-installed deployment script.
-Keep the script and executables operator-managed. The runner does not need WSL
-access or permissions to account data and workspace homes for frontend releases.
+The workflow updates the publisher and account service from its tested artifact.
+The runner requires administrative rights, but does not need WSL workspace access.
 Access to Caddy's loopback administration endpoint permits configuration changes;
 reserve this runner for trusted production deployment jobs.
 
@@ -157,8 +159,8 @@ Commit [.github/workflows/deploy-windows.yml](../.github/workflows/deploy-window
 and the deployment source files to your private repository. Use **Actions → Deploy
 LopeOS to Windows → Run workflow** on `main` for the first automated release.
 Subsequent pushes to `main` deploy automatically. Do not add pull-request jobs to this production
-runner. Changes to the host-installed deployment script or Caddy template require
-reviewing and copying those files to the host again.
+runner. Publisher and account code changes deploy automatically. Existing customized Caddy
+templates are preserved; changes beyond the account route remain host-managed.
 
 ## 4. Check updates and roll back
 
