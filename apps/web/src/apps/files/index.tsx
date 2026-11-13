@@ -331,7 +331,6 @@ export default function Files({ context }: { context: AppContext }) {
     { id: 'files.put-back' as const, label: 'Put Back', enabled: usable && inTrash && targets.length > 0 && targets.every(entry => Boolean(entry.originalPath)), execute: putBack },
     { id: 'files.empty-trash' as const, label: 'Empty Trash…', enabled: usable && inTrash && entries.length > 0, execute: () => showDialog('empty-trash') },
     { id: 'files.info' as const, label: 'Get Info', shortcut: 'Mod+I', enabled: targets.length === 1, execute: () => showDialog('info') },
-    { id: 'files.terminal' as const, label: 'Open in Terminal', enabled: !inTrash && !inDrive && targets.length <= 1 && (!targets.length || targets[0].type === 'directory'), execute: () => context.services.launch('terminal', { cwd: targets[0]?.path || path }) },
     { id: 'files.select-all' as const, label: 'Select All', shortcut: 'Mod+A', enabled: () => visible.length > 0 && !(document.activeElement instanceof HTMLElement && document.activeElement.matches('input,textarea,select,[contenteditable=true]')), execute: () => setSelected(new Set(visible.map(item => item.path))) },
     { id: 'files.lope-drive' as const, label: 'LopeDrive', execute: () => navigate(LOPE_DRIVE) },
     { id: 'files.home' as const, label: 'Home', execute: () => navigate('/') },

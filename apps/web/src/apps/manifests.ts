@@ -1,7 +1,7 @@
 import type { AppManifest, MenuDefinition } from '../../../../packages/contracts/src';
 
 const fileMenus: MenuDefinition[] = [
-  { label: 'File', items: ['files.new-window', { separator: true }, 'files.open', 'files.open-with', 'files.new-folder', 'files.upload', 'files.download', { separator: true }, 'files.info', 'files.terminal'] },
+  { label: 'File', items: ['files.new-window', { separator: true }, 'files.open', 'files.open-with', 'files.new-folder', 'files.upload', 'files.download', { separator: true }, 'files.info'] },
   { label: 'Edit', items: ['files.cut', 'files.copy', 'files.paste', 'files.duplicate', { separator: true }, 'files.rename', 'files.move', 'files.delete', 'files.put-back', 'files.delete-permanently', 'files.empty-trash', { separator: true }, 'files.select-all', 'files.find'] },
   { label: 'View', items: ['files.home', 'files.documents', 'files.downloads', 'files.trash', 'files.parent', 'files.go', { separator: true }, 'files.list', 'files.grid', 'files.hidden', 'files.refresh'] },
 ];

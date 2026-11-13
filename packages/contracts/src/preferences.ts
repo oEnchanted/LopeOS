@@ -19,7 +19,7 @@ export const preferenceSchema = {
   wallpaper: text('perfecthue-light'), background: choice('automatic', ['automatic','morning','afternoon','blue-hour','midnight']), wallpaperFit: choice('fill', ['fill','fit','center']), wallpaperRotation: number(0, 0, 1440),
   dockSize: number(52, 36, 68), dockMagnification: bool(true), dockPosition: choice('bottom', ['bottom','left','right']),
   dockAutoHide: bool(false), windowAnimation: choice('gentle', ['gentle','none']), runningIndicators: bool(true),
-  pinned: list(['lope.welcome','lope.files','lope.browser','lope.terminal','lope.editor','lope.weather','lope.calculator','lope.settings','lope.writer','lope.image-editor','lope.lightroom']),
+  pinned: list(['lope.welcome','lope.files','lope.browser','lope.editor','lope.weather','lope.calculator','lope.settings','lope.writer','lope.image-editor','lope.lightroom']),
   showRecentApps: bool(true), minimizeDestination: choice('app', ['app','dock']),
   titlebarDoubleClick: choice('maximize', ['maximize','minimize','none']), desktopItems: bool(true),
   showDesktopBehavior: choice('toggle', ['toggle','minimize']),
