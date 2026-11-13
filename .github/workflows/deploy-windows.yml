@@ -53,7 +53,9 @@ jobs:
       LOPE_RELEASE_PATH: C:/LopeOS/releases/${{ github.run_id }}-${{ github.run_attempt }}
     defaults:
       run:
-        shell: powershell
+        # Permit these reviewed workflow scripts for this process only; keep
+        # the Windows account and machine execution policies unchanged.
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
     steps:
       - name: Check host deployment configuration
         run: |
