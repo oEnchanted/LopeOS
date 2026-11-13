@@ -4,6 +4,9 @@ The deployment workflow builds LopeOS on GitHub and sends the finished website t
 a runner on your Windows server. Caddy serves versioned releases from
 `C:/LopeOS/releases`; its services and user data live outside the runner checkout.
 The workflow updates the frontend and installs/updates Lope Accounts automatically.
+When creating a deployment template from an existing Caddyfile, it replaces the
+explicit LopeOS HTTPS site and preserves other domains, including shared aliases.
+Imported or ambiguous LopeOS site definitions require a host-provided template.
 Linux workspace files still need the separate host setup below.
 
 These instructions assume a private repository, a Windows x64 server, and a real

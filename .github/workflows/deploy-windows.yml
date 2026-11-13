@@ -46,7 +46,7 @@ jobs:
           mkdir -p deployment/accounts/windows deployment/windows
           cp services/accounts/server.mjs deployment/accounts/
           cp services/accounts/windows/* deployment/accounts/windows/
-          cp services/runtime/windows/Deploy-LopeFrontend.ps1 services/runtime/windows/Caddyfile.deploy.template deployment/windows/
+          cp services/runtime/windows/Deploy-LopeFrontend.ps1 services/runtime/windows/Caddyfile.deploy.template scripts/caddy-template.mjs deployment/windows/
       - uses: actions/upload-artifact@v7
         with:
           name: lope-services
@@ -112,23 +112,8 @@ jobs:
           Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Deploy-LopeFrontend.ps1" C:/LopeOS/deploy/Deploy-LopeFrontend.ps1 -Force
           $templatePath = 'C:/Caddy/Caddyfile.template'
           if (-not (Test-Path $templatePath)) {
-            # Refuse to replace a shared host configuration with a single-site template.
-            $adapted = & C:/Caddy/caddy.exe adapt --config C:/Caddy/Caddyfile --adapter caddyfile
-            if ($LASTEXITCODE -ne 0) { throw 'Could not inspect the current Caddy configuration.' }
-            $configuration = $adapted | ConvertFrom-Json
-            function Check-SiteHosts($value) {
-              if ($null -eq $value -or $value -is [string] -or $value -is [ValueType]) { return }
-              if ($value -is [System.Collections.IEnumerable]) { foreach ($item in $value) { Check-SiteHosts $item }; return }
-              foreach ($property in $value.PSObject.Properties) {
-                if ($property.Name -eq 'host') {
-                  foreach ($hostName in $property.Value) {
-                    if ($hostName -ne ([Uri]$env:LOPE_SITE_ORIGIN).Host) { throw 'This Caddy host serves other domains. Supply a Caddyfile.template that preserves those sites before deployment.' }
-                  }
-                } else { Check-SiteHosts $property.Value }
-              }
-            }
-            Check-SiteHosts $configuration
-            Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $templatePath
+            & node "$env:RUNNER_TEMP/lope-services/windows/caddy-template.mjs" C:/Caddy/Caddyfile "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $env:LOPE_SITE_ORIGIN $templatePath
+            if ($LASTEXITCODE -ne 0) { throw 'Could not prepare the LopeOS Caddy template.' }
           }
           $template = Get-Content -LiteralPath $templatePath -Raw
           if ($template -notmatch '/api/accounts/') {
