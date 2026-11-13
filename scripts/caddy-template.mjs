@@ -37,7 +37,7 @@ export function mergeSiteTemplate(source, template, origin) {
   const block = matches[0];
   // Split shared address blocks so every other hostname retains its old routes.
   const others = block.addresses.filter(address => !block.selected.includes(address));
-  const preserved = others.length ? '\n' + others.join(', ') + source.slice(block.open, block.end) + '\n' : '';
+  const preserved = others.length ? '\n' + others.join(', ') + ' ' + source.slice(block.open, block.end) + '\n' : '';
   const comments = (block.header.match(/#[^\n]*/g) || []).join('\n');
   const header = '\n' + (comments ? comments + '\n' : '') + '__LOPE_SITE_HOST__ ';
   const body = template.slice(template.indexOf('{') + 1, template.lastIndexOf('}'));
