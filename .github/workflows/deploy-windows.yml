@@ -1,150 +1,26 @@
-name: Deploy LopeOS to Windows
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
+name: Install Lope Browser Ubuntu prerequisites
+on: workflow_dispatch
 permissions:
   contents: read
-
-concurrency:
-  group: lope-production
-  cancel-in-progress: false
-
 jobs:
-  build:
-    name: Test and build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-      - name: Install locked dependencies
-        run: npx --yes pnpm@10.32.1 install --frozen-lockfile
-      - name: Run all unit and transport tests
-        run: npm run test:unit
-      - name: Check runtime filesystem operations
-        run: python3 -m unittest services/runtime/fs_test.py
-      - name: Build the production desktop
-        run: npm run build
-      - uses: actions/upload-artifact@v7
-        with:
-          name: lope-dist
-          path: dist/
-          if-no-files-found: error
-          include-hidden-files: true
-          compression-level: 0
-          retention-days: 7
-
-      - name: Package account service and deployment scripts
-        run: |
-          mkdir -p deployment/accounts/windows deployment/windows
-          cp services/accounts/server.mjs deployment/accounts/
-          cp services/accounts/windows/* deployment/accounts/windows/
-          cp services/runtime/windows/Deploy-LopeFrontend.ps1 services/runtime/windows/Caddyfile.deploy.template scripts/caddy-template.mjs deployment/windows/
-      - uses: actions/upload-artifact@v7
-        with:
-          name: lope-services
-          path: deployment/
-          if-no-files-found: error
-
-  windows-accounts:
-    name: Verify Windows account installation
-    runs-on: windows-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-      - name: Install, restart, and verify persistent accounts
-        shell: powershell
-        run: ./tests/accounts/windows-install.ps1
-      - name: Verify atomic Caddy configuration replacement
-        shell: powershell
-        run: ./tests/updates/windows-config.ps1
-
-  deploy:
-    name: Publish the tested desktop
-    needs: [build, windows-accounts]
-    if: github.ref == 'refs/heads/main'
+  prerequisites:
     runs-on: [self-hosted, Windows, X64, lope-production]
-    environment: production
-    timeout-minutes: 15
-    env:
-      LOPE_SITE_ORIGIN: ${{ vars.LOPE_SITE_ORIGIN }}
-      LOPE_RELEASE_PATH: C:/LopeOS/releases/${{ github.run_id }}-${{ github.run_attempt }}
-    defaults:
-      run:
-        # Permit these reviewed workflow scripts for this process only; keep
-        # the Windows account and machine execution policies unchanged.
-        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+    timeout-minutes: 35
     steps:
-      - name: Check host deployment configuration
+      - name: Install Ubuntu Docker and Node without a Windows restart
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = 'Stop'
-          if ([string]::IsNullOrWhiteSpace($env:LOPE_SITE_ORIGIN)) {
-            throw 'Set LOPE_SITE_ORIGIN in the production environment variables.'
+          $source = Join-Path $env:RUNNER_TEMP ('lope-browser-prerequisites-' + [Guid]::NewGuid().ToString('N'))
+          $files = @('services/browser/hosting/windows/Install-LopeBrowserPrerequisites.ps1', 'services/browser/hosting/linux/configure-wsl.sh', 'services/browser/hosting/linux/install-prerequisites.sh', 'services/browser/hosting/windows/Prepare-LopeBrowserWSL.ps1')
+          try {
+            foreach ($file in $files) {
+              $target = Join-Path $source $file
+              New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+              Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA/$file" -OutFile $target
+            }
+            & (Join-Path $source $files[3])
+            & (Join-Path $source $files[0]) -SourcePath $source
+          } finally {
+            if (Test-Path $source) { Remove-Item $source -Recurse -Force }
           }
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-      - uses: actions/download-artifact@v8
-        with:
-          name: lope-services
-          path: ${{ runner.temp }}/lope-services
-          digest-mismatch: error
-      - name: Install or update the persistent account service
-        run: |
-          $ErrorActionPreference = 'Stop'
-          & "$env:RUNNER_TEMP/lope-services/accounts/windows/Install-LopeAccounts.ps1" `
-            -SourcePath "$env:RUNNER_TEMP/lope-services/accounts" `
-            -SiteOrigin $env:LOPE_SITE_ORIGIN -NodeExe (Get-Command node).Source
-      - name: Prepare deployment configuration
-        run: |
-          $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Force -Path C:/LopeOS/deploy, C:/LopeOS/releases, C:/LopeOS/shared/assets | Out-Null
-          Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Deploy-LopeFrontend.ps1" C:/LopeOS/deploy/Deploy-LopeFrontend.ps1 -Force
-          $templatePath = 'C:/Caddy/Caddyfile.template'
-          if (-not (Test-Path $templatePath)) {
-            & node "$env:RUNNER_TEMP/lope-services/windows/caddy-template.mjs" C:/Caddy/Caddyfile "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $env:LOPE_SITE_ORIGIN $templatePath
-            if ($LASTEXITCODE -ne 0) { throw 'Could not prepare the LopeOS Caddy template.' }
-          }
-          $template = Get-Content -LiteralPath $templatePath -Raw
-          if ($template -notmatch '/api/accounts/') {
-            if ($template -notmatch '__LOPE_SITE_HOST__\s*\{') { throw 'Caddy template must identify the LopeOS site with __LOPE_SITE_HOST__.' }
-            $accountRoute = @'
-              handle /api/accounts/* {
-                  reverse_proxy 127.0.0.1:4176 {
-                      header_up X-Forwarded-For {remote_host}
-                  }
-              }
-          '@
-            $template = ([regex]'(__LOPE_SITE_HOST__\s*\{)').Replace($template, ('$1' + "`n" + $accountRoute), 1)
-            [IO.File]::WriteAllText($templatePath, $template, [Text.UTF8Encoding]::new($false))
-          }
-      - uses: actions/download-artifact@v8
-        with:
-          name: lope-dist
-          path: ${{ env.LOPE_RELEASE_PATH }}
-          digest-mismatch: error
-      - name: Activate the complete release
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $deployParameters = @{
-            ReleasePath = $env:LOPE_RELEASE_PATH
-            SiteOrigin = $env:LOPE_SITE_ORIGIN
-            CaddyExe = 'C:/Caddy/caddy.exe'
-            Caddyfile = 'C:/Caddy/Caddyfile'
-            CaddyTemplate = 'C:/Caddy/Caddyfile.template'
-            SharedAssetsPath = 'C:/LopeOS/shared/assets'
-          }
-          & 'C:/LopeOS/deploy/Deploy-LopeFrontend.ps1' @deployParameters
