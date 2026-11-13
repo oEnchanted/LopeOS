@@ -7,12 +7,31 @@ export function Button({ variant = 'secondary', className = '', ...props }: Butt
 export function Input(props: ComponentPropsWithRef<'input'>) { return <input {...props} className={`ui-input ${props.className ?? ''}`} />; }
 export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) { return <select {...props} className={`ui-input ${props.className ?? ''}`}/>; }
 export function EmptyState({ title, description, children }: { title: string; description?: string; children?: ReactNode }) { return <div className="ui-empty-state"><strong>{title}</strong>{description && <p>{description}</p>}{children}</div>; }
+function dialogTabStops(dialog: HTMLElement) {
+  return [...dialog.querySelectorAll<HTMLElement>('a[href],button,input,select,textarea,[tabindex],[contenteditable="true"]')]
+    .filter(node => node.tabIndex >= 0 && !node.matches(':disabled') && !node.closest('[hidden],[inert]') && node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden')
+    .sort((a, b) => (a.tabIndex > 0 ? a.tabIndex : Infinity) - (b.tabIndex > 0 ? b.tabIndex : Infinity));
+}
 export function Dialog({ title, children, onClose, dismissible = true }: { title: string; children: ReactNode; onClose: () => void; dismissible?: boolean }) {
   const label = useId(); const ref = useRef<HTMLElement>(null);
-  useEffect(() => { const previous = document.activeElement as HTMLElement; const frame = requestAnimationFrame(() => (ref.current?.querySelector<HTMLElement>('input:not([hidden]):not(:disabled),button:not(:disabled),select,textarea,[tabindex="0"]') ?? ref.current)?.focus()); return () => { cancelAnimationFrame(frame); if (previous?.isConnected) previous.focus(); }; }, []);
+  // Capture the trigger before a child's autoFocus runs during the DOM commit.
+  const previousFocus = useRef(document.activeElement as HTMLElement | null);
+  useEffect(() => {
+    const previous = previousFocus.current;
+    const frame = requestAnimationFrame(() => {
+      const dialog = ref.current;
+      if (dialog && !dialog.contains(document.activeElement)) (dialogTabStops(dialog)[0] ?? dialog).focus();
+    });
+    return () => { cancelAnimationFrame(frame); if (previous?.isConnected) previous.focus(); };
+  }, []);
   return createPortal(<div className="ui-dialog-backdrop" onMouseDown={e => { if (dismissible && e.target === e.currentTarget) onClose(); }} onKeyDown={e => {
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (dismissible) onClose(); }
-    if (e.key === 'Tab') { const nodes = [...ref.current!.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled):not([hidden]),select,textarea,[tabindex="0"]')]; const first = nodes[0], last = nodes.at(-1); if (!first) { e.preventDefault(); ref.current?.focus(); } else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); } }
+    if (e.key === 'Tab' && ref.current) {
+      e.preventDefault(); e.stopPropagation();
+      const nodes = dialogTabStops(ref.current), index = nodes.indexOf(document.activeElement as HTMLElement);
+      const next = index < 0 ? (e.shiftKey ? nodes.length - 1 : 0) : (index + (e.shiftKey ? -1 : 1) + nodes.length) % nodes.length;
+      (nodes[next] ?? ref.current).focus();
+    }
   }}><section ref={ref} className="ui-dialog glass" role="dialog" aria-modal="true" aria-labelledby={label} tabIndex={-1}><header><h2 id={label}>{title}</h2>{dismissible && <button type="button" aria-label="Close dialog" onClick={onClose}>×</button>}</header>{children}</section></div>, document.querySelector('.desktop') ?? document.body);
 }
 export function Toolbar({ children }: { children: ReactNode }) { return <div className="ui-toolbar" role="toolbar">{children}</div>; }

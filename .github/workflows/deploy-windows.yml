@@ -26,12 +26,10 @@ jobs:
           node-version: "24"
       - name: Install locked dependencies
         run: npx --yes pnpm@10.32.1 install --frozen-lockfile
-      # pnpm blocks dependency scripts by default, and node-pty has no Linux
-      # prebuild. Build only the native dependency needed by the PTY tests.
-      - name: Build the Linux PTY test dependency
-        run: npm rebuild node-pty --prefix services/runtime
-      - name: Run unit and transport tests
-        run: npm test
+      - name: Run all unit and transport tests
+        run: npm run test:unit
+      - name: Check runtime filesystem operations
+        run: python3 -m unittest services/runtime/fs_test.py
       - name: Build the production desktop
         run: npm run build
       - uses: actions/upload-artifact@v7

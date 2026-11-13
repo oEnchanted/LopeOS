@@ -11,7 +11,9 @@ export function WindowFrame({ win, focused, fullscreen, onFocus, onClose, onMini
   useEffect(() => () => cancelGesture.current?.(), []);
   const start = (e: PointerEvent<HTMLElement>, edge = '') => {
     if (e.button !== 0 || cancelGesture.current || viewport().width < 700 || fullscreen || win.state === 'maximized' || (e.target as HTMLElement).closest('button')) return;
-    e.preventDefault(); onFocus(); const el = ref.current!; const captureTarget = e.currentTarget; captureTarget.setPointerCapture(e.pointerId);
+    e.preventDefault(); onFocus(); const el = ref.current!; const captureTarget = e.currentTarget;
+    if (!edge) captureTarget.focus({ preventScroll: true });
+    captureTarget.setPointerCapture(e.pointerId);
     const pointerId = e.pointerId;
     const scale = interfaceScale(); const area = workArea(); const origin = { x: e.clientX, y: e.clientY }, bounds = { ...win.bounds };
     let next = bounds; let frame = 0; let moved = false;
@@ -56,7 +58,7 @@ export function WindowFrame({ win, focused, fullscreen, onFocus, onClose, onMini
   };
   const bounds = fullscreen ? { x: 0, y: 0, ...viewport() } : win.state === 'maximized' ? workArea() : win.bounds;
   return <section ref={ref} className={`os-window ${focused ? 'is-focused' : ''} ${win.state === 'maximized' ? 'is-maximized' : ''} ${fullscreen ? 'is-fullscreen' : ''}`} style={{ transform: `translate3d(${bounds.x}px,${bounds.y}px,0)`, width: bounds.width, height: bounds.height, zIndex: 100 + win.zIndex }} onPointerDown={onFocus} aria-label={win.title} data-window-id={win.id} data-app-id={win.appId}>
-    <header className="window-titlebar" onPointerDown={e => start(e)} onDoubleClick={e => { if (!fullscreen && !(e.target as HTMLElement).closest('button')) { const action=preferences.getSnapshot().titlebarDoubleClick;if(action==='maximize')onMaximize();else if(action==='minimize')onMinimize(); } }}>
+    <header className="window-titlebar" tabIndex={-1} onPointerDown={e => start(e)} onDoubleClick={e => { if (!fullscreen && !(e.target as HTMLElement).closest('button')) { const action=preferences.getSnapshot().titlebarDoubleClick;if(action==='maximize')onMaximize();else if(action==='minimize')onMinimize(); } }}>
       <div className="traffic-lights"><button className="close" aria-label={`Close ${win.title}`} onClick={onClose}><X size={9}/></button><button className="minimize" aria-label={`Minimize ${win.title}`} onClick={onMinimize}><Minus size={9}/></button><button className="maximize" aria-label={`${fullscreen ? 'Exit' : 'Enter'} full screen ${win.title}`} title={fullscreen ? 'Exit full screen (Esc)' : 'Enter full screen'} onClick={onFullscreen}>{fullscreen ? <Minimize2 size={7}/> : <Maximize2 size={7}/>}</button></div>
       <div className="window-title">{win.title}</div>
     </header>

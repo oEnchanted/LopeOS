@@ -81,6 +81,7 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   await eventually(()=>engine.normal.tabs.length===2,'reopen duplicate');
   assert.notEqual(engine.normal.activeTabId, duplicate.id);
   const reopened=engine.normal.tabs.find(item=>item.id!==tab.id);
+  // Close immediately, including while the restored navigation swaps renderers.
   await engine.command('normal', { type: 'tab.close', tabId: reopened.id });
   await eventually(()=>engine.normal.tabs.length===1,'close reopened tab');
   await engine.command('normal', { type: 'zoom', tabId: tab.id, value: 1.5 }); assert.equal(tab.zoom, 1.5);

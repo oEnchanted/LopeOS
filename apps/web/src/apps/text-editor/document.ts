@@ -32,17 +32,20 @@ export function applyExternalChange(doc: EditorDocument, text: string, version: 
   if (isDirty(doc)) return { ...doc, externalChange: true };
   return newDocument(text, doc.path, version);
 }
+function searchPattern(query: string, matchCase: boolean): RegExp {
+  return new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), matchCase ? 'g' : 'gi');
+}
 export function findNext(text: string, query: string, from = 0, matchCase = false): [number, number] | null {
   if (!query) return null;
-  const source = matchCase ? text : text.toLocaleLowerCase();
-  const needle = matchCase ? query : query.toLocaleLowerCase();
-  let index = source.indexOf(needle, from);
-  if (index < 0) index = source.indexOf(needle);
-  return index < 0 ? null : [index, index + query.length];
+  // Match the original text: lowercasing can expand Unicode characters and shift offsets.
+  const pattern = searchPattern(query, matchCase);
+  pattern.lastIndex = from;
+  let match = pattern.exec(text);
+  if (!match) { pattern.lastIndex = 0; match = pattern.exec(text); }
+  return match ? [match.index, match.index + match[0].length] : null;
 }
 export function replaceAllText(text: string, query: string, replacement: string, matchCase = false): { text: string; count: number } {
   if (!query) return { text, count: 0 };
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   let count = 0;
-  return { text: text.replace(new RegExp(escaped, matchCase ? 'g' : 'gi'), () => { count++; return replacement; }), count };
+  return { text: text.replace(searchPattern(query, matchCase), () => { count++; return replacement; }), count };
 }

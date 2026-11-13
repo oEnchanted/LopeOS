@@ -101,7 +101,7 @@ try {
   await expect(editorWindows.getByRole('textbox', { name: 'Document content', exact: true })).toHaveValue('Downloaded fixture text.');
   await downloadsButton.click();
   await downloads.getByRole('button', { name: 'Open in Files', exact: true }).click();
-  const fileApp = page.getByTestId('files-app');
+  const fileApp = page.locator('[data-app-id="lope.files"].is-focused').getByTestId('files-app');
   await expect(fileApp.getByRole('heading', { name: 'Downloads', exact: true })).toBeVisible();
   checks.push('Downloads stack lists real workspace entries, opens files, and reveals the folder in Files');
 
@@ -117,7 +117,7 @@ try {
   await expect(fileApp.getByRole('button', { name: 'dock-note.txt, file', exact: true })).toHaveCount(0);
   checks.push('Move to Trash preserves file data and Put Back restores its original location');
 
-  await fileApp.getByRole('button', { name: 'Downloads', exact: true }).click();
+  await fileApp.getByRole('complementary', { name: 'Locations', exact: true }).getByRole('button', { name: 'Downloads', exact: true }).click();
   const dragData = await page.evaluateHandle(() => new DataTransfer());
   await note.dispatchEvent('dragstart', { dataTransfer: dragData });
   const trashButton = dock.getByRole('button', { name: 'Trash', exact: true });

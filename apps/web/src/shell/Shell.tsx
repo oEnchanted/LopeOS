@@ -307,7 +307,10 @@ export function Shell() {
       if (restoringBackup.current) return;
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'w' && active) { e.preventDefault(); void close(active.id); }
       if (e.defaultPrevented) return;
-      if (active && !editable && !(e.target as HTMLElement).closest('[data-terminal-input="true"],[role="dialog"]')) {
+      // Keep native text-editing shortcuts, while allowing Save, Find, and other
+      // application commands to work when the document or a search field has focus.
+      const appShortcut = !editable || (e.metaKey || e.ctrlKey) && e.key.length === 1 && !['a', 'c', 'v', 'x', 'y', 'z'].includes(e.key.toLowerCase());
+      if (active && appShortcut && !(e.target as HTMLElement).closest('.xterm,[data-terminal-input="true"],[role="dialog"]')) {
         for (const command of commands.list().filter(c => c.id.startsWith(`${active.id}.`) && c.shortcut)) {
           const keys = command.shortcut!.toLowerCase().split('+'); const key = keys.at(-1)!;
           if (e.key.toLowerCase() === key && (keys.includes('mod') ? e.metaKey || e.ctrlKey : !e.metaKey && !e.ctrlKey) && keys.includes('shift') === e.shiftKey && keys.includes('alt') === e.altKey) { const enabled = typeof command.enabled === 'function' ? command.enabled() : command.enabled; if (enabled !== false) { e.preventDefault(); runCommand(command.id); return; } }

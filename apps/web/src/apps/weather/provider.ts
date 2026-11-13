@@ -94,7 +94,11 @@ export function createOpenMeteoProvider(options: { forecastEndpoint?: string; ge
       const url = new URL(options.geocodingEndpoint || 'https://geocoding-api.open-meteo.com/v1/search', globalThis.location?.origin || 'http://localhost');
       url.search = new URLSearchParams({ name: query.trim().slice(0, 120), count: '6', language: 'en', format: 'json' }).toString();
       const raw = await request(url, signal);
-      return (raw.results || []).map((place: any) => ({ name: [place.name, place.admin1].filter(Boolean).join(', '), latitude: place.latitude, longitude: place.longitude, country: place.country, timezone: place.timezone })).filter(validLocation);
+      return (raw.results || []).map((place: any) => ({
+        name: [place.name, place.admin1].filter(Boolean).join(', '), latitude: place.latitude, longitude: place.longitude,
+        ...(typeof place.country === 'string' ? { country: place.country } : {}),
+        ...(typeof place.timezone === 'string' ? { timezone: place.timezone } : {}),
+      })).filter(validLocation);
     },
   };
 }

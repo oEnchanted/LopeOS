@@ -24,7 +24,7 @@ test('browser controls operate real tabs and expose unavailable streaming honest
     await engine.close(); await fixture.close(); await rm(root, { recursive: true, force: true }); });
   await engine.start(); const token = randomBytes(32).toString('hex'); const origins = [];
   worker = createBrowserServer(engine, { token, origins, hosts: ['127.0.0.1'] }); worker.listen(0,'127.0.0.1'); await once(worker,'listening');
-  web = await createServer({ configFile: false, plugins: [react()], server: { fs: sharedConfig.server.fs, host: '127.0.0.1', port: 0, proxy: {
+  web = await createServer({ configFile: false, cacheDir: join(root, 'vite-cache'), plugins: [react()], server: { fs: sharedConfig.server.fs, host: '127.0.0.1', port: 0, proxy: {
     '/api/browser': { target: `http://127.0.0.1:${worker.address().port}`, configure: proxy => proxy.on('proxyReq', req => req.setHeader('Authorization', `Bearer ${token}`)) },
   } } });
   await web.listen(); const origin = `http://127.0.0.1:${web.httpServer.address().port}`; origins.push(origin);
@@ -40,7 +40,7 @@ test('browser controls operate real tabs and expose unavailable streaming honest
   const page = await host.newPage({ viewport: { width: 1440, height: 1000 } }); const failures = [];
   page.on('pageerror', error => failures.push(error.message));
   await page.goto(origin + '/services/browser/tests/host.html');
-  await page.locator('.lb-start-connection').filter({ hasText: 'Engine connected' }).waitFor();
+  await page.locator('.lb-status').filter({ hasText: 'Engine connected' }).waitFor();
   await page.getByRole('button', { name: 'New tab', exact: true }).click();
   await page.waitForFunction(() => document.querySelectorAll('.lb-tab[draggable]').length === 2);
   const address = page.getByRole('textbox', { name: 'Search or enter address', exact: true });

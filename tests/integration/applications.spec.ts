@@ -58,8 +58,38 @@ test('Files opens documents; editor commands save, undo, replace, and protect co
 test('Save As uses the shared dialog and atomic creation; a new file survives reload', async ({ page }) => {
   const fs = await installContractRuntime(page); await page.goto('/'); await launch(page, 'Text Editor');
   const text = page.getByRole('textbox', { name: 'Document content' }); await text.fill('A saved idea.'); await page.getByTestId('editor-app').getByRole('button', { name: 'Save', exact: true }).click();
-  const dialog = page.getByRole('dialog', { name: 'Save file', exact: true }); await dialog.getByLabel('File name').fill('New idea.txt'); await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Save file', exact: true }); await dialog.getByRole('button', { name: 'Parent folder', exact: true }).click(); await dialog.getByLabel('File name').fill('New idea.txt'); await dialog.getByRole('button', { name: 'Save', exact: true }).click();
   await expect.poll(() => fs.text('/New idea.txt')).toBe('A saved idea.'); await expect(page.getByTestId('editor-app').getByRole('status')).toContainText('Saved to your workspace'); await page.reload(); await expect(page.getByRole('textbox', { name: 'Document content' })).toHaveValue('A saved idea.');
+});
+
+test('editor shortcuts retain native selection and find Unicode text at its original offsets', async ({ page }) => {
+  await installContractRuntime(page); await page.goto('/'); await launch(page, 'Text Editor');
+  const editor = page.getByTestId('editor-app'), text = editor.getByRole('textbox', { name: 'Document content' });
+  await text.fill('İstanbul road; ROAD'); await text.press(`${mod}+a`);
+  await expect.poll(() => text.evaluate((node: HTMLTextAreaElement) => [node.selectionStart, node.selectionEnd])).toEqual([0, 19]);
+  await text.press(`${mod}+f`);
+  const find = editor.getByRole('textbox', { name: 'Find text' }); await expect(find).toBeFocused();
+  await find.fill('road'); await find.press('Enter');
+  await expect.poll(() => text.evaluate((node: HTMLTextAreaElement) => [node.selectionStart, node.selectionEnd])).toEqual([9, 13]);
+  await editor.getByRole('button', { name: 'Replace', exact: true }).click();
+  await editor.getByRole('textbox', { name: 'Replace with' }).fill('lane');
+  await editor.locator('.editor-replace').getByRole('button', { name: 'Replace', exact: true }).click();
+  await expect(text).toHaveValue('İstanbul lane; ROAD');
+  await expect.poll(() => text.evaluate((node: HTMLTextAreaElement) => [node.selectionStart, node.selectionEnd])).toEqual([15, 19]);
+  await text.press(`${mod}+z`); await expect(text).toHaveValue('İstanbul road; ROAD');
+});
+
+test('editing a Files search preserves native deletion and caret navigation without changing files', async ({ page }) => {
+  const fs = await installContractRuntime(page); await page.goto('/'); await launch(page, 'Files');
+  const files = page.getByTestId('files-app'); await files.getByRole('button', { name: 'Documents', exact: true }).click();
+  await files.getByRole('button', { name: 'hello.txt, file', exact: true }).click();
+  const search = files.getByRole('textbox', { name: 'Search files' }); await search.fill('hello');
+  await search.press(`${mod}+Backspace`);
+  expect(fs.text('/Documents/hello.txt')).toBe('Hello from the shared workspace.\n');
+  await search.fill('hello'); await search.press(`${mod}+ArrowUp`);
+  await expect(files.getByRole('heading', { name: 'Documents', exact: true })).toBeVisible();
+  await expect(search).toBeFocused();
+  expect(fs.mutations()).toEqual([]);
 });
 
 test('Calculator accepts keyboard arithmetic, reports errors, and persists usable history', async ({ page }) => {
@@ -96,7 +126,7 @@ test('Weather and widget share requests, location, and units; offline data is la
 
 test('runtime and weather failures show recoverable errors', async ({ page }) => {
   const fs = await installContractRuntime(page); fs.setDisconnected(true); fs.setWeatherFailure(true);
-  await page.goto('/'); await launch(page, 'Files'); await expect(page.getByTestId('files-app').getByRole('alert')).toContainText('disconnected');
+  await page.goto('/'); await launch(page, 'Files'); await page.getByTestId('files-app').getByRole('complementary', { name: 'Locations', exact: true }).getByRole('button', { name: 'Home', exact: true }).click(); await expect(page.getByTestId('files-app').getByRole('alert')).toContainText('disconnected');
   fs.setDisconnected(false); await page.getByTestId('files-app').getByRole('button', { name: 'Try again', exact: true }).click(); await expect(page.getByTestId('files-app').getByRole('button', { name: 'Documents, directory' })).toBeVisible();
   await launch(page, 'Weather'); await expect(page.getByTestId('weather-app').getByRole('alert')).toContainText('Weather is unavailable');
 });

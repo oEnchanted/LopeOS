@@ -27,3 +27,28 @@ test('an already-open Downloads folder reflects an external filesystem invalidat
   fs.externalWrite('/Downloads/contract-download.txt', 'Written by another filesystem consumer');
   await expect(files.getByRole('button', { name: 'contract-download.txt, file', exact: true })).toBeVisible();
 });
+
+test('dialog tab order includes links and skips hidden, disabled, and untabbable controls', async ({ page }) => {
+  await installContractRuntime(page); await page.goto('/');
+  await page.getByRole('button', { name: 'Open Files', exact: true }).click();
+  const trigger = page.getByTestId('files-app').getByRole('button', { name: 'New folder', exact: true });
+  await trigger.focus(); await trigger.press('Enter');
+  const dialog = page.getByRole('dialog', { name: 'New folder', exact: true });
+  // Dialog children can add form metadata, busy controls, or help links at runtime.
+  await dialog.evaluate(node => {
+    const fields = document.createElement('div');
+    fields.innerHTML = '<input type="hidden" name="metadata"><select disabled><option>Unavailable</option></select><button tabindex="-1">Untabbable</button><div hidden><button>Hidden parent</button></div><div inert><button>Inert parent</button></div><a href="#dialog-help">Folder help</a>';
+    node.append(fields);
+  });
+  const close = dialog.getByRole('button', { name: 'Close dialog', exact: true });
+  const name = dialog.getByLabel('Name', { exact: true });
+  const cancel = dialog.getByRole('button', { name: 'Cancel', exact: true });
+  const create = dialog.getByRole('button', { name: 'Create', exact: true });
+  const help = dialog.getByRole('link', { name: 'Folder help', exact: true });
+  await close.focus();
+  for (const next of [name, cancel, create, help, close]) { await page.keyboard.press('Tab'); await expect(next).toBeFocused(); }
+  for (const previous of [help, create, cancel, name, close]) { await page.keyboard.press('Shift+Tab'); await expect(previous).toBeFocused(); }
+  await dialog.focus(); await page.keyboard.press('Tab'); await expect(close).toBeFocused();
+  await dialog.focus(); await page.keyboard.press('Shift+Tab'); await expect(help).toBeFocused();
+  await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0); await expect(trigger).toBeFocused();
+});

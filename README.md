@@ -31,7 +31,8 @@ are in [Windows hosting](docs/windows-hosting.md).
 
 ```sh
 pnpm build
-pnpm test
+pnpm test:unit
+python3 -m unittest services/runtime/fs_test.py
 pnpm exec playwright install chromium
 pnpm test:desktop
 pnpm test:setup

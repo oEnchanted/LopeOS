@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { calculate } from '../../apps/web/src/apps/calculator/engine.ts';
-import { acknowledgeSave, applyExternalChange, editDocument, isDirty, newDocument } from '../../apps/web/src/apps/text-editor/document.ts';
+import { acknowledgeSave, applyExternalChange, editDocument, findNext, isDirty, newDocument, replaceAllText } from '../../apps/web/src/apps/text-editor/document.ts';
 
 test('calculator handles decimal arithmetic and rejects invalid operations', () => {
   assert.equal(calculate('0.1 + 0.2'), '0.3');
@@ -25,4 +25,26 @@ test('save acknowledgment does not mark subsequent edits as saved', () => {
   const result = acknowledgeSave(editedAgain, '/note.txt', 'saved', 'v2');
   assert.equal(result.text, 'later edit');
   assert.equal(isDirty(result), true);
+});
+
+test('editor search keeps original text offsets when Unicode case folding changes length', () => {
+  const text = 'İstanbul road; ROAD';
+  assert.deepEqual(findNext(text, 'road'), [9, 13]);
+  assert.deepEqual(findNext(text, 'road', 13), [15, 19]);
+  assert.deepEqual(findNext(text, 'road', 19), [9, 13]);
+  assert.deepEqual(findNext(text, 'İstanbul'), [0, 8]);
+  assert.deepEqual(replaceAllText(text, 'road', 'path'), { text: 'İstanbul path; path', count: 2 });
+});
+
+test('editor search treats regex characters literally and honors case-sensitive matching', () => {
+  assert.deepEqual(findNext('A+B a+b', 'a+b'), [0, 3]);
+  assert.deepEqual(findNext('A+B a+b', 'a+b', 0, true), [4, 7]);
+  assert.equal(findNext('A+B', 'a+b', 0, true), null);
+  assert.equal(findNext('A+B', ''), null);
+});
+
+test('editor find and replace agree on Unicode case-insensitive matches', () => {
+  assert.deepEqual(findNext('Σ ς σ', 'σ'), [0, 1]);
+  assert.deepEqual(findNext('Σ ς σ', 'σ', 1), [2, 3]);
+  assert.deepEqual(replaceAllText('Σ ς σ', 'σ', '$&'), { text: '$& $& $&', count: 3 });
 });

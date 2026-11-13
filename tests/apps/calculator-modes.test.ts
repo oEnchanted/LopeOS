@@ -40,6 +40,15 @@ test('programmer calculations retain integer precision, precedence and signed 64
   }
 });
 
+test('programmer mode accepts leading-zero hexadecimal values without truncating them as binary prefixes', () => {
+  for (const value of ['0BAD', '0BEEF', '0B10A', '0BADC0DE']) {
+    assert.equal(evaluateProgrammer(value, 16).decimal, BigInt(`0x${value}`).toString());
+  }
+  assert.equal(evaluateProgrammer('0xBEEF + 0b10 + 0o7', 10).hex, 'BEF8');
+  assert.equal(evaluateProgrammer('0b1010', 16).decimal, '10');
+  assert.throws(() => evaluateProgrammer('0b102', 10));
+});
+
 test('conversions use correct temperature offsets and distinguish decimal from binary data units', () => {
   assert.equal(convertValue('32', 'temperature', 'f', 'c'), '0');
   assert.equal(convertValue('-40', 'temperature', 'c', 'f'), '-40');

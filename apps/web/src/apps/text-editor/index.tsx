@@ -169,7 +169,8 @@ export default function TextEditor({ context }: { context: AppContext }) {
   function replaceOne() {
     const start = editor.current?.selectionStart || 0; const end = editor.current?.selectionEnd || 0;
     const selected = current.current.text.slice(start, end);
-    if (!query || (matchCase ? selected !== query : selected.toLocaleLowerCase() !== query.toLocaleLowerCase())) { nextMatch(start); return; }
+    const match = findNext(selected, query, 0, matchCase);
+    if (!match || match[0] !== 0 || match[1] !== selected.length) { nextMatch(start); return; }
     update(doc => editDocument(doc, doc.text.slice(0, start) + replacement + doc.text.slice(end), start, end));
     requestAnimationFrame(() => nextMatch(start + replacement.length));
   }

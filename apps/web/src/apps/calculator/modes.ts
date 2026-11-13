@@ -114,11 +114,12 @@ export function evaluateProgrammer(expression: string, radix: ProgrammerRadix = 
   function primary(): bigint {
     if (take('(')) { const value = or(); if (!take(')')) throw new Error('Close the parenthesis.'); return value; }
     skip();
-    const token = source.slice(at).match(/^(?:0[xX][\dA-Fa-f]+|0[bB][01]+|0[oO][0-7]+|[\dA-Fa-f]+)/)?.[0];
+    const token = source.slice(at).match(/^[\dA-Za-z]+/)?.[0];
     if (!token) throw new Error('Enter an integer in the selected base.');
     at += token.length;
     let value: bigint;
-    if (/^0[xbo]/i.test(token)) value = BigInt(token);
+    // Read the whole integer before interpreting prefixes: 0BAD is valid hexadecimal.
+    if (/^(?:0x[\dA-F]+|0b[01]+|0o[0-7]+)$/i.test(token)) value = BigInt(token);
     else {
       const allowed = radix === 2 ? /^[01]+$/ : radix === 8 ? /^[0-7]+$/ : radix === 10 ? /^\d+$/ : /^[\dA-Fa-f]+$/;
       if (!allowed.test(token)) throw new Error(`Use digits valid in base ${radix}.`);

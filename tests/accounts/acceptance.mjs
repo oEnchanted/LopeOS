@@ -12,7 +12,8 @@ let accounts, vite, browser;
 try {
   accounts = await createAccountServer({ directory, origins: [origin] });
   await new Promise(resolve => accounts.server.listen(0, '127.0.0.1', resolve));
-  vite = await createServer({ configFile: false, server: { host: '127.0.0.1', port: 5207, strictPort: true, proxy: { '/api/accounts': `http://127.0.0.1:${accounts.server.address().port}` } } });
+  // This fixture uses a different Vite config; never invalidate a running desktop's dependency cache.
+  vite = await createServer({ configFile: false, cacheDir: join(directory, '.vite'), server: { host: '127.0.0.1', port: 5207, strictPort: true, proxy: { '/api/accounts': `http://127.0.0.1:${accounts.server.address().port}` } } });
   await vite.listen();
   browser = await chromium.launch({ headless: true });
   const contextA = await browser.newContext(), contextB = await browser.newContext();

@@ -13,6 +13,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test services/runtime/*.test.js tests/apps/*.test.ts",
+    "test:unit": "node --test services/runtime/*.test.js services/accounts/*.test.mjs services/browser/tests/*.test.mjs tests/apps/*.test.ts tests/accounts/*.test.ts tests/backup/*.test.ts tests/setup/*.test.ts tests/image-editor/*.test.ts tests/lightroom/*.test.ts tests/writer/*.test.ts tests/updates/*.test.mjs",
     "test:backup": "node --test tests/backup/*.test.ts",
     "test:desktop": "node tests/shell/desktop.mjs",
     "test:dock": "node tests/shell/dock.mjs",

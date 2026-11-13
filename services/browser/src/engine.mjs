@@ -185,11 +185,14 @@ export class BrowserEngine extends EventEmitter {
     session.activeTabId = tab.id; this.foreground = session.id; this.changed(session);
   }
   async closeTab(tab) {
-    // Chromium can acknowledge close during a cross-document swap before closing the
-    // replacement page. Wait for the actual target lifecycle and retry while it exists.
+    // Page.close respects beforeunload; retry while navigation replaces the active
+    // renderer. Target.closeTarget can acknowledge success here but strand the tab.
     const until = Date.now() + 5000;
     while (this.targets.has(tab.id) && Date.now() < until) {
-      await this.cdp.send('Target.closeTarget', { targetId: tab.id });
+      try { await this.send(tab, 'Page.close'); }
+      catch (error) {
+        if (this.targets.has(tab.id) && !/Not attached to an active page/.test(error.message)) throw error;
+      }
       if (!this.targets.has(tab.id)) return;
       await new Promise(resolve => {
         const done = event => { if (!event || event.targetId === tab.id) { clearTimeout(timer); this.cdp.off('Target.targetDestroyed', done); resolve(); } };

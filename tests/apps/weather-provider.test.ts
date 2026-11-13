@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createOpenMeteoProvider, DEFAULT_LOCATION, parseForecast } from '../../apps/web/src/apps/weather/provider.ts';
+import { validPreference } from '../../packages/contracts/src/preferences.ts';
 
 function forecast() {
   const days = Array.from({ length: 11 }, (_, index) => `2026-11-${String(13 + index).padStart(2, '0')}`);
@@ -62,4 +63,18 @@ test('weather requests ten days, 24 hours, and consistent imperial units', async
   assert.equal(requestURL?.searchParams.get('timezone'), 'auto');
   assert.ok(requestURL?.searchParams.get('current')?.includes('visibility'));
   assert.ok(requestURL?.searchParams.get('hourly')?.includes('precipitation_probability'));
+});
+
+test('geocoding results without optional metadata can be saved as the weather location', async () => {
+  const provider = createOpenMeteoProvider({ fetcher: (async () => Response.json({ results: [
+    { name: 'Equator', latitude: 0, longitude: 0 },
+    { name: 'Boulder', admin1: 'Colorado', latitude: 40.015, longitude: -105.2705, country: 'United States' },
+    { name: 'Denver', latitude: 39.7392, longitude: -104.9903, country: 'United States', timezone: 'America/Denver' },
+  ] })) as typeof fetch });
+  const locations = await provider.search('city');
+  assert.equal(locations.length, 3);
+  for (const location of locations) assert.equal(validPreference('weather.location', location), true);
+  assert.deepEqual(locations[0], { name: 'Equator', latitude: 0, longitude: 0 });
+  assert.equal(Object.hasOwn(locations[1], 'timezone'), false);
+  assert.equal(locations[2].timezone, 'America/Denver');
 });

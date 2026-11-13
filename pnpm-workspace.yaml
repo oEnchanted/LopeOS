@@ -2,3 +2,8 @@ packages:
   - apps/*
   - packages/*
   - services/*
+
+# Build the terminal's native addon during pnpm install. npm rebuild follows
+# pnpm's symlink and incorrectly runs node-pty's legacy TypeScript prepare step.
+onlyBuiltDependencies:
+  - node-pty
