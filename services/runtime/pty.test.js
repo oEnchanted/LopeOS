@@ -17,7 +17,10 @@ test('native sandbox-agent protocol and PTY really execute quoting, pipelines, P
   process.onData(data => { output = (output + data).slice(-131072); for (const resolve of watchers.splice(0)) resolve(); });
   const waitFor = async (pattern, timeout = 4000) => {
     const end = Date.now() + timeout;
-    while (!pattern.test(output)) {
+    // Newer Bash versions wrap prompts in Readline bracketed-paste toggles.
+    // Ignore that prompt decoration while retaining the raw transport output
+    // and all other controls, including the alternate-screen assertion below.
+    while (!pattern.test(output.replace(/\x1b\[\?2004[hl]\r?/g, ''))) {
       if (Date.now() > end) assert.fail(`PTY did not produce ${pattern}. Tail: ${output.slice(-1000)}`);
       await Promise.race([new Promise(resolve => watchers.push(resolve)), new Promise(resolve => setTimeout(resolve, 40))]);
     }
