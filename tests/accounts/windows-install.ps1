@@ -8,7 +8,8 @@ $parameters = @{ SourcePath = "$PSScriptRoot/../../services/accounts"; SiteOrigi
 try {
     & "$PSScriptRoot/../../services/accounts/windows/Install-LopeAccounts.ps1" @parameters
     $headers = @{ Origin = $parameters.SiteOrigin }
-    $credentials = @{ accountName = 'deployment_test'; displayName = 'Deployment Test'; password = 'temporary-test-password-123' } | ConvertTo-Json
+    $credentials = & node "$PSScriptRoot/encrypted-registration.mjs"
+    if ($LASTEXITCODE -ne 0) { throw 'Could not prepare encrypted test credentials.' }
     $created = Invoke-RestMethod http://127.0.0.1:14176/api/accounts/register -Method Post -ContentType application/json -Headers $headers -Body $credentials
     if (-not $created.account.id) { throw 'Account creation failed.' }
     & "$PSScriptRoot/../../services/accounts/windows/Install-LopeAccounts.ps1" @parameters

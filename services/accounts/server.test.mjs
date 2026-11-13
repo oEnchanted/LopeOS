@@ -4,6 +4,7 @@ import { mkdtemp, rm, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { EncryptedVault } from '../../apps/web/src/accounts/encryption.ts';
 import { createAccountServer } from './server.mjs';
 
 const origin = 'http://127.0.0.1:5173', password = 'a very strong test password';
@@ -12,14 +13,14 @@ async function fixture(t, options = {}) {
   const directory = await mkdtemp(join(tmpdir(), 'lope-accounts-'));
   let service, base;
   async function start() {
-    service = await createAccountServer({ directory, origins: [origin], ...options });
+    service = await createAccountServer({ directory, origins: [origin], allowLegacyRegistration: true, ...options });
     await new Promise(resolve => service.server.listen(0, '127.0.0.1', resolve));
     base = `http://127.0.0.1:${service.server.address().port}/api/accounts`;
   }
   await start();
   t.after(async () => { await service.dispose(); await rm(directory, { recursive: true, force: true }); });
   const call = async (path, { method = 'GET', data, cookie, headers = {} } = {}) => {
-    const response = await fetch(base + path, { method, headers: { ...(method === 'GET' ? {} : { origin }), ...(cookie ? { cookie } : {}), ...(data === undefined ? {} : { 'content-type': typeof data === 'string' ? 'application/octet-stream' : 'application/json' }), ...headers }, body: data === undefined ? undefined : typeof data === 'string' ? data : JSON.stringify(data) });
+    const response = await fetch(base + path, { method, headers: { ...(method === 'GET' ? {} : { origin }), ...(cookie ? { cookie } : {}), ...(data === undefined ? {} : { 'content-type': typeof data === 'string' || data instanceof Uint8Array ? 'application/octet-stream' : 'application/json' }), ...headers }, body: data === undefined ? undefined : typeof data === 'string' || data instanceof Uint8Array ? data : JSON.stringify(data) });
     const json = response.headers.get('content-type')?.startsWith('application/json') ? await response.json() : await response.text();
     return { status: response.status, body: json, cookie: response.headers.get('set-cookie')?.split(';')[0], setCookie: response.headers.get('set-cookie') };
   };
@@ -146,4 +147,84 @@ test('production requires HTTPS origins and issues Secure host-only cookies', as
   const f = await fixture(t, { production: true, origins: ['https://lope.example.com'] });
   const registration = await f.call('/register', { method: 'POST', data: { accountName: 'alice', displayName: 'Alice', password }, headers: { origin: 'https://lope.example.com' } });
   assert.equal(registration.status, 201); assert.match(registration.setCookie, /^__Host-lope-account=/); assert.match(registration.setCookie, /; Secure/); assert.match(registration.setCookie, /Path=\//);
+});
+
+test('recovery keys are hashed, single use, persistent, and revoke sessions without removing files', async t => {
+  const f = await fixture(t), registration = await f.register();
+  const key = registration.body.recoveryKey;
+  assert.match(key, /^[a-f0-9]{6}(-[a-f0-9]{6}){7}$/);
+  assert.equal((await readFile(join(f.directory, 'registry.json'), 'utf8')).includes(key.replaceAll('-', '')), false);
+  assert.equal('recoveryKey' in (await f.call('/session', { cookie: registration.cookie })).body, false);
+  const bytes = 'preserved file', hash = hashOf(bytes);
+  await f.call('/blobs/' + hash, { method: 'PUT', cookie: registration.cookie, data: bytes });
+  await f.restart();
+  const reset = data => f.call('/recover', { method: 'POST', data: { accountName: 'alice', password: 'replacement password phrase', recoveryKey: key, ...data } });
+  assert.equal((await reset({ recoveryKey: 'wrong' })).status, 401);
+  assert.equal((await reset({ password: 'short' })).status, 400);
+  const results = await Promise.all([reset({}), reset({})]);
+  assert.deepEqual(results.map(r => r.status).sort(), [200, 401]);
+  const replacement = results.find(r => r.status === 200).body.recoveryKey;
+  assert.notEqual(replacement, key);
+  assert.equal((await f.call('/session', { cookie: registration.cookie })).body.account, null);
+  assert.equal((await f.call('/login', { method: 'POST', data: { accountName: 'alice', password } })).status, 401);
+  const login = await f.call('/login', { method: 'POST', data: { accountName: 'alice', password: 'replacement password phrase' } });
+  assert.equal(login.status, 200);
+  assert.equal((await f.call('/blobs/' + hash, { cookie: login.cookie })).body, bytes);
+  assert.equal((await f.call('/recovery-key', { method: 'POST', cookie: login.cookie, data: { accountName: 'alice', password: 'wrong' } })).status, 401);
+  const rotated = await f.call('/recovery-key', { method: 'POST', cookie: login.cookie, data: { accountName: 'alice', password: 'replacement password phrase' } });
+  assert.equal(rotated.status, 200);
+  assert.equal((await reset({ recoveryKey: replacement })).status, 401);
+  await f.restart();
+  assert.equal((await reset({ recoveryKey: rotated.body.recoveryKey })).status, 200);
+});
+
+test('legacy encryption upgrade is atomic, rejects stale manifests, removes live plaintext, and blocks old clients', async t => {
+  const f = await fixture(t), registered = await f.register(), cookie = registered.cookie;
+  const content = 'old private content', oldHash = hashOf(content);
+  const plain = { key: 'drive:file:/LopeDrive/private.txt', hash: oldHash, size: Buffer.byteLength(content), modifiedAt: new Date().toISOString() };
+  assert.equal((await f.call('/blobs/' + oldHash, { method: 'PUT', cookie, data: content })).status, 200);
+  assert.equal((await f.call('/manifest', { method: 'PUT', cookie, data: { baseRevision: 0, entries: [plain] } })).status, 200);
+  const secured = await EncryptedVault.create('alice', password);
+  const cipher = await secured.vault.encryptBlob(plain, Buffer.from(content));
+  assert.equal((await f.call('/blobs/' + cipher.entry.hash, { method: 'PUT', cookie, data: cipher.bytes, headers: { 'X-Lope-Encryption-Upgrade': '1' } })).status, 200);
+  const entries = await secured.vault.encodeManifest([plain]);
+  const input = { accountName: 'alice', password, newPassword: secured.password, recoveryProof: secured.recoveryProof, vault: secured.envelope, baseRevision: 0, entries };
+  assert.equal((await f.call('/upgrade', { method: 'POST', data: input })).status, 409);
+  assert.equal((await f.call('/blobs/' + oldHash, { cookie })).body, content);
+  assert.equal((await f.call('/session', { cookie })).body.vault, null);
+  assert.equal((await f.call('/upgrade', { method: 'POST', data: { ...input, baseRevision: 1 } })).status, 200);
+  assert.equal((await f.call('/session', { cookie })).body.account, null);
+  const login = await f.call('/login', { method: 'POST', data: { accountName: 'alice', password: secured.password, credentialVersion: 1 } });
+  assert.equal(login.status, 200);
+  assert.equal((await f.call('/manifest', { cookie: login.cookie })).status, 409);
+  const headers = { 'X-Lope-Encryption': '1' };
+  const result = await f.call('/manifest', { cookie: login.cookie, headers });
+  assert.deepEqual(await secured.vault.decodeManifest(result.body.entries), [plain]);
+  assert.equal((await f.call('/blobs/' + oldHash, { cookie: login.cookie, headers })).status, 404);
+  assert.equal((await f.call('/manifest', { method: 'PUT', cookie: login.cookie, headers, data: { baseRevision: 2, entries: [plain] } })).status, 400);
+  const disk = await readFile(join(f.directory, 'registry.json'), 'utf8');
+  assert.equal(disk.includes('private.txt'), false); assert.equal(disk.includes(password), false);
+  await assert.rejects(readFile(join(f.directory, registered.body.account.id, 'manifest.json')), { code: 'ENOENT' });
+  await f.restart();
+  assert.deepEqual(await secured.vault.decodeManifest((await f.call('/manifest', { cookie: login.cookie, headers })).body.entries), [plain]);
+  secured.vault.destroy();
+});
+
+test('encrypted recovery refuses missing envelopes and cannot downgrade the account', async t => {
+  const f = await fixture(t), secured = await EncryptedVault.create('alice', password);
+  const created = await f.call('/register', { method: 'POST', data: { accountName: 'alice', displayName: 'Alice', password: secured.password, credentialVersion: 1, vault: secured.envelope, recoveryProof: secured.recoveryProof } });
+  assert.equal(created.status, 201); assert.equal(created.body.recoveryKey, undefined);
+  assert.equal((await f.call('/recover', { method: 'POST', data: { accountName: 'alice', password, recoveryKey: secured.recoveryProof } })).status, 400);
+  assert.equal((await f.call('/session', { cookie: created.cookie })).body.vault.id, secured.envelope.id);
+  const wrong = { ...secured.envelope, id: '0'.repeat(32) };
+  assert.equal((await f.call('/recover', { method: 'POST', data: { accountName: 'alice', password: secured.password, recoveryKey: secured.recoveryProof, recoveryProof: secured.recoveryProof, credentialVersion: 1, vault: wrong } })).status, 400);
+  assert.equal((await f.call('/recovery-info', { method: 'POST', data: { accountName: 'alice', recoveryProof: '0'.repeat(64) } })).status, 401);
+  const disk = await readFile(join(f.directory, 'registry.json'), 'utf8');
+  assert.equal(disk.includes(secured.recoveryProof), false); assert.equal(disk.includes(secured.password), false);
+  secured.vault.destroy();
+});
+
+test('new account registration requires encryption by default', async t => {
+  const f = await fixture(t, { allowLegacyRegistration: false });
+  assert.equal((await f.call('/register', { method: 'POST', data: { accountName: 'alice', displayName: 'Alice', password } })).status, 400);
 });

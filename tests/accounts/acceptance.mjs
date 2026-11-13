@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createServer } from 'vite';
@@ -10,7 +10,7 @@ const directory = await mkdtemp(join(tmpdir(), 'lope-accounts-browser-'));
 const origin = 'http://127.0.0.1:5207';
 let accounts, vite, browser;
 try {
-  accounts = await createAccountServer({ directory, origins: [origin] });
+  accounts = await createAccountServer({ directory, origins: [origin], allowLegacyRegistration: true });
   await new Promise(resolve => accounts.server.listen(0, '127.0.0.1', resolve));
   // This fixture uses a different Vite config; never invalidate a running desktop's dependency cache.
   vite = await createServer({ configFile: false, cacheDir: join(directory, '.vite'), server: { host: '127.0.0.1', port: 5207, strictPort: true, proxy: { '/api/accounts': `http://127.0.0.1:${accounts.server.address().port}` } } });
@@ -20,6 +20,13 @@ try {
   async function open(context) {
     const page = await context.newPage();
     await page.route('**/api/**', route => route.request().url().includes('/api/accounts/') ? route.continue() : route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'UNAVAILABLE', message: 'Workspace offline in account test' } }) }));
+    await page.addInitScript(() => { window.readTestManifest = async () => {
+      const { EncryptedVault } = await import('/apps/web/src/accounts/encryption.ts');
+      const session = await (await fetch('/api/accounts/session')).json();
+      const vault = await EncryptedVault.unlock(session.vault, 'cloudtester', 'correct-horse-battery');
+      try { const manifest = await (await fetch('/api/accounts/manifest', { headers: { 'X-Lope-Encryption': '1' } })).json(); return { ...manifest, entries: await vault.decodeManifest(manifest.entries) }; }
+      finally { vault.destroy(); }
+    }; });
     await page.goto(origin + '/tests/accounts/harness.html');
     await page.waitForFunction(() => !!window.accountTest);
     return page;
@@ -70,8 +77,8 @@ try {
   assert.deepEqual(local, { stale: true, winners: 1, trashed: 1, restored: 'guest edits' });
   console.log('PASS guest persistence, version conflicts, concurrent writes, recoverable Trash');
 
-  await a.evaluate(async () => { const { cloudAccount } = window.accountTest; await cloudAccount.register({ displayName: 'Cloud Tester', accountName: 'cloudtester', password: 'correct-horse-battery' }); await cloudAccount.syncNow(); });
-  const manifest = await a.evaluate(async () => (await fetch('/api/accounts/manifest')).json());
+  const recoveryKey = await a.evaluate(async () => { const { cloudAccount } = window.accountTest; const key = await cloudAccount.register({ displayName: 'Cloud Tester', accountName: 'cloudtester', password: 'correct-horse-battery' }); await cloudAccount.syncNow(); return key; });
+  const manifest = await a.evaluate(async () => window.readTestManifest());
   assert.ok(manifest.entries.some(entry => entry.key === 'drive:file:/LopeDrive/Documents/hello.txt'));
   assert.ok(!manifest.entries.some(entry => entry.key.includes('lope.accounts') || entry.key.includes('password')));
   assert.equal(manifest.quotaBytes, 1_000_000_000);
@@ -156,11 +163,11 @@ try {
   await b.evaluate(() => window.accountTest.cloudAccount.syncNow());
   assert.equal(await b.evaluate(async () => (await window.accountTest.drive.read('/LopeDrive/offline.txt')).content), 'offline survives');
   await a.reload(); await a.waitForFunction(() => !!window.accountTest);
-  await a.evaluate(async () => { await window.accountTest.cloudAccount.initialize(); await window.accountTest.cloudAccount.syncNow(); });
+  await a.evaluate(async () => { await window.accountTest.cloudAccount.initialize(); if (window.accountTest.cloudAccount.getSnapshot().encryption !== 'locked') throw new Error('Reload must lock encryption'); await window.accountTest.cloudAccount.unlock('correct-horse-battery'); await window.accountTest.cloudAccount.syncNow(); });
   assert.equal(await a.evaluate(() => window.accountTest.cloudAccount.getSnapshot().account.accountName), 'cloudtester');
   await a.evaluate(() => window.accountTest.drive.write('/LopeDrive/automatic.txt', 'saved without pressing sync'));
   await a.waitForFunction(async () => {
-    const manifest = await (await fetch('/api/accounts/manifest')).json();
+    const manifest = await window.readTestManifest();
     return manifest.entries.some(entry => entry.key === 'drive:file:/LopeDrive/automatic.txt');
   }, undefined, { timeout: 15_000 });
   console.log('PASS file changes automatically upload without a manual sync');
@@ -179,8 +186,49 @@ try {
   await a.waitForFunction(() => window.accountTest.cloudAccount.getSnapshot().account === null, undefined, { timeout: 10_000 });
   assert.equal(await a.evaluate(() => localStorage.getItem('lope.cloud.signout-pending.v1')), null);
   assert.equal(await a.evaluate(async () => (await fetch('/api/accounts/session')).json().then(value => value.account)), null);
-  assert.equal(await b.evaluate(async () => (await fetch('/api/accounts/manifest')).json().then(value => value.entries.some(entry => entry.key === 'drive:file:/LopeDrive/signed-out-local.txt'))), false);
+  assert.equal(await b.evaluate(async () => window.readTestManifest().then(value => value.entries.some(entry => entry.key === 'drive:file:/LopeDrive/signed-out-local.txt'))), false);
   console.log('PASS failed offline signout pauses uploads and revokes the session on reconnect');
+
+  const disk = await readFile(join(directory, 'registry.json'), 'utf8');
+  for (const secret of ['correct-horse-battery', recoveryKey, 'hello.txt', 'guest edits', 'offline survives']) assert.equal(disk.includes(secret), false);
+  const registry = JSON.parse(disk), account = registry.accounts.find(a => a.accountName === 'cloudtester');
+  for (const name of await readdir(join(directory, account.id, 'blobs'))) {
+    const data = await readFile(join(directory, account.id, 'blobs', name));
+    assert.equal(data.includes(Buffer.from('offline survives')), false);
+  }
+  const replacement = await a.evaluate(async recoveryKey => window.accountTest.cloudAccount.recover('cloudtester', recoveryKey, 'a new secure password phrase'), recoveryKey);
+  assert.ok(replacement.recoveryKey); assert.notEqual(replacement.recoveryKey, recoveryKey);
+  await a.evaluate(() => window.accountTest.cloudAccount.signIn('cloudtester', 'a new secure password phrase'));
+  await a.evaluate(() => window.accountTest.cloudAccount.syncNow());
+  assert.equal(await a.evaluate(async () => (await window.accountTest.drive.read('/LopeDrive/offline.txt')).content), 'offline survives');
+  const revoked = await b.evaluate(async () => (await fetch('/api/accounts/session')).json()); assert.equal(revoked.account, null);
+  const replay = await a.evaluate(async recoveryKey => { try { await window.accountTest.cloudAccount.recover('cloudtester', recoveryKey, 'another new secure phrase'); return true; } catch { return false; } }, recoveryKey); assert.equal(replay, false);
+  console.log('PASS server stores ciphertext only; recovery preserves files and revokes sessions and old recovery key');
+  const wrongPassword = await a.evaluate(async () => { try { await window.accountTest.cloudAccount.replaceRecoveryKey('wrong password'); return true; } catch { return false; } }); assert.equal(wrongPassword, false);
+  const rotated = await a.evaluate(() => window.accountTest.cloudAccount.replaceRecoveryKey('a new secure password phrase'));
+  assert.notEqual(rotated.recoveryKey, replacement.recoveryKey);
+  const oldKey = await a.evaluate(async key => { try { await window.accountTest.cloudAccount.recover('cloudtester', key, 'yet another secure password'); return true; } catch { return false; } }, replacement.recoveryKey); assert.equal(oldKey, false);
+  await a.evaluate(() => window.accountTest.cloudAccount.syncNow());
+  console.log('PASS recovery-key rotation requires current password and invalidates the previous recovery key');
+
+
+  const contextC = await browser.newContext(), c = await open(contextC);
+  const upgraded = await c.evaluate(async () => {
+    const post = async (path, data, method = 'POST') => {
+      const res = await fetch('/api/accounts' + path, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      if (!res.ok) throw new Error(await res.text()); return res.json();
+    };
+    await post('/register', { accountName: 'legacyuser', displayName: 'Legacy user', password: 'legacy password phrase' });
+    const content = new TextEncoder().encode('legacy cloud file survives encryption');
+    const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', content)), n => n.toString(16).padStart(2, '0')).join('');
+    await fetch('/api/accounts/blobs/' + hash, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: content });
+    await post('/manifest', { baseRevision: 0, entries: [{ key: 'drive:file:/LopeDrive/legacy.txt', hash, size: content.length, modifiedAt: new Date().toISOString() }] }, 'PUT');
+    const key = await window.accountTest.cloudAccount.upgradeEncryption('legacyuser', 'legacy password phrase', 'new private password phrase');
+    await window.accountTest.cloudAccount.syncNow();
+    return { key: !!key.recoveryKey, encryption: window.accountTest.cloudAccount.getSnapshot().encryption, content: (await window.accountTest.drive.read('/LopeDrive/legacy.txt')).content };
+  });
+  assert.deepEqual(upgraded, { key: true, encryption: 'unlocked', content: 'legacy cloud file survives encryption' });
+  console.log('PASS existing account migration encrypts remote files and resumes encrypted sync without data loss');
 
 } finally {
   await browser?.close();

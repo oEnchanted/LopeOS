@@ -72,17 +72,16 @@ All endpoints are below `/api/accounts`. Mutations require an Origin matching th
 configured website. Auth/manifest mutations use `application/json`. Sessions use
 random opaque 256-bit tokens in HttpOnly, SameSite=Lax cookies; production adds
 Secure and the `__Host-` prefix. Only SHA-256 token hashes are stored, with a 30-day
-expiry and at most 20 active sessions per account. Passwords use salted scrypt
-(N=32768, r=8, p=1) and constant-time verification. Passwords must have 12–1,024
-characters. Account names use 1–32 lower-case ASCII letters, numbers, underscores,
+expiry and at most 20 active sessions per account. Sign-in credentials use salted scrypt
+(N=32768, r=8, p=1) and constant-time verification. The browser requires passwords of 12–1,024 characters and sends a separate derived credential for encrypted accounts. Account names use 1–32 lower-case ASCII letters, numbers, underscores,
 or hyphens, beginning with a letter; system names are reserved. Display names have
 1–64 characters. Registration and login are rate limited by account name and IP.
 
 | Method and route | Request / response |
 | --- | --- |
-| POST `/register` | `{accountName,displayName,password}` → authenticated session |
-| POST `/login` | `{accountName,password}` → authenticated session |
-| GET `/session` | `{account:null\|{id,accountName,displayName,createdAt},quotaBytes,usedBytes}` |
+| POST `/register` | `{accountName,displayName,password,credentialVersion:1,vault,recoveryProof}` → encrypted session |
+| POST `/login` | `{accountName,password,credentialVersion:1}` → encrypted session (`password` is a derived credential) |
+| GET `/session` | `{account:null\|{id,accountName,displayName,createdAt},vault,quotaBytes,usedBytes}` |
 | POST `/logout` | `{}` → revokes current session and clears its cookie |
 | GET `/manifest` | `{revision,entries,quotaBytes,usedBytes}` |
 | PUT `/blobs/:hash` | Raw bytes; verifies lower-case SHA-256 hex; returns `{hash,size,quotaBytes,usedBytes}` |
@@ -91,8 +90,8 @@ or hyphens, beginning with a letter; system names are reserved. Display names ha
 | POST `/cleanup` | `{}` → deletes unreferenced staged uploads; never published data |
 
 Each manifest entry is `{key,hash,size,modifiedAt}`, where `modifiedAt` is an ISO
-timestamp and key is an opaque, unique string (up to 2,048 characters, no control
-characters). Keys never become filesystem paths. Each blob is limited to 64 MiB;
+timestamp and key is an opaque, unique string (up to 16,384 characters for encrypted metadata, no control
+characters). Keys never become filesystem paths. Each ciphertext blob is limited to 64 MiB + 28 bytes;
 larger user files must be chunked by the client. Manifest JSON is limited to 24 MiB
 and 100,000 entries. Multiple entries can reference the same blob without paying
 for duplicate bytes. Account data is isolated by server-owned UUID directories.
@@ -116,7 +115,51 @@ version needs free quota for the new bytes until commit; at capacity, first remo
 unneeded synced items or clear abandoned staging. No upload can exceed the quota,
 including simultaneous requests.
 
-The initial service uses username/password sign-in without email or password
-recovery. It does not promise end-to-end encryption; configure disk encryption and
-server backups on the host. Authentication secrets and temporary runtime identities
-must never be included in workspace sync records.
+New accounts require end-to-end encryption. Browser code uses a random 256-bit
+master key, AES-256-GCM with random 96-bit nonces, and separately derived content,
+metadata, sign-in, password-wrapping, and recovery-wrapping keys. Passwords use
+PBKDF2-HMAC-SHA256 (600,000 iterations) before HKDF domain separation. Server scrypt
+hashes the separate sign-in credential, never the encryption password. Recovery
+keys are generated in the browser; the server stores only a hash of their separate
+authentication proof and an encrypted master-key envelope.
+
+Encrypted storage requests require `X-Lope-Encryption: 1`. Encrypted metadata uses
+`e2ee:` keys; plaintext names, plaintext hashes and modification times are inside
+authenticated ciphertext. The server sees ciphertext sizes, counts and access
+patterns, plus account/display names. Local browser data remains unencrypted.
+
+Recovery endpoints: `POST /recovery-info` accepts `{accountName,recoveryProof}` and
+returns the encrypted envelope after credential verification. `POST /recover`
+accepts `{accountName,password,credentialVersion:1,recoveryKey,recoveryProof,vault}`:
+`recoveryKey` here is the OLD derived authentication proof, `recoveryProof` is its
+replacement, and `password` is the new derived sign-in credential. It atomically
+replaces envelopes and credentials and revokes all sessions. `POST /recovery-key`
+requires a session and current derived password, and rotates the recovery envelope
+and proof. The raw recovery key never leaves the browser.
+
+Legacy accounts require explicit migration with a distinct NEW password; the old
+password goes to the legacy login endpoint once, but the new encryption password
+never does. `/upgrade` atomically commits new credentials, key envelopes, and the
+encrypted manifest only after every encrypted blob exists and the old manifest
+revision still matches. A stale revision preserves the original account. Temporary
+migration uploads may use up to twice the quota plus bounded per-item overhead;
+the committed encrypted manifest must fit the normal quota. Live plaintext blobs
+and the old manifest are removed after commit; startup completes this cleanup if
+interrupted. Old external backups are outside this cleanup and may contain
+plaintext. The `allowLegacyRegistration` server option exists solely for migration
+test fixtures; normal server startup rejects unencrypted new registrations.
+
+Encrypted manifests live in the account registry to make migration and credential
+changes crash-atomic. Back up the registry and blob directories together. Never
+restore an older server version for an encrypted account: older implementations do
+not understand the authoritative encrypted manifest. Browser keys remain in memory
+only; refresh locks cloud sync until the user unlocks it again. Losing both password
+and recovery key makes cloud data unrecoverable by administrators.
+
+See [the UI integration contract](../../docs/accounts/encryption-ui-contract.md).
+This implementation has not had an independent cryptographic audit. Encryption
+does not protect a compromised/unlocked browser, a maliciously modified application
+delivered by the host, or guarantee freshness against a server replaying older valid
+ciphertext. Keep independent backups. Sources for primitives and password work
+factor: [Web Crypto](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey)
+and [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).

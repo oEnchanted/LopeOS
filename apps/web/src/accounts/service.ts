@@ -1,3 +1,4 @@
+import { EncryptedVault, credentials, recoveryCredentials, type VaultEnvelope } from './encryption';
 import { useSyncExternalStore } from 'react';
 import { preferences } from '../../../../packages/sdk/src/preferences';
 import { captureData, digest, applyRecord, conflictKey, validateLogicalKey, type LocalItem } from './data';
@@ -5,6 +6,7 @@ import { EMPTY_HASH, entryMap, manifestsEqual, mergeEntries, normalizeFileTopolo
 
 export interface CloudUser { id: string; accountName: string; displayName: string; createdAt: string }
 export interface CloudAccountState {
+  encryption: 'none' | 'locked' | 'unlocked';
   account: CloudUser | null;
   status: 'guest' | 'idle' | 'syncing' | 'offline' | 'error';
   error: string | null;
@@ -13,11 +15,11 @@ export interface CloudAccountState {
   currentFile: string | null; message: string | null; conflicts: number;
   workspaceAvailable: boolean; pendingChanges: boolean;
 }
-interface Session { account: CloudUser | null; quotaBytes: number; usedBytes: number }
+interface Session { vault?: VaultEnvelope | null; recoveryKey?: string; account: CloudUser | null; quotaBytes: number; usedBytes: number }
 interface Manifest { revision: number; entries: SyncEntry[]; quotaBytes: number; usedBytes: number }
 interface Baseline { id: string; entries: SyncEntry[]; lastSyncedAt: string | null }
 const OWNER_KEY = 'lope.cloud.owner.v1', SIGNOUT_KEY = 'lope.cloud.signout-pending.v1', BASE_DB = 'lope.cloud.sync.v1';
-const initialState: CloudAccountState = { account: null, status: 'guest', error: null, quotaBytes: 1_000_000_000, usedBytes: 0, totalBytes: 0, transferredBytes: 0, etaSeconds: null, lastSyncedAt: null, currentFile: null, message: null, conflicts: 0, workspaceAvailable: true, pendingChanges: false };
+const initialState: CloudAccountState = { encryption: 'none', account: null, status: 'guest', error: null, quotaBytes: 1_000_000_000, usedBytes: 0, totalBytes: 0, transferredBytes: 0, etaSeconds: null, lastSyncedAt: null, currentFile: null, message: null, conflicts: 0, workspaceAvailable: true, pendingChanges: false };
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : 'Account sync is temporarily unavailable.';
 class AccountError extends Error { constructor(message: string, public status = 0, public code = '') { super(message); } }
 async function baselineDB(): Promise<IDBDatabase> {
@@ -49,6 +51,9 @@ function validateSession(value: Session): Session {
 
 export class CloudAccountService {
   private state = initialState;
+  private vault: EncryptedVault | null = null;
+  private envelope: VaultEnvelope | null = null;
+  private upgrading = false;
   private listeners = new Set<() => void>();
   private initialized: Promise<void> | null = null;
   private generation = 0;
@@ -74,7 +79,7 @@ export class CloudAccountService {
     const controller = new AbortController(); this.controllers.add(controller);
     const timeout = setTimeout(() => controller.abort(), 20_000);
     try {
-      const res = await fetch('/api/accounts' + path, { ...init, credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: { ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...(this.state.account && /^\/(manifest|blobs|cleanup)/.test(path) ? { 'X-Lope-Account': this.state.account.id } : {}), ...init.headers } });
+      const res = await fetch('/api/accounts' + path, { ...init, credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: { ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...(this.envelope ? { 'X-Lope-Encryption': '1' } : {}), ...(this.state.account && /^\/(manifest|blobs|cleanup)/.test(path) ? { 'X-Lope-Account': this.state.account.id } : {}), ...init.headers } });
       const payload = await res.json().catch(() => { throw new AccountError('The account service is unavailable. Your files remain on this device.', res.status); });
       if (!res.ok) throw new AccountError(payload.error?.message || 'The account request failed.', res.status, payload.error?.code);
       return payload as T;
@@ -91,10 +96,13 @@ export class CloudAccountService {
     this.update({ transferredBytes, etaSeconds: rate > 0 ? Math.ceil(Math.max(0, this.state.totalBytes - transferredBytes) / rate) : null });
   }
   private async upload(entry: SyncEntry, bytes: Uint8Array): Promise<void> {
+    const plainSize = entry.size;
+    if (this.vault) { const encrypted = await this.vault.encryptBlob(entry, bytes); entry = encrypted.entry; bytes = encrypted.bytes; }
+
     await new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest(); this.xhrs.add(xhr);
       const finish = (error?: Error) => { this.xhrs.delete(xhr); error ? reject(error) : resolve(); };
-      xhr.open('PUT', '/api/accounts/blobs/' + entry.hash); xhr.setRequestHeader('Content-Type', 'application/octet-stream'); if (this.state.account) xhr.setRequestHeader('X-Lope-Account', this.state.account.id); xhr.timeout = 120_000;
+      xhr.open('PUT', '/api/accounts/blobs/' + entry.hash); xhr.setRequestHeader('Content-Type', 'application/octet-stream'); if (this.envelope) xhr.setRequestHeader('X-Lope-Encryption', '1'); if (this.upgrading) xhr.setRequestHeader('X-Lope-Encryption-Upgrade', '1'); if (this.state.account) xhr.setRequestHeader('X-Lope-Account', this.state.account.id); xhr.timeout = 120_000;
       xhr.upload.onprogress = event => this.progress(Math.min(entry.size, event.loaded));
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) finish();
@@ -105,13 +113,16 @@ export class CloudAccountService {
       xhr.ontimeout = () => finish(new AccountError('Upload timed out. Your local copy is safe and will retry.'));
       xhr.send(bytes.slice().buffer);
     });
-    this.completedBytes += entry.size; this.progress(0);
+    this.completedBytes += plainSize; this.progress(0);
   }
   private async download(entry: SyncEntry): Promise<Uint8Array> {
+    const plainEntry = entry;
+    const decryptingVault = this.vault;
+    if (decryptingVault) entry = decryptingVault.remoteEntry(entry);
     const controller = new AbortController(); this.controllers.add(controller);
     const timeout = setTimeout(() => controller.abort(), 120_000);
     try {
-      const response = await fetch('/api/accounts/blobs/' + entry.hash, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: this.state.account ? { 'X-Lope-Account': this.state.account.id } : {} });
+      const response = await fetch('/api/accounts/blobs/' + entry.hash, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: { ...(this.state.account ? { 'X-Lope-Account': this.state.account.id } : {}), ...(this.envelope ? { 'X-Lope-Encryption': '1' } : {}) } });
       if (!response.ok) { const error = await response.json().catch(() => null); throw new AccountError(error?.error?.message || 'A cloud file could not be downloaded.', response.status, error?.error?.code); }
       if (!response.body) throw new Error('The account server returned an empty download.');
       const reader = response.body.getReader(), chunks: Uint8Array[] = []; let count = 0;
@@ -125,7 +136,7 @@ export class CloudAccountService {
       const bytes = new Uint8Array(count); let offset = 0;
       for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
       if (await digest(bytes) !== entry.hash) throw new Error('A cloud file failed its integrity check. Your local copy has not been replaced.');
-      this.completedBytes += entry.size; this.progress(0); return bytes;
+      this.completedBytes += plainEntry.size; this.progress(0); return decryptingVault ? await decryptingVault.decryptBlob(plainEntry, bytes) : bytes;
     } finally { clearTimeout(timeout); this.controllers.delete(controller); }
   }
   initialize(): Promise<void> {
@@ -134,7 +145,7 @@ export class CloudAccountService {
       const changed = () => { if (!this.applying && this.state.account) { this.update({ pendingChanges: true }); this.schedule(1800); } };
       window.addEventListener('lope:preferences-updated', changed);
       window.addEventListener('lope:files-changed', changed);
-      window.addEventListener('storage', event => { if (event.key === 'lope.reset.pending.v1' && event.newValue) { void this.suspendForReset().catch(() => {}); return; } if (event.key === OWNER_KEY || event.key === SIGNOUT_KEY) { this.invalidate(); void this.resume(); } else if (event.key?.startsWith('lope.') && !event.key.startsWith('lope.cloud.')) changed(); });
+      window.addEventListener('storage', event => { if (event.key === 'lope.reset.pending.v1' && event.newValue) { void this.suspendForReset().catch(() => {}); return; } if (event.key === OWNER_KEY || event.key === SIGNOUT_KEY) { this.invalidate(); this.vault?.destroy(); this.vault = null; void this.resume(); } else if (event.key?.startsWith('lope.') && !event.key.startsWith('lope.cloud.')) changed(); });
       window.addEventListener('online', () => { void this.resume(); });
       window.addEventListener('offline', () => { if (this.state.account) this.update({ status: 'offline', error: 'You’re offline. Changes will sync when you reconnect.' }); });
       window.addEventListener('lope:reset-requested', () => { void this.suspendForReset().catch(() => {}); });
@@ -148,10 +159,10 @@ export class CloudAccountService {
     if (this.authBusy || this.resetting) return;
     const generation = this.generation;
     try {
-      if (localStorage.getItem(SIGNOUT_KEY)) { await this.api('/logout', { method: 'POST', body: '{}' }); localStorage.removeItem(SIGNOUT_KEY); this.update({ ...initialState }); return; }
+      if (localStorage.getItem(SIGNOUT_KEY)) { await this.api('/logout', { method: 'POST', body: '{}' }); localStorage.removeItem(SIGNOUT_KEY); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState }); return; }
       const session = validateSession(await this.api<Session>('/session'));
       if (this.resetting || this.authBusy || generation !== this.generation) return;
-      if (!session.account) { this.invalidate(); this.update({ ...initialState }); return; }
+      if (!session.account) { this.invalidate(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState }); return; }
       this.accept(session);
       this.schedule(50);
     } catch (error) { if (generation === this.generation && !this.resetting) this.update({ status: this.state.account ? 'offline' : 'guest', error: errorMessage(error) }); }
@@ -161,11 +172,23 @@ export class CloudAccountService {
     const owner = localStorage.getItem(OWNER_KEY);
     if (owner && owner !== session.account.id) throw new AccountError('This device still contains another LopeOS account’s data. Use a separate browser profile, or reset this device in Settings before signing into a different account.', 409, 'DEVICE_OWNER');
     localStorage.setItem(OWNER_KEY, session.account.id);
-    this.update({ account: session.account, status: 'idle', error: null, quotaBytes: session.quotaBytes, usedBytes: session.usedBytes, pendingChanges: true });
+    this.envelope = session.vault ?? null;
+    if (!this.envelope || this.vault?.id !== this.envelope.id) { this.vault?.destroy(); this.vault = null; }
+    this.update({ encryption: this.envelope ? this.vault ? 'unlocked' : 'locked' : 'none', account: session.account, status: 'idle', error: null, quotaBytes: session.quotaBytes, usedBytes: session.usedBytes, pendingChanges: true });
   }
-  async register(input: { accountName: string; displayName: string; password: string }): Promise<void> { if (localStorage.getItem(OWNER_KEY)) throw new Error('This device already contains account data. Sign back into that account, or use a separate browser profile to create a different account.'); return this.authenticate('/register', input); }
-  async signIn(accountName: string, password: string): Promise<void> { return this.authenticate('/login', { accountName, password }); }
-  private async authenticate(path: string, input: unknown): Promise<void> {
+  async register(input: { accountName: string; displayName: string; password: string }): Promise<string> {
+    if (localStorage.getItem(OWNER_KEY)) throw new Error('This device already contains account data. Use a separate browser profile for another account.');
+    const created = await EncryptedVault.create(input.accountName, input.password);
+    try {
+      await this.authenticate('/register', { ...input, password: created.password, credentialVersion: 1, vault: created.envelope, recoveryProof: created.recoveryProof }, created.vault);
+      return created.recoveryKey;
+    } catch (error) { created.vault.destroy(); throw error; }
+  }
+  async signIn(accountName: string, password: string): Promise<void> {
+    const auth = await credentials(accountName, password); auth.wrapping.fill(0);
+    await this.authenticate('/login', { accountName, password: auth.password, credentialVersion: 1 }, undefined, password);
+  }
+  private async authenticate(path: string, input: unknown, vault?: EncryptedVault, password?: string): Promise<void> {
     if (this.authBusy) throw new Error('An account request is already in progress.');
     if (this.state.account) throw new Error('Sign out before signing into an account.');
     this.authBusy = true; this.invalidate();
@@ -173,17 +196,80 @@ export class CloudAccountService {
       await lock('lope.account.authentication', async () => {
         if (localStorage.getItem(SIGNOUT_KEY)) { await this.api('/logout', { method: 'POST', body: '{}' }); localStorage.removeItem(SIGNOUT_KEY); }
         const session = validateSession(await this.api<Session>(path, { method: 'POST', body: JSON.stringify(input) }));
-        try { this.accept(session); }
-        catch (error) { await this.api('/logout', { method: 'POST', body: '{}' }).catch(() => {}); throw error; }
+        try {
+          if (!session.vault) throw new Error('The server did not enable end-to-end encryption. Update the account service.');
+          this.vault = vault ?? await EncryptedVault.unlock(session.vault, session.account!.accountName, password!);
+          this.accept(session);
+        } catch (error) { this.vault?.destroy(); this.vault = null; await this.api('/logout', { method: 'POST', body: '{}' }).catch(() => {}); throw error; }
       });
       window.dispatchEvent(new Event('lope:cloud-signed-in'));
-    } catch (error) { this.update({ status: 'guest', error: errorMessage(error) }); throw error; }
+    } catch (error) { this.update({ ...initialState, error: errorMessage(error) }); throw error; }
     finally { this.authBusy = false; }
     this.schedule(50);
+  }
+  async unlock(password: string) {
+    if (!this.state.account || !this.envelope) throw new Error('Sign in to your encrypted account first.');
+    const generation = this.generation, accountId = this.state.account.id;
+    const session = validateSession(await this.api<Session>('/session'));
+    if (generation !== this.generation || session.account?.id !== accountId || !session.vault) throw new Error('Your session changed. Sign in again.');
+    const vault = await EncryptedVault.unlock(session.vault, session.account.accountName, password);
+    if (generation !== this.generation || this.state.account?.id !== accountId) { vault.destroy(); throw new Error('Your session changed. Sign in again.'); }
+    this.vault?.destroy(); this.vault = vault; this.accept(session); this.schedule(0);
+  }
+  async recover(accountName: string, recoveryKey: string, password: string) {
+    if (password.length < 12) throw new Error('Use a password with at least 12 characters.');
+    const proof = await recoveryCredentials(recoveryKey); proof.wrapping.fill(0);
+    const { vault: envelope } = await this.api<{ vault: VaultEnvelope }>('/recovery-info', { method: 'POST', body: JSON.stringify({ accountName, recoveryProof: proof.proof }) });
+    const vault = await EncryptedVault.recover(envelope, recoveryKey);
+    try {
+      const secured = await vault.rewrap(accountName, password);
+      await this.api('/recover', { method: 'POST', body: JSON.stringify({ accountName, password: secured.password, credentialVersion: 1, recoveryKey: proof.proof, recoveryProof: secured.recoveryProof, vault: secured.envelope }) });
+      return { recoveryKey: secured.recoveryKey };
+    } finally { vault.destroy(); }
+  }
+  async replaceRecoveryKey(password: string) {
+    if (!this.state.account || !this.envelope) throw new Error('Enable encryption first.');
+    const vault = await EncryptedVault.unlock(this.envelope, this.state.account.accountName, password);
+    try {
+      const secured = await vault.rewrap(this.state.account.accountName, password);
+      await this.api('/recovery-key', { method: 'POST', body: JSON.stringify({ accountName: this.state.account.accountName, password: secured.password, credentialVersion: 1, recoveryProof: secured.recoveryProof, vault: secured.envelope }) });
+      this.envelope = secured.envelope;
+      return { recoveryKey: secured.recoveryKey };
+    } finally { vault.destroy(); }
+  }
+  /** Explicit legacy upgrade: the old password is sent once to authenticate the old account. */
+  async upgradeEncryption(accountName: string, password: string, newPassword: string): Promise<{ recoveryKey: string }> {
+    if (!newPassword || newPassword.length < 12 || newPassword === password) throw new Error('Choose a new password of at least 12 characters, different from your old password, so the legacy server never receives your encryption password.');
+    if (this.authBusy) throw new Error('Wait for the current account request.');
+    this.authBusy = true; this.invalidate();
+    let created: Awaited<ReturnType<typeof EncryptedVault.create>> | undefined;
+    try {
+      return await lock('lope.account.authentication', () => lock('lope.account.sync', async () => {
+        const session = validateSession(await this.api<Session>('/login', { method: 'POST', body: JSON.stringify({ accountName, password }) }));
+        if (session.vault) throw new Error('This account is already encrypted. Sign in normally.');
+        this.accept(session);
+        const manifest = await this.api<Manifest>('/manifest');
+        created = await EncryptedVault.create(accountName, newPassword);
+        this.upgrading = true;
+        for (const entry of [...new Map(manifest.entries.map(entry => [entry.hash, entry])).values()]) {
+          this.update({ message: 'Encrypting existing cloud files…', currentFile: entry.key });
+          const plain = await this.download(entry);
+          const encrypted = await created.vault.encryptBlob(entry, plain);
+          await this.upload(encrypted.entry, encrypted.bytes);
+        }
+        const entries = await created.vault.encodeManifest(manifest.entries);
+        await this.api('/upgrade', { method: 'POST', body: JSON.stringify({ accountName, password, newPassword: created.password, vault: created.envelope, recoveryProof: created.recoveryProof, baseRevision: manifest.revision, entries }) });
+        const signedIn = validateSession(await this.api<Session>('/login', { method: 'POST', body: JSON.stringify({ accountName, password: created.password, credentialVersion: 1 }) }));
+        this.vault = created.vault; this.accept(signedIn);
+        return { recoveryKey: created.recoveryKey };
+      }));
+    } catch (error) { created?.vault.destroy(); this.update({ error: errorMessage(error) }); throw error; }
+    finally { this.upgrading = false; this.authBusy = false; this.schedule(50); }
   }
   async signOut(): Promise<void> {
     if (!this.state.account && !localStorage.getItem(OWNER_KEY) && !localStorage.getItem(SIGNOUT_KEY)) { this.invalidate(); this.update({ ...initialState }); return; }
     if (this.authBusy) throw new Error('Wait for the current account request to finish.');
+    this.vault?.destroy(); this.vault = null; this.envelope = null;
     localStorage.setItem(SIGNOUT_KEY, '1');
     this.authBusy = true; this.invalidate();
     try {
@@ -195,16 +281,17 @@ export class CloudAccountService {
     finally { this.authBusy = false; }
   }
   async suspendForReset(): Promise<void> {
+    this.vault?.destroy(); this.vault = null; this.envelope = null;
     this.resetting = true; this.invalidate(); clearInterval(this.interval);
     if (this.state.account || localStorage.getItem(OWNER_KEY)) await this.api('/logout', { method: 'POST', body: '{}' });
     this.update({ ...initialState });
   }
   private schedule(delay: number) {
-    if (!this.state.account || this.resetting || this.authBusy || localStorage.getItem(SIGNOUT_KEY)) return;
+    if (!this.state.account || this.resetting || this.authBusy || this.state.encryption !== 'unlocked' || localStorage.getItem(SIGNOUT_KEY)) return;
     clearTimeout(this.timer); this.timer = setTimeout(() => { void this.syncNow().catch(() => {}); }, delay);
   }
   async syncNow(): Promise<void> {
-    if (!this.state.account || this.resetting || this.authBusy || localStorage.getItem(SIGNOUT_KEY)) return;
+    if (!this.state.account || this.resetting || this.authBusy || this.state.encryption !== 'unlocked' || localStorage.getItem(SIGNOUT_KEY)) return;
     if (this.active) return this.active;
     const id = this.state.account.id, generation = this.generation;
     this.active = lock('lope.account.sync', () => this.sync(id, generation));
@@ -217,9 +304,12 @@ export class CloudAccountService {
       if (!navigator.onLine) throw new AccountError('You’re offline. Changes will sync when you reconnect.');
       this.update({ status: 'syncing', error: null, currentFile: null, totalBytes: 0, transferredBytes: 0, etaSeconds: null, message: 'Checking account data…' });
       const session = validateSession(await this.api<Session>('/session')); check();
-      if (session.account?.id !== id) { this.invalidate(); this.update({ ...initialState, error: 'Your account session changed. Sign in again to resume syncing.' }); return; }
+      if (session.account?.id !== id) { this.invalidate(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState, error: 'Your account session changed. Sign in again to resume syncing.' }); return; }
       const saved = await readBaseline(id), base = entryMap(saved.entries);
-      const manifest = await this.api<Manifest>('/manifest'); check();
+      if (!this.vault || !session.vault || session.vault.id !== this.vault.id) throw new Error('Unlock your encrypted files before syncing.');
+      const vault = this.vault;
+      const wireManifest = await this.api<Manifest>('/manifest'); check();
+      const manifest = { ...wireManifest, entries: await vault.decodeManifest(wireManifest.entries) }; check();
       const remote = entryMap(manifest.entries); for (const key of remote.keys()) validateLogicalKey(key);
       if (!Number.isSafeInteger(manifest.revision) || manifest.revision < 0) throw new Error('The account manifest revision is invalid.');
       const captured = await captureData(message => this.update({ message }), check, id); check();
@@ -255,7 +345,7 @@ export class CloudAccountService {
       }
       let committed = manifest;
       if (!manifestsEqual(plan.entries, remote)) {
-        committed = await this.api<Manifest>('/manifest', { method: 'PUT', body: JSON.stringify({ baseRevision: manifest.revision, entries: [...plan.entries.values()] }) }); check();
+        committed = await this.api<Manifest>('/manifest', { method: 'PUT', body: JSON.stringify({ baseRevision: manifest.revision, entries: await vault.encodeManifest([...plan.entries.values()]) }) }); check();
       }
       // Save the server baseline before application so interrupted downloads resume
       // as remote changes rather than treating absent local files as deletions.

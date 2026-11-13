@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { EncryptedVault } from '../../apps/web/src/accounts/encryption.ts';
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -27,8 +28,9 @@ test('background account host shuts down cleanly and preserves sign-in across re
     }
     assert.fail('Account host did not start');
   };
+  const encrypted = await EncryptedVault.create('deploy_test', 'test-only-password-123');
   const request = async action => {
-    const response = await fetch(`http://127.0.0.1:${port}/api/accounts/${action}`, { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ accountName: 'deploy_test', displayName: 'Deployment Test', password: 'test-only-password-123' }) });
+    const response = await fetch(`http://127.0.0.1:${port}/api/accounts/${action}`, { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ accountName: 'deploy_test', displayName: 'Deployment Test', password: encrypted.password, credentialVersion: 1, vault: encrypted.envelope, recoveryProof: encrypted.recoveryProof }) });
     assert.equal(response.status, action === 'register' ? 201 : 200);
     return response.json();
   };

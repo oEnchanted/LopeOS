@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
 export const QUOTA_BYTES = 1_000_000_000;
-export const MAX_BLOB_BYTES = 64 * 1024 * 1024;
+export const MAX_BLOB_BYTES = 64 * 1024 * 1024 + 28;
 const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 const STAGING_MS = 60 * 60 * 1000;
 const hashPattern = /^[a-f0-9]{64}$/;
@@ -15,6 +15,8 @@ const accountPattern = /^[a-z][a-z0-9_-]{0,31}$/;
 const reserved = new Set(['guest', 'shared', 'root', 'system', 'admin', 'administrator', 'everyone', 'nobody']);
 const derive = promisify(scrypt);
 const digest = value => createHash('sha256').update(value).digest('hex');
+const newRecoveryKey = () => randomBytes(24).toString('hex').match(/.{6}/g).join('-');
+const recoveryDigest = key => digest(String(key).replace(/[-\s]/g, '').toLowerCase());
 const publicAccount = ({ id, accountName, displayName, createdAt }) => ({ id, accountName, displayName, createdAt });
 class ServiceError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
@@ -55,11 +57,17 @@ function json(res, status, value) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
   res.end(JSON.stringify(value));
 }
+function validateVault(value) {
+  if (!value || value.version !== 1 || !/^[a-f0-9]{32}$/.test(value.id) || !/^[a-f0-9]{120}$/.test(value.passwordWrap) || !/^[a-f0-9]{120}$/.test(value.recoveryWrap)) fail(400, 'INVALID_VAULT', 'A valid encrypted key envelope is required.');
+  return { version: 1, id: value.id, passwordWrap: value.passwordWrap, recoveryWrap: value.recoveryWrap };
+}
+function validateProof(value) { if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) fail(400, 'INVALID_PROOF', 'An encrypted recovery credential is required.'); return value; }
+function requireEncrypted(entries) { if (entries.some(entry => !/^e2ee:[a-f0-9]+$/.test(entry.key))) fail(400, 'ENCRYPTION_REQUIRED', 'This account only accepts encrypted file metadata.'); }
 function validateManifest(value) {
   if (!Number.isSafeInteger(value.baseRevision) || value.baseRevision < 0 || !Array.isArray(value.entries) || value.entries.length > 100_000) fail(400, 'INVALID_MANIFEST', 'The sync manifest is invalid.');
   const keys = new Set();
   return value.entries.map(entry => {
-    if (!entry || typeof entry.key !== 'string' || !entry.key.length || entry.key.length > 2048 || /[\x00-\x1f\x7f]/.test(entry.key)
+    if (!entry || typeof entry.key !== 'string' || !entry.key.length || entry.key.length > 16384 || /[\x00-\x1f\x7f]/.test(entry.key)
       || keys.has(entry.key) || !hashPattern.test(entry.hash) || !Number.isSafeInteger(entry.size) || entry.size < 0 || entry.size > MAX_BLOB_BYTES
       || typeof entry.modifiedAt !== 'string' || !Number.isFinite(Date.parse(entry.modifiedAt))) fail(400, 'INVALID_MANIFEST', 'The sync manifest contains an invalid or duplicate entry.');
     keys.add(entry.key);
@@ -130,6 +138,8 @@ export async function createAccountServer(options = {}) {
   const accountDir = account => join(directory, account.id);
   const blobPath = (account, hash) => join(accountDir(account), 'blobs', hash);
   async function readManifest(account) {
+    const current = registry.accounts.find(value => value.id === account.id);
+    if (current?.vault) return current.encryptedManifest ?? { revision: 0, entries: [] };
     try {
       const saved = JSON.parse(await readFile(join(accountDir(account), 'manifest.json'), 'utf8'));
       const entries = validateManifest({ baseRevision: saved.revision, entries: saved.entries });
@@ -153,7 +163,7 @@ export async function createAccountServer(options = {}) {
   }
   async function summary(account) {
     const usedBytes = account ? await serial(account.id, async () => [...(await blobInventory(account)).values()].reduce((sum, info) => sum + info.size, 0)) : 0;
-    return { account: account ? publicAccount(account) : null, quotaBytes, usedBytes };
+    return { account: account ? publicAccount(account) : null, vault: account?.vault ?? null, quotaBytes, usedBytes };
   }
   function identity(req, required = true) {
     const cookies = String(req.headers.cookie ?? '').split(';').map(value => value.trim());
@@ -163,9 +173,15 @@ export async function createAccountServer(options = {}) {
     if (!account && required) fail(401, 'SIGN_IN_REQUIRED', 'Sign in to your LopeOS account to sync.');
     return account ?? null;
   }
+  function assertSession(req, account) {
+    const current = identity(req);
+    if (current.id !== account.id) fail(409, 'SESSION_CHANGED', 'Your session changed. Sign in again.');
+    if (current.vault && req.headers['x-lope-encryption'] !== '1') fail(409, 'ENCRYPTION_REQUIRED', 'Unlock this encrypted account in an updated client.');
+  }
   async function establish(res, account) {
     const token = randomBytes(32).toString('hex');
     await saveRegistry(next => {
+      if (next.accounts.find(value => value.id === account.id)?.passwordHash !== account.passwordHash) fail(401, 'SESSION_CHANGED', 'Your password changed. Sign in again.');
       for (const [key, value] of Object.entries(next.sessions)) if (value.expiresAt <= Date.now()) delete next.sessions[key];
       // Bound active sessions per account; the oldest session expires first.
       const own = Object.entries(next.sessions).filter(([, value]) => value.accountId === account.id).sort((a, b) => a[1].expiresAt - b[1].expiresAt);
@@ -173,6 +189,18 @@ export async function createAccountServer(options = {}) {
       next.sessions[digest(token)] = { accountId: account.id, expiresAt: Date.now() + SESSION_MS };
     });
     res.setHeader('Set-Cookie', cookie(token));
+  }
+  // Complete cleanup after a crash between an atomic encryption upgrade and deleting old plaintext.
+  try {
+    for (const account of registry.accounts.filter(value => value.vault)) {
+      validateVault(account.vault);
+      if (account.encryptedManifest) { validateManifest({ baseRevision: account.encryptedManifest.revision, entries: account.encryptedManifest.entries }); requireEncrypted(account.encryptedManifest.entries); }
+      await collect(account, { allStaged: true });
+      await unlink(join(accountDir(account), 'manifest.json')).catch(error => { if (error.code !== 'ENOENT') throw error; });
+    }
+  } catch (error) {
+    await lock.close(); await unlink(lockPath);
+    throw new Error('Encrypted account storage could not be opened; existing data was preserved.', { cause: error });
   }
   const server = http.createServer({ requestTimeout: 120_000, headersTimeout: 15_000, maxHeaderSize: 16 * 1024 }, async (req, res) => {
     active++;
@@ -184,12 +212,13 @@ export async function createAccountServer(options = {}) {
       if ((origin && !origins.includes(origin)) || req.headers['sec-fetch-site'] === 'cross-site') fail(403, 'ORIGIN', 'This website is not allowed to use the account service.');
       if (!['GET', 'HEAD'].includes(req.method) && !origins.includes(origin)) fail(403, 'ORIGIN', 'An allowed website origin is required.');
       if (req.method === 'GET' && url.pathname === '/api/accounts/session') return json(res, 200, await summary(identity(req, false)));
-      if (req.method === 'POST' && ['/api/accounts/register', '/api/accounts/login'].includes(url.pathname)) {
+      if (req.method === 'POST' && ['/api/accounts/register', '/api/accounts/login', '/api/accounts/recover', '/api/accounts/recovery-key', '/api/accounts/recovery-info', '/api/accounts/upgrade'].includes(url.pathname)) {
         const direct = req.socket.remoteAddress ?? 'unknown', forwarded = req.headers['x-forwarded-for'];
         const address = trustProxy && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(direct) && typeof forwarded === 'string' && isIP(forwarded) ? forwarded : direct;
         rate(`auth:${address}`, 30, 15 * 60_000);
         if (authActive >= 4) fail(429, 'BUSY', 'Sign-in is busy. Try again shortly.');
-        const input = await jsonBody(req);
+        const input = await jsonBody(req, url.pathname.endsWith('/upgrade') ? 32 * 1024 * 1024 : 16 * 1024);
+        if (url.pathname.endsWith('/recovery-info')) input.password = '';
         if (typeof input.accountName !== 'string' || input.accountName.trim().length > 32 || typeof input.password !== 'string' || input.password.length > 1024) fail(400, 'INVALID_CREDENTIALS', 'Enter an account name and a password of at most 1,024 characters.');
         const name = input.accountName.trim().toLowerCase();
         rate(`name:${name}`, 15, 15 * 60_000);
@@ -198,6 +227,7 @@ export async function createAccountServer(options = {}) {
         authActive++;
         try {
           if (url.pathname.endsWith('/register')) {
+            if (input.credentialVersion !== 1 && options.allowLegacyRegistration !== true) fail(400, 'ENCRYPTION_REQUIRED', 'Update LopeOS to create an end-to-end encrypted account.');
             rate(`register:${address}`, 8, 60 * 60_000);
             if (!accountPattern.test(name) || reserved.has(name)) fail(400, 'INVALID_ACCOUNT_NAME', 'Use a name starting with a letter, followed by letters, numbers, hyphens or underscores (up to 32 characters).');
             const displayName = typeof input.displayName === 'string' ? input.displayName.trim().replace(/\s+/g, ' ') : '';
@@ -205,18 +235,83 @@ export async function createAccountServer(options = {}) {
             if (input.password.length < 12) fail(400, 'WEAK_PASSWORD', 'Use a password with at least 12 characters.');
             const salt = randomBytes(16).toString('hex');
             const passwordHash = (await derive(input.password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 })).toString('hex');
-            const account = { id: randomUUID(), accountName: name, displayName, salt, passwordHash, createdAt: new Date().toISOString() };
+            const vault = input.credentialVersion === 1 ? validateVault(input.vault) : null;
+            if (vault) validateProof(input.password);
+            const recoveryKey = vault ? undefined : newRecoveryKey();
+            const account = { ...(vault ? { vault, credentialVersion: 1 } : {}), recoveryHash: vault ? recoveryDigest(validateProof(input.recoveryProof)) : recoveryDigest(recoveryKey), id: randomUUID(), accountName: name, displayName, salt, passwordHash, createdAt: new Date().toISOString() };
             await saveRegistry(async next => {
               if (next.accounts.some(value => value.accountName === name)) fail(409, 'ACCOUNT_NAME_TAKEN', 'That account name is already in use.');
               await mkdir(join(accountDir(account), 'blobs'), { recursive: true, mode: 0o700 });
               next.accounts.push(account);
             });
-            await establish(res, account); return json(res, 201, await summary(account));
+            await establish(res, account); return json(res, 201, { ...await summary(account), recoveryKey });
           }
           const account = registry.accounts.find(value => value.accountName === name);
+          if (url.pathname.endsWith('/recovery-info')) {
+            const supplied = recoveryDigest(typeof input.recoveryProof === 'string' ? input.recoveryProof : '');
+            if (!account?.vault || !account.recoveryHash || !timingSafeEqual(Buffer.from(supplied, 'hex'), Buffer.from(account.recoveryHash, 'hex'))) fail(401, 'INVALID_RECOVERY', 'The account name or recovery key is incorrect.');
+            return json(res, 200, { vault: account.vault });
+          }
+          if (url.pathname.endsWith('/recover')) {
+            if (input.password.length < 12) fail(400, 'WEAK_PASSWORD', 'Use a password with at least 12 characters.');
+            const supplied = recoveryDigest(typeof input.recoveryKey === 'string' ? input.recoveryKey : '');
+            if (!account?.recoveryHash || !timingSafeEqual(Buffer.from(supplied, 'hex'), Buffer.from(account.recoveryHash, 'hex'))) fail(401, 'INVALID_RECOVERY', 'The account name or recovery key is incorrect.');
+            const salt = randomBytes(16).toString('hex');
+            const passwordHash = (await derive(input.password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 })).toString('hex');
+            const vault = account.vault ? validateVault(input.vault) : null;
+            if (vault) validateProof(input.password);
+            if (vault && (vault.id !== account.vault.id || input.credentialVersion !== 1)) fail(400, 'INVALID_VAULT', 'Recovery must preserve the encrypted file key.');
+            const recoveryKey = vault ? undefined : newRecoveryKey();
+            const recoveryHash = vault ? recoveryDigest(validateProof(input.recoveryProof)) : recoveryDigest(recoveryKey);
+            await saveRegistry(next => {
+              const current = next.accounts.find(value => value.id === account.id);
+              if (current.recoveryHash !== supplied) fail(401, 'INVALID_RECOVERY', 'The account name or recovery key is incorrect.');
+              Object.assign(current, { salt, passwordHash, recoveryHash, ...(vault ? { vault } : {}) });
+              for (const [key, value] of Object.entries(next.sessions)) if (value.accountId === account.id) delete next.sessions[key];
+            });
+            return json(res, 200, { recoveryKey });
+          }
+          if (account?.vault && input.credentialVersion !== 1) fail(400, 'ENCRYPTION_REQUIRED', 'Update LopeOS to sign in to this encrypted account.');
+          if (account && !account.vault && input.credentialVersion === 1 && !url.pathname.endsWith('/upgrade')) fail(409, 'LEGACY_ACCOUNT', 'This account needs an encryption upgrade. Use the existing-account upgrade flow.');
           const actual = await derive(input.password, account?.salt ?? '00000000000000000000000000000000', 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });
           const expected = Buffer.from(account?.passwordHash ?? '0'.repeat(64), 'hex');
           if (!timingSafeEqual(actual, expected) || !account) fail(401, 'INVALID_CREDENTIALS', 'The account name or password is incorrect.');
+          if (url.pathname.endsWith('/upgrade')) {
+            if (account.vault) fail(409, 'ALREADY_ENCRYPTED', 'This account is already encrypted. Sign in again.');
+            const vault = validateVault(input.vault), recoveryHash = recoveryDigest(validateProof(input.recoveryProof));
+            const newPassword = validateProof(input.newPassword);
+            const entries = validateManifest(input); requireEncrypted(entries);
+            const salt = randomBytes(16).toString('hex');
+            const passwordHash = (await derive(newPassword, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 })).toString('hex');
+            await serial(account.id, async () => {
+              const previous = await readManifest(account), inventory = await blobInventory(account), unique = new Map();
+              if (previous.revision !== input.baseRevision) fail(409, 'REVISION_CONFLICT', 'Another device changed your files. Retry the upgrade.');
+              for (const entry of entries) { if (inventory.get(entry.hash)?.size !== entry.size) fail(400, 'MISSING_BLOB', 'An encrypted file is missing.'); unique.set(entry.hash, entry.size); }
+              if ([...unique.values()].reduce((sum, size) => sum + size, 0) > quotaBytes) fail(413, 'QUOTA_EXCEEDED', 'Make room for encryption overhead before upgrading.');
+              await saveRegistry(next => {
+                const current = next.accounts.find(value => value.id === account.id);
+                if (current.vault || current.passwordHash !== account.passwordHash) fail(409, 'SESSION_CHANGED', 'Your account changed. Sign in again.');
+                Object.assign(current, { vault, credentialVersion: 1, salt, passwordHash, recoveryHash, encryptedManifest: { revision: previous.revision + 1, entries } });
+                for (const [key, value] of Object.entries(next.sessions)) if (value.accountId === account.id) delete next.sessions[key];
+              });
+              await collect(account, { allStaged: true });
+              await unlink(join(accountDir(account), 'manifest.json')).catch(error => { if (error.code !== 'ENOENT') throw error; });
+            });
+            return json(res, 200, { upgraded: true });
+          }
+          if (url.pathname.endsWith('/recovery-key')) {
+            if (identity(req).id !== account.id) fail(403, 'SESSION_CHANGED', 'Sign in to this account first.');
+            const vault = account.vault ? validateVault(input.vault) : null;
+            if (vault && vault.id !== account.vault.id) fail(400, 'INVALID_VAULT', 'Keep the existing encrypted file key.');
+            const recoveryKey = vault ? undefined : newRecoveryKey();
+            const recoveryHash = vault ? recoveryDigest(validateProof(input.recoveryProof)) : recoveryDigest(recoveryKey);
+            await saveRegistry(next => {
+              const current = next.accounts.find(value => value.id === account.id);
+              if (current.passwordHash !== account.passwordHash || identity(req).id !== account.id) fail(401, 'SESSION_CHANGED', 'Sign in again.');
+              current.recoveryHash = recoveryHash; if (vault) current.vault = vault;
+            });
+            return json(res, 200, { recoveryKey });
+          }
           await establish(res, account); return json(res, 200, await summary(account));
         } finally { authActive--; }
       }
@@ -229,14 +324,16 @@ export async function createAccountServer(options = {}) {
       const account = identity(req);
       // Browser cookies are shared across tabs. A sync that began before another
       // tab changed the cookie must not read or write that different account.
+      if (account.vault && req.headers['x-lope-encryption'] !== '1') fail(409, 'ENCRYPTION_REQUIRED', 'Unlock your encrypted account in an updated LopeOS client.');
       const expectedAccount = req.headers['x-lope-account'];
       if (expectedAccount !== undefined && expectedAccount !== account.id) fail(409, 'SESSION_CHANGED', 'Your account session changed. Sign in again before syncing.');
       if (url.pathname === '/api/accounts/manifest' && req.method === 'GET') {
-        return await serial(account.id, async () => { const manifest = await readManifest(account); json(res, 200, { ...manifest, quotaBytes, usedBytes: await collect(account) }); });
+        return await serial(account.id, async () => { assertSession(req, account); const manifest = await readManifest(account); json(res, 200, { ...manifest, quotaBytes, usedBytes: await collect(account) }); });
       }
       if (url.pathname === '/api/accounts/manifest' && req.method === 'PUT') {
         const input = await jsonBody(req, 24 * 1024 * 1024), entries = validateManifest(input);
         return await serial(account.id, async () => {
+          assertSession(req, account);
           const previous = await readManifest(account);
           if (input.baseRevision !== previous.revision) fail(409, 'REVISION_CONFLICT', 'Your account changed on another device. Fetch its latest manifest and merge before retrying.');
           const inventory = await blobInventory(account), unique = new Map();
@@ -246,21 +343,28 @@ export async function createAccountServer(options = {}) {
           }
           if ([...unique.values()].reduce((sum, size) => sum + size, 0) > quotaBytes) fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full. Free space before syncing more data.');
           const next = { revision: previous.revision + 1, entries };
-          await atomicJSON(join(accountDir(account), 'manifest.json'), next);
+          const current = registry.accounts.find(value => value.id === account.id);
+          if (current.vault) {
+            if (req.headers['x-lope-encryption'] !== '1') fail(409, 'ENCRYPTION_REQUIRED', 'Update LopeOS before syncing this account.');
+            requireEncrypted(entries);
+            await saveRegistry(registry => { registry.accounts.find(value => value.id === account.id).encryptedManifest = next; });
+          } else await atomicJSON(join(accountDir(account), 'manifest.json'), next);
           const usedBytes = await collect(account, { previous: previous.entries });
           return json(res, 200, { ...next, quotaBytes, usedBytes });
         });
       }
       if (url.pathname === '/api/accounts/cleanup' && req.method === 'POST') {
         await jsonBody(req);
-        return await serial(account.id, async () => json(res, 200, { quotaBytes, usedBytes: await collect(account, { allStaged: true }) }));
+        return await serial(account.id, async () => { assertSession(req, account); return json(res, 200, { quotaBytes, usedBytes: await collect(account, { allStaged: true }) }); });
       }
       const match = /^\/api\/accounts\/blobs\/([a-f0-9]{64})$/.exec(url.pathname);
       if (match && req.method === 'PUT') {
         const hash = match[1];
         return await serial(account.id, async () => {
+          assertSession(req, account);
           const used = await collect(account), inventory = await blobInventory(account), present = inventory.has(hash);
-          const available = present ? MAX_BLOB_BYTES : Math.min(MAX_BLOB_BYTES, quotaBytes - used);
+          const uploadQuota = !account.vault && req.headers['x-lope-encryption-upgrade'] === '1' ? quotaBytes * 2 + 2_800_000 : quotaBytes;
+          const available = present ? MAX_BLOB_BYTES : Math.min(MAX_BLOB_BYTES, uploadQuota - used);
           if (Number(req.headers['content-length'] ?? 0) > available) fail(413, 'QUOTA_EXCEEDED', 'This upload exceeds the free space in your 1 GB LopeDrive or the 64 MiB item limit.');
           const temporary = join(accountDir(account), 'blobs', `${randomUUID()}.upload`), handle = await open(temporary, 'wx', 0o600);
           const checksum = createHash('sha256'); let size = 0;
@@ -272,7 +376,7 @@ export async function createAccountServer(options = {}) {
             }
             if (checksum.digest('hex') !== hash) fail(400, 'HASH_MISMATCH', 'The uploaded item did not match its checksum. Try again.');
             const usedBytes = used - (inventory.get(hash)?.size ?? 0) + size;
-            if (usedBytes > quotaBytes) fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full. Free space before syncing more data.');
+            if (usedBytes > uploadQuota) fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full. Free space before syncing more data.');
             await handle.sync(); await handle.close();
             // Replace even an existing hash with the verified upload: retries can
             // repair a damaged stored object without changing its logical entry.
