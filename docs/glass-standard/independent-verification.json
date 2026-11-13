@@ -1,0 +1,1086 @@
+{
+  "records": [
+    {
+      "label": "light menu bar",
+      "selector": ".menubar",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.968628 0.968628 0.976471 / 0.545) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.094) 0px 2px 9px 0px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.968628 0.968628 0.976471 / 0.545) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light Dock",
+      "selector": ".dock",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light window",
+      "selector": ".os-window.is-focused",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light Control Center",
+      "selector": ".quick-settings",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light menu",
+      "selector": ".dropdown-menu",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light calendar",
+      "selector": ".calendar-popover",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light notifications",
+      "selector": ".notifications-popover",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light Spotlight searchbar",
+      "selector": ".spotlight-searchbar",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light Spotlight body",
+      "selector": ".spotlight-body",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light settings .glass-preview-window",
+      "selector": ".glass-preview-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.88) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.086) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.208) 0px -1px 1px 0px inset, rgba(28, 60, 95, 0.08) 0px 3px 7px 0px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light settings .glass-preview-menu",
+      "selector": ".glass-preview-menu",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.88) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.086) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.208) 0px -1px 1px 0px inset, rgba(28, 60, 95, 0.08) 0px 3px 7px 0px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light settings .glass-preview-dock",
+      "selector": ".glass-preview-dock",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.88) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.086) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.208) 0px -1px 1px 0px inset, rgba(28, 60, 95, 0.08) 0px 3px 7px 0px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light shared dialog",
+      "selector": ".ui-dialog",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "dark menu bar",
+      "selector": ".menubar",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.160784 0.164706 0.180392 / 0.545) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.094) 0px 2px 9px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.160784 0.164706 0.180392 / 0.545) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark Dock",
+      "selector": ".dock",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark window",
+      "selector": ".os-window.is-focused",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark Control Center",
+      "selector": ".quick-settings",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark menu",
+      "selector": ".dropdown-menu",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark calendar",
+      "selector": ".calendar-popover",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark notifications",
+      "selector": ".notifications-popover",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark Spotlight searchbar",
+      "selector": ".spotlight-searchbar",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark Spotlight body",
+      "selector": ".spotlight-body",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark settings .glass-preview-window",
+      "selector": ".glass-preview-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.44) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.086) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.208) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.19) 0px 3px 7px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark settings .glass-preview-menu",
+      "selector": ".glass-preview-menu",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.44) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.086) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.208) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.19) 0px 3px 7px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark settings .glass-preview-dock",
+      "selector": ".glass-preview-dock",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.44) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.086) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.208) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.19) 0px 3px 7px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark shared dialog",
+      "selector": ".ui-dialog",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback reduceTransparency=true .menubar",
+      "selector": ".menubar",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.094) 0px 2px 9px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback reduceTransparency=true .dock",
+      "selector": ".dock",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback reduceTransparency=true .os-window.is-focused",
+      "selector": ".os-window.is-focused",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback reduceTransparency=true .quick-settings",
+      "selector": ".quick-settings",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback increaseContrast=true .menubar",
+      "selector": ".menubar",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(16, 41, 69, 0.094) 0px 2px 9px 0px",
+        "color": "rgb(255, 255, 255)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "label": "fallback increaseContrast=true .dock",
+      "selector": ".dock",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "label": "fallback increaseContrast=true .os-window.is-focused",
+      "selector": ".os-window.is-focused",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "label": "fallback increaseContrast=true .quick-settings",
+      "selector": ".quick-settings",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=low .menubar",
+      "selector": ".menubar",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.094) 0px 2px 9px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=low .dock",
+      "selector": ".dock",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=low .os-window.is-focused",
+      "selector": ".os-window.is-focused",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=low .quick-settings",
+      "selector": ".quick-settings",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=balanced .menubar",
+      "selector": ".menubar",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.160784 0.164706 0.180392 / 0.545) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.094) 0px 2px 9px 0px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.160784 0.164706 0.180392 / 0.545) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=balanced .dock",
+      "selector": ".dock",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=balanced .os-window.is-focused",
+      "selector": ".os-window.is-focused",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "fallback effectsQuality=balanced .quick-settings",
+      "selector": ".quick-settings",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "light setup",
+      "selector": ".setup-panel",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light setup light preview",
+      "selector": ".setup-mini[data-glass-tone=light] .setup-mini-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "light setup dark preview",
+      "selector": ".setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset",
+        "color": "rgb(25, 42, 59)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark setup",
+      "selector": ".setup-panel",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "dark setup light preview",
+      "selector": ".setup-mini[data-glass-tone=light] .setup-mini-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "dark setup dark preview",
+      "selector": ".setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(34px) saturate(1.65)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback reduceTransparency=true .setup-panel",
+      "selector": ".setup-panel",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback reduceTransparency=true .setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback reduceTransparency=true .setup-mini[data-glass-tone=light] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=light] .setup-mini-window",
+      "actual": {
+        "background": "rgb(247, 247, 249) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.724863 0.743529 0.767843)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(247, 247, 249) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.724863 0.743529 0.767843)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "setup fallback increaseContrast=true .setup-panel",
+      "selector": ".setup-panel",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "label": "setup fallback increaseContrast=true .setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(255, 255, 255)",
+        "filter": "none",
+        "shadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "label": "setup fallback increaseContrast=true .setup-mini[data-glass-tone=light] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=light] .setup-mini-window",
+      "actual": {
+        "background": "rgb(247, 247, 249) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(16, 42, 60)",
+        "filter": "none",
+        "shadow": "rgb(16, 42, 60) 0px 0px 0px 1px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(247, 247, 249) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgb(16, 42, 60)",
+        "filter": "none",
+        "shadow": "rgb(16, 42, 60) 0px 0px 0px 1px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(16, 42, 60)"
+      }
+    },
+    {
+      "label": "setup fallback effectsQuality=low .setup-panel",
+      "selector": ".setup-panel",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback effectsQuality=low .setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "actual": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(41, 42, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.38698 0.392 0.406588)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback effectsQuality=low .setup-mini[data-glass-tone=light] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=light] .setup-mini-window",
+      "actual": {
+        "background": "rgb(247, 247, 249) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.724863 0.743529 0.767843)",
+        "filter": "none",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "rgb(247, 247, 249) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "color(srgb 0.724863 0.743529 0.767843)",
+        "filter": "none",
+        "shadow": "rgba(23, 60, 78, 0.14) 0px 5px 14px 0px",
+        "color": "rgb(25, 42, 59)"
+      }
+    },
+    {
+      "label": "setup fallback effectsQuality=balanced .setup-panel",
+      "selector": ".setup-panel",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback effectsQuality=balanced .setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=dark] .setup-mini-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0) 45%, rgba(195, 213, 255, 0.03)) repeat scroll 0% 0% / auto padding-box border-box, rgba(28, 30, 35, 0.65) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.22)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.396) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.08) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.733) 0px 24px 64px -16px, rgba(0, 0, 0, 0.267) 0px 6px 20px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+        "color": "rgb(247, 249, 252)"
+      }
+    },
+    {
+      "label": "setup fallback effectsQuality=balanced .setup-mini[data-glass-tone=light] .setup-mini-window",
+      "selector": ".setup-mini[data-glass-tone=light] .setup-mini-window",
+      "actual": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset",
+        "color": "rgb(226, 237, 243)"
+      },
+      "expected": {
+        "background": "linear-gradient(145deg, rgba(255, 255, 255, 0.314), rgba(255, 255, 255, 0.03) 42%, rgba(226, 239, 255, 0.082)) repeat scroll 0% 0% / auto padding-box border-box, rgba(233, 241, 251, 0.443) none repeat scroll 0% 0% / auto padding-box border-box",
+        "border": "rgba(255, 255, 255, 0.57)",
+        "filter": "blur(20px) saturate(1.4)",
+        "shadow": "rgba(255, 255, 255, 0.94) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.4) 1px 0px 1px 0px inset, rgba(255, 255, 255, 0.42) 0px -1px 1px 0px inset, rgba(16, 41, 69, 0.44) 0px 24px 64px -16px, rgba(18, 42, 72, 0.15) 0px 6px 20px 0px, rgba(20, 52, 77, 0.07) 0px 0px 0px 1px",
+        "color": "rgb(25, 42, 59)"
+      }
+    }
+  ],
+  "failures": [],
+  "errors": []
+}

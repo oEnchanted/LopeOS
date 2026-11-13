@@ -1,0 +1,38 @@
+.dock { max-width: calc(100% - 24px); }
+.dock-panel { position: absolute; z-index: 31000; border-radius: 16px; overflow: hidden; max-height: calc(100% - 56px); max-width: calc(100% - 16px); color: var(--glass-text); }
+.dock-panel button { color: inherit; background: transparent; }
+.dock-panel button:hover, .dock-panel button:focus-visible { background: var(--glass-hover); }
+.dock-panel button:disabled { opacity: .45; cursor: default; }
+.dock-downloads { width: 340px; display: flex; flex-direction: column; }
+.dock-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 18px 13px; }
+.dock-panel-heading strong { display: block; font-size: 16px; letter-spacing: -.25px; }
+.dock-panel-heading small { display: block; margin-top: 4px; font-size: 11px; color: var(--glass-muted); }
+.dock-panel-heading button { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; }
+.dock-download-list { min-height: 0; max-height: 370px; overflow-y: auto; padding: 0 8px 8px; overscroll-behavior: contain; }
+.dock-panel .dock-download-entry { display: flex; width: 100%; align-items: center; gap: 12px; text-align: left; padding: 9px; border-radius: 9px; }
+.dock-file-symbol { width: 40px; height: 44px; border-radius: 9px; display: grid; place-items: center; flex-shrink: 0; color: var(--glass-icon-ink); }
+.dock-download-entry > span:nth-child(2) { min-width: 0; flex: 1; }
+.dock-download-entry strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 550; }
+.dock-download-entry small { display: block; color: var(--glass-muted); font-size: 10px; margin-top: 4px; }
+.dock-download-entry > svg { flex-shrink: 0; color: var(--glass-muted); }
+.dock-empty { min-height: 150px; margin: 0; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; color: var(--glass-muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.dock-empty strong { color: var(--glass-text); font-size: 13px; }
+.dock-panel .dock-panel-footer { flex-shrink: 0; display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 14px 18px; border-top: 1px solid var(--glass-inset-border); font-size: 12px; font-weight: 550; }
+.dock-menu { width: 250px; padding: 6px; overflow-y: auto; }
+.dock-menu-heading { padding: 8px 10px; font-size: 11px; font-weight: 650; color: var(--glass-muted); }
+.dock-menu > button { min-height: 33px; width: 100%; display: flex; align-items: center; gap: 7px; padding: 7px 10px; text-align: left; border-radius: 6px; font-size: 12px; }
+.dock-menu > .dock-menu-window { padding-left: 3px; }
+.dock-menu-window > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dock-menu-window small { margin-left: auto; font-size: 10px; color: var(--glass-muted); }
+.dock-check { display: flex; width: 15px; flex-shrink: 0; }
+.dock-menu-separator { height: 1px; background: var(--glass-inset-border); margin: 5px; }
+.dock-menu-error { padding: 6px 10px; margin: 0; color: var(--glass-muted); font-size: 11px; overflow-wrap: anywhere; }
+.dock .dock-window-tile { width: var(--dock-size); height: calc(var(--dock-size) - 8px); border-radius: 7px; padding: 8px 4px 3px; display: flex; flex-direction: column; gap: 2px; }
+.dock-window-lines { position: absolute; top: 4px; left: 4px; right: 4px; height: 2px; background: var(--glass-track); border-radius: 2px; }
+.dock-window-title { display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 7px; line-height: 1; }
+.dock-trash.is-drop-target { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 10px; background: var(--glass-active); }
+.dock .app-icon--trash, .dock .app-icon--trash-full, .dock .app-icon--downloads { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.dock[data-overflow=true] { overflow-x: auto; overflow-y: hidden; }
+.dock[data-position=left][data-overflow=true], .dock[data-position=right][data-overflow=true] { overflow-x: hidden; overflow-y: auto; }
+@media (prefers-reduced-motion: reduce) { .dock .dock-item { transition: none; transform: none !important; } }
+.desktop[data-reduce-motion=true] .dock .dock-item { transition: none; transform: none !important; }

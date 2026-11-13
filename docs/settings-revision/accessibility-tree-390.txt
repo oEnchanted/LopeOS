@@ -1,0 +1,78 @@
+- button "Back in Settings" [disabled]
+- button "Forward in Settings" [disabled]
+- strong: Appearance
+- text: Saved in this browser
+- combobox "Settings category":
+  - option "General"
+  - option "Appearance" [selected]
+  - option "Desktop & Dock"
+  - option "Display & Scale"
+  - option "Menu Bar"
+  - option "Search"
+  - option "Wallpaper"
+  - option "Notifications & Focus"
+  - option "Sound"
+  - option "Accessibility"
+  - option "Session & Privacy Screen"
+  - option "Privacy & Security"
+  - option "Profile & Accounts"
+  - option "Weather"
+  - option "Applications"
+- textbox "Search Settings on small screen":
+  - /placeholder: Search Settings
+- heading "Appearance" [level=1]
+- paragraph: Adjust colors, materials, and application icons.
+- img "Live appearance preview":
+  - text: Appearance
+  - complementary
+  - main:
+    - text: Appearance Accent color Transparency
+    - emphasis
+  - text: Show Sidebar View Options
+  - separator
+  - text: Arrange Windows
+- heading "Appearance" [level=2]
+- button "Light" [pressed]:
+  - emphasis
+  - emphasis
+  - text: Light
+- button "Dark":
+  - emphasis
+  - emphasis
+  - text: Dark
+- button "System":
+  - emphasis
+  - emphasis
+  - text: System
+- text: Glass clarity
+- paragraph: More clarity lets the wallpaper show through desktop chrome.
+- slider "Glass clarity": "64"
+- status: 64%
+- text: Accent color
+- button "Ocean accent" [pressed]
+- button "Iris accent"
+- button "Rose accent"
+- button "Clay accent"
+- button "Forest accent"
+- button "Graphite accent"
+- textbox "Accent color": "#167bac"
+- text: Text highlight color
+- textbox "Text highlight color": "#73c9ec"
+- code: "#73C9EC"
+- text: Folder color
+- textbox "Folder color": "#62b9df"
+- code: "#62B9DF"
+- text: Sidebar icon size
+- slider "Sidebar icon size": "17"
+- status: 17 px
+- text: Tint chrome with the wallpaper
+- paragraph: Personal images use your accent as a consistent fallback.
+- switch "Tint chrome with the wallpaper" [checked]
+- heading "Application icons" [level=2]
+- text: Icon style
+- paragraph: A consistent finish for the Dock. Application symbols stay recognizable.
+- button "Default icons" [pressed]: Default
+- button "Dark icons": Dark
+- button "Clear icons": Clear
+- button "Tinted icons": Tinted
+- status

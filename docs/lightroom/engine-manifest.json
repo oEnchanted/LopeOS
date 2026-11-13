@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-13",
+  "engine": "lope-photo/1.0.0",
+  "recipeSchema": 1,
+  "workingSpace": "linear sRGB, Float32 RGBA",
+  "codecs": {
+    "nativePng": "Lope PNG 1.0; 8/16-bit encoder; 16-bit decoder",
+    "nativeTiff": "Lope TIFF 1.0; uncompressed chunky strips; 8/16 unsigned and 32-bit float",
+    "rawWrapper": "libraw-wasm 1.6.0",
+    "upstreamRawBuild": {
+      "LibRaw": "0.22.1",
+      "LittleCMS": "2.19.1",
+      "source": "https://github.com/ybouane/LibRaw-Wasm/blob/v1.6.0/compileLibraw.sh",
+      "qualification": "Versions pinned by upstream build script; binary does not expose its embedded revision"
+    },
+    "wasmSha256": "8947f7e668e488461c3e9defe7007583aa8477b4886aa603b36b407f2f0846ff",
+    "wasmBytes": 1417725,
+    "psd": "ag-psd 31.0.3, compatible RGB/8 composite",
+    "raster": "Runtime createImageBitmap / OffscreenCanvas"
+  },
+  "models": [
+    {
+      "id": "ffdnet-color-clip-v1",
+      "name": "FFDNet Color (clipped)",
+      "optional": true,
+      "license": "MIT",
+      "manifest": "docs/lightroom/denoise-model-manifest.json",
+      "runtimeManifest": "public/models/denoise/engine/manifest.json",
+      "runtime": "onnxruntime-web 1.31.1",
+      "backend": "CPU WASM, single thread",
+      "modelBytes": 3412037,
+      "totalDownloadBytes": 18362651,
+      "modelSha256": "28c8ca2616c3283792a6db51ae26830ec44d1c8b5b823614c25788f785140f24",
+      "domain": "opaque SDR sRGB, after source decoding and before edit recipe",
+      "output": "Separate managed TIFF16 plus inherited edit recipe",
+      "uploads": false
+    }
+  ],
+  "profiles": [
+    "Generated LopeOS sRGB ICC v4 matrix/TRC",
+    "Generated LopeOS Linear sRGB ICC v4 matrix/TRC"
+  ],
+  "limits": {
+    "sourceBytes": 268435456,
+    "sourcePixels": 24000000,
+    "recipeHistory": 80,
+    "backupBytes": 268435456,
+    "backupManifestBytes": 33554432
+  },
+  "testHost": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M1 Pro",
+    "logicalCpus": 8,
+    "memoryBytes": 17179869184,
+    "node": "v26.12.1"
+  },
+  "execution": {
+    "heavyProcessing": "Dedicated workers, CPU Float32; RAW WASM nested worker; optional CPU WASM neural denoising",
+    "gpu": "Not required or used by the photo engine",
+    "remoteProviders": [],
+    "uploads": "None for core processing"
+  },
+  "recordedAt": "2026-11-13",
+  "standardNoiseReduction": {
+    "implementation": "Lope classical bilateral 5x5",
+    "source": "packages/photo-engine/src/noise.ts",
+    "controls": [
+      "Luminance noise",
+      "Color noise"
+    ],
+    "execution": "regular dedicated photo development/export workers",
+    "modelRequired": false,
+    "uploads": false,
+    "workingSpace": "Float32 linear sRGB; separate luminance/chroma filtering; alpha preserved"
+  }
+}

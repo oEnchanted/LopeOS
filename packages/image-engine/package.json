@@ -1,0 +1,9 @@
+{
+  "name": "@lopeos/image-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": { "ag-psd": "^31.0.0" },
+  "scripts": { "test": "node --test ../../tests/image-editor/*.test.ts" }
+}

@@ -1,0 +1,90 @@
+{
+  "modelIds": [
+    "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"
+  ],
+  "temperature": 0.3,
+  "topP": 0.9,
+  "seed": 11,
+  "maxTokens": 256,
+  "testedAt": "2026-11-13T18:57:58.409Z",
+  "results": [
+    {
+      "modelId": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+      "metadata": {
+        "bytes": 880289238,
+        "weightBytes": 868547584
+      },
+      "initializationMs": 30120.900000000373,
+      "cases": [
+        {
+          "name": "paris-clean",
+          "system": "final",
+          "prompt": "where is paris france",
+          "text": "Paris is in France.",
+          "chunks": 5,
+          "firstTokenMs": 662.7000000011176,
+          "durationMs": 794
+        },
+        {
+          "name": "paris-followup",
+          "system": "final",
+          "prompt": "What river runs through it?",
+          "text": "The Seine River runs through Paris.",
+          "chunks": 8,
+          "firstTokenMs": 214.80000000074506,
+          "durationMs": 376
+        },
+        {
+          "name": "paris-contaminated",
+          "system": "final",
+          "prompt": "where is paris france",
+          "text": "Paris is in France.",
+          "chunks": 5,
+          "firstTokenMs": 315.19999999925494,
+          "durationMs": 432.90000000037253
+        },
+        {
+          "name": "australia-capital",
+          "system": "final",
+          "prompt": "What is the capital of Australia? Answer in one short sentence.",
+          "text": "The capital of Australia is Canberra.",
+          "chunks": 7,
+          "firstTokenMs": 211,
+          "durationMs": 346.40000000037253
+        },
+        {
+          "name": "short-draft",
+          "system": "final",
+          "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+          "text": "Sam, I'm sorry for the delay. I'll be here in ten minutes.",
+          "chunks": 17,
+          "firstTokenMs": 209.40000000037253,
+          "durationMs": 577.5999999996275
+        },
+        {
+          "name": "word-count",
+          "system": "final",
+          "prompt": "Return only the number of letters in the word \"planet\".",
+          "text": "planet has 6 letters.",
+          "chunks": 6,
+          "firstTokenMs": 206.19999999925494,
+          "durationMs": 320.59999999962747
+        },
+        {
+          "name": "format",
+          "system": "final",
+          "prompt": "Give exactly three common fruits, separated by commas. No explanation.",
+          "text": "apple, banana, orange",
+          "chunks": 5,
+          "firstTokenMs": 204.09999999962747,
+          "durationMs": 310.90000000037253
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "quota": 10737418240,
+    "usage": 0,
+    "usageDetails": {}
+  }
+}

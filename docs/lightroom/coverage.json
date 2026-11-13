@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-13",
+  "reference": "Adobe Lightroom desktop 10.0 / Advanced / Dark",
+  "qualification": "Only the listed variants were tested. An implemented decoder path and accepted extension are not a camera-family compatibility claim.",
+  "fixtures": [
+    {
+      "id": "jpeg-demo",
+      "formats": [
+        "jpeg"
+      ],
+      "variants": "Four public-domain Jon Sullivan JPEGs, browser-decoded SDR RGB/8",
+      "files": [
+        "public/photos/yosemite.jpg",
+        "public/photos/painted-desert.jpg",
+        "public/photos/forest.jpg",
+        "public/photos/big-sur.jpg"
+      ],
+      "tests": [
+        "tests/lightroom/browser.mjs"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "png8-scale",
+      "formats": [
+        "png"
+      ],
+      "variants": "Original procedural 32x24 sRGB RGBA/8 PNG, 1000 separately stored asset identities",
+      "tests": [
+        "tests/lightroom/browser.mjs"
+      ],
+      "status": "verified",
+      "qualification": "Library/virtualization fixture, not 1000 distinct scenes or a decode-throughput benchmark"
+    },
+    {
+      "id": "png16",
+      "formats": [
+        "png"
+      ],
+      "variants": "Non-interlaced sRGB RGBA/16 gradients; native encode/decode; intentionally corrupt CRC; independently reopened by browser and Pillow",
+      "tests": [
+        "tests/lightroom/engine.test.ts",
+        "tests/lightroom/codecs.mjs",
+        "tests/lightroom/validate-exports.py"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "tiff-unsigned",
+      "formats": [
+        "tiff"
+      ],
+      "variants": "Uncompressed chunky RGB strips; 8/16-bit unsigned; generated sRGB ICC; native round trip",
+      "tests": [
+        "tests/lightroom/engine.test.ts"
+      ],
+      "status": "verified",
+      "qualification": "Independent Pillow/LittleCMS verification covers RGB/16 only"
+    },
+    {
+      "id": "tiff-float",
+      "formats": [
+        "tiff"
+      ],
+      "variants": "Uncompressed chunky RGB/32 IEEE float; generated linear-sRGB ICC; numeric highlight headroom",
+      "tests": [
+        "tests/lightroom/engine.test.ts"
+      ],
+      "status": "verified",
+      "qualification": "Native encoder/parser round trip; independent float-TIFF rendering reader not tested"
+    },
+    {
+      "id": "synthetic-dng",
+      "formats": [
+        "dng"
+      ],
+      "variants": "DNG 1.4, 128x96, uncompressed unsigned 16-bit RGGB mosaic, original synthetic camera, no embedded preview",
+      "files": [
+        "docs/lightroom/fixtures/synthetic-bayer.dng"
+      ],
+      "generator": "tests/lightroom/fixtures.ts",
+      "tests": [
+        "tests/lightroom/codecs.mjs",
+        "tests/lightroom/production.mjs"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "lopeimage",
+      "formats": [
+        "lopeimage"
+      ],
+      "variants": "Shared native v1 RGB/8 project; added layer and fill, save, render returned composite, preserve source checksum/recipe",
+      "tests": [
+        "tests/lightroom/handoff.mjs"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "ai-denoise-synthetic",
+      "formats": [
+        "png",
+        "tiff",
+        "dng"
+      ],
+      "variants": "Original procedural clipped Gaussian-noise PNG16 (192x144 quality probe and 384x288 UI fixture); TIFF16 derivative/export; sensor-only synthetic Bayer DNG after LibRaw development in production",
+      "tests": [
+        "tests/lightroom/denoise.test.ts",
+        "tests/lightroom/denoise-probe.mjs",
+        "tests/lightroom/denoise-browser.mjs",
+        "tests/lightroom/production.mjs",
+        "tests/lightroom/validate-exports.py"
+      ],
+      "status": "verified",
+      "qualification": "Controlled synthetic denoise/behavior checks only; no real-camera photographic benchmark or sensor-domain denoising claim"
+    },
+    {
+      "id": "standard-noise",
+      "formats": [
+        "float-rgba",
+        "png"
+      ],
+      "variants": "Original procedural luminance/chroma noise with sharp step edges, transparency and HDR headroom; offline PNG16 UI controls",
+      "tests": [
+        "tests/lightroom/noise.test.ts",
+        "tests/lightroom/denoise-browser.mjs"
+      ],
+      "status": "verified",
+      "qualification": "Deterministic classical bilateral filter; quantitative synthetic noise/edge checks and regular-render integration, not an Adobe processing comparison"
+    }
+  ],
+  "cameraVariants": [
+    {
+      "manufacturer": "LopeOS",
+      "model": "Synthetic Bayer test camera",
+      "format": "DNG 1.4",
+      "mosaic": "RGGB",
+      "compression": "None",
+      "sourceBits": 16,
+      "embeddedPreview": false,
+      "status": "verified"
+    },
+    {
+      "family": "Canon CR2/CR3",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Nikon NEF/NRW",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Sony ARW",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Fujifilm RAF / X-Trans",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Panasonic RW2",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Olympus / OM ORF",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Pentax PEF",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Samsung SRW",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Apple ProRAW",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Linear/HDR DNG",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    },
+    {
+      "family": "Pixel-shift / burst / manufacturer-specific compressed RAW",
+      "testedModels": [],
+      "status": "unverified",
+      "execution": "LibRaw candidate route only; no family-wide claim"
+    }
+  ],
+  "unverifiedOrUnsupported": [
+    "Rotated/wide-gamut JPEG fixtures",
+    "Arbitrary ICC input transforms",
+    "Interlaced/profiled PNG16",
+    "Compressed/tiled/CMYK TIFF",
+    "Real camera/compression RAW fixtures beyond the synthetic DNG",
+    "PSD with/without compatible composites and high depth",
+    "PSB",
+    "HEIF/HEIC/HIF, AVIF and JPEG XL actual sample variants",
+    "All video container+codec/profile combinations"
+  ],
+  "exports": {
+    "verified": [
+      "JPEG/8 with generated sRGB ICC",
+      "PNG/16 with sRGB chunk",
+      "TIFF/RGB16 with generated sRGB ICC",
+      "TIFF/RGB8 and RGB32 float in native tests",
+      "Exact original byte hashes",
+      "Portable ZIP originals/recipes/sidecars"
+    ],
+    "unavailable": [
+      "AVIF encoding",
+      "JPEG XL encoding",
+      "RAW-to-DNG conversion",
+      "New proprietary camera RAW encoding",
+      "Wide-gamut profiles",
+      "C2PA credentials"
+    ]
+  },
+  "browsers": {
+    "verified": [
+      "Chromium 158.0.8127.18",
+      "Playwright WebKit 27.2"
+    ],
+    "unavailable": [
+      "Installed Firefox profile initialization failed"
+    ],
+    "qualification": "Exact versions from reports; no claim that all stable browsers or physical HDR displays are verified."
+  }
+}

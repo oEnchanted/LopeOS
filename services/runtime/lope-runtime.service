@@ -1,0 +1,26 @@
+[Unit]
+Description=LopeOS authenticated runtime control plane
+After=docker.service network-online.target
+Requires=docker.service
+RequiresMountsFor=/var/lib/lopeos/homes/local
+
+[Service]
+Type=simple
+User=lope-runtime
+Group=lope-runtime
+SupplementaryGroups=docker
+WorkingDirectory=/opt/lopeos
+EnvironmentFile=/etc/lopeos/runtime.env
+ExecStart=/usr/bin/node services/runtime/server.js
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+MemoryMax=512M
+TasksMax=256
+
+[Install]
+WantedBy=multi-user.target

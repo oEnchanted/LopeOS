@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-13",
+  "build": {
+    "earlierFullProductionBuild": "passed",
+    "latestFullProductionBuild": "blocked by concurrent Writer TypeScript errors",
+    "latestErrors": [
+      "WriterEngine.insertPageBreak missing",
+      "WriterEngine.insertBlankPage missing",
+      "WriterEngine.fitPage missing"
+    ],
+    "imageEditorScopedTypeScript": "passed",
+    "imageEditorProductionBundle": "passed; Vite production input tests/image-editor/harness.html, output /tmp/lope-image-editor-build"
+  },
+  "scopedTypeScript": "passed",
+  "standardSuite": {
+    "passed": 122,
+    "failed": 0,
+    "skipped": 3,
+    "skipReason": "Linux/Docker/gVisor environment acceptance checks"
+  },
+  "imageEngineTests": 56,
+  "browserWorkflows": 17,
+  "recoveryWorkflows": 10,
+  "cs6Workflows": 10,
+  "presetWorkflows": 3,
+  "hotRefreshChecks": 6,
+  "pixelComparisons": 70,
+  "blendComparisons": 222,
+  "smartFilterComparisons": 45,
+  "localAiUiWorkflows": 7,
+  "actualPortraitInference": "passed with pinned ONNX graph / WASM CPU",
+  "comfyUiDiffusion": "unverified; mocked protocol/UI checks pass",
+  "visualStates": 18,
+  "registeredCommands": 120,
+  "shellAndVisualReportChecks": 4,
+  "localDocumentationLinks": "all present",
+  "productionEditorSmoke": "passed",
+  "actualPortraitPhoto": "NASA public-domain portrait, useful person/helmet separation; single-photo qualitative check, manual edge refinement remains"
+}

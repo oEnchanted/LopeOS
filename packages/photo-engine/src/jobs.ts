@@ -1,0 +1,7 @@
+import type { Recipe } from './model.ts';
+/** Future provider contract. No provider is installed and no network call is made. */
+export type ExternalPhotoCapability='segment'|'depth'|'generative-remove'|'generative-expand'|'prompt-edit'|'open-eyes'|'image-to-video'|'denoise'|'super-resolution'|'ai-sharpen'|'hdr-merge'|'panorama'|'video-transcode'|'tether';
+export type PhotoProvider={id:string;version:string;modelVersion:string;execution:'local'|'remote';capabilities:ExternalPhotoCapability[];priceDescription:string;dataFlowDescription:string;credentialConfiguration:'server'|'local-companion'|'not-required'};
+export type PhotoJobRequest={id:string;capability:ExternalPhotoCapability;providerId:string;engineVersion:string;modelVersion:string;assets:{id:string;sha256:string;reference:string}[];recipe?:Recipe;parameters:Record<string,unknown>;uploadAuthorization?:{assetIds:string[];providerId:string;authorizedAt:string}};
+export type PhotoJobState={id:string;state:'queued'|'running'|'succeeded'|'failed'|'cancelled';progress?:{completed:number;total:number;unit:string};result?:{reference:string;sha256:string;mime:string;provenance:Record<string,unknown>}[];error?:{code:string;message:string;retryable:boolean}};
+export interface PhotoJobProvider{description:PhotoProvider;submit(request:PhotoJobRequest):Promise<PhotoJobState>;status(id:string):Promise<PhotoJobState>;cancel(id:string):Promise<PhotoJobState>;retry(id:string):Promise<PhotoJobState>}

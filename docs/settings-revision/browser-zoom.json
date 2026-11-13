@@ -1,0 +1,16 @@
+{
+  "method": "chrome.tabs.setZoom",
+  "zoom": 2,
+  "before": {
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "dpr": 1
+  },
+  "after": {
+    "innerWidth": 720,
+    "innerHeight": 450,
+    "dpr": 2,
+    "width": 702,
+    "scrollWidth": 702
+  }
+}

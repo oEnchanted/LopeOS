@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-12",
+  "fullBuild": {
+    "command": "npm run build",
+    "exitCode": 0
+  },
+  "entryTypecheck": {
+    "command": "npx tsc --noEmit -p tests/settings/tsconfig.scope.json",
+    "exitCode": 0
+  },
+  "bundle": {
+    "command": "npx vite build",
+    "exitCode": 0
+  },
+  "warnings": [
+    "Existing large editor-engine chunks",
+    "Weather has both static and dynamic imports"
+  ],
+  "build": {
+    "version": "0.1.0",
+    "build": "2026-11-12T22:34:47.499Z"
+  }
+}

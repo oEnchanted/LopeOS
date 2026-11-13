@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-13",
+  "entry": "tests/image-editor/harness.html",
+  "buildDirectory": "/tmp/lope-image-editor-build",
+  "checks": [
+    "Bundled worker loaded and rendered the actual sample",
+    "UI New Layer and Undo changed layer count 7 \u2192 8 \u2192 7",
+    "Local AI lazy JavaScript/CSS loaded; download control enabled; dialog closed"
+  ],
+  "worker": {
+    "asset": "worker-B_2WWifo.js",
+    "status": 200,
+    "dimensions": [
+      953,
+      636
+    ],
+    "backend": "Canvas 2D",
+    "sampleAlpha": 255,
+    "renderMs": 27.1
+  },
+  "errors": [],
+  "failedRequests": [],
+  "modelDownloaded": false,
+  "temporaryServerStopped": true
+}

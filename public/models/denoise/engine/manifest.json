@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "ffdnet-color-clip-v1",
+  "name": "FFDNet Color",
+  "version": 1,
+  "runtime": "onnxruntime-web 1.31.1",
+  "backend": "wasm",
+  "tileSize": 160,
+  "halo": 32,
+  "files": [
+    {
+      "id": "model",
+      "name": "ffdnet-color-v1.onnx",
+      "path": "/models/denoise/ffdnet-color-v1.onnx",
+      "bytes": 3412037,
+      "sha256": "28c8ca2616c3283792a6db51ae26830ec44d1c8b5b823614c25788f785140f24"
+    },
+    {
+      "id": "runtime",
+      "name": "ort.wasm.bundle.min.mjs",
+      "path": "/models/denoise/engine/ort.wasm.bundle.min.mjs",
+      "bytes": 77024,
+      "sha256": "51bd7168175767324ab0acfcfc4ca94a096a3826e3ebac9ccc4f195eb865f8dd"
+    },
+    {
+      "id": "loader",
+      "name": "ort-wasm-simd-threaded.mjs",
+      "path": "/models/denoise/engine/ort-wasm-simd-threaded.mjs",
+      "bytes": 24738,
+      "sha256": "30ed0b5cd1182ede931fea448afb567d4dc705ec957af09f108a2be5f770dac3"
+    },
+    {
+      "id": "wasm",
+      "name": "ort-wasm-simd-threaded.wasm",
+      "path": "/models/denoise/engine/ort-wasm-simd-threaded.wasm",
+      "bytes": 14848852,
+      "sha256": "4b884c203b0fa48d057be3332c65513ff85aa3c5bddd6946acc0fab7ecda001d"
+    }
+  ],
+  "totalBytes": 18362651
+}

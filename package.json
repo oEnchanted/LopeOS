@@ -1,0 +1,46 @@
+{
+  "name": "lopeos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.32.1",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "dev:runtime": "node services/runtime/server.mjs",
+    "dev:accounts": "node services/accounts/server.mjs",
+    "test:accounts": "node --test services/accounts/*.test.mjs tests/accounts/*.test.ts && node tests/accounts/acceptance.mjs && playwright test -c tests/accounts/playwright.ui.config.ts",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test services/runtime/*.test.js tests/apps/*.test.ts",
+    "test:backup": "node --test tests/backup/*.test.ts",
+    "test:desktop": "node tests/shell/desktop.mjs",
+    "test:dock": "node tests/shell/dock.mjs",
+    "test:windows": "node tests/shell/windows.mjs",
+    "test:spotlight": "node tests/shell/spotlight.mjs",
+    "test:spotlight:ai": "node tests/shell/spotlight-ai.mjs",
+    "test:photos": "node --test tests/lightroom/engine.test.ts tests/lightroom/denoise.test.ts tests/lightroom/noise.test.ts",
+    "test:photos:browser": "node tests/lightroom/browser.mjs && node tests/lightroom/codecs.mjs && node tests/lightroom/handoff.mjs",
+    "dev:browser": "node scripts/browser-dev.mjs",
+    "test:setup": "node --test tests/setup/*.test.ts && playwright test -c tests/setup/playwright.config.ts",
+    "test:updates": "npm run build && node --test tests/updates/*.test.mjs && playwright test -c tests/updates/playwright.config.ts",
+    "test:photos:denoise": "node tests/lightroom/denoise-probe.mjs && node tests/lightroom/denoise-browser.mjs",
+    "prepare:photo-ai": "node scripts/prepare-denoise-runtime.mjs"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "0.2.88",
+    "@vitejs/plugin-react": "latest",
+    "libraw-wasm": "1.6.0",
+    "lucide-react": "latest",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest"
+  }
+}

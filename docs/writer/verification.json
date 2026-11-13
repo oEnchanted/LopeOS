@@ -1,0 +1,564 @@
+{
+  "date": "2026-11-13",
+  "browser": "Chromium headless on macOS arm64",
+  "primarySuite": {
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0,
+    "distinctScenarios": 62,
+    "manualRerunScenarios": 2,
+    "notes": "Final distinct coverage from the feature audit plus the clean 15-case compact Preferences recheck; this is not a single clean 62-case run.",
+    "runs": [
+      {
+        "kind": "combined",
+        "startTime": "2026-11-13T19:14:28.978Z",
+        "duration": 228991.795,
+        "expected": 59,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      {
+        "kind": "targeted shell rerun",
+        "startTime": "2026-11-13T19:18:41.405Z",
+        "duration": 9402.707,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      {
+        "kind": "compact Preferences final recheck",
+        "startTime": "2026-11-13T19:38:04.853Z",
+        "duration": 54207,
+        "expected": 15,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    ],
+    "environmentIssue": "The two shell-based scenarios could not load while an unrelated shared Accounts module was missing. Both passed after it became available."
+  },
+  "browserCases": [
+    {
+      "name": "Page Break inserts native breaks at the caret with coherent history and DOCX round trip",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Blank Page inserts native breaks at the caret with coherent history and DOCX round trip",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "text insertion resumes after pasted or inserted text in Editing, including after Undo/Redo",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "selected-text replacement resumes after pasted or inserted text in Editing, including after Undo/Redo",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "text insertion resumes after pasted or inserted text in Reviewing, including after Undo/Redo",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "selected-text replacement resumes after pasted or inserted text in Reviewing, including after Undo/Redo",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "One Page fits the active page within both viewport dimensions at different zooms and sizes",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "paper sizes preserve landscape orientation and standard margin presets retain their asymmetric sides",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Reviewing tracks public formatting and replacement commands and prevents untracked page-break writes",
+      "source": "adapter-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Paragraph supports right indentation without resetting left indentation",
+      "source": "document-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "formatting dialogs cannot apply changes while Viewing",
+      "source": "document-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Paste places continued typing after the inserted content",
+      "source": "document-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Symbol places continued typing after the inserted content",
+      "source": "document-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Ribbon Copy and Cut transfer the complete long selection and Cut retains native undo",
+      "source": "document-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "multi-page selection transactions, undo/redo, named style, TOC, DOCX round trip",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "comments and replies remain separate from tracked insertion/deletion decisions",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "table across pages supports cell edits and row/column operations",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "image insertion, resizing, wrapping, crop and media relationship survive export",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "50-page document keeps a semantic selection while editing and navigating",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "paragraph transactions, page setup, hyperlinks, footnotes, headers and page fields remain structures",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "pending reviews and opaque package metadata survive DOCX save and reopen",
+      "source": "engine.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "opening another file freezes the old editing surface and document commands",
+      "source": "file-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "a failed open restores typing in the original document",
+      "source": "file-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Preferences follows live LopeOS theme and the device theme in System mode",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "category grid, history, search, File Options and keyboard shortcut open the same Preferences",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "view and unit preferences persist without resetting editing history",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "author changes apply to new comments and survive DOCX saving",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "custom AutoCorrect replacements are real, persistent and undoable",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "animation controls honor both system and device Reduce Motion",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "Save preferences update AutoSave and recovery controls",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "picture and print preferences change saved wrapping and actual print output",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "closing animations return typing focus immediately",
+      "source": "preferences.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "super/subscript toggles preserve text and unrelated formatting through DOCX export and undo",
+      "source": "ribbon-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Read Mode and Print Layout show current mode and disable character edits while viewing",
+      "source": "ribbon-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "unsafe case replacement is unavailable with an explicit reason",
+      "source": "ribbon-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Layout shows actual and mixed paragraph values and uses per-edge Word margin presets",
+      "source": "ribbon-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "typing resumes at the caret immediately after Save",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Font dialog changes size without clearing color or strike, then returns to editing",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Paragraph dialog centers every selected paragraph",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "File Print refreshes the preview after document edits",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Escape cannot dismiss an in-flight formatting transaction",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Navigation and Comments stay open together, resize, and collapsed tabs reopen",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "search snippets select the intended occurrence for Replace",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "AutoSave retries edits made while a previous save is in flight",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "switching pictures loads each picture size and changes only the selected picture",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "a hyperlink keeps the selected display text",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "read-only documents cannot be switched into editing through review or view controls",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "a slow manual save keeps focus in a search started while it was saving",
+      "source": "second-pass.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Preferences search finds actual option labels before their panes have been visited",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "AutoCorrect tabs and replacement list support arrow keys and roving focus",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "Preferences honors OS larger text and increased contrast in both themes",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "recovery interval follows shared updates and preserves conflicting drafts",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 3,
+      "initialStatus": "unexpected"
+    },
+    {
+      "name": "replacement limit prevents silent discard and still allows editing existing rules",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
+      "name": "LopeOS manifest, window, global menus, and lifecycle use the same Writer commands",
+      "source": "shell.spec.ts",
+      "status": "expected",
+      "attempts": 2,
+      "initialStatus": "unexpected"
+    },
+    {
+      "name": "native text input, ribbon selection, semantic save/reload, recovery and close guard",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "external modifications and interrupted saves preserve unsaved edits",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "unsafe packages require a read-only or copy route and keep the original",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "comments dialog freezes selection; review panes, search, and formatting dialogs work",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "print preview and PDF use every engine page with matching page count",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "missing fonts are reported alongside save state and the ruler can be toggled",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "AutoSave acknowledges the workspace version without resetting undo history",
+      "source": "writer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Preferences is a compact utility window with readable category labels in the real shell",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    }
+  ],
+  "packageUnitTests": {
+    "passed": 5,
+    "failed": 0,
+    "command": "node --test tests/writer/package.test.ts"
+  },
+  "build": {
+    "command": "npm run build",
+    "result": "pass",
+    "notes": [
+      "Final whole-workspace TypeScript and Vite build passed.",
+      "Large lazy DOCX engine chunk and existing shared dynamic-import warnings remain."
+    ]
+  },
+  "productionSmoke": {
+    "date": "2026-11-13",
+    "passed": true,
+    "checks": [
+      "Production shell loads lazy Writer and engine worker",
+      "Native text input and bold formatting",
+      "SDK Save dialog and binary save acknowledged",
+      "Saved OOXML text and bold run",
+      "Preferences opens from the app and follows live system Light/Dark changes",
+      "Closing Preferences retains the saved document",
+      "No browser page errors"
+    ],
+    "errors": []
+  },
+  "packageFixtureAudit": {
+    "passed": 9,
+    "details": "package-validation.json"
+  },
+  "sourceFingerprint": {
+    "algorithm": "SHA-256 over sorted product paths and contents, each NUL-separated",
+    "files": 19,
+    "digest": "d9b9e2f694b6d82fc2cdbffdeecf4086d75ca699dbf95633926e368ee701cc6e",
+    "paths": [
+      "apps/web/src/apps/writer/Backstage.tsx",
+      "apps/web/src/apps/writer/PreferencesWindow.tsx",
+      "apps/web/src/apps/writer/Prompt.tsx",
+      "apps/web/src/apps/writer/Ribbon.tsx",
+      "apps/web/src/apps/writer/SidePane.tsx",
+      "apps/web/src/apps/writer/WriterDialog.tsx",
+      "apps/web/src/apps/writer/appearance.css",
+      "apps/web/src/apps/writer/index.tsx",
+      "apps/web/src/apps/writer/manifest.ts",
+      "apps/web/src/apps/writer/motion.css",
+      "apps/web/src/apps/writer/motion.ts",
+      "apps/web/src/apps/writer/preferences.css",
+      "apps/web/src/apps/writer/preferences.ts",
+      "apps/web/src/apps/writer/print.ts",
+      "apps/web/src/apps/writer/recovery.ts",
+      "apps/web/src/apps/writer/systemAppearance.ts",
+      "apps/web/src/apps/writer/writer.css",
+      "packages/document-engine/src/index.ts",
+      "packages/document-engine/src/package.ts"
+    ]
+  },
+  "nativeWord": {
+    "windows": "not performed",
+    "mac": "Word 16.115 AppleEvent open/read/close attempt timed out; no successful native validation"
+  },
+  "filesystem": "Production runtime-client transport with test-only binary filesystem contract; not live workspace deployment acceptance",
+  "secondPass": {
+    "request": "Fix bugs and improve the UI after a second review",
+    "regressionCases": 12,
+    "result": "pass",
+    "source": "tests/writer/second-pass.spec.ts",
+    "baselineFailures": [
+      "Typing immediately after Save",
+      "File Print reused a stale preview",
+      "Escape dismissed an in-flight formatting transaction",
+      "Slow manual Save stole focus from a search opened while saving"
+    ],
+    "fixes": [
+      "Restore editor focus after manual Save and formatting while preserving a search opened during a slow save",
+      "Apply only changed formatting properties",
+      "Format all selected paragraphs in one transaction",
+      "Read and switch picture settings without resetting untouched dimensions",
+      "Refresh print previews and hold the print document until afterprint",
+      "Retry recovery and AutoSave when previous saves are in flight",
+      "Allow independent Navigation and right-side panes",
+      "List actual search snippets and replace the selected occurrence",
+      "Protect read-only mode across view and review controls",
+      "Refine dialog spacing, preview fonts, comments, pane resizing, ribbon menus and small-window layout"
+    ],
+    "screenshots": "screenshots/",
+    "consoleErrorsInCapture": []
+  },
+  "audit": {
+    "request": "Inspect Writer and Preferences, verify Word feature coverage and LopeOS UI conventions",
+    "newBrowserScenarios": 26,
+    "coverage": "word-feature-audit.md",
+    "osChecks": [
+      "Live LopeOS Light/Dark/System theme",
+      "150% OS text size in Light/Dark and narrow windows",
+      "Increased contrast control and focus visibility",
+      "LopeOS and device Reduce Motion",
+      "Opaque Writer content surfaces permitted by docs/design-system.md",
+      "Global menus, SDK Save and lifecycle"
+    ],
+    "fixes": [
+      "Native caret Page Break and Blank Page with history and reveal",
+      "Actual One Page fit, landscape paper sizes, asymmetric margin presets",
+      "Superscript/subscript toggles and live/mixed Layout values",
+      "Right paragraph indentation and Viewing mutation guards",
+      "Inert previous editor while opening and typing restored after failed reads",
+      "Full native clipboard selection and Paste/Symbol caret/history continuation",
+      "Actual option-label Preferences search",
+      "AutoCorrect roving keyboard focus, navigation focus race and explicit replacement limit",
+      "Recovery interval shared updates and draft conflicts",
+      "OS text-size and increased-contrast Preferences styles",
+      "Compact 800×600 Preferences with smaller flat icon tiles, 13/14-pixel text, readable category colors and a single close action"
+    ],
+    "remaining": "Complete Microsoft Word parity is unavailable. See the feature-family matrix and exact compatibility limits.",
+    "captures": {
+      "mainPageErrors": [],
+      "preferencesPageErrors": [],
+      "osContrast": [
+        "screenshots/preferences-light-text150-contrast.png",
+        "screenshots/preferences-dark-text150-contrast.png"
+      ]
+    },
+    "productionHarness": "Waits for acknowledged Save and explicitly chooses the runtime workspace root; the SDK now defaults Save to browser-backed LopeDrive."
+  },
+  "compactPreferences": {
+    "request": "The preferences screen is still huge and ugly",
+    "size": "800×600 CSS px",
+    "previousSize": "1186×837 CSS px",
+    "toolbarHeight": 62,
+    "categoryIconSize": 36,
+    "categoryTextSize": 13,
+    "formTextSize": 14,
+    "checks": {
+      "scenariosPassed": 15,
+      "failed": 0,
+      "durationMs": 54207,
+      "all16CategoriesFitAtNormalDesktopText": true,
+      "lightAndDarkCategoryContrastAtLeast": 4.5,
+      "osTextSize150": true,
+      "increasedContrast": true,
+      "narrowWindow": true,
+      "productionSmoke": true
+    },
+    "investigation": "An earlier affected-suite run saw one native paragraph batch reject a revision change. The specific workflow passed three repeats, then the final 15-case suite passed clean. No retry or delay was added to the product.",
+    "screenshots": "screenshots/production-preferences-light.png"
+  }
+}

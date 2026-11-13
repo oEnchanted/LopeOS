@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-13",
+  "checks": [
+    "Tab switches preserve independent zoom and pan",
+    "Component unmount/remount preserves clean and dirty tabs, undo/redo, views and tool settings",
+    "IndexedDB reload restores all tabs and full undo/redo state, including clean documents",
+    "Restored redo and undo execute real document operations",
+    "Selected Copy, Cut, Paste in Place and Layer via Copy preserve source pixels and undo",
+    "Filter Cancel preserves history; Smart Filter apply, disable, remove and undo preserve embedded pixels",
+    "In-place Type commits as one undo transaction and typing does not switch tools",
+    "Escape cancels Type; an interrupted text draft is recovered as an editable layer",
+    "LopeOS Reload flushes the session without discarding unsaved edits",
+    "Device image paste imports real image pixels at original dimensions"
+  ],
+  "errors": []
+}

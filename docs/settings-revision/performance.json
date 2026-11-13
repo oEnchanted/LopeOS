@@ -1,0 +1,30 @@
+{
+  "idle": {
+    "samples": 66,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 16.700000000000045,
+    "over33ms": 0,
+    "visible": "visible"
+  },
+  "high": {
+    "samples": 83,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 33.30000000000018,
+    "over33ms": 6,
+    "visible": "visible"
+  },
+  "balanced": {
+    "samples": 81,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 16.800000000000182,
+    "over33ms": 1,
+    "visible": "visible"
+  },
+  "low": {
+    "samples": 81,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 16.700000000000728,
+    "over33ms": 0,
+    "visible": "visible"
+  }
+}

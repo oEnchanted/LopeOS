@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "../../apps/web/src/apps/browser",
+    "../../packages/browser-client/src",
+    "../../packages/contracts/src",
+    "../../packages/ui/src",
+    "tests/host.tsx"
+  ]
+}

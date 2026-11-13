@@ -1,0 +1,12 @@
+{
+  "name": "@lopeos/photo-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "ag-psd": "31.0.3",
+    "libraw-wasm": "1.6.0",
+    "onnxruntime-web": "1.31.1"
+  }
+}

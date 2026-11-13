@@ -1,0 +1,508 @@
+{
+  "schemaVersion": 1,
+  "reference": "Adobe Lightroom desktop 10.0 / November 2026 / Advanced / Dark",
+  "acceptance": "Independent implementation; full parity is not yet achieved. Statuses must be supported by verification.json.",
+  "features": [
+    {
+      "id": "shell",
+      "slice": "A",
+      "status": "partial",
+      "location": "apps/web/src/apps/lightroom",
+      "execution": "local browser",
+      "test": "tests/lightroom/browser.mjs",
+      "gap": "Exact Advanced preset geometry/platform/scale unverified"
+    },
+    {
+      "id": "import-library",
+      "slice": "A",
+      "status": "partial",
+      "location": "library.ts",
+      "execution": "IndexedDB + workspace file service",
+      "test": "tests/lightroom/browser.mjs",
+      "gap": "OS directory-handle persistence and remote synchronization not implemented"
+    },
+    {
+      "id": "nondestructive-development",
+      "slice": "A",
+      "status": "partial",
+      "location": "packages/photo-engine/src",
+      "execution": "worker CPU float32 linear sRGB",
+      "test": "tests/lightroom/engine.test.ts",
+      "gap": "Independent algorithms; Adobe pixel equivalence unverified"
+    },
+    {
+      "id": "raw-development",
+      "slice": "B",
+      "status": "partial",
+      "location": "packages/photo-engine/src/decode.ts",
+      "execution": "LibRaw WASM",
+      "test": "tests/lightroom/browser.mjs",
+      "gap": "Model/compression coverage needs explicit fixtures"
+    },
+    {
+      "id": "high-bit-depth",
+      "slice": "B",
+      "status": "partial",
+      "location": "png.ts + tiff.ts",
+      "execution": "local worker",
+      "test": "tests/lightroom/engine.test.ts",
+      "gap": "Arbitrary ICC transforms, wide gamut, high-bit-depth HEIF/AVIF/JXL and compressed TIFF unavailable"
+    },
+    {
+      "id": "masks-retouch",
+      "slice": "C",
+      "status": "partial",
+      "location": "render.ts + viewport.tsx",
+      "execution": "local worker",
+      "test": "tests/lightroom/browser.mjs",
+      "gap": "No AI segmentation, adaptive depth, content-aware or generative model"
+    },
+    {
+      "id": "presets-versions-xmp",
+      "slice": "C",
+      "status": "partial",
+      "location": "presets.ts + xmp.ts + library.ts",
+      "execution": "local browser",
+      "test": "tests/lightroom/browser.mjs",
+      "gap": "Adobe process/profile/masking equivalence and Classic catalog migration unavailable"
+    },
+    {
+      "id": "culling",
+      "slice": "D",
+      "status": "partial",
+      "location": "render.ts analyzePhoto",
+      "execution": "local sharpness/luminance heuristic",
+      "test": "tests/lightroom/engine.test.ts",
+      "gap": "Eye-state analysis, subject semantics and semantic search need models"
+    },
+    {
+      "id": "hdr-merge-panorama",
+      "slice": "D",
+      "status": "unsupported",
+      "execution": "none",
+      "gap": "No verified registration, deghosting or projection/blending implementation"
+    },
+    {
+      "id": "hdr-display-output",
+      "slice": "D",
+      "status": "partial",
+      "execution": "float TIFF headroom preservation only",
+      "gap": "HDR display, gain maps, PQ/HLG export and SDR soft proof not implemented"
+    },
+    {
+      "id": "enhance-ai-denoise-super-resolution-sharpen-enlarge",
+      "slice": "D",
+      "status": "partial",
+      "execution": "local FFDNet Color AI denoise with separate TIFF16 output",
+      "gap": "Post-development RGB denoise implemented; sensor reconstruction, AI sharpening, super resolution and enlargement remain unavailable.",
+      "tests": [
+        "tests/lightroom/denoise-browser.mjs",
+        "tests/lightroom/production.mjs"
+      ]
+    },
+    {
+      "id": "subject-sky-background-object-people-landscape-depth",
+      "slice": "D",
+      "status": "blocked",
+      "execution": "none",
+      "gap": "Segmentation/depth models not configured or validated"
+    },
+    {
+      "id": "remove-people-reflections-dust-blemishes",
+      "slice": "D",
+      "status": "blocked",
+      "execution": "none",
+      "gap": "No genuine cleanup model; manual clone/heal is separate"
+    },
+    {
+      "id": "generative-expand-prompt-edits-open-eyes-image-to-video",
+      "slice": "D",
+      "status": "blocked",
+      "execution": "none",
+      "gap": "Requires a declared configured model/provider; reference early-access status retained"
+    },
+    {
+      "id": "lens-blur",
+      "slice": "D",
+      "status": "blocked",
+      "execution": "none",
+      "gap": "Depth estimation/refinement and occlusion-aware bokeh unavailable"
+    },
+    {
+      "id": "glow-vectorscope-projection",
+      "slice": "D",
+      "status": "unsupported",
+      "execution": "none",
+      "gap": "November 2026 controls recorded; independent verified implementations remain"
+    },
+    {
+      "id": "favorites-local-versions",
+      "slice": "C",
+      "status": "partial",
+      "execution": "local browser",
+      "gap": "Favorites interchange and complete reference layouts not implemented"
+    },
+    {
+      "id": "video",
+      "slice": "D",
+      "status": "unsupported",
+      "execution": "none",
+      "gap": "Playback/edit/transcode/audio verification pipeline unavailable"
+    },
+    {
+      "id": "tethering",
+      "slice": "D",
+      "status": "blocked",
+      "execution": "none",
+      "gap": "No tested camera bridge or supported-camera session protocol"
+    },
+    {
+      "id": "cloud-sharing-content-credentials",
+      "slice": "D",
+      "status": "blocked",
+      "execution": "none",
+      "gap": "No access-controlled sharing/sync backend or validated C2PA signer"
+    },
+    {
+      "id": "pixel-parity-performance-accessibility-recovery",
+      "slice": "E",
+      "status": "partial",
+      "execution": "browser QA",
+      "test": "tests/lightroom/browser.mjs",
+      "gap": "Physical display/color evaluation and large production library benchmarking remain"
+    },
+    {
+      "id": "image-editor-round-trip",
+      "slice": "C",
+      "status": "partial",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "local browser",
+      "gap": "Actual native project handoff and returned derivative verified; RGB/8 only.",
+      "test": "tests/lightroom/handoff.mjs"
+    },
+    {
+      "id": "backup-restore",
+      "slice": "A",
+      "status": "implemented",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "local browser",
+      "gap": "ZIP integrity and fresh-library restoration verified; bounded archive size.",
+      "test": "tests/lightroom/browser.mjs"
+    },
+    {
+      "id": "batch-preset-and-undo",
+      "slice": "C",
+      "status": "implemented",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "local browser",
+      "gap": "Shared recipe transaction restores all four selected images; metadata undo is separate future work.",
+      "test": "tests/lightroom/browser.mjs"
+    },
+    {
+      "id": "justified-and-square-grids",
+      "slice": "A",
+      "status": "implemented",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "local browser",
+      "gap": "Distinct layout algorithms with virtualization; 1000 stored procedural images tested.",
+      "test": "tests/lightroom/browser.mjs"
+    },
+    {
+      "id": "raw-enhancement",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No validated enhancement model."
+    },
+    {
+      "id": "ai-denoising",
+      "slice": "D",
+      "status": "partial",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "local FFDNet Color on CPU WASM; optional verified download",
+      "gap": "Post-development opaque SDR RGB only. Camera-sensor denoising, automatic noise estimation and Adobe model equivalence are not implemented.",
+      "implementationStatus": "implemented",
+      "tests": [
+        "tests/lightroom/denoise.test.ts",
+        "tests/lightroom/denoise-probe.mjs",
+        "tests/lightroom/denoise-browser.mjs",
+        "tests/lightroom/production.mjs"
+      ],
+      "documentation": "docs/lightroom/ai-denoise.md"
+    },
+    {
+      "id": "super-resolution",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No validated reconstruction model."
+    },
+    {
+      "id": "ai-sharpening",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No AI model; manual/output sharpening is separate."
+    },
+    {
+      "id": "advanced-enlargement",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No validated enlargement model."
+    },
+    {
+      "id": "hdr-merge",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No alignment/deghosting merge engine."
+    },
+    {
+      "id": "panorama-stitching",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No registration/projection/blending engine."
+    },
+    {
+      "id": "hdr-panorama",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No combined merge pipeline."
+    },
+    {
+      "id": "subject-segmentation",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No segmentation model."
+    },
+    {
+      "id": "sky-segmentation",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No segmentation model."
+    },
+    {
+      "id": "background-segmentation",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No segmentation model."
+    },
+    {
+      "id": "object-segmentation",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No segmentation model."
+    },
+    {
+      "id": "people-parts-segmentation",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No segmentation model."
+    },
+    {
+      "id": "landscape-segmentation",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No segmentation model."
+    },
+    {
+      "id": "depth-generation-and-refinement",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No depth model."
+    },
+    {
+      "id": "semantic-search",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No embedding model/index."
+    },
+    {
+      "id": "eye-state-culling",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No eye-state model; heuristic scores do not claim it."
+    },
+    {
+      "id": "people-cleanup",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No cleanup model."
+    },
+    {
+      "id": "reflection-cleanup",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No cleanup model."
+    },
+    {
+      "id": "dust-cleanup",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No automated cleanup model."
+    },
+    {
+      "id": "blemish-cleanup",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No automated cleanup model."
+    },
+    {
+      "id": "glow-effects",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "November 2026 feature recorded; no verified implementation."
+    },
+    {
+      "id": "vectorscope",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "November 2026 feature recorded; no implementation."
+    },
+    {
+      "id": "projection-correction",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "November 2026 reference-specific correction not implemented."
+    },
+    {
+      "id": "generative-removal",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No provider/model; manual Clone/Heal are separate."
+    },
+    {
+      "id": "generative-expansion",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No provider/model."
+    },
+    {
+      "id": "prompt-guided-edits",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No provider/model."
+    },
+    {
+      "id": "open-eyes",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "Reference Early Access; no provider/model."
+    },
+    {
+      "id": "image-to-video",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "Reference conditional/early-access status; no provider/model."
+    },
+    {
+      "id": "raw-to-dng",
+      "slice": "B",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "DNG SDK conversion not implemented."
+    },
+    {
+      "id": "avif-encoding",
+      "slice": "B",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No tested encoder."
+    },
+    {
+      "id": "jxl-encoding",
+      "slice": "B",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No tested encoder."
+    },
+    {
+      "id": "video-trim-and-audio-export",
+      "slice": "D",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No verified container/codec processing pipeline."
+    },
+    {
+      "id": "content-credentials",
+      "slice": "D",
+      "status": "blocked",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "No signer/validator."
+    },
+    {
+      "id": "default-workspace",
+      "slice": "E",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "Actual layout values are unverified; preset not exposed."
+    },
+    {
+      "id": "classic-style-workspace",
+      "slice": "E",
+      "status": "unsupported",
+      "location": "apps/web/src/apps/lightroom / packages/photo-engine/src",
+      "execution": "none",
+      "gap": "Actual desktop preset values are unverified; not confused with separate Classic app."
+    }
+  ],
+  "updated": "2026-11-13"
+}

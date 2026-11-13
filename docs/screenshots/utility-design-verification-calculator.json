@@ -1,0 +1,30 @@
+{
+  "conditions": "Chromium headless, deterministic Open-Meteo fixtures; desktop, minimum utility windows, and 390\u00d7844 mobile. No live forecast claim.",
+  "checks": [
+    "Calculator modes: scientific degrees, hexadecimal/decimal arithmetic, RPN stack, variable Math Notes, and Fahrenheit/Celsius conversion",
+    "Calculator: exact decimal and parenthesized keyboard arithmetic, error feedback, reusable history, button arithmetic, minimum window keys",
+    "Light/dark desktop and 390\u00d7844 mobile layouts render without horizontal overflow",
+    "Targeted final layout pass: all Basic/Scientific/Programmer/RPN/Convert keypads fit default window with bottom padding in light and dark appearance"
+  ],
+  "screenshots": [
+    "docs/screenshots/calculator-refined-light.png",
+    "docs/screenshots/calculator-refined-light-scientific.png",
+    "docs/screenshots/calculator-refined-light-programmer.png",
+    "docs/screenshots/calculator-refined-light-rpn.png",
+    "docs/screenshots/calculator-refined-light-math-notes.png",
+    "docs/screenshots/calculator-refined-light-convert.png",
+    "docs/screenshots/calculator-refined-history.png",
+    "docs/screenshots/calculator-refined-minimum.png",
+    "docs/screenshots/calculator-refined-mobile-light.png",
+    "docs/screenshots/calculator-refined-dark.png",
+    "docs/screenshots/calculator-refined-mobile-dark.png",
+    "docs/screenshots/calculator-refined-light-mode-menu.png",
+    "docs/screenshots/calculator-refined-dark-mode-menu.png",
+    "docs/screenshots/calculator-refined-dark-scientific.png",
+    "docs/screenshots/calculator-refined-dark-programmer.png",
+    "docs/screenshots/calculator-refined-dark-rpn.png",
+    "docs/screenshots/calculator-refined-dark-convert.png",
+    "docs/screenshots/calculator-refined-dark-math-notes.png"
+  ],
+  "errors": []
+}

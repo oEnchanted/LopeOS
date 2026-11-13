@@ -1,0 +1,1 @@
+{"extends":"../../tsconfig.json","include":["../../apps/web/src/apps/writer","../../packages/document-engine/src","../../packages/contracts/src","../../packages/sdk/src"],"exclude":["results"]}

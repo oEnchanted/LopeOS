@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+source "${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}/container-env"
+until xdpyinfo -display "${DISPLAY:-:20}" >/dev/null 2>&1; do sleep 0.2; done
+# Chromium owns a fresh pipe and a persistent profile, never a public debugging endpoint.
+exec node /opt/lope/services/browser/src/main.mjs

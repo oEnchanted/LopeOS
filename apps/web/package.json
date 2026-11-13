@@ -1,0 +1,14 @@
+{
+  "name": "@lopeos/web",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@lopeos/runtime-client": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "lucide-react": "latest",
+    "@xterm/xterm": "^5.5.0",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-search": "^0.15.0"
+  }
+}

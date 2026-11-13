@@ -1,0 +1,35 @@
+apps/web/src/apps/image-editor/manifest.ts(4,23): error TS2307: Cannot find module './index' or its corresponding type declarations.
+apps/web/src/apps/writer/Ribbon.tsx(45,213): error TS2339: Property 'anchor' does not exist on type 'SelectionTarget'.
+apps/web/src/apps/writer/Ribbon.tsx(45,333): error TS2345: Argument of type '"format.paragraph.setPagination"' is not assignable to parameter of type '"authorities.configure" | "authorities.entries.get" | "authorities.entries.insert" | "authorities.entries.list" | "authorities.entries.remove" | "authorities.entries.update" | ... 448 more ... | "watermarks.replace"'.
+apps/web/src/apps/writer/Ribbon.tsx(81,512): error TS2304: Cannot find name 'assertReceipt'.
+apps/web/src/apps/writer/Ribbon.tsx(81,700): error TS2304: Cannot find name 'assertReceipt'.
+apps/web/src/apps/writer/SidePane.tsx(16,166): error TS2339: Property 'pending' does not exist on type 'SearchSnapshot'.
+apps/web/src/apps/writer/SidePane.tsx(24,120): error TS2339: Property 'then' does not exist on type 'MaybePromise<BlocksListResult>'.
+  Property 'then' does not exist on type 'BlocksListResult'.
+apps/web/src/apps/writer/SidePane.tsx(24,125): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/web/src/apps/writer/SidePane.tsx(37,259): error TS2339: Property 'text' does not exist on type 'TrackChangesItem'.
+apps/web/src/apps/writer/WriterDialog.tsx(9,81): error TS2300: Duplicate identifier 'setTab'.
+apps/web/src/apps/writer/WriterDialog.tsx(30,57): error TS2339: Property 'percent' does not exist on type 'ZoomSlice'.
+apps/web/src/apps/writer/WriterDialog.tsx(36,15): error TS2300: Duplicate identifier 'setTab'.
+apps/web/src/apps/writer/WriterDialog.tsx(66,29): error TS2339: Property 'anchor' does not exist on type 'SelectionTarget'.
+apps/web/src/apps/writer/WriterDialog.tsx(76,29): error TS2345: Argument of type '"format.paragraph.setPagination"' is not assignable to parameter of type '"authorities.configure" | "authorities.entries.get" | "authorities.entries.insert" | "authorities.entries.list" | "authorities.entries.remove" | "authorities.entries.update" | ... 448 more ... | "watermarks.replace"'.
+apps/web/src/apps/writer/WriterDialog.tsx(91,31): error TS2339: Property 'id' does not exist on type 'ImageSummary'.
+apps/web/src/apps/writer/WriterDialog.tsx(93,148): error TS2322: Type '"square" | "topAndBottom"' is not assignable to type 'ImageWrapType'.
+  Type '"square"' is not assignable to type 'ImageWrapType'. Did you mean '"Square"'?
+apps/web/src/apps/writer/WriterDialog.tsx(105,49): error TS2345: Argument of type '{ type: "endnote" | "footnote"; content: string; at?: SelectionTarget | undefined; }' is not assignable to parameter of type 'FootnoteInsertInput'.
+  Type '{ type: "endnote" | "footnote"; content: string; at?: SelectionTarget | undefined; }' is not assignable to type '{ at?: TextTarget | undefined; type: "endnote" | "footnote"; content: string; body?: undefined; }'.
+    Types of property 'at' are incompatible.
+      Type 'SelectionTarget | undefined' is not assignable to type 'TextTarget | undefined'.
+        Property 'segments' is missing in type 'SelectionTarget' but required in type 'TextTarget'.
+apps/web/src/apps/writer/WriterDialog.tsx(113,63): error TS2322: Type '"footer" | "header"' is not assignable to type '"story"'.
+  Type '"footer"' is not assignable to type '"story"'.
+apps/web/src/apps/writer/WriterDialog.tsx(115,49): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'text' does not exist in type 'InsertInput'.
+apps/web/src/apps/writer/WriterDialog.tsx(122,120): error TS2561: Object literal may only specify known properties, but 'width' does not exist in type 'TablesSetColumnWidthInput'. Did you mean to write 'widthPt'?
+apps/web/src/apps/writer/index.tsx(10,27): error TS2307: Cannot find module './Backstage' or its corresponding type declarations.
+apps/web/src/apps/writer/index.tsx(225,197): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'text' does not exist in type 'InsertInput'.
+apps/web/src/apps/writer/index.tsx(260,37): error TS2339: Property 'percent' does not exist on type 'ZoomSlice'.
+apps/web/src/apps/writer/index.tsx(290,163): error TS7006: Parameter 'path' implicitly has an 'any' type.

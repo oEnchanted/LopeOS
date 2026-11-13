@@ -1,0 +1,167 @@
+/* Spotlight is a pair of floating glass surfaces, with a stable search field. */
+.desktop .spotlight-backdrop { padding: clamp(60px, 15vh, 150px) 16px 24px; background: #071e351a; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.desktop .spotlight.spotlight-desktop { width: 700px; max-width: 100%; max-height: 100%; overflow: visible; display: flex; flex-direction: column; gap: 12px; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; animation: spotlight-arrive 160ms ease-out; }
+.spotlight-desktop::before { content: none; }
+.spotlight-desktop .spotlight-searchbar,.spotlight-desktop .spotlight-body { background: var(--glass-background); color: var(--glass-text); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); backdrop-filter: var(--glass-filter); -webkit-backdrop-filter: var(--glass-filter); }
+.desktop .spotlight-desktop .spotlight-searchbar { flex: 0 0 auto; min-height: 88px; padding: 20px 26px; gap: 18px; border-radius: 46px; }
+.desktop .spotlight-desktop .spotlight-input input { font-size: clamp(22px,2.4vw,29px); font-weight: 400; letter-spacing: -.035em; line-height: 1.3; color: var(--text); caret-color: var(--accent); }
+.spotlight-desktop .spotlight-input input::placeholder { opacity: .85; }
+.spotlight-desktop .spotlight-input>svg { color: var(--muted); flex-shrink: 0; }
+.spotlight-desktop .spotlight-input>button { min-width: 30px; min-height: 30px; border-radius: 50%; flex-shrink: 0; }
+.spotlight-desktop .spotlight-body { border-radius: 28px; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.desktop .spotlight-desktop .spotlight-results { max-height: 310px; padding: 8px 12px 10px; scrollbar-width: thin; overscroll-behavior: contain; }
+.desktop .spotlight-desktop .spotlight-results>button { margin: 2px 0; min-height: 62px; border: 1px solid transparent; border-radius: 14px; gap: 13px; padding: 10px 13px; color: var(--text); }
+.spotlight-desktop .spotlight-results>button.selected { background: color-mix(in srgb,var(--accent) 12%,transparent); border-color: color-mix(in srgb,var(--accent) 14%,transparent); box-shadow: inset 0 1px #ffffff2a; }
+.spotlight-desktop .spotlight-results>button>.app-icon,.spotlight-desktop .search-result-symbol { flex-shrink: 0; }
+.spotlight-desktop .search-result-symbol { color: var(--accent); background: color-mix(in srgb,var(--accent) 9%,transparent); width: 38px; height: 38px; border-radius: 11px; }
+.spotlight-desktop .spotlight-result-copy { min-width: 0; flex: 1; }
+.desktop .spotlight-desktop .spotlight-result-copy strong { font-size: calc(14px * var(--ui-text-scale,1)); font-weight: 550; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.desktop .spotlight-desktop .spotlight-result-copy small { margin-top: 4px; font-size: calc(11px * var(--ui-text-scale,1)); line-height: 1.45; }
+.spotlight-desktop .spotlight-result-kind { font-size: 10px; color: var(--muted); flex: 0 0 auto; }
+.spotlight-desktop .spotlight-results>button>svg:last-child { flex-shrink: 0; }
+.spotlight-scopes { display: flex; gap: 4px; padding: 14px 16px 10px; border-bottom: 1px solid var(--separator); overflow-x: auto; scrollbar-width: none; }
+.spotlight-scopes>button { flex-shrink: 0; background: transparent; color: var(--muted); font-size: 12px; padding: 7px 12px; border: 1px solid transparent; border-radius: 18px; }
+.spotlight-scopes>button[aria-pressed=true] { color: var(--text); background: var(--row-material); border-color: var(--separator); box-shadow: 0 1px 3px #123a4c0c; }
+.spotlight-scopes>button:hover { color: var(--text); background: var(--hover); }
+.desktop .spotlight-desktop .spotlight-answer { padding: 21px 18px; min-height: 100px; margin-bottom: 9px; }
+.spotlight-desktop .spotlight-answer .search-result-symbol { height: 46px; width: 46px; background: color-mix(in srgb,var(--accent) 14%,transparent); }
+.desktop .spotlight-desktop .spotlight-answer strong { font-size: clamp(26px,4vw,36px); letter-spacing: -.045em; font-weight: 500; white-space: normal; overflow-wrap: anywhere; }
+.spotlight-desktop .spotlight-answer small { white-space: normal; }
+.spotlight-clipboard-head { padding: 20px 25px 13px; display: flex; align-items: start; gap: 15px; }
+.spotlight-clipboard-head>div { flex: 1; }
+.spotlight-clipboard-head strong { font-size: 15px; font-weight: 550; }
+.spotlight-clipboard-head p { font-size: 11px; line-height: 1.6; color: var(--muted); margin: 5px 0 0; }
+.spotlight-desktop .spotlight-small-button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; color: var(--text); border: 1px solid var(--separator); border-radius: 8px; background: var(--row-material); padding: 7px 10px; font-size: 11px; }
+.spotlight-desktop button:disabled { opacity: .45; cursor: default; }
+.spotlight-small-button:not(:disabled):hover { background: var(--hover); }
+.spotlight-clipboard-compose { margin: 0 24px 10px; padding: 10px; border: 1px solid var(--separator); border-radius: 12px; background: color-mix(in srgb,var(--input) 60%,transparent); }
+.spotlight-clipboard-compose textarea { width: 100%; display: block; background: transparent; color: var(--text); border: 0; padding: 3px 3px 8px; resize: vertical; min-height: 50px; max-height: 140px; font: inherit; font-size: 12px; line-height: 1.5; }
+.spotlight-clipboard-compose>div { display: flex; gap: 8px; justify-content: space-between; }
+.spotlight-clip-preview { margin: 0 24px 16px; padding: 12px 14px; border: 1px solid var(--separator); background: color-mix(in srgb,var(--input) 50%,transparent); border-radius: 12px; }
+.spotlight-clip-preview>div { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); }
+.spotlight-clip-preview strong { font-size: 10px; font-weight: 500; letter-spacing: .025em; }
+.spotlight-clip-preview>div>span { display: flex; gap: 5px; }
+.spotlight-clip-preview button { background: transparent; color: var(--muted); display: grid; place-items: center; padding: 6px; border-radius: 6px; }
+.spotlight-clip-preview button:hover,.spotlight-clip-preview button[aria-pressed=true] { background: var(--accent-soft); color: var(--accent); }
+.spotlight-clip-preview pre { margin: 10px 0 3px; max-height: 115px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 12px; line-height: 1.7; user-select: text; }
+.spotlight-desktop .spotlight-empty { padding: 28px 28px 34px; display: flex; align-items: center; flex-direction: column; text-align: center; color: var(--muted); gap: 10px; }
+.spotlight-empty h3 { color: var(--text); font-size: 18px; font-weight: 500; letter-spacing: -.02em; margin: 3px 0 0; }
+.spotlight-empty p { max-width: 365px; font-size: 12px; line-height: 1.7; margin: 0; }
+.spotlight-desktop .spotlight-empty-small { padding: 26px; }
+.spotlight-desktop .spotlight-primary { background: var(--accent); color: white; border-radius: 9px; font-size: 12px; padding: 10px 15px; margin-top: 8px; }
+.spotlight-desktop .spotlight-message { margin: 0; color: var(--accent); font-size: 12px; padding: 10px 25px 15px; line-height: 1.5; }
+.spotlight-desktop .spotlight-message.is-error { color: #ae442a; }
+.desktop[data-theme=dark] .spotlight-message.is-error { color: #ffb29e; }
+.desktop .spotlight-desktop .spotlight-footer { align-items: center; padding: 12px 22px; gap: 16px; font-size: 10px; }
+.spotlight-footer .spotlight-brand { margin-right: auto; font-size: 11px; letter-spacing: -.01em; font-weight: 500; }
+.spotlight-desktop .spotlight-footer>button { display: grid; place-items: center; padding: 5px; color: var(--muted); background: transparent; border-radius: 5px; }
+.spotlight-desktop .spotlight-footer>button:hover { background: var(--hover); }
+.spotlight-desktop .search-status { padding: 6px 25px 12px; line-height: 1.5; }
+.spotlight-desktop .search-recent { padding: 15px 25px 0; }
+.spotlight-desktop .search-recent>button { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desktop[data-increase-contrast=true] .spotlight-desktop button.selected { outline: 2px solid var(--accent); outline-offset: -2px; }
+.desktop[data-reduce-motion=true] .spotlight-desktop { animation: none; }
+@keyframes spotlight-arrive { from { opacity: 0; transform: translateY(-5px) scale(.99); } to { opacity: 1; transform: none; } }
+@media(prefers-reduced-motion:reduce) { .desktop .spotlight-desktop { animation: none; } }
+@media(max-width:600px) {
+  .desktop .spotlight-backdrop { padding: 56px 12px 18px; }
+  .desktop .spotlight-desktop { gap: 9px; }
+  .desktop .spotlight-desktop .spotlight-searchbar { min-height: 70px; padding: 17px 18px; gap: 12px; }
+  .desktop .spotlight-desktop .spotlight-input input { font-size: 22px; }
+  .spotlight-desktop .spotlight-body { border-radius: 23px; }
+  .spotlight-scopes { padding: 12px 12px 9px; }
+  .spotlight-scopes>button { padding: 6px 9px; font-size: 11px; }
+  .spotlight-desktop .spotlight-result-kind { display: none; }
+  .desktop .spotlight-desktop .spotlight-footer { padding: 10px 14px; gap: 10px; font-size: 9px; }
+  .spotlight-desktop .spotlight-footer kbd { padding: 1px 2px; min-width: 15px; }
+  .spotlight-clipboard-head { padding: 17px 18px 12px; flex-wrap: wrap; }
+  .spotlight-clipboard-compose,.spotlight-clip-preview { margin-left: 17px; margin-right: 17px; }
+}
+@media(max-height:650px) { .desktop .spotlight-backdrop { padding-top: 48px; } .desktop .spotlight-desktop .spotlight-searchbar { min-height: 64px; padding-top: 14px; padding-bottom: 14px; } }
+
+/* Local replies use the same OS glass for chrome and an opaque reading surface. */
+.desktop .spotlight-desktop .spotlight-input>.spotlight-chat-send { display: grid; place-items: center; background: var(--accent); color: white; width: 32px; height: 32px; }
+.desktop .spotlight-desktop .spotlight-input>.spotlight-chat-send:disabled { background: var(--glass-track); color: var(--muted); opacity: .65; }
+.desktop .spotlight-desktop .spotlight-input>.spotlight-chat-send.is-stop { background: var(--glass-active); color: var(--text); }
+.spotlight-chat { padding: 0 22px; }
+.spotlight-chat-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0 14px; }
+.spotlight-chat-identity { display: flex; align-items: center; gap: 10px; }
+.spotlight-chat-symbol { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 11px; background: var(--glass-icon-background); color: var(--accent); }
+.spotlight-chat-identity strong { display: block; font-size: 14px; font-weight: 550; }
+.spotlight-chat-identity small { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); margin-top: 4px; }
+.spotlight-ai-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); opacity: .65; }
+.spotlight-ai-dot.is-ready { background: var(--accent); opacity: 1; }
+.spotlight-chat-tools { display: flex; gap: 5px; }
+.spotlight-chat-tools button { display: grid; place-items: center; color: var(--muted); background: transparent; border-radius: 8px; height: 30px; width: 30px; }
+.spotlight-chat-tools button:hover,.spotlight-chat-tools button[aria-expanded=true] { background: var(--glass-hover); color: var(--text); }
+.spotlight-chat-welcome { text-align: center; padding: 18px 0 20px; }
+.spotlight-chat-orbit { width: 60px; height: 60px; display: grid; place-items: center; margin: 0 auto 15px; border-radius: 20px; background: var(--glass-icon-background); color: var(--accent); }
+.spotlight-chat-welcome h2 { font-size: 25px; font-weight: 450; letter-spacing: -.04em; margin: 0 0 9px; }
+.spotlight-chat-welcome p { font-size: 12px; line-height: 1.8; color: var(--muted); margin: 0; }
+.spotlight-chat-suggestions { display: flex; gap: 7px; margin-top: 22px; }
+.spotlight-chat-suggestions>button { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 7px; padding: 11px; border-radius: 12px; text-align: left; font-size: 10px; line-height: 1.5; }
+.spotlight-chat-suggestions>button>svg { flex-shrink: 0; color: var(--muted); }
+.spotlight-chat-suggestions>button:hover { background: var(--glass-hover); }
+.spotlight-model-setup { display: flex; align-items: center; gap: 12px; justify-content: space-between; padding: 13px 14px; border-radius: 14px; }
+.spotlight-model-setup>div { display: flex; align-items: center; gap: 11px; }
+.spotlight-model-setup>div>svg { color: var(--muted); flex-shrink: 0; }
+.spotlight-model-setup strong { display: block; font-size: 11px; font-weight: 550; }
+.spotlight-model-setup small { display: block; color: var(--muted); font-size: 10px; margin-top: 4px; line-height: 1.5; }
+.spotlight-desktop .spotlight-model-setup .spotlight-primary { display: flex; gap: 6px; align-items: center; white-space: nowrap; margin: 0; padding: 9px 12px; font-size: 11px; }
+.spotlight-model-options { border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.spotlight-model-options strong { font-size: 12px; font-weight: 550; }
+.spotlight-model-options p { font-size: 11px; color: var(--muted); line-height: 1.6; margin: 4px 0 11px; }
+.spotlight-model-controls { display: flex; gap: 12px; }
+.spotlight-model-controls button { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; background: transparent; color: var(--text); padding: 5px 0; }
+.spotlight-model-controls button:hover:not(:disabled) { color: var(--accent); }
+.spotlight-chat-thread { background: var(--surface); color: var(--text); border: 1px solid var(--separator); border-radius: 16px; max-height: min(320px, 38vh); min-height: 130px; padding: 18px; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; user-select: text; }
+.spotlight-chat-message { margin-bottom: 23px; }
+.spotlight-chat-message:last-child { margin-bottom: 0; }
+.spotlight-chat-message.is-user { max-width: 88%; margin-left: auto; padding: 11px 13px; background: var(--accent-soft); border-radius: 13px 13px 3px 13px; }
+.spotlight-chat-speaker { display: flex; gap: 5px; align-items: center; font-size: 10px; color: var(--muted); margin-bottom: 8px; font-weight: 550; }
+.spotlight-chat-content { white-space: pre-wrap; overflow-wrap: anywhere; font-size: calc(13px * var(--ui-text-scale,1)); line-height: 1.75; }
+.spotlight-reply-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.spotlight-reply-actions button { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); background: transparent; border-radius: 5px; padding: 4px 5px; margin-left: -5px; }
+.spotlight-reply-actions button:hover { background: var(--hover); color: var(--text); }
+.spotlight-reply-actions small { color: var(--muted); font-size: 10px; }
+.spotlight-model-loading { padding: 13px 0 4px; }
+.spotlight-model-loading>div { display: flex; align-items: center; gap: 7px; font-size: 11px; }
+.spotlight-model-loading button { margin-left: auto; background: transparent; color: var(--accent); font-size: 10px; padding: 5px; }
+.spotlight-model-loading progress { width: 100%; display: block; height: 5px; margin: 11px 0 8px; border: 0; border-radius: 5px; accent-color: var(--accent); overflow: hidden; }
+.spotlight-model-loading progress::-webkit-progress-bar { background: var(--glass-track); }
+.spotlight-model-loading progress::-webkit-progress-value { background: var(--accent); }
+.spotlight-model-loading small { display: block; font-size: 10px; color: var(--muted); line-height: 1.5; overflow-wrap: anywhere; }
+.spotlight-chat-unavailable { display: flex; gap: 11px; padding: 14px; background: var(--surface); border: 1px solid var(--separator); border-radius: 12px; }
+.spotlight-chat-unavailable>svg { flex-shrink: 0; color: var(--muted); }
+.spotlight-chat-unavailable strong { font-size: 12px; font-weight: 550; }
+.spotlight-chat-unavailable p { font-size: 11px; color: var(--muted); line-height: 1.7; margin: 5px 0; }
+.spotlight-chat-unavailable button { font-size: 11px; color: var(--accent); padding: 5px 0; background: transparent; }
+.spotlight-chat-error { color: var(--text); border-left: 2px solid var(--accent); font-size: 11px; line-height: 1.65; margin-top: 12px; padding: 4px 12px; overflow-wrap: anywhere; }
+.spotlight-chat-response-controls { display: flex; justify-content: center; margin: 10px 0 0; }
+.spotlight-chat-response-controls button,.spotlight-chat-response-controls>span { display: inline-flex; align-items: center; gap: 5px; background: transparent; color: var(--muted); font-size: 10px; padding: 4px 8px; border-radius: 6px; }
+.spotlight-chat-response-controls button:hover { background: var(--glass-hover); }
+.spotlight-chat-note { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 9px; color: var(--muted); padding: 15px 0; line-height: 1.5; }
+.spotlight-chat-note svg { flex-shrink: 0; }
+.spotlight-chat-status { font-size: 11px; color: var(--muted); margin: 12px 0 0; }
+.spotlight-input-limit { font-weight: 600; color: var(--text); }
+.spotlight-ai-spinner { animation: spotlight-ai-spin 1s linear infinite; }
+.spotlight-thinking { display: inline-flex; gap: 4px; align-items: center; min-height: 24px; }
+.spotlight-thinking>span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: spotlight-ai-think 1.2s ease-in-out infinite; }
+.spotlight-thinking>span:nth-child(2) { animation-delay: .15s; }.spotlight-thinking>span:nth-child(3) { animation-delay: .3s; }
+@keyframes spotlight-ai-spin { to { transform: rotate(360deg); } }
+@keyframes spotlight-ai-think { 50% { opacity: .25; } }
+.desktop[data-reduce-motion=true] :is(.spotlight-ai-spinner,.spotlight-thinking>span) { animation: none; }
+@media(prefers-reduced-motion:reduce) { .spotlight-ai-spinner,.spotlight-thinking>span { animation: none; } }
+@media(max-width:600px) {
+  .spotlight-chat { padding: 0 15px; }
+  .spotlight-chat-welcome { padding: 11px 0 16px; }
+  .spotlight-chat-welcome h2 { font-size: 23px; }
+  .spotlight-chat-suggestions { flex-direction: column; gap: 6px; margin-top: 16px; }
+  .spotlight-chat-suggestions>button { padding: 9px 11px; font-size: 11px; }
+  .spotlight-model-setup { align-items: stretch; flex-direction: column; padding: 12px; }
+  .spotlight-desktop .spotlight-model-setup .spotlight-primary { justify-content: center; }
+  .spotlight-chat-thread { padding: 14px; }
+  .desktop .spotlight-desktop.is-chat .spotlight-input { gap: 8px; padding-left: 14px; padding-right: 14px; }
+  .desktop .spotlight-desktop.is-chat .spotlight-input input { font-size: 19px; }
+  .spotlight-chat-note { font-size: 9px; }
+}

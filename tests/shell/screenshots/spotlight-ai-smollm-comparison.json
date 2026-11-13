@@ -1,0 +1,159 @@
+{
+  "modelIds": [
+    "SmolLM2-360M-Instruct-q4f16_1-MLC",
+    "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"
+  ],
+  "temperature": 0.3,
+  "topP": 0.9,
+  "seed": 11,
+  "maxTokens": 256,
+  "testedAt": "2026-11-13T18:51:38.377Z",
+  "results": [
+    {
+      "modelId": "SmolLM2-360M-Instruct-q4f16_1-MLC",
+      "metadata": {
+        "bytes": 207242960,
+        "weightBytes": 203614080
+      },
+      "initializationMs": 10403.299999998882,
+      "cases": [
+        {
+          "name": "paris-clean",
+          "system": "original",
+          "prompt": "where is paris france",
+          "text": "I'm sorry, as an assistant, I don't have the ability to access external information or databases to provide you with specific information about Paris. I would recommend checking a map or using your device's built-in GPS to find the location of Paris.",
+          "chunks": 51,
+          "firstTokenMs": 663.9000000003725,
+          "durationMs": 1651.5999999996275
+        },
+        {
+          "name": "paris-followup",
+          "system": "original",
+          "prompt": "What river runs through it?",
+          "text": "The river that runs through Paris is the Seine River.",
+          "chunks": 12,
+          "firstTokenMs": 125.5,
+          "durationMs": 281.6000000014901
+        },
+        {
+          "name": "paris-contaminated",
+          "system": "original",
+          "prompt": "where is paris france",
+          "text": "I'm sorry, but as an assistant for LopeOS, I don't have the ability to access your location, personal data, or real-time location information. I can't browse the internet or determine your current location. Please use a map or search engine to find your location.",
+          "chunks": 58,
+          "firstTokenMs": 113.09999999962747,
+          "durationMs": 1060.4000000003725
+        },
+        {
+          "name": "australia-capital",
+          "system": "original",
+          "prompt": "What is the capital of Australia? Answer in one short sentence.",
+          "text": "The capital of Australia is Canberra.",
+          "chunks": 7,
+          "firstTokenMs": 83.09999999962747,
+          "durationMs": 184
+        },
+        {
+          "name": "short-draft",
+          "system": "original",
+          "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+          "text": "I will be ten minutes late.",
+          "chunks": 7,
+          "firstTokenMs": 71.19999999925494,
+          "durationMs": 168
+        },
+        {
+          "name": "word-count",
+          "system": "original",
+          "prompt": "Return only the number of letters in the word \"planet\".",
+          "text": "Planet has 6 letters.",
+          "chunks": 7,
+          "firstTokenMs": 70.09999999962747,
+          "durationMs": 212.80000000074506
+        },
+        {
+          "name": "format",
+          "system": "original",
+          "prompt": "Give exactly three common fruits, separated by commas. No explanation.",
+          "text": "\"A typical list of common fruits would include: Apple, Banana, Grape, Orange, Strawberry, and Carrot.\"",
+          "chunks": 27,
+          "firstTokenMs": 106.69999999925494,
+          "durationMs": 530.4000000003725
+        },
+        {
+          "name": "paris-clean",
+          "system": "concise",
+          "prompt": "where is paris france",
+          "text": "Paris, France.",
+          "chunks": 4,
+          "firstTokenMs": 95.90000000037253,
+          "durationMs": 175.30000000074506
+        },
+        {
+          "name": "paris-followup",
+          "system": "concise",
+          "prompt": "What river runs through it?",
+          "text": "The river that runs through Paris is the Seine River.",
+          "chunks": 12,
+          "firstTokenMs": 88.09999999962747,
+          "durationMs": 239.5
+        },
+        {
+          "name": "paris-contaminated",
+          "system": "concise",
+          "prompt": "where is paris france",
+          "text": "I'm sorry, but as an AI, I don't have the ability to access your personal data or location. I recommend using a map or search engine to find your location.",
+          "chunks": 36,
+          "firstTokenMs": 128.59999999962747,
+          "durationMs": 893.9000000003725
+        },
+        {
+          "name": "australia-capital",
+          "system": "concise",
+          "prompt": "What is the capital of Australia? Answer in one short sentence.",
+          "text": "The capital of Australia is Canberra.",
+          "chunks": 7,
+          "firstTokenMs": 94.90000000037253,
+          "durationMs": 216.59999999962747
+        },
+        {
+          "name": "short-draft",
+          "system": "concise",
+          "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+          "text": "I'll be 10 minutes late.",
+          "chunks": 9,
+          "firstTokenMs": 78.09999999962747,
+          "durationMs": 250.19999999925494
+        },
+        {
+          "name": "word-count",
+          "system": "concise",
+          "prompt": "Return only the number of letters in the word \"planet\".",
+          "text": "1",
+          "chunks": 1,
+          "firstTokenMs": 79.10000000149012,
+          "durationMs": 91.80000000074506
+        },
+        {
+          "name": "format",
+          "system": "concise",
+          "prompt": "Give exactly three common fruits, separated by commas. No explanation.",
+          "text": "1. Apples\n2. Oranges\n3. Grapes",
+          "chunks": 13,
+          "firstTokenMs": 79,
+          "durationMs": 280.40000000037253
+        }
+      ]
+    },
+    {
+      "modelId": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+      "metadata": {
+        "bytes": 880289238,
+        "weightBytes": 868547584
+      },
+      "initializationMs": null,
+      "cases": []
+    }
+  ],
+  "error": "page.evaluate: Error: Quota exceeded.\n    at window.__benchWorker.onmessage (eval at evaluate (:370:30), <anonymous>:18:66)"
+}

@@ -1,0 +1,29 @@
+
+Running 20 tests using 2 workers
+
+(node:85126) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85125) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/setup/capture.spec.ts:9:3 › capture six light steps at 390×844 (2.7s)
+  ✓   2 [chromium] › tests/setup/capture.spec.ts:9:3 › capture six light steps at 1440×900 (4.1s)
+  ✓   4 [chromium] › tests/setup/capture.spec.ts:9:3 › capture six dark steps at 390×844 (1.7s)
+  ✓   3 [chromium] › tests/setup/capture.spec.ts:9:3 › capture six dark steps at 1440×900 (3.4s)
+  ✓   6 [chromium] › tests/setup/setup.spec.ts:24:1 › account name follows the display name until manually edited (1.3s)
+  ✓   5 [chromium] › tests/setup/setup.spec.ts:5:1 › first run creates the account only on Finish and signs straight into the desktop (1.7s)
+  ✓   7 [chromium] › tests/setup/setup.spec.ts:37:1 › duplicate account names are rejected and focus the account field (1.5s)
+  ✓   8 [chromium] › tests/setup/setup.spec.ts:58:1 › password mismatch focuses confirmation and visibility toggles both fields (2.0s)
+  ✓   9 [chromium] › tests/setup/setup.spec.ts:75:1 › review edit keeps all account values including the password (1.6s)
+  ✓  11 [chromium] › tests/setup/setup.spec.ts:126:1 › non-image photo reports an error without preventing continuation (1.3s)
+  ✓  10 [chromium] › tests/setup/setup.spec.ts:87:1 › mobile accessibility previews immediately and persists into the signed-in session (2.8s)
+  ✓  12 [chromium] › tests/setup/setup.spec.ts:134:1 › review reflects the persistent storage choice and allows appearance editing (2.1s)
+  ✓  13 [chromium] › tests/setup/setup.spec.ts:147:1 › empty and reserved names validate on Continue and focus their field (1.8s)
+  ✓  15 [chromium] › tests/setup/setup.spec.ts:179:1 › Enter submits each step and future progress steps remain disabled (1.6s)
+  ✓  14 [chromium] › tests/setup/setup.spec.ts:160:1 › a preference failure after creation prevents duplicate creation and offers sign in (2.1s)
+  ✓  16 [chromium] › tests/setup/setup.spec.ts:193:1 › account fields stay read-only while the asynchronous name check is pending (1.5s)
+  ✓  17 [chromium] › tests/setup/setup.spec.ts:219:1 › a name claimed after review returns to Account without treating it as our partial creation (1.9s)
+  ✓  18 [chromium] › tests/setup/setup.spec.ts:242:1 › password-protected account signs out, rejects a wrong password, and signs back in (2.2s)
+  ✓  19 [chromium] › tests/setup/setup.spec.ts:263:1 › a later photo supersedes a slow earlier pick and saves a 256px JPEG (1.7s)
+  ✓  20 [chromium] › tests/setup/setup.spec.ts:310:1 › appearance choices preview in system defaults and become user preferences (1.8s)
+
+  20 passed (21.8s)

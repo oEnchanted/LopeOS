@@ -1,0 +1,38 @@
+# Build from the repository root: docker build -f services/browser/infra/Dockerfile -t lope-browser .
+# Release tag verified against Selkies 2.2.1's images workflow. Pin resolved digests in production.
+FROM node:24-trixie-slim AS node
+FROM ghcr.io/selkies-project/selkies/base:2.2.1-debiantrixie
+USER 0
+SHELL ["/bin/sh", "-c"]
+RUN apt-get update && apt-get install -y --no-install-recommends chromium chromium-sandbox openbox x11-utils fonts-noto-color-emoji \
+    && rm -rf /var/lib/apt/lists/* \
+    && find / -xdev -type f -perm /6000 -exec chmod a-s {} + \
+    && rm -f /usr/local/bin/sudo-root \
+    && mkdir -p /opt/lope /profiles /opt/lope-services \
+    && chown 1000:1000 /profiles
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --chown=0:0 packages/browser-client/src /opt/lope/packages/browser-client/src
+COPY --chown=0:0 services/browser/src /opt/lope/services/browser/src
+COPY --chown=0:0 services/runtime/browser-bridge.js services/runtime/config.js /opt/lope/services/runtime/
+COPY --chown=0:0 services/browser/infra/entrypoint.sh /opt/lope/entrypoint.sh
+COPY --chown=0:0 services/browser/infra/worker.run /opt/lope-services/browser/run
+COPY --chown=0:0 services/browser/infra/openbox.run /opt/lope-services/openbox/run
+# s6 and its supervision files live in ephemeral writable storage.
+RUN cp -a /etc/service/. /opt/lope-services/ \
+    && sed -i 's|/etc/service|/tmp/lope-services|g' /etc/container-entrypoint.sh \
+    && chmod -R a-w /opt/lope /opt/lope-services \
+    && chmod a+rx /opt/lope/entrypoint.sh /opt/lope-services/browser/run /opt/lope-services/openbox/run
+USER 1000:1000
+ENV SELKIES_WAYLAND=false SELKIES_ENABLE_HTTPS=false SELKIES_ADDR=127.0.0.1 SELKIES_PUBLIC=false \
+    SELKIES_SUBFOLDER=/api/browser/stream SELKIES_PORT=8080 SELKIES_MODE=websockets \
+    SELKIES_ENABLE_BASIC_AUTH=true SELKIES_BASIC_AUTH_USER=lope SELKIES_COMMAND_ENABLED=false \
+    SELKIES_FILE_TRANSFERS=none SELKIES_PRINTING_ENABLED=false SELKIES_ENABLE_SHARING=false \
+    SELKIES_WEBCAM_ENABLED=false SELKIES_MICROPHONE_ENABLED=false \
+    SELKIES_ENABLE_CLIPBOARD=true SELKIES_CLIPBOARD_SEAMLESS="false|locked" \
+    SELKIES_UI_SHOW_SIDEBAR=false SELKIES_ENABLE_INTERNAL_TURN=false \
+    LOPE_BROWSER_BIND=0.0.0.0 LOPE_BROWSER_HOSTS=browser-worker,127.0.0.1,localhost \
+    LOPE_BROWSER_DATA=/profiles/normal CHROMIUM_EXECUTABLE=/usr/bin/chromium \
+    SELKIES_URL=http://127.0.0.1:8080
+WORKDIR /opt/lope
+EXPOSE 4175
+ENTRYPOINT ["/opt/lope/entrypoint.sh"]

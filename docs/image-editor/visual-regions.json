@@ -1,0 +1,1002 @@
+{
+  "date": "2026-11-13",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "scale": 1
+  },
+  "fixture": "Original Alpine study, 1440 × 960, 50% zoom",
+  "states": [
+    {
+      "name": "essentials",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "brush-options",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "tool-flyout",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "mask-target",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "selection-taskbar",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 378.71875,
+          "y": 813,
+          "width": 403.5625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "crop",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 473.4765625,
+          "y": 813,
+          "width": 214.046875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "type-dialog",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 216.65625,
+          "width": 580,
+          "height": 466.6875
+        }
+      }
+    },
+    {
+      "name": "transform-dialog",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 284,
+          "width": 580,
+          "height": 332
+        }
+      }
+    },
+    {
+      "name": "color-picker",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 247.5,
+          "width": 580,
+          "height": 405
+        }
+      }
+    },
+    {
+      "name": "new-document",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 250,
+          "y": 163.5,
+          "width": 940,
+          "height": 572.984375
+        }
+      }
+    },
+    {
+      "name": "image-size",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 276.78125,
+          "width": 580,
+          "height": 346.4375
+        }
+      }
+    },
+    {
+      "name": "canvas-size",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 279.953125,
+          "width": 580,
+          "height": 340.09375
+        }
+      }
+    },
+    {
+      "name": "export",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 292.5,
+          "width": 580,
+          "height": 315
+        }
+      }
+    },
+    {
+      "name": "history",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "channels",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "floating-panels",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "collapsed-panels",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1365,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1347,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1440,
+          "y": 65,
+          "width": 0,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1440,
+          "y": 513,
+          "width": 0,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 549.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "layer-menu",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 513,
+          "width": 283,
+          "height": 385
+        },
+        ".ie-contextual-bar": {
+          "x": 407.2421875,
+          "y": 813,
+          "width": 346.515625,
+          "height": 37
+        }
+      }
+    }
+  ],
+  "errors": []
+}

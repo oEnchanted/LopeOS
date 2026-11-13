@@ -1,0 +1,108 @@
+{
+  "mode": "real-model-inference",
+  "channel": "chromium",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
+  "webgpu": {
+    "secureContext": true,
+    "available": true,
+    "features": [
+      "depth32float-stencil8",
+      "rg11b10ufloat-renderable",
+      "texture-formats-tier1",
+      "bgra8unorm-storage",
+      "texture-compression-bc",
+      "dual-source-blending",
+      "core-features-and-limits",
+      "float32-filterable",
+      "indirect-first-instance",
+      "texture-compression-astc-sliced-3d",
+      "float32-blendable",
+      "subgroup-size-control",
+      "texture-compression-unaligned",
+      "texture-compression-astc",
+      "texture-compression-etc2",
+      "depth-clip-control",
+      "texture-compression-bc-sliced-3d",
+      "shader-f16",
+      "timestamp-query",
+      "texture-formats-tier2",
+      "clip-distances",
+      "primitive-index",
+      "texture-component-swizzle",
+      "subgroups"
+    ],
+    "info": {
+      "vendor": "apple",
+      "architecture": "metal-3",
+      "device": "",
+      "description": ""
+    },
+    "maxBufferSize": 4294967292,
+    "maxStorageBufferBindingSize": 4294967292
+  },
+  "modelMetadata": null,
+  "outcome": "passed-real-inference-streaming-and-offline-followup",
+  "legacyFixtureKeys": [
+    {
+      "cacheName": "webllm/model",
+      "url": "https://huggingface.co/mlc-ai/SmolLM2-360M-Instruct-q4f16_1-MLC/resolve/main/params_shard_0.bin"
+    },
+    {
+      "cacheName": "webllm/model",
+      "url": "https://huggingface.co/mlc-ai/SmolLM2-360M-Instruct-q4f16_1-MLC/resolve/main/tokenizer.json"
+    },
+    {
+      "cacheName": "webllm/config",
+      "url": "https://huggingface.co/mlc-ai/SmolLM2-360M-Instruct-q4f16_1-MLC/resolve/main/mlc-chat-config.json"
+    },
+    {
+      "cacheName": "webllm/model",
+      "url": "https://huggingface.co/mlc-ai/SmolLM2-360M-Instruct-q4f32_1-MLC/resolve/main/params_shard_0.bin"
+    },
+    {
+      "cacheName": "webllm/model",
+      "url": "https://huggingface.co/mlc-ai/SmolLM2-360M-Instruct-q4f32_1-MLC/resolve/main/tokenizer.json"
+    },
+    {
+      "cacheName": "webllm/config",
+      "url": "https://huggingface.co/mlc-ai/SmolLM2-360M-Instruct-q4f32_1-MLC/resolve/main/mlc-chat-config.json"
+    }
+  ],
+  "initializationMs": 3152,
+  "modelId": "Qwen3-1.7B-q4f16_1-MLC",
+  "legacyCleanup": true,
+  "system": "You are Spotlight, a helpful assistant. Answer simple factual questions in one short sentence. Follow the user's instructions exactly. When drafting text, preserve the names, numbers, and details the user provides. Keep replies concise.",
+  "replies": [
+    {
+      "prompt": "where is paris france",
+      "reply": "Paris is in France.",
+      "offline": false,
+      "durationMs": 783
+    },
+    {
+      "prompt": "What river runs through it?",
+      "reply": "The Seine runs through Paris.",
+      "offline": true,
+      "durationMs": 407
+    },
+    {
+      "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+      "reply": "Sam, I will be ten minutes late. See you soon!",
+      "offline": true,
+      "durationMs": 534
+    },
+    {
+      "prompt": "Where in France is Paris?",
+      "reply": "Paris is in the region of Île-de-France, in the north of France.",
+      "offline": true,
+      "durationMs": 636
+    }
+  ],
+  "cachedReloadWithRemoteNetworkBlocked": true,
+  "network": {
+    "requests": 0,
+    "origins": [],
+    "nonGetRequests": 0,
+    "leakedPrompts": 0
+  }
+}

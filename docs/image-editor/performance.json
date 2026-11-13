@@ -1,0 +1,150 @@
+{
+  "date": "2026-11-13",
+  "host": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M1 Pro",
+    "memory": 17179869184
+  },
+  "dimensions": [
+    4096,
+    4096
+  ],
+  "layers": 8,
+  "sourceResolution": [
+    1024,
+    1024
+  ],
+  "sourceScale": 4,
+  "tileBytes": 33554432,
+  "viewport": {
+    "x": 0,
+    "y": 640,
+    "width": 4096,
+    "height": 2560,
+    "scale": 0.25
+  },
+  "output": [
+    1024,
+    640
+  ],
+  "frames": [
+    {
+      "label": "cold",
+      "packMs": 5.300000000745058,
+      "totalMs": 170.40000000037253,
+      "workerMs": 70.5,
+      "transferBytes": 25165824,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "unchanged",
+      "packMs": 0.2000000011175871,
+      "totalMs": 7.300000000745058,
+      "workerMs": 5.300000000745058,
+      "transferBytes": 0,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 0",
+      "packMs": 0.19999999925494194,
+      "totalMs": 7.099999999627471,
+      "workerMs": 6.599999999627471,
+      "transferBytes": 131072,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 1",
+      "packMs": 0.09999999962747097,
+      "totalMs": 7.799999998882413,
+      "workerMs": 7.200000001117587,
+      "transferBytes": 196608,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 2",
+      "packMs": 0.19999999925494194,
+      "totalMs": 12.699999999254942,
+      "workerMs": 9.299999998882413,
+      "transferBytes": 262144,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 3",
+      "packMs": 0.09999999962747097,
+      "totalMs": 9.099999999627471,
+      "workerMs": 8.599999999627471,
+      "transferBytes": 262144,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 4",
+      "packMs": 0.2000000011175871,
+      "totalMs": 7.5,
+      "workerMs": 7,
+      "transferBytes": 262144,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 5",
+      "packMs": 0.599999999627471,
+      "totalMs": 13.899999998509884,
+      "workerMs": 8.800000000745058,
+      "transferBytes": 262144,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 6",
+      "packMs": 0.19999999925494194,
+      "totalMs": 9.5,
+      "workerMs": 8.599999999627471,
+      "transferBytes": 262144,
+      "width": 1024,
+      "height": 640
+    },
+    {
+      "label": "stroke 7",
+      "packMs": 0.09999999962747097,
+      "totalMs": 11.199999999254942,
+      "workerMs": 10.599999999627471,
+      "transferBytes": 196608,
+      "width": 1024,
+      "height": 640
+    }
+  ],
+  "brushMs": [
+    5,
+    0.8000000007450581,
+    0.900000000372529,
+    0.900000000372529,
+    0.40000000037252903,
+    0.7000000011175871,
+    1.1000000014901161,
+    0.5
+  ],
+  "medianBrushMs": 0.900000000372529,
+  "medianWarmFrameMs": 9.5,
+  "medianWorkerMs": 8.599999999627471,
+  "heartbeat": {
+    "beats": 33,
+    "maxGapMs": 9.300000000745058
+  },
+  "journal": {
+    "initialMs": 98,
+    "metadataOnlyMs": 0.7000000011175871
+  },
+  "heap": {
+    "used": 123000000,
+    "total": 139000000
+  },
+  "hardwareConcurrency": 8,
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36"
+}

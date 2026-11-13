@@ -1,0 +1,90 @@
+{
+  "modelIds": [
+    "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"
+  ],
+  "temperature": 0.3,
+  "topP": 0.9,
+  "seed": 11,
+  "maxTokens": 256,
+  "testedAt": "2026-11-13T18:53:24.876Z",
+  "results": [
+    {
+      "modelId": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+      "metadata": {
+        "bytes": 880289238,
+        "weightBytes": 868547584
+      },
+      "initializationMs": 28149.700000001118,
+      "cases": [
+        {
+          "name": "paris-clean",
+          "system": "concise",
+          "prompt": "where is paris france",
+          "text": "Paris is the capital city of France. It's located in northern France, on the Seine River. The city is known for its iconic landmarks such as the Eiffel Tower and Notre Dame Cathedral.",
+          "chunks": 41,
+          "firstTokenMs": 1769.199999999255,
+          "durationMs": 3000.800000000745
+        },
+        {
+          "name": "paris-followup",
+          "system": "concise",
+          "prompt": "What river runs through it?",
+          "text": "The Seine River runs through Paris.",
+          "chunks": 8,
+          "firstTokenMs": 367.40000000037253,
+          "durationMs": 541.6000000014901
+        },
+        {
+          "name": "paris-contaminated",
+          "system": "concise",
+          "prompt": "where is paris france",
+          "text": "Paris is the capital city of France. It's located in northern France, on the Seine River. The city covers an area of about 107 square kilometers (41.6 square miles) and has a population of around 2 million people. Paris is known for its rich history, iconic landmarks such as the Eiffel Tower, Notre Dame Cathedral, and many museums, including the Louvre.",
+          "chunks": 84,
+          "firstTokenMs": 322.19999999925494,
+          "durationMs": 2274.5999999996275
+        },
+        {
+          "name": "australia-capital",
+          "system": "concise",
+          "prompt": "What is the capital of Australia? Answer in one short sentence.",
+          "text": "The capital of Australia is Canberra.",
+          "chunks": 7,
+          "firstTokenMs": 219,
+          "durationMs": 355.69999999925494
+        },
+        {
+          "name": "short-draft",
+          "system": "concise",
+          "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+          "text": "I'm sorry, but I don't have the context to provide a specific note. Please let me know if you need help with anything else.",
+          "chunks": 29,
+          "firstTokenMs": 221.7999999988824,
+          "durationMs": 964.0999999996275
+        },
+        {
+          "name": "word-count",
+          "system": "concise",
+          "prompt": "Return only the number of letters in the word \"planet\".",
+          "text": "The word \"planet\" has 6 letters.",
+          "chunks": 10,
+          "firstTokenMs": 241,
+          "durationMs": 447
+        },
+        {
+          "name": "format",
+          "system": "concise",
+          "prompt": "Give exactly three common fruits, separated by commas. No explanation.",
+          "text": "Apple, banana, orange",
+          "chunks": 5,
+          "firstTokenMs": 217.7000000011176,
+          "durationMs": 316.40000000037253
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "quota": 10737418240,
+    "usage": 0,
+    "usageDetails": {}
+  }
+}

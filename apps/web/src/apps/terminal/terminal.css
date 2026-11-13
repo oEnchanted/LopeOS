@@ -1,0 +1,34 @@
+.lope-terminal{height:100%;min-height:0;display:flex;flex-direction:column;background:#111b28;color:#e1ebf5;font:13px/1.45 var(--font-sans,system-ui,sans-serif);color-scheme:dark;overflow:hidden}
+.lope-terminal .ui-toolbar{display:flex;align-items:center;gap:5px;min-height:43px;padding:5px 9px;border-bottom:1px solid var(--glass-inset-border)}
+.lope-terminal .ui-button{font-size:11px;color:#d9e8f4;white-space:nowrap}.lope-terminal .ui-input{background:#1a2a3b;color:#e1ebf5;border:1px solid #546d82;border-radius:6px;padding:7px}
+.terminal-tabs{display:flex;min-width:0;flex:1;overflow:auto;gap:3px}.terminal-tab-wrap{display:flex;align-items:center;min-width:88px;max-width:220px;border-radius:7px;background:#152334}
+.terminal-tab{padding:7px 5px 7px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;color:#92a9bf;border:0;display:flex;align-items:center;gap:7px;min-width:0;flex:1;cursor:pointer;font:inherit;font-size:12px}
+.terminal-tab[aria-selected=true]{color:#e5f4ff}.terminal-tab-wrap:has([aria-selected=true]){background:#2a3d51;box-shadow:0 0 0 1px #52708d66 inset}
+.terminal-tab-close{background:none;color:#a3b8cc;border:0;padding:4px 7px;cursor:pointer;font-size:17px}.terminal-tab-close:hover{color:#fff}
+.terminal-state-dot{width:5px;height:5px;background:#8ca2b4;border-radius:50%;flex-shrink:0}.terminal-state-dot.connected{background:#96d4b5}.terminal-state-dot.reconnecting,.terminal-state-dot.connecting{background:#edcd8d}.terminal-state-dot.unavailable{background:#f58b91}
+.terminal-panes{flex:1;min-height:0;position:relative}.terminal-pane{height:100%;display:flex;flex-direction:column;min-height:0}.terminal-pane[hidden]{display:none}.terminal-emulator{flex:1;min-height:0;margin:12px 6px 8px 15px;overflow:hidden}.terminal-emulator .xterm{height:100%}.terminal-emulator .xterm-viewport{scrollbar-width:thin;scrollbar-color:#56708755 transparent}
+.terminal-connect{max-width:410px;margin:auto;padding:32px;display:flex;flex-direction:column;align-items:flex-start;gap:12px}.terminal-symbol{font:32px ui-monospace,monospace;color:#9bdde4}.terminal-connect h2{margin:0;font-size:21px;font-weight:550}.terminal-connect p{margin:0;color:#a9bfd3;line-height:1.6}.terminal-connect details{font-size:12px;width:100%;color:#a9bfd3}.terminal-connect summary{cursor:pointer;margin:12px 0}.terminal-connect label{display:grid;gap:7px}.terminal-connect .ui-button--primary{color:#102b37;background:#a6e4e8;margin-top:5px}
+.terminal-search{display:flex;gap:5px;padding:7px 12px;background:#1b2c3e}.terminal-search .ui-input{min-width:80px;flex:1}.terminal-replay-note{padding:6px 12px;font-size:11px;color:#edcd8d;background:#3b3425;display:flex;justify-content:space-between;gap:10px}.terminal-replay-note button{background:none;border:0;color:inherit;cursor:pointer}
+.terminal-status{display:flex;align-items:center;gap:12px;min-height:27px;padding:4px 12px;font-size:10px;color:#91a7bd;border-top:1px solid #56708733}.terminal-status>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.terminal-status select{background:#172739;color:#c2d5e7;border:1px solid #40566b;font-size:10px;max-width:160px}.terminal-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#9fb3c7}
+.lope-terminal :focus-visible{outline:2px solid #9bdde4;outline-offset:2px}.terminal-emulator :focus-visible{outline:none}
+/* Keep the terminal canvas dark and bring its surrounding controls into the glass system. */
+.lope-terminal .ui-toolbar{background:var(--glass-inset-background);color:var(--glass-text);box-shadow:var(--glass-inset-shadow);min-height:46px;gap:8px}
+.lope-terminal .ui-toolbar>.ui-button{min-height:30px;border-radius:8px;background:transparent;border-color:transparent;box-shadow:none;color:#b7c9db}
+.lope-terminal .ui-toolbar>.ui-button:hover:not(:disabled){background:#c9e1ff10;color:#f0f7ff}
+.terminal-tabs{gap:5px}
+.terminal-tab-wrap{border-radius:8px;background:#0d192780;border:1px solid transparent}
+.terminal-tab-wrap:has([aria-selected=true]){background:linear-gradient(160deg,#e4f1ff0c,transparent),#26394e;border-color:#c9e6ff24;box-shadow:inset 0 1px 0 #e0efff12,0 2px 4px #030a121c}
+.terminal-tab{padding-top:8px;padding-bottom:8px}
+.terminal-tab-close{border-radius:5px;margin-right:3px;font-size:16px}
+.terminal-tab-close:hover{background:#d8ebff12}
+.terminal-connect{gap:14px;padding:34px;max-width:430px}
+.terminal-symbol{display:grid;place-items:center;width:56px;height:56px;border:1px solid #b2e4f12e;border-radius:16px;background:linear-gradient(145deg,#9bdde41a,#9bdde405);box-shadow:inset 0 1px 0 #d8f9ff16;margin-bottom:6px;font-size:28px}
+.terminal-connect h2{letter-spacing:-.025em;font-size:22px}
+.terminal-connect .ui-button--primary{border:1px solid #ffffff38;border-radius:9px;box-shadow:inset 0 1px 0 #ffffff3d,0 3px 9px #050f191f}
+.terminal-search{background:#1b2b3d;border-bottom:1px solid #d6eaff16;padding:9px 12px;gap:7px}
+.terminal-search .ui-input{border-color:#d6eaff24;border-radius:8px;background:#101d2c}
+.terminal-status{background:#142130;min-height:30px;border-top-color:#d6eaff18;color:#a4b8ca;font-size:11px}
+.terminal-status select{border-color:#d6eaff26;border-radius:6px;padding:3px 5px}
+[data-increase-contrast=true] .lope-terminal{color:#fff}
+[data-increase-contrast=true] .lope-terminal :is(.terminal-status,.terminal-tab,.terminal-connect p){color:#e0efff}
+@media(max-width:540px){.lope-terminal .ui-toolbar{flex-wrap:wrap}.terminal-tabs{flex-basis:100%}.terminal-status{flex-wrap:wrap}.terminal-connect{padding:22px}.terminal-search .ui-button{padding:5px}}

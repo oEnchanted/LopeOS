@@ -1,0 +1,29 @@
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 2128 modules transformed.
+rendering chunks...
+computing gzip size...
+tests/integration/build/index.html                             0.55 kB │ gzip:  0.32 kB
+tests/integration/build/assets/ExampleApp-CSmBx3U8.css         0.85 kB │ gzip:  0.37 kB
+tests/integration/build/assets/Terminal-51pxdb3B.css           6.54 kB │ gzip:  1.91 kB
+tests/integration/build/assets/Browser-C701R4Bl.css           19.34 kB │ gzip:  5.01 kB
+tests/integration/build/assets/index-DaZ-thMj.css             49.86 kB │ gzip: 10.38 kB
+tests/integration/build/assets/arrow-right-BQZscsfP.js         0.20 kB │ gzip:  0.18 kB
+tests/integration/build/assets/upload-BwmtGcLu.js              0.27 kB │ gzip:  0.21 kB
+tests/integration/build/assets/rotate-ccw-clock-D71e5nO4.js    0.30 kB │ gzip:  0.24 kB
+tests/integration/build/assets/trash-WZCwOVBB.js               0.38 kB │ gzip:  0.25 kB
+tests/integration/build/assets/palette-BEtdttGp.js             0.55 kB │ gzip:  0.30 kB
+tests/integration/build/assets/plus-Dhamyj22.js                0.67 kB │ gzip:  0.37 kB
+tests/integration/build/assets/createLucideIcon-CddK_av9.js    3.08 kB │ gzip:  1.47 kB
+tests/integration/build/assets/ExampleApp-BHwQ8mXM.js          3.75 kB │ gzip:  1.59 kB
+tests/integration/build/assets/Welcome-BbuFwdKC.js             6.77 kB │ gzip:  2.44 kB
+tests/integration/build/assets/calculator-CJorXvyh.js          7.76 kB │ gzip:  3.37 kB
+tests/integration/build/assets/settings-DvNtbh2w.js           12.20 kB │ gzip:  3.98 kB
+tests/integration/build/assets/text-editor-hTv27tSl.js        13.71 kB │ gzip:  4.95 kB
+tests/integration/build/assets/src-CdLfhQsB.js                14.73 kB │ gzip:  5.21 kB
+tests/integration/build/assets/files-C5pKLtk9.js              15.05 kB │ gzip:  5.11 kB
+tests/integration/build/assets/Browser-eJ69xOUK.js            35.30 kB │ gzip: 11.20 kB
+tests/integration/build/assets/index-ChQuKldH.js             282.81 kB │ gzip: 89.37 kB
+tests/integration/build/assets/Terminal-D9XsQuYf.js          310.79 kB │ gzip: 74.91 kB
+
+✓ built in 329ms

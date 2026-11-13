@@ -1,0 +1,216 @@
+{
+  "engines": [
+    {
+      "name": "chromium",
+      "version": "158.0.8127.18",
+      "darkTheme": "dark",
+      "keyboardMenu": true,
+      "small": {
+        "width": 374,
+        "scrollWidth": 374
+      },
+      "errors": []
+    },
+    {
+      "name": "firefox",
+      "error": "browserType.launchPersistentContext: Failed to launch the browser process.\nBrowser logs:\n\n<launching> /Users/luke/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /tmp/lope-settings-firefox-F3TBLJ -juggler-pipe about:blank\n<launched> pid=32144\n[pid=32144][err] *** You are running in headless mode.\n[pid=32144][err] Could not find profile folder.\n[pid=32144] <process did exit: exitCode=1, signal=null>\n[pid=32144] starting temporary directories cleanup\nCall log:\n\u001b[2m  - <launching> /Users/luke/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /tmp/lope-settings-firefox-F3TBLJ -juggler-pipe about:blank\u001b[22m\n\u001b[2m  - <launched> pid=32144\u001b[22m\n\u001b[2m  - [pid=32144][err] *** You are running in headless mode.\u001b[22m\n\u001b[2m  - [pid=32144][err] Could not find profile folder.\u001b[22m\n\u001b[2m  - [pid=32144] <process did exit: exitCode=1, signal=null>\u001b[22m\n\u001b[2m  - [pid=32144] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=32144] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=32144] <kill>\u001b[22m\n\u001b[2m  - [pid=32144] <skipped force kill spawnedProcess.killed=false processClosed=true>\u001b[22m\n\u001b[2m  - [pid=32144] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=32144] <gracefully close end>\u001b[22m\n",
+      "note": "Launch failed on this host with both default and explicit profile paths; not retried for the visual-only refinement."
+    },
+    {
+      "name": "webkit",
+      "version": "27.2",
+      "darkTheme": "dark",
+      "keyboardMenu": true,
+      "small": {
+        "width": 374,
+        "scrollWidth": 374
+      },
+      "errors": []
+    }
+  ],
+  "contrast": [
+    {
+      "theme": "light",
+      "method": "computed foreground and alpha-composited ancestor background colors; decorative gradients excluded",
+      "samples": [
+        {
+          "selector": ".settings-toolbar>strong",
+          "foreground": [
+            39,
+            41,
+            46
+          ],
+          "compositedBackground": [
+            243.61004,
+            244.42072,
+            246.65212000000002
+          ],
+          "ratio": 13.28
+        },
+        {
+          "selector": ".settings-page-heading p",
+          "foreground": [
+            98,
+            103,
+            112
+          ],
+          "compositedBackground": [
+            243.61004,
+            244.42072,
+            246.65212000000002
+          ],
+          "ratio": 5.19
+        },
+        {
+          "selector": ".settings-row-label",
+          "foreground": [
+            39,
+            41,
+            46
+          ],
+          "compositedBackground": [
+            252.6081084,
+            252.7783512,
+            253.24694520000003
+          ],
+          "ratio": 14.28
+        },
+        {
+          "selector": ".settings-row p",
+          "foreground": [
+            98,
+            103,
+            112
+          ],
+          "compositedBackground": [
+            252.6081084,
+            252.7783512,
+            253.24694520000003
+          ],
+          "ratio": 5.58
+        },
+        {
+          "selector": ".settings-nav nav .is-selected",
+          "foreground": [
+            255,
+            255,
+            255
+          ],
+          "compositedBackground": [
+            22,
+            123,
+            172
+          ],
+          "ratio": 4.71
+        },
+        {
+          "selector": ".saved-state",
+          "foreground": [
+            98,
+            103,
+            112
+          ],
+          "compositedBackground": [
+            243.61004,
+            244.42072,
+            246.65212000000002
+          ],
+          "ratio": 5.19
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "method": "computed foreground and alpha-composited ancestor background colors; decorative gradients excluded",
+      "samples": [
+        {
+          "selector": ".settings-toolbar>strong",
+          "foreground": [
+            240,
+            240,
+            243
+          ],
+          "compositedBackground": [
+            37.82274,
+            39.262660000000004,
+            43.3739
+          ],
+          "ratio": 13.09
+        },
+        {
+          "selector": ".settings-page-heading p",
+          "foreground": [
+            184,
+            186,
+            195
+          ],
+          "compositedBackground": [
+            37.82274,
+            39.262660000000004,
+            43.3739
+          ],
+          "ratio": 7.69
+        },
+        {
+          "selector": ".settings-row-label",
+          "foreground": [
+            240,
+            240,
+            243
+          ],
+          "compositedBackground": [
+            49.0227754,
+            50.1151586,
+            55.718519
+          ],
+          "ratio": 11.22
+        },
+        {
+          "selector": ".settings-row p",
+          "foreground": [
+            184,
+            186,
+            195
+          ],
+          "compositedBackground": [
+            49.0227754,
+            50.1151586,
+            55.718519
+          ],
+          "ratio": 6.59
+        },
+        {
+          "selector": ".settings-nav nav .is-selected",
+          "foreground": [
+            255,
+            255,
+            255
+          ],
+          "compositedBackground": [
+            22,
+            123,
+            172
+          ],
+          "ratio": 4.71
+        },
+        {
+          "selector": ".saved-state",
+          "foreground": [
+            184,
+            186,
+            195
+          ],
+          "compositedBackground": [
+            37.82274,
+            39.262660000000004,
+            43.3739
+          ],
+          "ratio": 7.69
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "ARIA snapshots and keyboard navigation were checked; no physical VoiceOver/NVDA speech-output test was performed."
+  ]
+}

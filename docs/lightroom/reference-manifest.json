@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "researchedAt": "2026-11-12",
+  "target": {
+    "product": "Adobe Lightroom desktop",
+    "version": "10.0",
+    "release": "November 2026",
+    "workspace": "Advanced",
+    "theme": "Dark",
+    "density": "Compact",
+    "shortcutScheme": "Lightroom desktop default",
+    "distinctFrom": "Adobe Lightroom Classic 16.0",
+    "platform": "Documentation examples; platform not independently verified",
+    "scaling": "Documentation images have unknown UI scaling; image pixels are not CSS pixel measurements"
+  },
+  "evidenceLimits": [
+    "No licensed, locally installed Lightroom application was available for direct measurement.",
+    "The workspace customization article verifies the names Default, Advanced, and Classic, but does not provide complete per-preset configuration values.",
+    "The downloaded editing screenshot is a cropped documentation example. The workspace feature image is a stylized illustration.",
+    "Exact Advanced layout parity, font metrics, platform, scale, and workspace-specific control defaults remain unverified.",
+    "Reference illustrations are stored only under docs/lightroom/reference, never under public or bundled in the product."
+  ],
+  "sources": [
+    { "id": "R1", "url": "https://helpx.adobe.com/lightroom/desktop/introduction/whats-new.html", "lastUpdated": "2026-11-10", "verified": "Desktop 10.0 release heading and November feature additions" },
+    { "id": "R2", "url": "https://helpx.adobe.com/lightroom/desktop/introduction/customize-lightroom-workspace.html", "lastUpdated": "2026-11-10", "verified": "Workspace names, theme/density choices, histogram, favorites and panel customization" },
+    { "id": "R3", "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/edit-photos.html", "lastUpdated": "2026-11-10", "verified": "Detail editing, Cloud/Local distinction, filmstrip, profiles, histogram clipping, versions and control order" },
+    { "id": "R4", "url": "https://helpx.adobe.com/lightroom/desktop/add-import-and-capture-photos/add-photos.html", "lastUpdated": "2025-04-24", "verified": "Import review; older than selected release and used only for documented workflow" },
+    { "id": "R6", "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/organize-photos.html", "lastUpdated": "2026-04-16", "verified": "Albums, stacks, keywords, metadata, flags, ratings and filters" },
+    { "id": "R12", "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/crop-rotate-geometry.html", "lastUpdated": "2026-11-10", "verified": "Crop handles/aspects, straighten, overlay guides, rotate/flip, geometry, Projection" },
+    { "id": "R13", "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/masking.html", "lastUpdated": "2026-11-10", "verified": "Right toolbar masking, manual/AI masks and additive/subtractive refinement" },
+    { "id": "R14", "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/remove-tool.html", "lastUpdated": "2025-10-27", "verified": "Clone/Heal/Generative Remove distinction, reviewable variations and visualize spots" },
+    { "id": "R16", "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/presets.html", "lastUpdated": "2026-04-16", "verified": "Preset categories, hover preview, groups and favorites" },
+    { "id": "R21-export", "url": "https://helpx.adobe.com/lightroom/desktop/save-share-and-export/save-share-photos.html", "lastUpdated": "2025-04-24", "verified": "Export workflow; article lists JPG, AVIF, JPEG XL, DNG, TIF and original, so PNG is treated as a LopeOS extension" },
+    { "id": "R21-shortcuts", "url": "https://helpx.adobe.com/lightroom/desktop/using/keyboard-shortcuts.html", "lastUpdated": "2025-06-17", "verified": "Desktop default shortcuts rather than Lightroom Classic defaults" },
+    { "id": "color-labels", "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/color-labels.html", "lastUpdated": "2026-06-18", "verified": "Color-label menus/footer, Square Grid visibility, editable names and smart-album criterion" }
+  ],
+  "images": [
+    {
+      "file": "reference/adobe-edit-histogram.jpg",
+      "sourcePage": "https://helpx.adobe.com/lightroom/desktop/edit-photos/edit-photos.html",
+      "sourceAsset": "https://helpx-prod.scene7.com/is/image/HelpxProdLoc/lrd-histogram-tone-adjustment?%24png%24=&jpegSize=300&wid=1920",
+      "actualMime": "image/jpeg",
+      "width": 1920,
+      "height": 1241,
+      "workspace": "Unverified; documentation crop of desktop editing UI",
+      "platform": "Unverified",
+      "scale": "Unverified",
+      "observedImagePixels": { "topToolbarHeight": 66, "editingPanelLeft": 1499, "visibleEditingPanelWidth": 421, "photoRight": 1253 },
+      "cssMeasurements": "Not derivable without verified scale and uncropped workspace",
+      "use": "Private documentation comparison only; Adobe retains rights"
+    },
+    {
+      "file": "reference/adobe-customizable-workspace.jpg",
+      "sourcePage": "https://helpx.adobe.com/lightroom/desktop/introduction/whats-new.html",
+      "sourceAsset": "https://helpx-prod.scene7.com/is/image/HelpxProdLoc/whats-new-lrd-customizable-ui?%24pjpeg%24=&jpegSize=200&wid=1200",
+      "actualMime": "image/jpeg",
+      "width": 1200,
+      "height": 675,
+      "workspace": "Stylized workspace feature illustration, not a full Advanced capture",
+      "platform": "Not applicable",
+      "scale": "Not applicable",
+      "use": "Private documentation comparison only; Adobe retains rights"
+    }
+  ],
+  "provisionalImplementationMetrics": {
+    "topToolbarCssPx": 50,
+    "leftNavigationCssPx": 224,
+    "rightEditPanelCssPx": 288,
+    "toolTrackCssPx": 42,
+    "filmstripCssPx": 104,
+    "footerCssPx": 36,
+    "panelTextCssPx": 12,
+    "status": "Proposed starting metrics only. Implementation may choose other provisional values. None are measured Advanced preset values."
+  },
+  "conflictResolutions": [
+    "Default/Advanced/Classic are workspace presets inside Lightroom desktop 10.0; they do not imply Lightroom Classic catalog behavior.",
+    "Older import/export and shortcut examples establish behaviors only when consistent with the November release and current documentation.",
+    "PNG and WebP export/import may be useful LopeOS extensions; their implementation is not proof of Adobe desktop support.",
+    "A documentation feature illustration is not pixel-level fidelity evidence."
+  ]
+}

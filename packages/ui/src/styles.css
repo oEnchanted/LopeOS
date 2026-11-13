@@ -1,0 +1,37 @@
+@import './glass.css';
+:root { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #233b4b; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
+ --text: #233b4b; --muted: #728691; --accent: #167bac; --accent-soft: #d7ecf5; --surface: #fbfcfd; --chrome: rgba(242,249,252,.85); --glass: rgba(240,250,255,.48); --border: rgba(52,94,115,.13); --highlight: rgba(255,255,255,.9); --shadow: 0 28px 70px -18px #15384940, 0 6px 18px -5px #1538491a; --blur: 28px; --radius: 16px; --motion: 160ms; --space: 8px; color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; }
+button:disabled { opacity: .45; cursor: default; }
+button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 3px solid #0d96d8; outline-offset: 3px; }
+svg { flex-shrink: 0; }
+.ui-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 14px; border-radius:8px; font-size:12px; font-weight:600; transition:background var(--motion), transform var(--motion); white-space:nowrap; }
+.ui-button:active { transform:translateY(1px); }
+.ui-button--primary { color:white; background:linear-gradient(#2297c7,#137fae); box-shadow:0 2px 4px #146c8f26,inset 0 1px 0 #ffffff38; }
+.ui-button--primary:hover { background:#127ca7; }
+.ui-button--secondary { background:var(--surface); border:1px solid var(--border); box-shadow:0 2px 3px #183b4d06; }
+.ui-button--secondary:hover,.ui-button--ghost:hover { background:var(--accent-soft); }
+.ui-button--ghost { background:transparent; }
+.ui-input { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:9px 12px; min-width:0; }
+.ui-toolbar { display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border); }
+.ui-sidebar { background:var(--chrome);border-right:1px solid var(--border);padding:16px; }
+.ui-tabs { display:flex;gap:3px;padding:3px;background:#7b96a315;border-radius:9px; }
+.ui-tabs button { background:transparent;border-radius:6px;padding:6px 12px;font-size:12px; }
+.ui-tabs button[aria-selected=true] { background:var(--surface);box-shadow:0 1px 4px #263d4b15; }
+.ui-list-row { display:flex;gap:10px;align-items:center;width:100%;padding:10px;border-radius:8px;background:transparent;text-align:left; }
+.ui-list-row:hover,.ui-list-row.is-selected { background:var(--accent-soft); }
+.ui-tooltip { position:relative;display:inline-flex; }
+.ui-tooltip:hover:after { content:attr(data-tooltip);position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);padding:6px 9px;background:var(--chrome);color:var(--text);border-radius:6px;white-space:nowrap;font-size:11px;box-shadow:var(--shadow); }
+.ui-popover { border-radius:14px;padding:16px; }
+[data-theme=dark] { --text:#e2edf3; --muted:#94aab9; --accent:#79c8ed; --accent-soft:#254455; --surface:#1c2d39; --chrome:rgba(31,48,61,.94); --glass:rgba(27,48,63,.73); --border:rgba(198,223,240,.13); --highlight:rgba(218,238,251,.19); --shadow:0 28px 70px -18px #0009,0 6px 18px -5px #0005; color:var(--text);color-scheme:dark; }
+[data-reduce-transparency=true] { --glass:var(--surface);--chrome:var(--surface);--blur:0px; }
+[data-increase-contrast=true] { --muted:var(--text);--border:#758d9c;--highlight:#9eb9c8; }
+[data-reduce-motion=true] *,[data-reduce-motion=true] *:before,[data-reduce-motion=true] *:after { transition:none!important;animation:none!important;scroll-behavior:auto!important; }
+@media(prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none!important;animation:none!important;scroll-behavior:auto!important; } }
+
+.ui-empty-state{padding:45px 20px;text-align:center;color:var(--muted);font-size:12px}.ui-empty-state strong{display:block;color:var(--text);font-size:16px}.ui-empty-state p{line-height:1.7}.ui-dialog-backdrop{position:absolute;inset:0;z-index:52000;background:#153d4c38;backdrop-filter:blur(3px);display:grid;grid-template-columns:minmax(0,1fr);place-items:center;padding:20px}.ui-dialog{width:460px;min-width:0;max-width:100%;max-height:90vh;overflow:auto;background:var(--surface);padding:24px;border-radius:16px;box-shadow:var(--shadow)}.ui-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.ui-dialog h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.5px}.ui-dialog>header button{font-size:24px;background:transparent;padding:0 3px}.ui-dialog .ui-input{width:100%}

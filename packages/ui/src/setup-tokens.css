@@ -1,0 +1,47 @@
+/* Setup geometry and typography extend the shared LopeOS glass material. */
+:root {
+  --setup-theme-fade: 220ms;
+  --setup-hairline: rgb(42 76 100 / .18);
+  --setup-input: rgb(255 255 255 / .5);
+  --setup-lift: 0 2px 4px rgb(5 16 30 / .12), 0 24px 60px -18px rgb(5 16 30 / .5);
+  --setup-focus: #ffe4a4;
+  --setup-masthead: #f9fcfd;
+  --setup-backdrop: rgb(9 29 52 / .18);
+  --setup-white: #fff;
+  --setup-error: #982f3d;
+  --setup-error-fill: rgb(255 220 225 / .5);
+  --setup-mini-light: linear-gradient(145deg, #d8f0fa, #79c0e5 58%, #e3d5ee);
+  --setup-mini-dark: linear-gradient(145deg, #142c55, #34678d 58%, #393c63);
+  --setup-mini-line: rgb(71 110 145 / .27);
+  --setup-red: #ff6058;
+  --setup-yellow: #ffbd2e;
+  --setup-green: #28c840;
+  --setup-radius-panel: 22px;
+  --setup-radius-mobile: 19px;
+  --setup-radius-control: 8px;
+  --setup-radius-button: 9px;
+  --setup-radius-preview: 10px;
+  --setup-radius-circle: 50%;
+  --setup-type-tiny: .68rem;
+  --setup-type-small: .72rem;
+  --setup-type-label: .78rem;
+  --setup-type-body: .79rem;
+  --setup-type-heading: clamp(1.55rem, 2.6vw, 2rem);
+  --setup-type-welcome: clamp(1.8rem, 3.2vw, 2.4rem);
+  --setup-type-mobile-heading: 1.5rem;
+  --setup-type-name: 1.2rem;
+  --setup-type-preview: .95rem;
+  --setup-type-brand: .9rem;
+}
+.setup-screen {
+  --setup-text: var(--glass-text);
+  --setup-muted: var(--glass-muted);
+  --setup-edge: var(--glass-border);
+  --setup-rim: var(--glass-rim);
+}
+[data-theme=dark] {
+  --setup-hairline: rgb(237 249 255 / .24);
+  --setup-input: rgb(224 240 255 / .08);
+  --setup-error: #ffbfc8;
+  --setup-error-fill: rgb(117 25 45 / .25);
+}

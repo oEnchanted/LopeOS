@@ -1,0 +1,237 @@
+{
+  "date": "2026-11-13",
+  "checks": 45,
+  "maxChannelError": 0,
+  "records": [
+    {
+      "name": "selected interior",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "unselected original",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "soft selection",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "source retained",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "deselect retains captured coverage",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "scaled mask follows object",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "previous mask location restored",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "rotated mask follows object",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "rotation leaves unselected pixels",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "native reopen rendered pixels",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "WebGL selected filter",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "undo restores source render",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "redo restores masked render",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "disable masked filter",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "stack keeps first mask",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "stack uses second mask",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "overlapping filters both apply",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport invert",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport invert",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport gaussian-blur",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport gaussian-blur",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport box-blur",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport box-blur",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport motion-blur",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport motion-blur",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport unsharp-mask",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport unsharp-mask",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport high-pass",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport high-pass",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport mosaic",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport mosaic",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport add-noise",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport add-noise",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport emboss",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport emboss",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport find-edges",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport find-edges",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "viewport solarize",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "worker viewport solarize",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "scaled mask viewport",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "scaled mask worker",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "rotated mask viewport",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "rotated mask worker",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "cache pressure selected pixel",
+      "max": 0,
+      "tolerance": 1
+    },
+    {
+      "name": "cache pressure source pixel",
+      "max": 0,
+      "tolerance": 1
+    }
+  ],
+  "transport": {
+    "firstFrameBytes": 131072,
+    "repeatBytes": 0
+  },
+  "errors": []
+}

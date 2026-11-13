@@ -1,0 +1,3808 @@
+{
+  "captured": "2026-11-13",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "deviceScale": 1
+  },
+  "language": "en-US",
+  "theme": "dark",
+  "workspace": "Essentials",
+  "referenceStatus": "Public documentation baseline; build-specific Windows pixel parity unverified",
+  "menus": [
+    {
+      "label": "File",
+      "items": [
+        "image.new",
+        "image.open",
+        "image.device-open",
+        {
+          "label": "Browse in Bridge…",
+          "disabled": "Adobe Bridge is not connected."
+        },
+        null,
+        "image.close",
+        "image.close-all",
+        null,
+        "image.save",
+        "image.save-as",
+        {
+          "label": "Save a Copy",
+          "items": [
+            "image.psd-export"
+          ]
+        },
+        {
+          "label": "Export",
+          "items": [
+            "image.export"
+          ]
+        },
+        null,
+        "image.place",
+        {
+          "label": "Place Linked…",
+          "disabled": "Linked-file sources are not implemented."
+        },
+        null,
+        {
+          "label": "Automate",
+          "disabled": "Batch automation is not implemented."
+        },
+        {
+          "label": "Scripts",
+          "disabled": "Scripting is not implemented."
+        },
+        null,
+        {
+          "label": "Print…",
+          "shortcut": "Ctrl+P",
+          "disabled": "Color-managed printing is not implemented."
+        }
+      ]
+    },
+    {
+      "label": "Edit",
+      "items": [
+        "image.undo",
+        "image.redo",
+        null,
+        "image.cut",
+        "image.copy",
+        "image.copy-merged",
+        "image.paste",
+        "image.paste-in-place",
+        "image.clear",
+        null,
+        "image.fill",
+        {
+          "label": "Content-Aware Fill…",
+          "disabled": "Classic texture synthesis is not implemented. Local generative fill is available separately."
+        },
+        "image.ai-fill",
+        "image.ai-expand",
+        null,
+        "image.transform",
+        {
+          "label": "Transform",
+          "items": [
+            "image.transform-dialog",
+            "image.flip-horizontal",
+            "image.flip-vertical"
+          ]
+        },
+        {
+          "label": "Auto-Align Layers…",
+          "disabled": "Automatic image registration is not implemented."
+        },
+        null,
+        {
+          "label": "Color Settings…",
+          "disabled": "ICC color management is not implemented. The editor uses browser sRGB."
+        },
+        {
+          "label": "Keyboard Shortcuts…",
+          "items": [
+            "image.shortcuts"
+          ]
+        },
+        {
+          "label": "Toolbar…",
+          "items": [
+            "image.toggle-columns"
+          ]
+        },
+        {
+          "label": "Preferences",
+          "items": [
+            "image.reset-workspace"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Image",
+      "items": [
+        {
+          "label": "Mode",
+          "items": [
+            {
+              "label": "RGB Color ✓",
+              "disabled": "RGB is the supported color mode."
+            },
+            {
+              "label": "CMYK Color",
+              "disabled": "CMYK conversion is unavailable."
+            },
+            {
+              "label": "Lab Color",
+              "disabled": "Lab is unavailable."
+            },
+            null,
+            {
+              "label": "8 Bits/Channel ✓",
+              "disabled": "RGB/8 is the supported pipeline."
+            },
+            {
+              "label": "16 Bits/Channel",
+              "disabled": "16-bit editing is unavailable."
+            },
+            {
+              "label": "32 Bits/Channel",
+              "disabled": "32-bit editing is unavailable."
+            }
+          ]
+        },
+        {
+          "label": "Adjustments",
+          "items": [
+            "image.adjust-brightness",
+            "image.adjust-levels",
+            "image.adjust-curves",
+            "image.adjust-exposure",
+            "image.adjust-vibrance",
+            "image.adjust-hue",
+            "image.adjust-balance",
+            "image.adjust-black-white",
+            "image.adjust-photo-filter",
+            "image.adjust-channel-mixer",
+            "image.adjust-invert",
+            "image.adjust-posterize",
+            "image.adjust-threshold",
+            "image.adjust-gradient-map"
+          ]
+        },
+        null,
+        "image.image-size",
+        "image.canvas-size",
+        {
+          "label": "Image Rotation",
+          "items": [
+            "image.rotate-cw",
+            "image.rotate-ccw"
+          ]
+        },
+        "image.crop",
+        null,
+        "image.trim",
+        "image.reveal-all"
+      ]
+    },
+    {
+      "label": "Layer",
+      "items": [
+        {
+          "label": "New",
+          "items": [
+            "image.new-layer",
+            "image.group"
+          ]
+        },
+        "image.duplicate",
+        "image.layer-via-copy",
+        "image.layer-via-cut",
+        "image.delete-layer",
+        null,
+        {
+          "label": "Layer Style",
+          "items": [
+            "image.effects"
+          ]
+        },
+        {
+          "label": "New Adjustment Layer",
+          "items": [
+            "image.adjust-brightness",
+            "image.adjust-levels",
+            "image.adjust-curves",
+            "image.adjust-exposure",
+            "image.adjust-vibrance",
+            "image.adjust-hue",
+            "image.adjust-balance",
+            "image.adjust-black-white",
+            "image.adjust-photo-filter",
+            "image.adjust-channel-mixer",
+            "image.adjust-invert",
+            "image.adjust-posterize",
+            "image.adjust-threshold",
+            "image.adjust-gradient-map"
+          ]
+        },
+        {
+          "label": "Layer Mask",
+          "items": [
+            "image.mask",
+            "image.remove-mask"
+          ]
+        },
+        "image.clipping",
+        null,
+        {
+          "label": "Smart Objects",
+          "items": [
+            "image.embed",
+            "image.reset-source"
+          ]
+        },
+        {
+          "label": "Rasterize",
+          "items": [
+            "image.rasterize"
+          ]
+        },
+        null,
+        "image.group",
+        "image.ungroup",
+        {
+          "label": "Arrange",
+          "items": [
+            "image.bring-forward",
+            "image.send-backward"
+          ]
+        },
+        null,
+        "image.merge",
+        "image.merge-visible",
+        "image.flatten"
+      ]
+    },
+    {
+      "label": "Type",
+      "items": [
+        "image.edit-text",
+        null,
+        {
+          "label": "Panels",
+          "items": [
+            "image.edit-text"
+          ]
+        },
+        {
+          "label": "Anti-Alias",
+          "disabled": "The browser rasterizer provides antialiasing."
+        },
+        {
+          "label": "Convert to Shape",
+          "disabled": "Text outline extraction is not implemented."
+        },
+        {
+          "label": "Warp Text…",
+          "disabled": "Text warping is not implemented."
+        }
+      ]
+    },
+    {
+      "label": "Select",
+      "items": [
+        "image.select-all",
+        "image.deselect",
+        "image.reselect",
+        "image.invert",
+        "image.quick-mask",
+        "image.save-selection",
+        null,
+        {
+          "label": "All Layers",
+          "items": [
+            "image.select-layers"
+          ]
+        },
+        null,
+        "image.color-range",
+        "image.local-ai",
+        {
+          "label": "Sky",
+          "disabled": "Sky segmentation requires a provider integration."
+        },
+        null,
+        {
+          "label": "Modify",
+          "items": [
+            "image.feather",
+            "image.expand",
+            "image.contract",
+            "image.border",
+            "image.smooth"
+          ]
+        },
+        {
+          "label": "Select and Mask…",
+          "disabled": "Advanced edge refinement is not implemented."
+        }
+      ]
+    },
+    {
+      "label": "Filter",
+      "items": [
+        {
+          "label": "Convert for Smart Filters",
+          "items": [
+            "image.embed"
+          ]
+        },
+        null,
+        {
+          "label": "Camera Raw Filter…",
+          "disabled": "RAW processing is not implemented."
+        },
+        {
+          "label": "Local AI",
+          "items": [
+            "image.local-ai",
+            "image.ai-fill",
+            "image.ai-expand"
+          ]
+        },
+        {
+          "label": "Filter Gallery…",
+          "disabled": "Filter Gallery is not implemented."
+        },
+        null,
+        {
+          "label": "Smart Adjustments",
+          "items": [
+            "image.smart-brightness",
+            "image.smart-levels",
+            "image.smart-hue"
+          ]
+        },
+        {
+          "label": "Blur",
+          "items": [
+            "image.filter-gaussian-blur",
+            "image.filter-box-blur",
+            "image.filter-motion-blur"
+          ]
+        },
+        {
+          "label": "Distort",
+          "disabled": "Distortion filters are not implemented."
+        },
+        {
+          "label": "Noise",
+          "items": [
+            "image.filter-add-noise"
+          ]
+        },
+        {
+          "label": "Pixelate",
+          "items": [
+            "image.filter-mosaic"
+          ]
+        },
+        {
+          "label": "Stylize",
+          "items": [
+            "image.filter-emboss",
+            "image.filter-find-edges",
+            "image.filter-solarize"
+          ]
+        },
+        {
+          "label": "Sharpen",
+          "items": [
+            "image.filter-sharpen",
+            "image.filter-unsharp-mask"
+          ]
+        },
+        {
+          "label": "Other",
+          "items": [
+            "image.filter-high-pass",
+            "image.filter-invert",
+            "image.filter-grayscale"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "View",
+      "items": [
+        "image.zoom-in",
+        "image.zoom-out",
+        "image.fit",
+        "image.actual",
+        null,
+        "image.rulers",
+        "image.guides",
+        "image.clear-guides",
+        null,
+        {
+          "label": "Proof Setup",
+          "disabled": "ICC soft-proofing is not implemented."
+        },
+        {
+          "label": "Gamut Warning",
+          "disabled": "ICC gamut checks are not implemented."
+        }
+      ]
+    },
+    {
+      "label": "Plugins",
+      "items": [
+        {
+          "label": "Plugins Panel",
+          "disabled": "No plugin runtime is connected."
+        },
+        {
+          "label": "Browse Plugins",
+          "disabled": "Adobe plugin services are not connected."
+        }
+      ]
+    },
+    {
+      "label": "Window",
+      "items": [
+        {
+          "label": "Workspace",
+          "items": [
+            "image.save-workspace",
+            "image.restore-workspace",
+            "image.reset-workspace"
+          ]
+        },
+        null,
+        "image.color",
+        "image.properties",
+        "image.adjustments",
+        "image.layers",
+        "image.channels",
+        "image.paths",
+        "image.history",
+        null,
+        "image.taskbar",
+        "image.toggle-panels",
+        "image.toggle-columns"
+      ]
+    },
+    {
+      "label": "Help",
+      "items": [
+        "image.about",
+        "image.shortcuts",
+        "image.compatibility",
+        "image.local-ai"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "id": "image.local-ai",
+      "label": "Local AI — Select & Mask…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.local-ai",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.ai-fill",
+      "label": "Generative Fill…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.ai-fill",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.ai-expand",
+      "label": "Generative Expand…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.ai-expand",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.close-all",
+      "label": "Close All",
+      "shortcut": "Mod+Alt+W",
+      "enabled": true,
+      "action": "Shared command handler image.close-all",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.trim",
+      "label": "Trim Transparent Edges",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.trim",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.reveal-all",
+      "label": "Reveal All",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.reveal-all",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.color-range",
+      "label": "Color Range…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.color-range",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.new",
+      "label": "New…",
+      "shortcut": "Mod+N",
+      "enabled": true,
+      "action": "Shared command handler image.new",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.open",
+      "label": "Open…",
+      "shortcut": "Mod+O",
+      "enabled": true,
+      "action": "Shared command handler image.open",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.device-open",
+      "label": "Open from Device…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.device-open",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.place",
+      "label": "Place Embedded…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.place",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.save",
+      "label": "Save",
+      "shortcut": "Mod+S",
+      "enabled": true,
+      "action": "Shared command handler image.save",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.save-as",
+      "label": "Save As…",
+      "shortcut": "Mod+Shift+S",
+      "enabled": true,
+      "action": "Shared command handler image.save-as",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.export",
+      "label": "Export As…",
+      "shortcut": "Mod+Alt+Shift+S",
+      "enabled": true,
+      "action": "Shared command handler image.export",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.psd-export",
+      "label": "Photoshop PSD…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.psd-export",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.close",
+      "label": "Close",
+      "shortcut": "Mod+W",
+      "enabled": true,
+      "action": "Shared command handler image.close",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.undo",
+      "label": "Undo",
+      "shortcut": "Mod+Z",
+      "enabled": false,
+      "action": "Shared command handler image.undo",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.redo",
+      "label": "Redo",
+      "shortcut": "Mod+Shift+Z",
+      "enabled": false,
+      "action": "Shared command handler image.redo",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.copy",
+      "label": "Copy",
+      "shortcut": "Mod+C",
+      "enabled": true,
+      "action": "Shared command handler image.copy",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.copy-merged",
+      "label": "Copy Merged",
+      "shortcut": "Mod+Shift+C",
+      "enabled": true,
+      "action": "Shared command handler image.copy-merged",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.cut",
+      "label": "Cut",
+      "shortcut": "Mod+X",
+      "enabled": true,
+      "action": "Shared command handler image.cut",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.paste",
+      "label": "Paste",
+      "shortcut": "Mod+V",
+      "enabled": false,
+      "action": "Shared command handler image.paste",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.paste-in-place",
+      "label": "Paste in Place",
+      "shortcut": "Mod+Shift+V",
+      "enabled": false,
+      "action": "Shared command handler image.paste-in-place",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.clear",
+      "label": "Clear",
+      "shortcut": "Delete",
+      "enabled": true,
+      "action": "Shared command handler image.clear",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.layer-via-copy",
+      "label": "Layer via Copy",
+      "shortcut": "Mod+J",
+      "enabled": true,
+      "action": "Shared command handler image.layer-via-copy",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.layer-via-cut",
+      "label": "Layer via Cut",
+      "shortcut": "Mod+Shift+J",
+      "enabled": true,
+      "action": "Shared command handler image.layer-via-cut",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.new-layer",
+      "label": "New Layer…",
+      "shortcut": "Mod+Shift+N",
+      "enabled": true,
+      "action": "Shared command handler image.new-layer",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.duplicate",
+      "label": "Duplicate Layer…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.duplicate",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.group",
+      "label": "Group Layers",
+      "shortcut": "Mod+G",
+      "enabled": true,
+      "action": "Shared command handler image.group",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.ungroup",
+      "label": "Ungroup Layers",
+      "shortcut": "Mod+Shift+G",
+      "enabled": false,
+      "action": "Shared command handler image.ungroup",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.delete-layer",
+      "label": "Delete Layer",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.delete-layer",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.mask",
+      "label": "Add Layer Mask",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.mask",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.remove-mask",
+      "label": "Delete Layer Mask",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.remove-mask",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.clipping",
+      "label": "Create Clipping Mask",
+      "shortcut": "Mod+Alt+G",
+      "enabled": true,
+      "action": "Shared command handler image.clipping",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.embed",
+      "label": "Convert to Smart Object",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.embed",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.reset-source",
+      "label": "Reset Transform",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.reset-source",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.rasterize",
+      "label": "Rasterize Layer",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.rasterize",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.merge",
+      "label": "Merge Layers",
+      "shortcut": "Mod+E",
+      "enabled": false,
+      "action": "Shared command handler image.merge",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.merge-visible",
+      "label": "Merge Visible",
+      "shortcut": "Mod+Shift+E",
+      "enabled": true,
+      "action": "Shared command handler image.merge-visible",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.flatten",
+      "label": "Flatten Image",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.flatten",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.bring-forward",
+      "label": "Bring Forward",
+      "shortcut": "Mod+]",
+      "enabled": true,
+      "action": "Shared command handler image.bring-forward",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.send-backward",
+      "label": "Send Backward",
+      "shortcut": "Mod+[",
+      "enabled": true,
+      "action": "Shared command handler image.send-backward",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.fill",
+      "label": "Fill with Foreground",
+      "shortcut": "Alt+Backspace",
+      "enabled": true,
+      "action": "Shared command handler image.fill",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.transform",
+      "label": "Free Transform",
+      "shortcut": "Mod+T",
+      "enabled": true,
+      "action": "Shared command handler image.transform",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.transform-dialog",
+      "label": "Scale and Rotate…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.transform-dialog",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.flip-horizontal",
+      "label": "Flip Horizontal",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.flip-horizontal",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.flip-vertical",
+      "label": "Flip Vertical",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.flip-vertical",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.image-size",
+      "label": "Image Size…",
+      "shortcut": "Mod+Alt+I",
+      "enabled": true,
+      "action": "Shared command handler image.image-size",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.canvas-size",
+      "label": "Canvas Size…",
+      "shortcut": "Mod+Alt+C",
+      "enabled": true,
+      "action": "Shared command handler image.canvas-size",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.crop",
+      "label": "Crop",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.crop",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.rotate-cw",
+      "label": "90° Clockwise",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.rotate-cw",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.rotate-ccw",
+      "label": "90° Counter Clockwise",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.rotate-ccw",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.edit-text",
+      "label": "Edit Type…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.edit-text",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.effects",
+      "label": "Blending Options…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.effects",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.quick-mask",
+      "label": "Quick Mask Mode",
+      "shortcut": "Q",
+      "enabled": true,
+      "checked": false,
+      "action": "Shared command handler image.quick-mask",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.save-selection",
+      "label": "Save Selection",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.save-selection",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.select-all",
+      "label": "All",
+      "shortcut": "Mod+A",
+      "enabled": true,
+      "action": "Shared command handler image.select-all",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.deselect",
+      "label": "Deselect",
+      "shortcut": "Mod+D",
+      "enabled": false,
+      "action": "Shared command handler image.deselect",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.reselect",
+      "label": "Reselect",
+      "shortcut": "Mod+Shift+D",
+      "enabled": false,
+      "action": "Shared command handler image.reselect",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.invert",
+      "label": "Inverse",
+      "shortcut": "Mod+Shift+I",
+      "enabled": true,
+      "action": "Shared command handler image.invert",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.select-layers",
+      "label": "All Layers",
+      "shortcut": "Mod+Alt+A",
+      "enabled": true,
+      "action": "Shared command handler image.select-layers",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.feather",
+      "label": "Feather…",
+      "shortcut": "Shift+F6",
+      "enabled": false,
+      "action": "Shared command handler image.feather",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.expand",
+      "label": "Expand…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.expand",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.contract",
+      "label": "Contract…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.contract",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.border",
+      "label": "Border…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.border",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.smooth",
+      "label": "Smooth…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.smooth",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-brightness",
+      "label": "Brightness/Contrast…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-brightness",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-levels",
+      "label": "Levels…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-levels",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-curves",
+      "label": "Curves…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-curves",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-hue",
+      "label": "Hue/Saturation…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-hue",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-balance",
+      "label": "Color Balance…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-balance",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-exposure",
+      "label": "Exposure…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-exposure",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-vibrance",
+      "label": "Vibrance…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-vibrance",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-black-white",
+      "label": "Black & White…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-black-white",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-photo-filter",
+      "label": "Photo Filter…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-photo-filter",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-channel-mixer",
+      "label": "Channel Mixer…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-channel-mixer",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-invert",
+      "label": "Invert…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-invert",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-posterize",
+      "label": "Posterize…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-posterize",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-threshold",
+      "label": "Threshold…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-threshold",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjust-gradient-map",
+      "label": "Gradient Map…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.adjust-gradient-map",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.smart-brightness",
+      "label": "Brightness/Contrast…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.smart-brightness",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.smart-levels",
+      "label": "Levels…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.smart-levels",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.smart-hue",
+      "label": "Hue/Saturation…",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.smart-hue",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-gaussian-blur",
+      "label": "Gaussian Blur…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-gaussian-blur",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-sharpen",
+      "label": "Sharpen…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-sharpen",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-unsharp-mask",
+      "label": "Unsharp Mask…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-unsharp-mask",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-box-blur",
+      "label": "Box Blur…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-box-blur",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-motion-blur",
+      "label": "Motion Blur…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-motion-blur",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-high-pass",
+      "label": "High Pass…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-high-pass",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-add-noise",
+      "label": "Add Noise…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-add-noise",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-mosaic",
+      "label": "Mosaic…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-mosaic",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-emboss",
+      "label": "Emboss…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-emboss",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-find-edges",
+      "label": "Find Edges…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-find-edges",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-solarize",
+      "label": "Solarize…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.filter-solarize",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-invert",
+      "label": "Invert…",
+      "shortcut": "Mod+I",
+      "enabled": true,
+      "action": "Shared command handler image.filter-invert",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.filter-grayscale",
+      "label": "Desaturate…",
+      "shortcut": "Mod+Shift+U",
+      "enabled": true,
+      "action": "Shared command handler image.filter-grayscale",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.zoom-in",
+      "label": "Zoom In",
+      "shortcut": "Mod+=",
+      "enabled": true,
+      "action": "Shared command handler image.zoom-in",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.zoom-out",
+      "label": "Zoom Out",
+      "shortcut": "Mod+-",
+      "enabled": true,
+      "action": "Shared command handler image.zoom-out",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.fit",
+      "label": "Fit on Screen",
+      "shortcut": "Mod+0",
+      "enabled": true,
+      "action": "Shared command handler image.fit",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.actual",
+      "label": "100%",
+      "shortcut": "Mod+1",
+      "enabled": true,
+      "action": "Shared command handler image.actual",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.rulers",
+      "label": "Rulers",
+      "shortcut": "Mod+R",
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.rulers",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.guides",
+      "label": "Guides",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.guides",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.clear-guides",
+      "label": "Clear Guides",
+      "shortcut": null,
+      "enabled": false,
+      "action": "Shared command handler image.clear-guides",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.layers",
+      "label": "Layers",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.layers",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.history",
+      "label": "History",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.history",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.properties",
+      "label": "Properties",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.properties",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.color",
+      "label": "Color",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.color",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.adjustments",
+      "label": "Adjustments",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.adjustments",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.channels",
+      "label": "Channels",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.channels",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.paths",
+      "label": "Paths",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.paths",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.taskbar",
+      "label": "Contextual Task Bar",
+      "shortcut": null,
+      "enabled": true,
+      "checked": true,
+      "action": "Shared command handler image.taskbar",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.toggle-panels",
+      "label": "Hide / Show Panels",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.toggle-panels",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.toggle-columns",
+      "label": "Toolbar Columns",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.toggle-columns",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.save-workspace",
+      "label": "New Workspace…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.save-workspace",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.restore-workspace",
+      "label": "Restore Saved Workspace",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.restore-workspace",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.reset-workspace",
+      "label": "Reset Essentials",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.reset-workspace",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.about",
+      "label": "About Image Editor…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.about",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.shortcuts",
+      "label": "Keyboard Shortcuts…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.shortcuts",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.compatibility",
+      "label": "Format Compatibility…",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.compatibility",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    },
+    {
+      "id": "image.sample",
+      "label": "Open Layered Sample",
+      "shortcut": null,
+      "enabled": true,
+      "action": "Shared command handler image.sample",
+      "verification": "Implementation control recorded; reference appearance unverified"
+    }
+  ],
+  "tools": [
+    [
+      {
+        "id": "move",
+        "label": "Move Tool",
+        "shortcut": "V",
+        "group": 0,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "marquee",
+        "label": "Rectangular Marquee Tool",
+        "shortcut": "M",
+        "group": 1,
+        "disabled": null
+      },
+      {
+        "id": "ellipse-select",
+        "label": "Elliptical Marquee Tool",
+        "shortcut": "M",
+        "group": 1,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "lasso",
+        "label": "Lasso Tool",
+        "shortcut": "L",
+        "group": 2,
+        "disabled": null
+      },
+      {
+        "id": "polygon",
+        "label": "Polygonal Lasso Tool",
+        "shortcut": "L",
+        "group": 2,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "wand",
+        "label": "Magic Wand Tool",
+        "shortcut": "W",
+        "group": 3,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "crop",
+        "label": "Crop Tool",
+        "shortcut": "C",
+        "group": 4,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "eyedropper",
+        "label": "Eyedropper Tool",
+        "shortcut": "I",
+        "group": 5,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "heal",
+        "label": "Healing Brush Tool",
+        "shortcut": "J",
+        "group": 6,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "brush",
+        "label": "Brush Tool",
+        "shortcut": "B",
+        "group": 7,
+        "disabled": null
+      },
+      {
+        "id": "pencil",
+        "label": "Pencil Tool",
+        "shortcut": "B",
+        "group": 7,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "clone",
+        "label": "Clone Stamp Tool",
+        "shortcut": "S",
+        "group": 8,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "eraser",
+        "label": "Eraser Tool",
+        "shortcut": "E",
+        "group": 9,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "gradient",
+        "label": "Gradient Tool",
+        "shortcut": "G",
+        "group": 10,
+        "disabled": null
+      },
+      {
+        "id": "fill",
+        "label": "Paint Bucket Tool",
+        "shortcut": "G",
+        "group": 10,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "blur",
+        "label": "Blur Tool",
+        "shortcut": "",
+        "group": 11,
+        "disabled": null
+      },
+      {
+        "id": "sharpen",
+        "label": "Sharpen Tool",
+        "shortcut": "",
+        "group": 11,
+        "disabled": null
+      },
+      {
+        "id": "smudge",
+        "label": "Smudge Tool",
+        "shortcut": "",
+        "group": 11,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "dodge",
+        "label": "Dodge Tool",
+        "shortcut": "O",
+        "group": 12,
+        "disabled": null
+      },
+      {
+        "id": "burn",
+        "label": "Burn Tool",
+        "shortcut": "O",
+        "group": 12,
+        "disabled": null
+      },
+      {
+        "id": "sponge",
+        "label": "Sponge Tool",
+        "shortcut": "O",
+        "group": 12,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "pen",
+        "label": "Pen Tool",
+        "shortcut": "P",
+        "group": 13,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "type",
+        "label": "Horizontal Type Tool",
+        "shortcut": "T",
+        "group": 14,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "path-select",
+        "label": "Path Selection Tool",
+        "shortcut": "A",
+        "group": 15,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "rectangle",
+        "label": "Rectangle Tool",
+        "shortcut": "U",
+        "group": 16,
+        "disabled": null
+      },
+      {
+        "id": "ellipse",
+        "label": "Ellipse Tool",
+        "shortcut": "U",
+        "group": 16,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "hand",
+        "label": "Hand Tool",
+        "shortcut": "H",
+        "group": 17,
+        "disabled": null
+      }
+    ],
+    [
+      {
+        "id": "zoom",
+        "label": "Zoom Tool",
+        "shortcut": "Z",
+        "group": 18,
+        "disabled": null
+      }
+    ]
+  ],
+  "controls": [
+    {
+      "index": 0,
+      "tag": "INPUT",
+      "label": "Open image from device",
+      "disabled": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(37, 37, 37)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(28, 28, 28)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 1,
+      "tag": "BUTTON",
+      "label": "File",
+      "disabled": false,
+      "position": {
+        "x": 29.453125,
+        "y": 2,
+        "width": 33.734375,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 2,
+      "tag": "BUTTON",
+      "label": "Edit",
+      "disabled": false,
+      "position": {
+        "x": 64.1875,
+        "y": 2,
+        "width": 34.96875,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 3,
+      "tag": "BUTTON",
+      "label": "Image",
+      "disabled": false,
+      "position": {
+        "x": 100.15625,
+        "y": 2,
+        "width": 46.578125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 4,
+      "tag": "BUTTON",
+      "label": "Layer",
+      "disabled": false,
+      "position": {
+        "x": 147.734375,
+        "y": 2,
+        "width": 43.53125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 5,
+      "tag": "BUTTON",
+      "label": "Type",
+      "disabled": false,
+      "position": {
+        "x": 192.265625,
+        "y": 2,
+        "width": 39.859375,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 6,
+      "tag": "BUTTON",
+      "label": "Select",
+      "disabled": false,
+      "position": {
+        "x": 233.125,
+        "y": 2,
+        "width": 46.578125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 7,
+      "tag": "BUTTON",
+      "label": "Filter",
+      "disabled": false,
+      "position": {
+        "x": 280.703125,
+        "y": 2,
+        "width": 40.453125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 8,
+      "tag": "BUTTON",
+      "label": "View",
+      "disabled": false,
+      "position": {
+        "x": 322.15625,
+        "y": 2,
+        "width": 39.65625,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 9,
+      "tag": "BUTTON",
+      "label": "Plugins",
+      "disabled": false,
+      "position": {
+        "x": 362.8125,
+        "y": 2,
+        "width": 52.078125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 10,
+      "tag": "BUTTON",
+      "label": "Window",
+      "disabled": false,
+      "position": {
+        "x": 415.890625,
+        "y": 2,
+        "width": 55.125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 11,
+      "tag": "BUTTON",
+      "label": "Help",
+      "disabled": false,
+      "position": {
+        "x": 472.015625,
+        "y": 2,
+        "width": 38.625,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 12,
+      "tag": "BUTTON",
+      "label": "Search editor commands",
+      "disabled": false,
+      "position": {
+        "x": 1358.96875,
+        "y": 2,
+        "width": 28,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 13,
+      "tag": "BUTTON",
+      "label": "Essentials workspace",
+      "disabled": false,
+      "position": {
+        "x": 1394.96875,
+        "y": 2,
+        "width": 39.03125,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 14,
+      "tag": "INPUT",
+      "label": "",
+      "disabled": false,
+      "position": {
+        "x": 80,
+        "y": 40.5,
+        "width": 11,
+        "height": 11
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 15,
+      "tag": "SELECT",
+      "label": "Auto select target",
+      "disabled": false,
+      "position": {
+        "x": 160.703125,
+        "y": 35.5,
+        "width": 63,
+        "height": 21
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgb(37, 37, 37)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(28, 28, 28)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 16,
+      "tag": "INPUT",
+      "label": "",
+      "disabled": false,
+      "position": {
+        "x": 232.703125,
+        "y": 40.5,
+        "width": 11,
+        "height": 11
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 17,
+      "tag": "BUTTON",
+      "label": "Align left",
+      "disabled": false,
+      "position": {
+        "x": 392.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 18,
+      "tag": "BUTTON",
+      "label": "Align center",
+      "disabled": false,
+      "position": {
+        "x": 425.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 19,
+      "tag": "BUTTON",
+      "label": "Align right",
+      "disabled": false,
+      "position": {
+        "x": 458.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 20,
+      "tag": "BUTTON",
+      "label": "Align top",
+      "disabled": false,
+      "position": {
+        "x": 491.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 21,
+      "tag": "BUTTON",
+      "label": "Align middle",
+      "disabled": false,
+      "position": {
+        "x": 524.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 22,
+      "tag": "BUTTON",
+      "label": "Align bottom",
+      "disabled": false,
+      "position": {
+        "x": 557.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 23,
+      "tag": "BUTTON",
+      "label": "Align distribute-x",
+      "disabled": false,
+      "position": {
+        "x": 590.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 24,
+      "tag": "BUTTON",
+      "label": "Align distribute-y",
+      "disabled": false,
+      "position": {
+        "x": 623.53125,
+        "y": 34,
+        "width": 24,
+        "height": 24
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 25,
+      "tag": "BUTTON",
+      "label": "Change toolbar columns",
+      "disabled": false,
+      "position": {
+        "x": 0,
+        "y": 65,
+        "width": 39,
+        "height": 15
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgb(37, 37, 37)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 26,
+      "tag": "BUTTON",
+      "label": "Move Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 84,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(34, 34, 34)",
+        "color": "rgb(242, 242, 242)",
+        "border": "rgb(106, 106, 106)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 27,
+      "tag": "BUTTON",
+      "label": "Rectangular Marquee Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 111,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 28,
+      "tag": "BUTTON",
+      "label": "Lasso Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 138,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 29,
+      "tag": "BUTTON",
+      "label": "Magic Wand Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 165,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 30,
+      "tag": "BUTTON",
+      "label": "Crop Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 192,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 31,
+      "tag": "BUTTON",
+      "label": "Eyedropper Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 219,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 32,
+      "tag": "BUTTON",
+      "label": "Healing Brush Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 246,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 33,
+      "tag": "BUTTON",
+      "label": "Brush Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 273,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 34,
+      "tag": "BUTTON",
+      "label": "Clone Stamp Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 300,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 35,
+      "tag": "BUTTON",
+      "label": "Eraser Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 327,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 36,
+      "tag": "BUTTON",
+      "label": "Gradient Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 354,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 37,
+      "tag": "BUTTON",
+      "label": "Blur Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 381,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 38,
+      "tag": "BUTTON",
+      "label": "Dodge Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 408,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 39,
+      "tag": "BUTTON",
+      "label": "Pen Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 435,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 40,
+      "tag": "BUTTON",
+      "label": "Horizontal Type Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 462,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 41,
+      "tag": "BUTTON",
+      "label": "Path Selection Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 489,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 42,
+      "tag": "BUTTON",
+      "label": "Rectangle Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 516,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 43,
+      "tag": "BUTTON",
+      "label": "Hand Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 543,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 44,
+      "tag": "BUTTON",
+      "label": "Zoom Tool",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 570,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 45,
+      "tag": "BUTTON",
+      "label": "Toolbar groups",
+      "disabled": false,
+      "position": {
+        "x": 2.5,
+        "y": 597,
+        "width": 34,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 46,
+      "tag": "BUTTON",
+      "label": "Swap foreground and background colors",
+      "disabled": false,
+      "position": {
+        "x": 23.5,
+        "y": 618,
+        "width": 15,
+        "height": 19.546875
+      },
+      "appearance": {
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 47,
+      "tag": "BUTTON",
+      "label": "Background color",
+      "disabled": false,
+      "position": {
+        "x": 14.5,
+        "y": 646,
+        "width": 23,
+        "height": 23
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(221, 221, 221)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 48,
+      "tag": "BUTTON",
+      "label": "Foreground color",
+      "disabled": false,
+      "position": {
+        "x": 3.5,
+        "y": 634,
+        "width": 23,
+        "height": 23
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(193, 143, 98)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(221, 221, 221)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 49,
+      "tag": "BUTTON",
+      "label": "Default foreground and background colors",
+      "disabled": false,
+      "position": {
+        "x": 1.5,
+        "y": 660.8125,
+        "width": 12.390625,
+        "height": 18.1875
+      },
+      "appearance": {
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 50,
+      "tag": "BUTTON",
+      "label": "Quick Mask Mode",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 681,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 51,
+      "tag": "BUTTON",
+      "label": "Fit on screen",
+      "disabled": false,
+      "position": {
+        "x": 4.5,
+        "y": 708,
+        "width": 30,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(208, 208, 208)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 52,
+      "tag": "BUTTON",
+      "label": "Alpine study.lopeimage @ 50% (Retouch, RGB/8)",
+      "disabled": false,
+      "position": {
+        "x": 40,
+        "y": 65,
+        "width": 266.734375,
+        "height": 27
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(240, 240, 240)",
+        "border": "rgb(240, 240, 240)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 53,
+      "tag": "BUTTON",
+      "label": "Close Alpine study.lopeimage",
+      "disabled": false,
+      "position": {
+        "x": 307.734375,
+        "y": 70,
+        "width": 17,
+        "height": 17
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(240, 240, 240)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 54,
+      "tag": "BUTTON",
+      "label": "New layer",
+      "disabled": false,
+      "position": {
+        "x": 434.2421875,
+        "y": 818,
+        "width": 62.46875,
+        "height": 27
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(240, 244, 255, 0.05)",
+        "color": "rgb(247, 249, 252)",
+        "border": "rgba(255, 255, 255, 0.16)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 55,
+      "tag": "BUTTON",
+      "label": "Transform",
+      "disabled": false,
+      "position": {
+        "x": 500.7109375,
+        "y": 818,
+        "width": 63.203125,
+        "height": 27
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(240, 244, 255, 0.05)",
+        "color": "rgb(247, 249, 252)",
+        "border": "rgba(255, 255, 255, 0.16)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 56,
+      "tag": "BUTTON",
+      "label": "Local AI",
+      "disabled": false,
+      "position": {
+        "x": 567.9140625,
+        "y": 818,
+        "width": 53.59375,
+        "height": 27
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(240, 244, 255, 0.05)",
+        "color": "rgb(247, 249, 252)",
+        "border": "rgba(255, 255, 255, 0.16)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 57,
+      "tag": "BUTTON",
+      "label": "Adjust colors",
+      "disabled": false,
+      "position": {
+        "x": 625.5078125,
+        "y": 818,
+        "width": 75.25,
+        "height": 27
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(240, 244, 255, 0.05)",
+        "color": "rgb(247, 249, 252)",
+        "border": "rgba(255, 255, 255, 0.16)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 58,
+      "tag": "BUTTON",
+      "label": "Contextual Task Bar options",
+      "disabled": false,
+      "position": {
+        "x": 713.7578125,
+        "y": 818,
+        "width": 35,
+        "height": 27
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(240, 244, 255, 0.05)",
+        "color": "rgb(247, 249, 252)",
+        "border": "rgba(255, 255, 255, 0.16)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 59,
+      "tag": "INPUT",
+      "label": "Canvas zoom percentage",
+      "disabled": false,
+      "position": {
+        "x": 47,
+        "y": 882.25,
+        "width": 44,
+        "height": 13.5
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(189, 189, 189)",
+        "border": "rgb(189, 189, 189)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 60,
+      "tag": "BUTTON",
+      "label": "Expand panels",
+      "disabled": false,
+      "position": {
+        "x": 1124,
+        "y": 65,
+        "width": 29,
+        "height": 16
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(189, 189, 189)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 61,
+      "tag": "BUTTON",
+      "label": "Show History",
+      "disabled": false,
+      "position": {
+        "x": 1124,
+        "y": 86,
+        "width": 29,
+        "height": 31
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(189, 189, 189)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 62,
+      "tag": "BUTTON",
+      "label": "Show Properties",
+      "disabled": false,
+      "position": {
+        "x": 1124,
+        "y": 122,
+        "width": 29,
+        "height": 31
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(189, 189, 189)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 63,
+      "tag": "BUTTON",
+      "label": "Show Adjustments",
+      "disabled": false,
+      "position": {
+        "x": 1124,
+        "y": 158,
+        "width": 29,
+        "height": 31
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(189, 189, 189)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 64,
+      "tag": "BUTTON",
+      "label": "Collapse editing panels",
+      "disabled": false,
+      "position": {
+        "x": 1416,
+        "y": 65,
+        "width": 24,
+        "height": 13
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 65,
+      "tag": "BUTTON",
+      "label": "Color",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 80,
+        "width": 44.296875,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(48, 48, 48)",
+        "color": "rgb(238, 238, 238)",
+        "border": "rgb(109, 109, 109) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 66,
+      "tag": "BUTTON",
+      "label": "Swatches",
+      "disabled": false,
+      "position": {
+        "x": 1201.296875,
+        "y": 80,
+        "width": 65.703125,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 67,
+      "tag": "BUTTON",
+      "label": "Color panel menu",
+      "disabled": false,
+      "position": {
+        "x": 1418.40625,
+        "y": 80,
+        "width": 21.59375,
+        "height": 26
+      },
+      "appearance": {
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgb(170, 170, 170)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 68,
+      "tag": "INPUT",
+      "label": "Color hue",
+      "disabled": false,
+      "position": {
+        "x": 1411,
+        "y": 118,
+        "width": 16,
+        "height": 126
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(23, 23, 23)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 69,
+      "tag": "BUTTON",
+      "label": "Properties",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 262,
+        "width": 68.140625,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(48, 48, 48)",
+        "color": "rgb(238, 238, 238)",
+        "border": "rgb(109, 109, 109) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 70,
+      "tag": "BUTTON",
+      "label": "Adjustments",
+      "disabled": false,
+      "position": {
+        "x": 1225.140625,
+        "y": 262,
+        "width": 78.53125,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 71,
+      "tag": "BUTTON",
+      "label": "History",
+      "disabled": false,
+      "position": {
+        "x": 1303.671875,
+        "y": 262,
+        "width": 52.234375,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 72,
+      "tag": "BUTTON",
+      "label": "Properties panel menu",
+      "disabled": false,
+      "position": {
+        "x": 1418.40625,
+        "y": 262,
+        "width": 21.59375,
+        "height": 26
+      },
+      "appearance": {
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgb(170, 170, 170)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 73,
+      "tag": "INPUT",
+      "label": "X",
+      "disabled": false,
+      "position": {
+        "x": 1187,
+        "y": 359.84375,
+        "width": 47,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 74,
+      "tag": "INPUT",
+      "label": "Y",
+      "disabled": false,
+      "position": {
+        "x": 1322.5,
+        "y": 359.84375,
+        "width": 47,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 75,
+      "tag": "INPUT",
+      "label": "W",
+      "disabled": false,
+      "position": {
+        "x": 1187,
+        "y": 386.84375,
+        "width": 47,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 76,
+      "tag": "INPUT",
+      "label": "H",
+      "disabled": false,
+      "position": {
+        "x": 1322.5,
+        "y": 386.84375,
+        "width": 47,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 77,
+      "tag": "INPUT",
+      "label": "Rotation",
+      "disabled": false,
+      "position": {
+        "x": 1223,
+        "y": 413.84375,
+        "width": 47,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 78,
+      "tag": "INPUT",
+      "label": "",
+      "disabled": false,
+      "position": {
+        "x": 1169,
+        "y": 491.4375,
+        "width": 11,
+        "height": 11
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgb(170, 170, 170)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 79,
+      "tag": "BUTTON",
+      "label": "Layers",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 486,
+        "width": 51.03125,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgb(48, 48, 48)",
+        "color": "rgb(238, 238, 238)",
+        "border": "rgb(109, 109, 109) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 80,
+      "tag": "BUTTON",
+      "label": "Channels",
+      "disabled": false,
+      "position": {
+        "x": 1208.03125,
+        "y": 486,
+        "width": 64.484375,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 81,
+      "tag": "BUTTON",
+      "label": "Paths",
+      "disabled": false,
+      "position": {
+        "x": 1272.515625,
+        "y": 486,
+        "width": 46.140625,
+        "height": 26
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(34, 34, 34) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 82,
+      "tag": "BUTTON",
+      "label": "Layers panel menu",
+      "disabled": false,
+      "position": {
+        "x": 1418.40625,
+        "y": 486,
+        "width": 21.59375,
+        "height": 26
+      },
+      "appearance": {
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgb(170, 170, 170)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 83,
+      "tag": "INPUT",
+      "label": "Filter layers",
+      "disabled": false,
+      "position": {
+        "x": 1179.625,
+        "y": 518.5,
+        "width": 85,
+        "height": 18
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgb(170, 170, 170)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 84,
+      "tag": "SELECT",
+      "label": "Layer blend mode",
+      "disabled": false,
+      "position": {
+        "x": 1165,
+        "y": 547,
+        "width": 125,
+        "height": 21
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgb(37, 37, 37)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(28, 28, 28)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 85,
+      "tag": "INPUT",
+      "label": "Layer opacity",
+      "disabled": false,
+      "position": {
+        "x": 1387.09375,
+        "y": 548,
+        "width": 31,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 86,
+      "tag": "BUTTON",
+      "label": "Lock selected layer",
+      "disabled": false,
+      "position": {
+        "x": 1193.90625,
+        "y": 575,
+        "width": 23,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 87,
+      "tag": "INPUT",
+      "label": "Fill",
+      "disabled": false,
+      "position": {
+        "x": 1387.09375,
+        "y": 575,
+        "width": 31,
+        "height": 19
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgb(216, 216, 216)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 88,
+      "tag": "BUTTON",
+      "label": "Hide Retouch",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 601,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(242, 242, 242)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 89,
+      "tag": "BUTTON",
+      "label": "Edit Retouch pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 604,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(242, 242, 242)",
+        "border": "rgb(255, 255, 255)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 90,
+      "tag": "BUTTON",
+      "label": "Unlink layer mask",
+      "disabled": false,
+      "position": {
+        "x": 1233,
+        "y": 613,
+        "width": 10,
+        "height": 13
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(170, 170, 170)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 91,
+      "tag": "BUTTON",
+      "label": "Edit Retouch mask",
+      "disabled": false,
+      "position": {
+        "x": 1248,
+        "y": 604,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(242, 242, 242)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 92,
+      "tag": "BUTTON",
+      "label": "Hide The quiet between.",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 639,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 93,
+      "tag": "BUTTON",
+      "label": "Edit The quiet between. pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 642,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 94,
+      "tag": "BUTTON",
+      "label": "Hide A STUDY IN STILLNESS",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 677,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 95,
+      "tag": "BUTTON",
+      "label": "Edit A STUDY IN STILLNESS pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 680,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 96,
+      "tag": "BUTTON",
+      "label": "Hide Lake & forest",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 715,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 97,
+      "tag": "BUTTON",
+      "label": "Edit Lake & forest pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 718,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 98,
+      "tag": "BUTTON",
+      "label": "Hide Mountain range",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 753,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 99,
+      "tag": "BUTTON",
+      "label": "Edit Mountain range pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 756,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 100,
+      "tag": "BUTTON",
+      "label": "Hide Evening sun",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 791,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 101,
+      "tag": "BUTTON",
+      "label": "Edit Evening sun pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 794,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 102,
+      "tag": "BUTTON",
+      "label": "Hide Atmosphere",
+      "disabled": false,
+      "position": {
+        "x": 1157,
+        "y": 829,
+        "width": 25,
+        "height": 37
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0) rgb(37, 37, 37) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 103,
+      "tag": "BUTTON",
+      "label": "Edit Atmosphere pixels",
+      "disabled": false,
+      "position": {
+        "x": 1186,
+        "y": 832,
+        "width": 42,
+        "height": 31
+      },
+      "appearance": {
+        "font": "10px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 104,
+      "tag": "BUTTON",
+      "label": "Link layers unavailable",
+      "disabled": true,
+      "position": {
+        "x": 1241,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 105,
+      "tag": "BUTTON",
+      "label": "Add layer style",
+      "disabled": false,
+      "position": {
+        "x": 1269,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 106,
+      "tag": "BUTTON",
+      "label": "Add layer mask",
+      "disabled": true,
+      "position": {
+        "x": 1297,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 107,
+      "tag": "BUTTON",
+      "label": "Create adjustment layer",
+      "disabled": false,
+      "position": {
+        "x": 1325,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 108,
+      "tag": "BUTTON",
+      "label": "New group",
+      "disabled": false,
+      "position": {
+        "x": 1353,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 109,
+      "tag": "BUTTON",
+      "label": "New layer",
+      "disabled": false,
+      "position": {
+        "x": 1381,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    },
+    {
+      "index": 110,
+      "tag": "BUTTON",
+      "label": "Delete layer",
+      "disabled": false,
+      "position": {
+        "x": 1409,
+        "y": 873.5,
+        "width": 23,
+        "height": 22
+      },
+      "appearance": {
+        "font": "11px",
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(216, 216, 216)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "verification": "Rendered at 1440 × 900, DPR 1, 50% canvas zoom"
+    }
+  ]
+}

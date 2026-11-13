@@ -1,0 +1,16 @@
+import { adjustments, clamp, cloneRecipe, type Adjustment, type Asset, type Recipe } from '../../../../../packages/photo-engine/src/model';
+const mappings:Record<string,Adjustment>={Exposure2012:'exposure',Contrast2012:'contrast',Highlights2012:'highlights',Shadows2012:'shadows',Whites2012:'whites',Blacks2012:'blacks',Vibrance:'vibrance',Saturation:'saturation',Clarity2012:'clarity',Texture:'texture',Dehaze:'dehaze',PostCropVignetteAmount:'vignette',GrainAmount:'grain',Sharpness:'sharpening',LuminanceSmoothing:'noise',ColorNoiseReduction:'colorNoise'};
+const escape=(text:string)=>text.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]!));
+export function importXmp(text:string,recipe:Recipe):{recipe:Recipe;report:string[];rating?:number;keywords:string[];label?:string}{
+  if(text.length>2_000_000||/<!DOCTYPE|<!ENTITY/i.test(text))throw new Error('Sidecar is too large or contains unsupported XML entities.');
+  const xml=new DOMParser().parseFromString(text,'application/xml');if(xml.querySelector('parsererror'))throw new Error('Invalid XMP XML.');const next=cloneRecipe(recipe),report:string[]=[],keywords:string[]=[];let rating:number|undefined,label:string|undefined;
+  for(const element of xml.querySelectorAll('*')){for(const attr of Array.from(element.attributes)){const key=attr.localName,mapped=mappings[key];if(mapped){const n=Number(attr.value);if(!Number.isFinite(n))throw new Error(`Invalid XMP ${key}.`);const spec=adjustments[mapped];next.values[mapped]=clamp(n,spec.min,spec.max);report.push(`${key}: mapped approximately to ${spec.label}; Adobe rendering is not numerically equivalent.`);}else if(attr.namespaceURI?.includes('camera-raw-settings'))report.push(`${attr.name}: preserved in original sidecar; rendering not mapped.`);if(attr.name==='xmp:Rating')rating=clamp(Number(attr.value)||0,0,5);if(attr.name==='xmp:Label')label=attr.value;}
+    if(element.namespaceURI==='http://purl.org/dc/elements/1.1/'&&element.localName==='subject')for(const li of Array.from(element.getElementsByTagNameNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#','li')))if(li.textContent)keywords.push(li.textContent);
+  }
+  if(!report.length)report.push('No supported Adobe develop attributes found. Original sidecar is retained unchanged.');
+  return {recipe:next,report,rating,keywords,label};
+}
+export function exportXmp(asset:Asset):string {
+  const attrs=Object.entries(mappings).map(([key,value])=>`crs:${key}="${asset.recipe.values[value]}"`).join('\n      ');
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<x:xmpmeta xmlns:x="adobe:ns:meta/">\n <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">\n  <rdf:Description rdf:about="" xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:lope="https://lopeos.local/ns/photo/1.0/" xmp:Rating="${asset.rating}" xmp:Label="${escape(asset.label)}" lope:Rendering="Independent approximate mappings; not Adobe pixel equivalence"\n      ${attrs}>\n   <dc:subject><rdf:Bag>${asset.keywords.map(k=>`<rdf:li>${escape(k)}</rdf:li>`).join('')}</rdf:Bag></dc:subject>\n   <lope:Recipe>${escape(JSON.stringify(asset.recipe))}</lope:Recipe>\n  </rdf:Description>\n </rdf:RDF>\n</x:xmpmeta>`;
+}

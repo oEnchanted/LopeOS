@@ -1,0 +1,135 @@
+{
+  "date": "2026-11-13",
+  "download": {
+    "installed": true,
+    "last": 37168009,
+    "monotonic": true
+  },
+  "actualModelInference": {
+    "length": 9216,
+    "min": 0,
+    "max": 255,
+    "elapsedMs": 1396.2999999988824,
+    "inferenceMs": 1069.199999999255,
+    "input": {
+      "width": 512,
+      "height": 512
+    },
+    "backend": "WebAssembly CPU",
+    "statuses": [
+      "Loading local engine\u2026",
+      "Finding portrait edges on this device\u2026"
+    ]
+  },
+  "generationPatch": {
+    "inside": [
+      255,
+      0,
+      0,
+      255
+    ],
+    "outside": [
+      255,
+      0,
+      0,
+      0
+    ],
+    "sourcePreserved": true,
+    "expanded": [
+      24,
+      24
+    ],
+    "oldArea": 0,
+    "newArea": 255
+  },
+  "uiChecks": [
+    "Registered Local AI command opens dialog; delete and real 37.2 MB download controls install verified assets",
+    "Select Person runs the actual local graph, preserves layers, and one Undo removes its selection",
+    "Remove Background uses actual inference and a linked editable mask; one Undo restores the original pixels and mask",
+    "Cancelling active portrait inference terminates the worker without changing document revision",
+    "A changed document revision rejects a stale AI result and preserves the intervening edit",
+    "Registered Generative Fill dialog discovers a checkpoint, queues an inpainting graph and inserts the returned PNG on top; one Undo removes it (server mocked)",
+    "Registered Generative Expand dialog extends canvas, confines generated alpha to the added border, and one Undo restores dimensions/layers (server mocked)"
+  ],
+  "localServerProtocol": {
+    "requests": [
+      "GET /object_info/CheckpointLoaderSimple",
+      "POST /upload/image",
+      "POST /prompt",
+      "GET /history/lope-test-own-job",
+      "GET /view",
+      "GET /object_info/CheckpointLoaderSimple",
+      "POST /upload/image",
+      "POST /prompt",
+      "GET /history/lope-test-own-job",
+      "GET /view"
+    ],
+    "graphs": 2,
+    "globalInterrupt": false
+  },
+  "deleted": true,
+  "errors": [],
+  "comfyGeneration": "Protocol, dialog and patch integration tested with a mocked local server. End-to-end diffusion requires a running ComfyUI/checkpoint and was not available in this test.",
+  "portraitQuality": {
+    "date": "2026-11-13",
+    "sample": "NASA photograph of Eileen Collins, scikit-image astronaut sample",
+    "source": "https://raw.githubusercontent.com/scikit-image/scikit-image/v0.24.0/skimage/data/astronaut.png",
+    "license": "Public domain; no known copyright restrictions, as documented by scikit-image",
+    "licenseSource": "https://scikit-image.org/docs/stable/api/skimage.data.html#skimage.data.astronaut",
+    "dimensions": [
+      512,
+      512
+    ],
+    "backend": "WebAssembly CPU",
+    "inferenceMs": 1332.300000000745,
+    "foregroundFraction": 0.5323028564453125,
+    "meanAlpha": 135.60280227661133,
+    "samples": [
+      {
+        "name": "face",
+        "rect": [
+          205,
+          115,
+          20,
+          20
+        ],
+        "meanAlpha": 255
+      },
+      {
+        "name": "suit",
+        "rect": [
+          90,
+          300,
+          20,
+          20
+        ],
+        "meanAlpha": 255
+      },
+      {
+        "name": "upper-right background",
+        "rect": [
+          465,
+          35,
+          20,
+          20
+        ],
+        "meanAlpha": 0
+      },
+      {
+        "name": "right background",
+        "rect": [
+          470,
+          290,
+          20,
+          20
+        ],
+        "meanAlpha": 0
+      }
+    ],
+    "errors": [],
+    "scope": "Single photograph and four coarse sample regions; no ground-truth alpha, population benchmark or Photoshop-equivalence claim.",
+    "visualInspection": "Source, alpha and checkerboard cutout visually inspected. Face, hair, suit and held helmet are largely isolated from the flag/shuttle background. Soft hair edges and low-opacity artifacts around a bright lower glove/connector need manual refinement. This is one image, without a ground-truth alpha matte.",
+    "sourceSha256": "88431cd9653ccd539741b555fb0a46b61558b301d4110412b5bc28b5e3ea6cb5",
+    "comparisonArtifact": "/tmp/lope-ai-portrait-comparison.png (temporary; not shipped)"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "regular": {
+    "toolbar": {
+      "x": 0,
+      "y": 65,
+      "width": 40,
+      "height": 835
+    },
+    "layers": {
+      "x": 1157,
+      "y": 601,
+      "width": 283,
+      "height": 269
+    },
+    "properties": {
+      "x": 1157,
+      "y": 262,
+      "width": 283,
+      "height": 224
+    },
+    "color": {
+      "x": 1157,
+      "y": 80,
+      "width": 283,
+      "height": 182
+    }
+  },
+  "compact": {
+    "toolbarWidth": 66,
+    "quickMaskBottom": 457,
+    "appBottom": 550,
+    "layersHeight": 105,
+    "layerFooterBottom": 548
+  },
+  "toolbar": {
+    "manualSingleColumnRestored": true,
+    "keyboardFlyout": true,
+    "longPressFlyout": true
+  },
+  "dockedPanel": {
+    "initialHeight": 182,
+    "restoredHeight": 232,
+    "restoredWidth": 294
+  },
+  "floatingPanel": {
+    "after": {
+      "x": 210,
+      "y": 140,
+      "width": 364,
+      "height": 360
+    },
+    "restored": {
+      "x": 210,
+      "y": 140,
+      "width": 364,
+      "height": 360
+    },
+    "compact": {
+      "x": 116,
+      "y": 80,
+      "width": 364,
+      "height": 320
+    }
+  },
+  "accessibility": {
+    "background": "rgb(41, 42, 46)",
+    "backdropFilter": "none",
+    "border": "rgb(255, 255, 255)",
+    "color": "rgb(255, 255, 255)"
+  },
+  "errors": [],
+  "dialogs": {
+    "desktopPortrait": {
+      "dialog": {
+        "x": 425,
+        "y": 223.875,
+        "width": 590,
+        "height": 452.25
+      },
+      "body": {
+        "height": 300,
+        "scrollHeight": 300,
+        "width": 588,
+        "scrollWidth": 588
+      },
+      "footerBottom": 675.125,
+      "focusInside": true
+    },
+    "desktopGeneration": {
+      "dialog": {
+        "x": 425,
+        "y": 45,
+        "width": 590,
+        "height": 810
+      },
+      "body": {
+        "height": 658,
+        "scrollHeight": 700,
+        "width": 588,
+        "scrollWidth": 588
+      },
+      "footerBottom": 854,
+      "focusInside": true
+    },
+    "compactGeneration": {
+      "dialog": {
+        "x": 95,
+        "y": 32,
+        "width": 590,
+        "height": 486
+      },
+      "body": {
+        "height": 334,
+        "scrollHeight": 700,
+        "width": 588,
+        "scrollWidth": 588
+      },
+      "footerBottom": 517,
+      "focusInside": true
+    },
+    "compactPortrait": {
+      "dialog": {
+        "x": 95,
+        "y": 48.875,
+        "width": 590,
+        "height": 452.25
+      },
+      "body": {
+        "height": 300,
+        "scrollHeight": 300,
+        "width": 588,
+        "scrollWidth": 588
+      },
+      "footerBottom": 500.125,
+      "focusInside": true
+    },
+    "compactNew": {
+      "dialog": {
+        "x": 12,
+        "y": 12,
+        "width": 756,
+        "height": 526
+      },
+      "body": {
+        "height": 443,
+        "scrollHeight": 570,
+        "width": 754,
+        "scrollWidth": 754
+      },
+      "footerBottom": 537
+    },
+    "errors": []
+  },
+  "lockedProperties": {
+    "checks": [
+      "Locked adjustment number/slider controls disabled; callback rejects forced input without a revision; unlock and visibility remain usable",
+      "Locked shape fill/stroke/width and transform controls disabled; forced fill input rejected; unlock restores editing",
+      "Locked legacy Smart Adjustment controls and removal disabled; forced edit rejected; unlock restores controls"
+    ],
+    "errors": []
+  },
+  "localAiFinalCopy": {
+    "downloadAndDoneReachable": true,
+    "compactHorizontalOverflow": false,
+    "modelDetailsExpandable": true,
+    "errors": []
+  }
+}

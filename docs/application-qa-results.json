@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-12",
+  "scope": "Agent 3 apps + real shell and SDK with test-only runtime contracts and extension registration",
+  "engines": {
+    "chromium": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 2,
+      "browserPassed": 20,
+      "nodePassed": 4
+    },
+    "webkit": {
+      "passed": 23,
+      "failed": 1,
+      "skipped": 2,
+      "browserPassed": 19,
+      "nodePassed": 4
+    }
+  },
+  "failures": [
+    {
+      "engine": "webkit",
+      "test": "active menus and shortcuts follow two editor windows; modal keyboard focus is contained",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m"
+    }
+  ],
+  "screenshots": 62,
+  "liveRuntime": "Not executed: Linux/Docker workspace unavailable; BrowserFileBridge required",
+  "firefox": "No page executed: matching build 1572, cached build 1543, and dedicated TMPDIR all failed to find profile folder",
+  "fullWorkspaceTypecheck": "Fails in concurrently edited Writer/Image Editor; scoped Agent 3 typecheck and QA build pass",
+  "engineVersions": {
+    "chromium": "158.0.8127.18",
+    "webkit": "27.2",
+    "firefoxAttempted": "159.0 (Playwright build 1572)"
+  },
+  "additionalVerification": {
+    "keyboardOnly": "2 passed in Chromium/WebKit; shell readiness awaited",
+    "expandedVisualCoverage": "12 passed; five foreground app captures per viewport/theme/engine"
+  },
+  "qaBundle": {
+    "directory": "tests/integration/build",
+    "indexSha256": "8af78830c83d258a5db12331ea4fcea17947aa9938af44711ffceb008bea5765"
+  }
+}

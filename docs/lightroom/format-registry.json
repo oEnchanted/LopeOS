@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "qualification": "Capabilities apply only to documented variants; see coverage.json. Original preservation/download applies to successfully imported assets. All processing is local; no codec backend is configured.",
+  "formats": [
+    {
+      "id": "jpeg",
+      "extensions": [
+        "jpg",
+        "jpeg"
+      ],
+      "container": "JPEG SOI",
+      "decode": "Browser full-resolution decode",
+      "metadata": "EXIF subset; original bytes preserved",
+      "export": "JPEG, sRGB, 8-bit",
+      "precision": "8-bit input → linear float32",
+      "status": "implemented",
+      "notes": "ICC conversion delegated to browser; CMYK/platform differences require validation.",
+      "original": true
+    },
+    {
+      "id": "png",
+      "extensions": [
+        "png"
+      ],
+      "container": "PNG signature",
+      "decode": "Browser 8-bit; native non-interlaced gray/RGB(A) 16-bit",
+      "metadata": "IHDR; profile chunks detected; original metadata bytes retained",
+      "export": "PNG, sRGB, 8/16-bit",
+      "precision": "8/16-bit → linear float32",
+      "status": "implemented",
+      "notes": "16-bit decoder supports filters 0–4 and deflate. Non-sRGB 16-bit ICC images rejected rather than silently reinterpreted. PNG is a LopeOS extension.",
+      "original": true
+    },
+    {
+      "id": "tiff",
+      "extensions": [
+        "tif",
+        "tiff"
+      ],
+      "container": "TIFF IFD",
+      "decode": "Uncompressed, chunky grayscale/RGB(A), strips, 8/16 unsigned or 32-bit float",
+      "metadata": "IFD/EXIF subset",
+      "export": "TIFF 8/16 unsigned sRGB; 32-bit float linear sRGB",
+      "precision": "Full sample precision → float32",
+      "status": "implemented",
+      "notes": "LZW/JPEG/ZIP, tiles, CMYK and arbitrary ICC require another decoder; rejected explicitly.",
+      "original": true
+    },
+    {
+      "id": "lopeimage",
+      "extensions": [
+        "lopeimage"
+      ],
+      "container": "Lope Image JSON v1",
+      "decode": "Shared Image Editor native renderer composite",
+      "metadata": "Native document dimensions/name",
+      "export": "Original native project; flattened photographic derivative",
+      "precision": "RGB/8 interchange; independent float32 photo recipe",
+      "status": "implemented",
+      "notes": "LopeOS extension. Native layers are preserved in original project bytes; photo adjustments apply to the composite.",
+      "original": true
+    },
+    {
+      "id": "dng",
+      "extensions": [
+        "dng"
+      ],
+      "container": "DNG",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "cr2",
+      "extensions": [
+        "cr2"
+      ],
+      "container": "Canon CR2",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "cr3",
+      "extensions": [
+        "cr3"
+      ],
+      "container": "Canon CR3",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "nef",
+      "extensions": [
+        "nef"
+      ],
+      "container": "Nikon NEF",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "nrw",
+      "extensions": [
+        "nrw"
+      ],
+      "container": "Nikon NRW",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "arw",
+      "extensions": [
+        "arw"
+      ],
+      "container": "Sony ARW",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "raf",
+      "extensions": [
+        "raf"
+      ],
+      "container": "Fujifilm RAF",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "rw2",
+      "extensions": [
+        "rw2"
+      ],
+      "container": "Panasonic RW2",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "orf",
+      "extensions": [
+        "orf"
+      ],
+      "container": "Olympus / OM ORF",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "pef",
+      "extensions": [
+        "pef"
+      ],
+      "container": "Pentax PEF",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "srw",
+      "extensions": [
+        "srw"
+      ],
+      "container": "Samsung SRW",
+      "decode": "libraw-wasm 1.6.0; sensor processing, not embedded JPEG",
+      "metadata": "LibRaw metadata",
+      "export": "Original bytes only; developed output to JPEG/PNG/TIFF",
+      "precision": "16-bit linear sRGB development → float32",
+      "status": "conditional",
+      "notes": "Embedded LibRaw revision is not exposed by this build. Model/compression coverage is unverified unless listed in coverage.json. DNG SDK conversion is not implemented.",
+      "original": true
+    },
+    {
+      "id": "psd",
+      "extensions": [
+        "psd"
+      ],
+      "container": "8BPS v1",
+      "decode": "ag-psd compatible merged composite only",
+      "metadata": "Canvas dimensions",
+      "export": "Original source only; flattened derivative to JPEG/PNG/TIFF",
+      "precision": "RGB/8 only",
+      "status": "conditional",
+      "notes": "Missing composite and higher precision are rejected; original layered bytes remain immutable.",
+      "original": true
+    },
+    {
+      "id": "psb",
+      "extensions": [
+        "psb"
+      ],
+      "container": "8BPS v2",
+      "decode": "Unavailable",
+      "metadata": "Signature only",
+      "export": "Original only",
+      "precision": "Unavailable",
+      "status": "unsupported",
+      "notes": "A verified large-document composite parser is required.",
+      "original": true
+    },
+    {
+      "id": "heif",
+      "extensions": [
+        "heif",
+        "heic",
+        "hif"
+      ],
+      "container": "HEIF",
+      "decode": "Runtime browser capability probe; full decode or explicit error",
+      "metadata": "Limited",
+      "export": "Original only",
+      "precision": "Browser SDR 8-bit path; high-bit-depth / HDR not claimed",
+      "status": "conditional",
+      "notes": "No fallback encoder/transcoder is bundled. Metadata and auxiliary HDR are retained only in original bytes.",
+      "original": true
+    },
+    {
+      "id": "avif",
+      "extensions": [
+        "avif"
+      ],
+      "container": "AVIF",
+      "decode": "Runtime browser capability probe; full decode or explicit error",
+      "metadata": "Limited",
+      "export": "Original only",
+      "precision": "Browser SDR 8-bit path; high-bit-depth / HDR not claimed",
+      "status": "conditional",
+      "notes": "No fallback encoder/transcoder is bundled. Metadata and auxiliary HDR are retained only in original bytes.",
+      "original": true
+    },
+    {
+      "id": "jxl",
+      "extensions": [
+        "jxl"
+      ],
+      "container": "JPEG XL",
+      "decode": "Runtime browser capability probe; full decode or explicit error",
+      "metadata": "Limited",
+      "export": "Original only",
+      "precision": "Browser SDR 8-bit path; high-bit-depth / HDR not claimed",
+      "status": "conditional",
+      "notes": "No fallback encoder/transcoder is bundled. Metadata and auxiliary HDR are retained only in original bytes.",
+      "original": true
+    },
+    {
+      "id": "webp",
+      "extensions": [
+        "webp"
+      ],
+      "container": "RIFF WEBP",
+      "decode": "Browser",
+      "metadata": "Limited",
+      "export": "Original only",
+      "precision": "8-bit → float32",
+      "status": "conditional",
+      "notes": "LopeOS extension; reference parity is not asserted.",
+      "original": true
+    },
+    {
+      "id": "video",
+      "extensions": [
+        "mp4",
+        "mov",
+        "m4v",
+        "avi",
+        "mts",
+        "m2ts",
+        "m2t",
+        "mpeg",
+        "mpg",
+        "3gp"
+      ],
+      "container": "Container + codec required",
+      "decode": "No video editing path",
+      "metadata": "Not implemented",
+      "export": "Original only",
+      "precision": "Not applicable",
+      "status": "unsupported",
+      "notes": "Playback/trim/transcoding/audio-preserving export require a verified codec pipeline.",
+      "original": true
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+source "${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}/container-env"
+until xdpyinfo -display "${DISPLAY:-:20}" >/dev/null 2>&1; do sleep 0.2; done
+exec openbox --sm-disable

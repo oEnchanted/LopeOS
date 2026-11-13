@@ -1,0 +1,233 @@
+/* Application bodies use the shell's shared tokens; no resets or global selectors. */
+.lope-app{height:100%;min-height:0;min-width:0;color:var(--text);background:var(--surface);font-size:13px;container-type:inline-size}
+.lope-app .ui-toolbar{flex:none;justify-content:space-between;background:var(--chrome);min-height:52px;flex-wrap:wrap;gap:8px}
+.lope-app .ui-toolbar strong{font-size:12px;font-weight:650}
+.lope-app .ui-toolbar .ui-button{padding:7px 8px;font-size:11px}
+.lope-app .ui-button[aria-pressed=true],.lope-app .ui-button.selected{background:var(--accent-soft);color:var(--accent-text,var(--text));border-color:var(--accent)}
+.lope-app .control-group{display:flex;align-items:center;gap:5px;min-width:0}
+.lope-app .application-main{min-width:0;min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden}
+.lope-app .application-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:22px 0}
+.lope-app .application-heading h1{font-size:25px;line-height:1.25;letter-spacing:-.045em;font-weight:600;margin:0 0 7px}
+.lope-app .application-heading p{font-size:12px;line-height:1.55;color:var(--muted);margin:0}
+.lope-app .application-heading>span{font-size:11px;color:var(--muted);white-space:nowrap}
+.lope-app .application-state{padding:36px 18px;text-align:center;color:var(--muted);line-height:1.6}
+.lope-app .application-error{display:flex;flex-direction:column;align-items:flex-start;gap:8px;background:color-mix(in srgb,var(--surface) 92%,#c88328);border:1px solid color-mix(in srgb,var(--text) 22%,transparent);border-left:3px solid #b68135;border-radius:9px;padding:13px 16px;line-height:1.55;font-size:12px;overflow-wrap:anywhere;margin:10px}
+.lope-app .application-error strong{font-size:12px}
+.lope-app .application-status{display:flex;flex-wrap:wrap;justify-content:space-between;gap:7px;align-items:center;font-size:10px;line-height:1.5;color:var(--muted);padding:7px 14px;border-top:1px solid var(--border);background:var(--surface);flex:none;min-height:31px}
+.lope-app .application-status .ui-button{font-size:10px;padding:6px;gap:4px}
+.lope-application-dialog-form{display:flex;flex-direction:column;gap:16px;min-width:0;line-height:1.6}
+.lope-application-dialog-form label{display:flex;flex-direction:column;gap:8px;font-size:12px}
+.lope-application-dialog-form .dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.lope-application-dialog-form .application-error{overflow-wrap:anywhere;color:var(--text);font-size:12px}
+.lope-app a{color:var(--accent-text,var(--text));text-underline-offset:3px}
+.lope-app .field-help{font-size:11px;line-height:1.7;color:var(--muted);margin:10px 0}
+.lope-app .sidebar-caption{font-size:10px;font-weight:650;letter-spacing:.1em;color:var(--muted);margin:8px 10px 17px}
+.lope-app .sidebar-footer{font-size:10px;line-height:1.6;color:var(--muted);margin:auto 10px 0}
+.lope-app .availability-dot{display:inline-block;background:#379f81;width:6px;height:6px;border-radius:50%;margin-right:5px}
+
+.files-view{display:flex;background:transparent}
+.files-view .application-sidebar{display:flex;flex-direction:column;gap:5px;flex:0 0 184px;padding:24px 12px 18px;background:var(--sidebar-material,var(--chrome));border-right:1px solid var(--border)}
+.files-view .application-sidebar .ui-button{justify-content:flex-start;background:transparent;border-color:transparent;box-shadow:none;font-size:12px;padding:9px 10px}
+.files-view .application-sidebar .ui-button.selected{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--text);box-shadow:inset 0 1px 0 var(--highlight)}
+.files-view .application-sidebar .ui-button svg{color:var(--accent)}
+.files-view .files-content{padding:20px 26px 28px;overflow:auto;flex:1;min-height:0;background:var(--content-material,var(--surface))}
+.files-view .file-breadcrumbs,.files-view .file-breadcrumbs>span{display:flex;align-items:center;gap:4px;flex-wrap:wrap;color:var(--muted)}
+.files-view .file-breadcrumbs .ui-button{font-size:11px;padding:3px 5px;background:transparent;border:0;box-shadow:none;color:var(--muted)}
+.files-view .file-breadcrumbs .ui-button:hover{color:var(--accent)}
+.files-view .file-controls{display:flex;gap:10px;margin:0 0 18px;align-items:center}
+.files-view .search-control{display:flex;align-items:center;min-width:0;flex:1;background:var(--input,var(--surface));border:1px solid var(--border);border-radius:9px;padding-left:11px;color:var(--muted);box-shadow:inset 0 1px 2px #16324b05}
+.files-view .search-control input{width:100%;border:0;font-size:12px;background:transparent}
+.files-view .file-controls select{font-size:12px;max-width:140px;background:var(--input,var(--surface))}
+.files-view .file-items.list{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--row-material,var(--surface))}
+.files-view .file-item-heading,.files-view .list .file-item{display:grid;grid-template-columns:minmax(100px,1fr) 100px 60px;gap:12px;align-items:center;text-align:left;width:100%}
+.files-view .file-item-heading{font-size:11px;font-weight:550;color:var(--muted);padding:10px 12px;background:var(--hover,#16324b06);border-bottom:1px solid var(--border)}
+.files-view .file-item{background:transparent;color:var(--text);border-radius:6px;font-size:11px;border:1px solid transparent}
+.files-view .list .file-item{padding:12px;border-bottom-color:var(--border);border-radius:0}
+.files-view .file-item:hover{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.files-view .file-item.selected{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.files-view .file-item-name{min-width:0;display:flex;align-items:center;gap:11px;font-size:12px}
+.files-view .file-item-name>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.files-view .file-original-path{display:block;overflow:hidden;text-overflow:ellipsis;margin-top:4px;color:var(--muted);font-size:10px;font-weight:400}
+.files-view .file-item-name svg{color:var(--muted)}
+.files-view .file-item-name .file-folder{color:#4d99bd;fill:#acd8e9;stroke-width:1.3}
+.files-view .file-item time,.files-view .file-item>span:last-child{font-size:11px;color:var(--muted)}
+.files-view .file-items.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.files-view .grid .file-item{padding:20px 10px 14px;min-width:0;border-radius:12px;background:var(--row-material,var(--surface));border-color:var(--border);box-shadow:inset 0 1px 0 var(--highlight),0 3px 10px #17354d04}
+.files-view .grid .file-item-name{flex-direction:column;gap:10px}
+.files-view .grid .file-item-name>span{width:100%;font-size:12px;text-align:center}
+.files-view .grid .file-item time,.files-view .grid .file-item>span:last-child{display:none}
+.file-info{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px 15px;font-size:12px}
+.file-info dt{color:var(--muted)}
+.file-info dd{margin:0;overflow-wrap:anywhere}
+
+.editor-view{display:flex;flex-direction:column}
+.editor-view .document-name{display:flex;gap:9px;align-items:center;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editor-view .unsaved-indicator{font-size:8px;color:var(--accent)}
+.editor-view .editor-page{flex:1;min-height:0;min-width:0;display:flex;background:var(--content-material,var(--surface))}
+.editor-view .editor-page textarea{width:100%;height:100%;resize:none;border:0;background:transparent;font:13px/1.85 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);padding:32px clamp(20px,6cqw,58px);tab-size:2}
+.editor-view .editor-page textarea:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.editor-view .editor-page textarea::placeholder{color:var(--muted)}
+.editor-view .editor-find{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--chrome)}
+.editor-view .editor-find .ui-input{width:145px;flex:1;font-size:11px}
+.editor-view .editor-find .ui-button{font-size:10px;padding:7px 9px}
+.editor-view .inline-check{display:flex;align-items:center;gap:4px;font-size:10px;white-space:nowrap}
+.editor-view .inline-check input{accent-color:var(--accent)}
+.editor-view .editor-replace{width:100%;display:flex;gap:7px}
+.editor-view .editor-conflict{padding:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--accent-soft);font-size:11px;line-height:1.6}
+.editor-view .editor-conflict>div{flex:1;min-width:180px}
+.editor-view .editor-conflict strong,.editor-view .editor-conflict span{display:block}
+.editor-view .editor-conflict .ui-button{font-size:11px;padding:7px}
+
+.settings-view{display:flex}
+.settings-view .settings-navigation{width:197px;flex:none;background:var(--chrome)}
+.settings-view .ui-sidebar{height:100%;display:flex;flex-direction:column;padding:20px 12px;gap:18px}
+.settings-view .settings-identity{display:flex;align-items:center;gap:9px;margin:3px 2px 11px}
+.settings-view .settings-avatar{height:34px;width:34px;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:19px}
+.settings-view .settings-identity strong{display:block;font-size:12px}
+.settings-view .settings-identity small{display:block;font-size:9px;color:var(--muted);margin-top:4px}
+.settings-view .settings-navigation nav{display:flex;flex-direction:column;gap:7px}
+.settings-view .settings-navigation .ui-button{justify-content:flex-start;background:transparent;border-color:transparent;box-shadow:none;padding:10px;font-size:11px}
+.settings-view .settings-navigation .ui-button.selected{background:var(--surface);border-color:var(--border);color:var(--accent-text,var(--text))}
+.settings-view .settings-content{padding:14px 30px 24px;overflow:auto;min-height:0;flex:1}
+.settings-view .application-heading{margin:16px 0 24px}
+.settings-view .preference-card{padding:19px;border:1px solid var(--border);border-radius:12px;background:var(--surface);margin-bottom:15px;box-shadow:0 3px 8px #163d5105}
+.settings-view .preference-card h2{font-size:12px;margin:0 0 5px;font-weight:650}
+.settings-view .preference-card>p{font-size:11px;line-height:1.65;color:var(--muted);margin:0 0 17px}
+.settings-view .appearance-options{display:flex;gap:12px;flex-wrap:wrap}
+.settings-view .appearance-option{padding:4px;display:flex;flex-direction:column;gap:7px;min-width:90px;background:transparent;border:1px solid transparent;box-shadow:none;flex:1}
+.settings-view .appearance-option.selected{border-color:var(--accent);background:transparent}
+.settings-view .appearance-option>span:last-child{display:flex;align-items:center;gap:8px;font-size:10px;padding:3px 0}
+.settings-view .appearance-miniature{display:flex;align-items:center;justify-content:center;width:100%;height:66px;border-radius:6px;background:linear-gradient(150deg,#badcd8,#5c96b2);position:relative;overflow:hidden}
+.settings-view .appearance-miniature:after{content:'';position:absolute;width:49%;height:62%;background:#fbfcfd;left:36%;top:22%;border-radius:4px;box-shadow:0 2px 8px #152f422b}
+.settings-view .appearance-miniature:before{content:'';position:absolute;width:16%;height:62%;background:#ecf5f6b0;left:20%;top:22%;border-radius:4px 0 0 4px}
+.settings-view .appearance-miniature.dark{background:linear-gradient(150deg,#254856,#182737)}
+.settings-view .appearance-miniature.dark:after{background:#263d4b}
+.settings-view .appearance-miniature.dark:before{background:#314b5bd0}
+.settings-view .appearance-miniature.system{background:linear-gradient(120deg,#badcd8 48%,#1d3547 50%)}
+.settings-view .appearance-miniature.system:after{background:linear-gradient(120deg,#fbfcfd 48%,#2c4351 50%)}
+.settings-view .accent-options{display:flex;align-items:center;flex-wrap:wrap;gap:13px}
+.settings-view .accent-options>button{display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;color:white;box-shadow:inset 0 0 0 1px #0001}
+.settings-view .accent-options>button.selected{outline:2px solid var(--accent);outline-offset:3px}
+.settings-view .custom-accent{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.settings-view input[type=color]{width:29px;height:29px;padding:3px}
+.settings-view .preference-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.settings-view .preference-row:first-child{padding-top:3px}
+.settings-view .preference-row:last-child{border-bottom:0;padding-bottom:3px}
+.settings-view .preference-row strong{font-size:12px}
+.settings-view .preference-row p{font-size:11px;line-height:1.55;color:var(--muted);margin:5px 0 0}
+.settings-view .preference-row select{font-size:11px;max-width:150px}
+.settings-view .preference-switch{height:23px;width:39px;min-width:39px;padding:3px;border-radius:30px;background:color-mix(in srgb,var(--muted) 40%,var(--surface));position:relative;box-shadow:inset 0 1px 3px #142b3812}
+.settings-view .preference-switch>span{display:block;width:17px;height:17px;border-radius:50%;background:white;box-shadow:0 1px 3px #0003;transition:transform var(--motion)}
+.settings-view .preference-switch[aria-checked=true]{background:var(--accent)}
+.settings-view .preference-switch[aria-checked=true]>span{transform:translateX(16px)}
+.settings-view .range-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:14px}
+.settings-view input[type=range]{width:100%;padding:0;accent-color:var(--accent);margin:0 0 15px;border:0}
+.settings-view .wallpaper-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:15px;margin-bottom:22px}
+.settings-view .wallpaper-option{display:flex;flex-direction:column;align-items:stretch;padding:4px;border:1px solid var(--border);background:transparent;overflow:hidden;white-space:normal}
+.settings-view .wallpaper-option>span:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px}
+.settings-view .wallpaper-option strong{font-size:11px;overflow-wrap:anywhere}
+.settings-view .wallpaper-option small{font-size:10px;color:var(--muted);font-weight:400}
+.settings-view .wallpaper-preview{height:85px;background-size:cover;background-position:center;border-radius:5px;position:relative}
+.settings-view .wallpaper-preview.dark{filter:brightness(.55) saturate(.8)}
+.settings-view .wallpaper-preview svg{position:absolute;bottom:7px;right:7px;background:var(--surface);color:var(--accent);padding:2px;border-radius:50%;width:20px;height:20px}
+.settings-view .wallpaper-metadata{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--muted);margin:10px 0 20px}
+.settings-view .settings-save-status{display:flex;align-items:center;gap:7px;font-size:10px;line-height:1.5;color:var(--muted);margin:22px 0 0}
+
+.weather-location-picker{font-size:12px;line-height:1.6;min-width:0}
+.weather-location-picker form>label{display:block;font-size:11px;margin-bottom:7px}
+.weather-location-picker form{margin-bottom:12px}
+.weather-location-picker .control-group{display:flex;gap:7px}
+.weather-location-picker .ui-input{width:100%;min-width:0;flex:1;font-size:12px}
+.weather-location-picker .field-help{font-size:10px;line-height:1.7;color:var(--muted);margin:12px 0}
+.weather-location-picker .location-results{padding:0;margin:14px 0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.weather-location-picker .location-results .ui-button{width:100%;justify-content:flex-start;text-align:left}
+.weather-location-picker .location-results strong,.weather-location-picker .location-results small{display:block;font-size:11px}
+.weather-location-picker .location-results small{font-weight:400;color:var(--muted);font-size:10px;margin-top:3px}
+.weather-view{display:flex;flex-direction:column;background:radial-gradient(ellipse at 85% 0%,color-mix(in srgb,var(--accent) 15%,transparent),transparent 62%),var(--content-material,var(--surface));position:relative}
+.weather-view .weather-content{overflow:auto;flex:1;min-height:0;padding:0 24px 16px}
+.weather-view .weather-location-name{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.weather-view .weather-loading{font-size:10px;color:var(--muted);text-align:center;margin:12px 0 -10px}
+.weather-view .weather-current{text-align:center;padding:22px 0 26px}
+.weather-view .weather-sky-symbol{display:inline-flex;margin-bottom:8px;color:var(--accent);filter:drop-shadow(0 3px 8px color-mix(in srgb,var(--accent) 20%,transparent))}
+.weather-view .weather-current h1{font-size:68px;line-height:1.1;letter-spacing:-.07em;font-weight:350;margin:1px 0 4px}
+.weather-view .weather-current h1 span{font-size:35px;vertical-align:top;display:inline-block;line-height:1.7;letter-spacing:-.04em}
+.weather-view .weather-current p{font-size:15px;margin:0 0 10px}
+.weather-view .weather-high-low{font-size:12px;color:var(--muted)}
+.weather-view .weather-details{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);background:var(--row-material,var(--surface));border-radius:14px;padding:18px 7px;box-shadow:inset 0 1px 0 var(--highlight),0 4px 16px #13375405}
+.weather-view .weather-details>div{display:flex;justify-content:center;align-items:center;gap:7px;border-right:1px solid var(--border);font-size:10px;color:var(--muted)}
+.weather-view .weather-details>div:last-child{border:0}
+.weather-view .weather-details strong{display:block;font-size:12px;color:var(--text);margin-top:3px;font-weight:550}
+.weather-view .weather-forecast{margin:16px 0 12px;background:var(--row-material,var(--surface));border:1px solid var(--border);border-radius:14px;padding:17px;box-shadow:inset 0 1px 0 var(--highlight),0 4px 16px #13375405}
+.weather-view .weather-forecast h2{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--muted);margin:0 0 12px}
+.weather-view .weather-forecast ol{margin:0;padding:0;list-style:none}
+.weather-view .weather-forecast li{display:grid;grid-template-columns:42px 28px 30px 28px 1fr 28px;gap:7px;align-items:center;padding:9px 0;border-top:1px solid var(--border);font-size:11px}
+.weather-view .forecast-symbol{display:flex;justify-content:center;color:var(--accent)}
+.weather-view .precipitation{font-size:10px;color:var(--accent-text,var(--text))}
+.weather-view .forecast-low{color:var(--muted);text-align:right}
+.weather-view .forecast-range{height:4px;background:linear-gradient(90deg,#83bcc7,#d4b771);border-radius:3px;margin:0 4px}
+.weather-view .weather-updated{font-size:9px;text-align:center;color:var(--muted);margin:13px 0 0}
+.weather-view .weather-attribution{display:flex;justify-content:space-between;gap:9px;font-size:9px;padding:11px 18px;border-top:1px solid var(--border);flex:none}
+.weather-view .weather-awaiting{text-align:center;padding:80px 0;color:var(--muted);font-size:12px;line-height:1.7}
+.weather-view .weather-awaiting>span{font-size:52px;color:var(--accent)}
+.weather-view .weather-awaiting h1{font-size:20px;color:var(--text);font-weight:500;letter-spacing:-.04em}
+
+.calculator-view{position:relative;display:flex;flex-direction:column;padding:0 14px 4px;background:radial-gradient(ellipse at 90% 0%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 65%),var(--content-material,var(--surface))}
+.calculator-view .ui-toolbar{margin:0 -14px;padding:8px 12px;min-height:40px}
+.calculator-view .calculator-mode{font-size:10px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.calculator-view .calculator-display{display:flex;flex-direction:column;align-items:flex-end;min-height:125px;padding:19px 5px 13px;gap:7px}
+.calculator-view .calculator-previous{font-size:11px;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calculator-view .calculator-display input{width:100%;min-width:0;font-size:clamp(28px,10cqw,40px);font-weight:350;letter-spacing:-.055em;text-align:right;background:transparent;border:0;padding:0;line-height:1.3}
+.calculator-view .calculator-feedback{font-size:10px;line-height:1.5;min-height:15px;text-align:right;color:var(--muted)}
+.calculator-view .calculator-pad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(5,minmax(34px,1fr));gap:7px;flex:1;min-height:0}
+.calculator-view .calculator-pad button{border:1px solid var(--border);border-radius:13px;background:var(--row-material,var(--surface));font-size:21px;font-weight:450;box-shadow:inset 0 1px 0 var(--highlight),0 2px 4px #16324b08;transition:background var(--motion),box-shadow var(--motion),transform var(--motion)}
+.calculator-view .calculator-pad button:hover{background:var(--accent-soft)}
+.calculator-view .calculator-pad button:active{transform:translateY(1px)}
+.calculator-view .calculator-pad button.operator{background:linear-gradient(180deg,#ffffff18,transparent),var(--accent);color:var(--accent-ink,var(--on-accent,#fff));border-color:color-mix(in srgb,var(--accent) 70%,var(--border));font-size:23px;box-shadow:inset 0 1px 0 #ffffff38,0 2px 4px #16324b12}
+.calculator-view .calculator-pad button.utility{background:var(--accent-soft);font-size:16px}
+.calculator-view .calculator-pad button.zero{grid-column:span 2;text-align:left;padding-left:26px}
+.calculator-view .calculator-bottom{display:flex;justify-content:space-between;align-items:center;gap:5px;min-height:36px;color:var(--muted)}
+.calculator-view .calculator-bottom>span{font-size:10px}
+.calculator-view .calculator-bottom .ui-button{background:transparent;border:0;box-shadow:none;padding:6px}
+.calculator-view .calculator-history{position:absolute;inset:40px 0 0;background:var(--surface);z-index:2;display:flex;flex-direction:column;padding:17px;overflow:auto}
+.calculator-view .history-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.calculator-view .history-heading h2{font-size:17px;font-weight:600;letter-spacing:-.03em}
+.calculator-view .calculator-history ol{list-style:none;margin:8px 0;padding:0}
+.calculator-view .calculator-history li>button{display:flex;flex-direction:column;align-items:flex-end;gap:6px;background:transparent;padding:14px 7px;border-bottom:1px solid var(--border);width:100%;overflow-wrap:anywhere;text-align:right}
+.calculator-view .calculator-history li>button:hover{background:var(--accent-soft)}
+.calculator-view .calculator-history li span{font-size:11px;color:var(--muted)}
+.calculator-view .calculator-history li strong{font-size:21px;font-weight:500;letter-spacing:-.03em}
+
+/* These surfaces are limited to the system utilities; creative apps keep their own UI. */
+.lope-app:is(.files-view,.editor-view,.weather-view,.calculator-view) .ui-toolbar{background:var(--chrome-material,var(--chrome));box-shadow:inset 0 1px 0 var(--highlight)}
+.lope-app:is(.files-view,.editor-view,.weather-view,.calculator-view) .ui-toolbar .ui-button{border-radius:8px;min-height:30px;box-shadow:none;background:transparent;border-color:transparent;color:var(--muted)}
+.lope-app:is(.files-view,.editor-view,.weather-view,.calculator-view) .ui-toolbar .ui-button:hover:not(:disabled){background:var(--hover,var(--accent-soft));color:var(--text)}
+.lope-app:is(.files-view,.editor-view,.weather-view,.calculator-view) .ui-toolbar .ui-button[aria-pressed=true]{background:var(--row-material,var(--surface));color:var(--accent-text,var(--text));border-color:var(--border);box-shadow:0 1px 3px #16324b0a}
+.lope-app:is(.files-view,.editor-view) .application-status{background:var(--chrome-material,var(--chrome));font-size:11px;min-height:34px}
+.files-view .sidebar-caption{font-size:10px;letter-spacing:.07em;margin:3px 10px 12px}
+.files-view .application-sidebar .ui-button:hover:not(.selected){background:var(--hover,var(--accent-soft))}
+.files-view .search-control:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 12%,transparent)}
+.files-view .search-control input:focus-visible{outline:none}
+.files-view .list .file-item:last-child{border-bottom:0}
+.files-view .list .file-item:nth-child(odd):not(:hover):not(.selected){background:var(--hover,#16324b05)}
+.files-view .file-item:focus-visible{outline-offset:-3px}
+.files-view .grid .file-item:hover{background:var(--hover,var(--accent-soft));border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}
+.files-view .grid .file-item.selected{background:var(--accent-soft);border-color:var(--accent)}
+.editor-view .editor-find{box-shadow:0 3px 10px #16324b05}
+.editor-view .document-name{font-weight:550;letter-spacing:-.015em}
+.weather-view .weather-details>div{font-size:11px}
+.weather-view .weather-details strong{font-size:13px;font-variant-numeric:tabular-nums}
+.weather-view .weather-high-low,.weather-view .weather-forecast li{font-variant-numeric:tabular-nums}
+.weather-view .weather-forecast li{font-size:12px;padding:11px 0}
+.weather-view .weather-attribution{background:var(--chrome-material,var(--chrome));font-size:10px}
+.calculator-view .calculator-display input{font-variant-numeric:tabular-nums}
+.calculator-view .calculator-pad button.operator:hover{filter:brightness(1.08)}
+.calculator-view .calculator-history{background:var(--content-material,var(--surface))}
+.calculator-view .calculator-history li>button{border-radius:8px}
+[data-reduce-transparency=true] .lope-app:is(.files-view,.editor-view,.weather-view,.calculator-view){--content-material:var(--surface);--row-material:var(--surface);--chrome-material:var(--surface);--sidebar-material:var(--surface);--input:var(--surface)}
+
+@container(max-width:600px){.files-view .application-sidebar{flex-basis:135px;padding:17px 7px}.files-view .files-content{padding:16px}.files-view .list .file-item,.files-view .file-item-heading{grid-template-columns:minmax(90px,1fr) 58px}.files-view .list .file-item time,.files-view .file-item-heading>span:nth-child(2){display:none}.settings-view .settings-navigation{width:150px}.settings-view .ui-sidebar{padding:20px 8px}.settings-view .settings-identity{gap:6px}.settings-view .settings-identity small{display:none}.settings-view .settings-content{padding:12px 19px 24px}.settings-view .appearance-option{min-width:70px}.editor-view .document-name{max-width:130px}}
+@container(max-width:440px){.files-view .application-sidebar{flex-basis:54px;padding:18px 6px}.files-view .application-sidebar .ui-button{padding:10px;justify-content:center}.files-view .application-sidebar .ui-button>span{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}.files-view .sidebar-caption,.files-view .sidebar-footer{display:none}.files-view .files-content{padding:15px 13px}.files-view .application-heading h1{font-size:22px}.files-view .file-controls{flex-wrap:wrap}.files-view .file-controls select{max-width:none;width:100%}.files-view .search-control{flex-basis:100%}.files-view .application-status{padding:7px 9px}.settings-view .settings-navigation{width:54px}.settings-view .ui-sidebar{padding:16px 6px}.settings-view .settings-identity,.settings-view .sidebar-footer{display:none}.settings-view .settings-navigation .ui-button{padding:10px;justify-content:center}.settings-view .settings-navigation .ui-button span{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}.settings-view .settings-content{padding:12px 14px 24px}.settings-view .preference-card{padding:14px}.settings-view .application-heading h1{font-size:23px}.settings-view .appearance-options{gap:5px}.settings-view .appearance-option{min-width:55px;padding:3px}.settings-view .appearance-miniature{height:50px}.settings-view .preference-row{gap:10px;flex-wrap:wrap}.editor-view .document-name{max-width:90px}.editor-view .ui-toolbar{padding:8px}.editor-view .editor-page textarea{padding:20px}.weather-view .weather-content{padding:0 14px 12px}.weather-view .weather-details{padding:13px 4px}.weather-view .weather-details>div{gap:4px}.weather-view .weather-details>div>svg{width:13px}.weather-view .weather-location-name{max-width:110px}.weather-view .weather-forecast{padding:12px}.weather-view .weather-forecast li{gap:5px}}
+.weather-view .weather-attribution{flex-wrap:wrap;align-items:center;row-gap:6px}
+.weather-view .weather-credit-links{display:flex;gap:10px}
+.weather-view .weather-attribution time{font-size:9px;color:var(--muted)}
+.calculator-view .calculator-pad button.operator{color:var(--accent-ink,var(--on-accent,#fff))}

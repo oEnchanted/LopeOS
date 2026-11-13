@@ -1,0 +1,47 @@
+import { TILE, clamp, findLayer, maskTransform, surface, toDocument, updateLayer, type ImageDocument, type Surface, type Transform } from './model.ts';
+import { fromPixels, surfacePixels } from './pixels.ts';
+import {inverse,matrixOf,transformOf} from './matrix.ts';
+export type RasterFilter={type:'gaussian-blur'|'box-blur'|'motion-blur'|'sharpen'|'unsharp-mask'|'high-pass'|'add-noise'|'mosaic'|'emboss'|'find-edges'|'solarize'|'invert'|'grayscale';radius:number;amount:number;threshold:number;angle?:number;seed?:number;monochrome?:boolean;enabled?:boolean;origin?:{x:number;y:number};mask?:{pixels:Surface;transform:Transform}};
+/** A selection is captured in document coordinates with a transform relative to its object. */
+function captureFilterMask(doc:ImageDocument,transform:Transform){
+  const selection=doc.selection!;let white=0;for(const value of selection)if(value===255)white++;
+  const base=white>selection.length/2?255:0,pixels=surface(doc.width,doc.height,[base,base,base,255]);
+  for(let ty=0;ty<Math.ceil(doc.height/TILE);ty++)for(let tx=0;tx<Math.ceil(doc.width/TILE);tx++){
+    const width=Math.min(TILE,doc.width-tx*TILE),height=Math.min(TILE,doc.height-ty*TILE);let tile:Uint8ClampedArray|undefined;
+    for(let y=0;y<height;y++)for(let x=0;x<width;x++){const value=selection[(ty*TILE+y)*doc.width+tx*TILE+x];if(value===base&&!tile)continue;if(!tile){tile=new Uint8ClampedArray(TILE*TILE*4);new Uint32Array(tile.buffer).fill((255<<24)|(base<<16)|(base<<8)|base);}const p=(y*TILE+x)*4;tile[p]=tile[p+1]=tile[p+2]=value;}
+    if(tile)pixels.tiles[`${tx},${ty}`]=tile;
+  }
+  return {pixels,transform:transformOf(inverse(matrixOf(transform)))};
+}
+/** Blend a filtered result through grayscale coverage without creating dark alpha fringes. */
+export function mixFilteredPixels(before:Uint8ClampedArray,after:Uint8ClampedArray,coverage:Uint8ClampedArray){
+  for(let p=0;p<after.length;p+=4){const amount=coverage[p+3]/255;if(amount===1)continue;if(!amount){after[p]=before[p];after[p+1]=before[p+1];after[p+2]=before[p+2];after[p+3]=before[p+3];continue;}const alpha=before[p+3]*(1-amount)+after[p+3]*amount;for(let c=0;c<3;c++)after[p+c]=alpha?(before[p+c]*before[p+3]*(1-amount)+after[p+c]*after[p+3]*amount)/alpha:0;after[p+3]=alpha;}return after;
+}
+const gaussianBoxes=(sigma:number)=>{const ideal=Math.sqrt(4*sigma*sigma+1);let low=Math.floor(ideal);if(!(low%2))low--;const high=low+2;const count=Math.round((12*sigma*sigma-3*low*low-12*low-9)/(-4*low-4));return [0,1,2].map(i=>Math.max(0,((i<count?low:high)-1)/2));};
+function box(input:Float32Array,output:Float32Array,width:number,height:number,radius:number,vertical:boolean){
+  const major=vertical?width:height,minor=vertical?height:width,divisor=radius*2+1;for(let row=0;row<major;row++){const at=(position:number)=>vertical?position*width+row:row*width+position;let sum=0;for(let p=-radius;p<=radius;p++)sum+=input[at(Math.max(0,Math.min(minor-1,p)))];for(let p=0;p<minor;p++){output[at(p)]=sum/divisor;sum+=input[at(Math.min(minor-1,p+radius+1))]-input[at(Math.max(0,p-radius))];}}
+}
+export function filterPixels(width:number,height:number,input:Uint8ClampedArray,filter:RasterFilter):Uint8ClampedArray{
+  if(filter.enabled===false)return input.slice();const output=input.slice();
+  if(filter.type==='add-noise'){const random=(x:number,y:number,c:number)=>{let value=(Math.imul(x,374761393)+Math.imul(y,668265263)+Math.imul((filter.seed??1)+c,1274126177))|0;value=Math.imul(value^(value>>>13),1274126177);return ((value^(value>>>16))>>>0)/4294967296;};for(let y=0;y<height;y++)for(let x=0;x<width;x++){const p=(y*width+x)*4;for(let c=0;c<3;c++)output[p+c]=input[p+c]+(random(Math.floor(x+(filter.origin?.x||0)),Math.floor(y+(filter.origin?.y||0)),filter.monochrome?0:c)*2-1)*clamp(filter.amount,0,4)*255;}return output;}
+  if(filter.type==='solarize'){for(let p=0;p<input.length;p+=4)for(let c=0;c<3;c++)output[p+c]=input[p+c]>127?255-input[p+c]:input[p+c];return output;}
+  if(filter.type==='mosaic'){const size=Math.max(2,Math.round(filter.radius));for(let y=-((filter.origin?.y||0)%size);y<height;y+=size)for(let x=-((filter.origin?.x||0)%size);x<width;x+=size){const left=Math.max(0,x),top=Math.max(0,y),right=Math.min(width,x+size),bottom=Math.min(height,y+size);let r=0,g=0,b=0,a=0;for(let yy=top;yy<bottom;yy++)for(let xx=left;xx<right;xx++){const p=(yy*width+xx)*4,alpha=input[p+3];r+=input[p]*alpha;g+=input[p+1]*alpha;b+=input[p+2]*alpha;a+=alpha;}for(let yy=top;yy<bottom;yy++)for(let xx=left;xx<right;xx++){const p=(yy*width+xx)*4;output[p]=a?r/a:0;output[p+1]=a?g/a:0;output[p+2]=a?b/a:0;output[p+3]=a/((right-left)*(bottom-top));}}return output;}
+  if(filter.type==='motion-blur'){const distance=clamp(filter.radius,0,250),steps=Math.max(2,Math.min(64,Math.ceil(distance*2+1))),angle=(filter.angle||0)*Math.PI/180,dx=Math.cos(angle),dy=Math.sin(angle);for(let y=0;y<height;y++)for(let x=0;x<width;x++){let r=0,g=0,b=0,a=0;for(let i=0;i<steps;i++){const offset=(i/(steps-1)-.5)*distance*2,xx=Math.max(0,Math.min(width-1,Math.round(x+dx*offset))),yy=Math.max(0,Math.min(height-1,Math.round(y+dy*offset))),p=(yy*width+xx)*4,alpha=input[p+3];r+=input[p]*alpha;g+=input[p+1]*alpha;b+=input[p+2]*alpha;a+=alpha;}const p=(y*width+x)*4;output[p]=a?r/a:0;output[p+1]=a?g/a:0;output[p+2]=a?b/a:0;output[p+3]=a/steps;}return output;}
+  if(filter.type==='emboss'||filter.type==='find-edges'){const sample=(x:number,y:number,c:number)=>input[(Math.max(0,Math.min(height-1,y))*width+Math.max(0,Math.min(width-1,x)))*4+c];for(let y=0;y<height;y++)for(let x=0;x<width;x++){const p=(y*width+x)*4;for(let c=0;c<3;c++){if(filter.type==='emboss')output[p+c]=128+(sample(x+1,y+1,c)-sample(x-1,y-1,c))*filter.amount;else{const gx=-sample(x-1,y-1,c)-2*sample(x-1,y,c)-sample(x-1,y+1,c)+sample(x+1,y-1,c)+2*sample(x+1,y,c)+sample(x+1,y+1,c),gy=-sample(x-1,y-1,c)-2*sample(x,y-1,c)-sample(x+1,y-1,c)+sample(x-1,y+1,c)+2*sample(x,y+1,c)+sample(x+1,y+1,c);output[p+c]=255-Math.min(255,Math.hypot(gx,gy));}}}return output;}
+  if(filter.type==='invert'||filter.type==='grayscale'){for(let p=0;p<output.length;p+=4){if(filter.type==='invert'){output[p]=255-input[p];output[p+1]=255-input[p+1];output[p+2]=255-input[p+2];}else{const gray=input[p]*.2126+input[p+1]*.7152+input[p+2]*.0722;output[p]=output[p+1]=output[p+2]=gray;}}return output;}
+  if(filter.type==='sharpen'){const amount=clamp(filter.amount,0,5);for(let y=0;y<height;y++)for(let x=0;x<width;x++){const p=(y*width+x)*4;for(let c=0;c<3;c++){let neighbors=0;for(const [dx,dy]of [[-1,0],[1,0],[0,-1],[0,1]]){const n=(Math.min(height-1,Math.max(0,y+dy))*width+Math.min(width-1,Math.max(0,x+dx)))*4;neighbors+=input[n+3]?input[n+c]:input[p+c];}output[p+c]=input[p+c]*(1+4*amount)-neighbors*amount;}}return output;}
+  const radius=clamp(filter.radius,0,250);if(radius<.1)return output;const boxes=filter.type==='box-blur'?[Math.round(radius)]:gaussianBoxes(radius);let a=new Float32Array(width*height),b=new Float32Array(width*height);
+  for(let channel=0;channel<4;channel++){for(let i=0;i<a.length;i++)a[i]=channel===3?input[i*4+3]:input[i*4+channel]*input[i*4+3]/255;for(const r of boxes){box(a,b,width,height,r,false);box(b,a,width,height,r,true);}for(let i=0;i<a.length;i++)output[i*4+channel]=a[i];}
+  for(let p=0;p<output.length;p+=4){const alpha=output[p+3];if(alpha)for(let c=0;c<3;c++)output[p+c]=output[p+c]*255/alpha;else output[p]=output[p+1]=output[p+2]=0;}
+  if(filter.type==='unsharp-mask'){const amount=clamp(filter.amount,0,5),threshold=clamp(filter.threshold,0,255);for(let p=0;p<output.length;p+=4){for(let c=0;c<3;c++){const difference=input[p+c]-output[p+c];output[p+c]=Math.abs(difference)>=threshold?input[p+c]+difference*amount:input[p+c];}output[p+3]=input[p+3];}}
+  if(filter.type==='high-pass')for(let p=0;p<output.length;p+=4){for(let c=0;c<3;c++)output[p+c]=input[p+c]-output[p+c]+128;output[p+3]=input[p+3];}
+  return output;
+}
+export function applyFilter(doc:ImageDocument,filter:RasterFilter,smart=false):ImageDocument{
+  const active=findLayer(doc);if(!active||active.locked)throw new Error('Select an unlocked pixel layer or embedded source.');const mask=doc.target==='mask'&&active.mask;
+  if(smart&&!mask){if(active.kind!=='raster'&&active.kind!=='embedded')throw new Error('Smart filters require a pixel layer or embedded source.');const captured=doc.selection?{...filter,mask:captureFilterMask(doc,active.transform)}:filter;return updateLayer(doc,active.id,l=>({...l,kind:'embedded',source:l.kind==='embedded'?l.source:l.pixels,pixels:undefined,rasterFilters:[...(l.rasterFilters||[]),captured]}));}
+  const source=mask?mask.pixels:active.kind==='raster'?active.pixels:undefined;if(!source)throw new Error('Apply this filter as a Smart Filter to preserve the source.');
+  const before=surfacePixels(source),after=filterPixels(source.width,source.height,before,filter);
+  if(doc.selection){const transform=mask?maskTransform(active):active.transform;for(let y=0;y<source.height;y++)for(let x=0;x<source.width;x++){const point=toDocument({x:x+.5,y:y+.5},transform),dx=Math.floor(point.x),dy=Math.floor(point.y),p=(y*source.width+x)*4;const amount=dx>=0&&dy>=0&&dx<doc.width&&dy<doc.height?doc.selection[dy*doc.width+dx]/255:0;const alpha=before[p+3]*(1-amount)+after[p+3]*amount;for(let c=0;c<3;c++)after[p+c]=alpha?(before[p+c]*before[p+3]*(1-amount)+after[p+c]*after[p+3]*amount)/alpha:0;after[p+3]=alpha;}}
+  const pixels=fromPixels(source.width,source.height,after);return updateLayer(doc,active.id,l=>mask?{...l,mask:{...mask,pixels}}:{...l,pixels});
+}

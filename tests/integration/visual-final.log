@@ -1,0 +1,31 @@
+[WebServer] (node:28468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 12 tests using 2 workers
+
+(node:28472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:28471) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/12] [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 light
+[2/12] [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 dark
+[3/12] [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 light
+[4/12] [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 dark
+[5/12] [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 light
+[6/12] [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 dark
+(node:28502) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/12] [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 light
+(node:28510) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/12] [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 dark
+[9/12] [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 light
+[10/12] [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 dark
+[11/12] [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 light
+[12/12] [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 dark
+  12 passed (24.2s)

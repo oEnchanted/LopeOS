@@ -1,0 +1,22 @@
+{
+  "conditions": "Chromium headless, deterministic Open-Meteo fixtures; desktop, minimum utility windows, and 390×844 mobile. No live forecast claim.",
+  "checks": [
+    "Weather: 10 real-shaped daily rows, hourly forecast, proportional temperature bars, Celsius/Fahrenheit with shared menu status, city search, cached offline notice, minimum window",
+    "Light/dark desktop and 390×844 mobile layouts render without horizontal overflow",
+    "Night/storm presentation, missing hourly data, and provider error with retry render correctly",
+    "Reduced transparency and increased contrast appearance reviewed"
+  ],
+  "screenshots": [
+    "docs/screenshots/weather-refined-day.png",
+    "docs/screenshots/weather-refined-minimum.png",
+    "docs/screenshots/weather-refined-mobile-light.png",
+    "docs/screenshots/weather-refined-dark-day.png",
+    "docs/screenshots/weather-refined-mobile-dark.png",
+    "docs/screenshots/weather-refined-night.png",
+    "docs/screenshots/weather-refined-storm.png",
+    "docs/screenshots/weather-refined-legacy.png",
+    "docs/screenshots/weather-refined-failure.png",
+    "docs/screenshots/weather-refined-accessible.png"
+  ],
+  "errors": []
+}

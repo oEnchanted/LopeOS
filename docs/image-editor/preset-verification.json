@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-13",
+  "checks": [
+    "Saved document dimensions, resolution and transparent background survive reload",
+    "Creating from a preset makes real transparent pixels and records a recent document preset",
+    "Presets can be deleted and oversized document creation is blocked"
+  ],
+  "errors": []
+}

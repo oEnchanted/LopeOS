@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-12",
+  "validation": "ZIP CRC, well-formed XML, main-part presence and internal relationship target resolution. Not full ECMA schema or native Word validation.",
+  "fixtures": [
+    {
+      "fixture": "embedded-object.docx",
+      "zipCrc": "pass",
+      "xmlParts": 6,
+      "internalRelationshipsResolved": 3,
+      "parts": 7
+    },
+    {
+      "fixture": "fifty-pages.docx",
+      "zipCrc": "pass",
+      "xmlParts": 6,
+      "internalRelationshipsResolved": 3,
+      "parts": 6
+    },
+    {
+      "fixture": "missing-font.docx",
+      "zipCrc": "pass",
+      "xmlParts": 6,
+      "internalRelationshipsResolved": 3,
+      "parts": 6
+    },
+    {
+      "fixture": "multipage.docx",
+      "zipCrc": "pass",
+      "xmlParts": 6,
+      "internalRelationshipsResolved": 3,
+      "parts": 6
+    },
+    {
+      "fixture": "opaque-package.docx",
+      "zipCrc": "pass",
+      "xmlParts": 7,
+      "internalRelationshipsResolved": 4,
+      "parts": 7
+    },
+    {
+      "fixture": "review-roundtrip.docx",
+      "zipCrc": "pass",
+      "xmlParts": 9,
+      "internalRelationshipsResolved": 6,
+      "parts": 9
+    },
+    {
+      "fixture": "roundtrip.docx",
+      "zipCrc": "pass",
+      "xmlParts": 6,
+      "internalRelationshipsResolved": 3,
+      "parts": 6
+    },
+    {
+      "fixture": "spanning-table.docx",
+      "zipCrc": "pass",
+      "xmlParts": 6,
+      "internalRelationshipsResolved": 3,
+      "parts": 6
+    },
+    {
+      "fixture": "structures-roundtrip.docx",
+      "zipCrc": "pass",
+      "xmlParts": 9,
+      "internalRelationshipsResolved": 6,
+      "parts": 9
+    }
+  ]
+}

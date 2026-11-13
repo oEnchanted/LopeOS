@@ -1,0 +1,75 @@
+
+Running 28 tests using 2 workers
+
+(node:28820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [chromium] › tests/setup/capture.spec.ts:9:3 › capture seven light steps at 390×844 (7.0s)
+  ✓   1 [chromium] › tests/setup/capture.spec.ts:9:3 › capture seven light steps at 1440×900 (8.2s)
+  ✓   4 [chromium] › tests/setup/capture.spec.ts:9:3 › capture seven dark steps at 390×844 (3.5s)
+  ✓   3 [chromium] › tests/setup/capture.spec.ts:9:3 › capture seven dark steps at 1440×900 (5.7s)
+  ✓   5 [chromium] › tests/setup/local-ai.spec.ts:9:1 › Local AI explains all browser models, stays optional, and never downloads on its own (4.5s)
+  ✓   6 [chromium] › tests/setup/local-ai.spec.ts:29:1 › real model byte progress and speed continue across setup navigation and can be cancelled (5.2s)
+  ✓   8 [chromium] › tests/setup/local-ai.spec.ts:91:1 › Download all queues supported models and cancelling clears the remaining queue (5.7s)
+  ✓   7 [chromium] › tests/setup/local-ai.spec.ts:62:1 › failed model downloads can retry, verify the real package, and reuse it after reload (9.6s)
+  ✓  10 [chromium] › tests/setup/reset.spec.ts:52:1 › canceling a full reset preserves the account, preferences, and local data (11.0s)
+  ✓   9 [chromium] › tests/setup/local-ai.spec.ts:113:1 › Spotlight download populates its existing runtime caches without loading inference (16.7s)
+  ✓  11 [chromium] › tests/setup/reset.spec.ts:76:1 › full reset shows the boot screen, erases owned storage, and permits a new setup (14.1s)
+  ✓  13 [chromium] › tests/setup/setup.spec.ts:5:1 › first run creates the account only on Finish and signs straight into the desktop (5.5s)
+  ✓  14 [chromium] › tests/setup/setup.spec.ts:24:1 › account name follows the display name until manually edited (6.5s)
+  ✓  15 [chromium] › tests/setup/setup.spec.ts:37:1 › duplicate account names are rejected and focus the account field (7.0s)
+  ✓  16 [chromium] › tests/setup/setup.spec.ts:58:1 › password mismatch focuses confirmation and visibility toggles both fields (5.9s)
+  ✘  12 [chromium] › tests/setup/reset.spec.ts:145:1 › reset also retires another open desktop tab so old state cannot return (28.4s)
+  ✓  17 [chromium] › tests/setup/setup.spec.ts:75:1 › review edit keeps all account values including the password (4.4s)
+(node:30285) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 [chromium] › tests/setup/setup.spec.ts:128:1 › non-image photo reports an error without preventing continuation (2.8s)
+  ✓  20 [chromium] › tests/setup/setup.spec.ts:136:1 › review reflects the persistent storage choice and allows appearance editing (3.7s)
+  ✓  19 [chromium] › tests/setup/setup.spec.ts:87:1 › mobile accessibility previews immediately and persists into the signed-in session (5.4s)
+  ✓  21 [chromium] › tests/setup/setup.spec.ts:150:1 › empty and reserved names validate on Continue and focus their field (3.2s)
+  ✓  22 [chromium] › tests/setup/setup.spec.ts:163:1 › a preference failure after creation prevents duplicate creation and offers sign in (3.5s)
+  ✓  23 [chromium] › tests/setup/setup.spec.ts:182:1 › Enter submits each step and future progress steps remain disabled (1.5s)
+  ✓  24 [chromium] › tests/setup/setup.spec.ts:196:1 › account fields stay read-only while the asynchronous name check is pending (2.6s)
+  ✓  25 [chromium] › tests/setup/setup.spec.ts:222:1 › a name claimed after review returns to Account without treating it as our partial creation (3.2s)
+  ✓  26 [chromium] › tests/setup/setup.spec.ts:245:1 › password-protected account signs out, rejects a wrong password, and signs back in (5.1s)
+  ✓  27 [chromium] › tests/setup/setup.spec.ts:266:1 › a later photo supersedes a slow earlier pick and saves a 256px JPEG (4.0s)
+  ✓  28 [chromium] › tests/setup/setup.spec.ts:313:1 › appearance choices preview in system defaults and become user preferences (4.1s)
+
+
+  1) [chromium] › tests/setup/reset.spec.ts:145:1 › reset also retires another open desktop tab so old state cannot return 
+
+    Error: expect(received).toBeNull()
+
+    Received: "factory-reset-user"
+
+      155 |   await dialog.getByRole('button', { name: 'Erase and restart', exact: true }).click();
+      156 |   await Promise.all([expectFreshSetup(page), expectFreshSetup(other)]);
+    > 157 |   expect(await other.evaluate(() => sessionStorage.getItem('lope.account.session.v1'))).toBeNull();
+          |                                                                                         ^
+      158 |   expect(await other.evaluate(() => localStorage.getItem('lope.accounts.v1'))).toBeNull();
+      159 |   await other.reload();
+      160 |   await expectFreshSetup(other);
+        at /Users/luke/Documents/LopeOS 100/tests/setup/reset.spec.ts:157:89
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tests/setup/results/reset-reset-also-retires-a-a7ec3--so-old-state-cannot-return-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tests/setup/results/reset-reset-also-retires-a-a7ec3--so-old-state-cannot-return-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tests/setup/results/reset-reset-also-retires-a-a7ec3--so-old-state-cannot-return-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    tests/setup/results/reset-reset-also-retires-a-a7ec3--so-old-state-cannot-return-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace tests/setup/results/reset-reset-also-retires-a-a7ec3--so-old-state-cannot-return-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/setup/reset.spec.ts:145:1 › reset also retires another open desktop tab so old state cannot return 
+  27 passed (1.8m)

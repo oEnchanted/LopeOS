@@ -1,0 +1,4 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["../../apps/web/src/apps/terminal/**/*.tsx", "../../apps/web/src/apps/terminal/**/*.ts", "../../packages/runtime-client/src/**/*.ts"]
+}

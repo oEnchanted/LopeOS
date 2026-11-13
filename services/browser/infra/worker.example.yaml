@@ -1,0 +1,67 @@
+# Provision one worker + profile PVC per authenticated user. The gateway chooses the owner,
+# strips inbound Authorization, and injects that worker's bearer for HTTP and WS upgrades.
+# These example credentials/domains/image names must be supplied by your deployment system.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: browser-worker
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: browser-worker, owner: USER_ID } }
+  template:
+    metadata: { labels: { app: browser-worker, owner: USER_ID } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, runAsUser: 1000, runAsGroup: 1000, fsGroup: 1000, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: browser
+          image: REGISTRY/lope-browser:TESTED_DIGEST
+          ports: [{ containerPort: 4175 }]
+          resources:
+            requests: { cpu: '1', memory: 2Gi, ephemeral-storage: 2Gi }
+            limits: { cpu: '4', memory: 4Gi, ephemeral-storage: 4Gi }
+          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }
+          env:
+            - { name: LOPE_BROWSER_TOKEN, valueFrom: { secretKeyRef: { name: browser-owner-USER_ID, key: worker-token } } }
+            - { name: SELKIES_BASIC_AUTH_PASSWORD, valueFrom: { secretKeyRef: { name: browser-owner-USER_ID, key: selkies-password } } }
+            - { name: LOPE_BROWSER_ORIGINS, value: 'https://lope.example.com' }
+            - { name: SELKIES_ALLOWED_ORIGINS, value: 'https://lope.example.com' }
+            - { name: LOPE_BROWSER_HOSTS, value: 'lope.example.com,browser-worker,127.0.0.1,localhost' }
+            # Optional: an authenticated Agent 2 API, not a terminal container mount.
+            # - { name: LOPE_RUNTIME_TRANSFER_URL, value: 'http://runtime-api:4174' }
+            # - { name: LOPE_RUNTIME_TRANSFER_TOKEN, valueFrom: { secretKeyRef: { name: browser-owner-USER_ID, key: runtime-token } } }
+          volumeMounts:
+            - { name: profile, mountPath: /profiles }
+            - { name: temporary, mountPath: /tmp }
+            - { name: shared-memory, mountPath: /dev/shm }
+            - { name: home, mountPath: /home/ubuntu }
+      volumes:
+        - { name: profile, persistentVolumeClaim: { claimName: browser-profile-USER_ID } }
+        - { name: temporary, emptyDir: { sizeLimit: 2Gi } }
+        - { name: shared-memory, emptyDir: { medium: Memory, sizeLimit: 1Gi } }
+        - { name: home, emptyDir: { sizeLimit: 256Mi } }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: browser-isolation }
+spec:
+  podSelector: { matchLabels: { app: browser-worker } }
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app: lope-gateway } } }]
+      ports: [{ protocol: TCP, port: 4175 }]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }
+          podSelector: { matchLabels: { k8s-app: kube-dns } }
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [0.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.0.0.0/24, 192.0.2.0/24, 192.168.0.0/16, 198.18.0.0/15, 198.51.100.0/24, 203.0.113.0/24, 224.0.0.0/4, 240.0.0.0/4]
+        - ipBlock: { cidr: '2000::/3', except: ['2001:db8::/32', '2001::/32'] }
+      ports: [{ protocol: TCP, port: 80 }, { protocol: TCP, port: 443 }]
+    # Add only when enabling the owner-scoped file bridge:
+    # - to: [{ podSelector: { matchLabels: { app: runtime-api } } }]
+    #   ports: [{ protocol: TCP, port: 4174 }]

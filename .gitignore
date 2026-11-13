@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.runtime/
+.accounts-data/
+workspace/
+.browser-data/
+services/browser/.data/
+services/browser/.profiles/
+test-results/
+tests/integration/results/
+tests/updates/results/
+tests/integration/report/
+tests/integration/tests/
+.DS_Store
+
+Caddyfile.windows.generated

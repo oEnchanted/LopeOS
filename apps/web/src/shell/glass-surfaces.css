@@ -1,0 +1,65 @@
+/* Adapt existing OS surfaces to the shared material. Keep component geometry local. */
+.desktop[data-theme] {
+  --window-material: var(--glass-background);
+  --floating-material: var(--glass-background);
+  --chrome-material: var(--glass-inset-background);
+  --sidebar-material: var(--glass-inset-background);
+  --glass: var(--glass-background);
+  --chrome: var(--glass-inset-background);
+  --edge-light: var(--glass-border);
+  --highlight: var(--glass-inset-glint);
+}
+
+.desktop[data-theme] :is(.glass:not(.spotlight-desktop), .os-window, .spotlight-searchbar, .spotlight-body, .mini-glass, .dock-tooltip),
+.ui-tooltip:hover::after {
+  color: var(--glass-text);
+  background: var(--glass-background);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+}
+
+/* Full-width chrome and nested surfaces share the optics without a second blur. */
+.desktop[data-theme] .menubar.glass {
+  background: var(--glass-menu-background);
+  box-shadow: var(--glass-rim), 0 2px 9px #10294518;
+}
+.desktop[data-theme] .window-titlebar,
+.desktop[data-theme] .welcome-sidebar,
+.desktop[data-theme] .ui-sidebar,
+.desktop[data-theme] .dock-minimized {
+  background: var(--glass-inset-background);
+  border-color: var(--glass-inset-border);
+  box-shadow: var(--glass-inset-shadow);
+}
+.desktop[data-theme] .os-window:not(.is-focused) { box-shadow: var(--glass-rim), 0 12px 34px -12px #102b4838; }
+.desktop[data-theme][data-effects=low] .os-window { box-shadow: var(--glass-shadow); }
+.desktop[data-theme] :is(.menubar, .dock, .system-popover)::before { display: none; }
+.desktop[data-theme] .wallpaper-credit {
+  background: var(--glass-background);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-inset-shadow);
+  color: var(--glass-text);
+  text-shadow: none;
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+}
+.desktop[data-theme] .wallpaper-credit:hover { background: var(--glass-background); }
+
+/* Floating surfaces use the material's legible foreground pair. */
+.desktop :is(.system-popover, .dropdown-menu, .toast, .file-dialog, .spotlight-desktop, .dock-tooltip, .ui-dialog) {
+  --text: var(--glass-text);
+  --muted: var(--glass-muted);
+}
+
+/* A window being dragged must not repeatedly sample the entire desktop. */
+.desktop[data-theme]:has(.os-window.is-moving) .os-window {
+  background: var(--glass-solid);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.desktop[data-theme] .os-window.is-moving .glass-preview :is(.glass-preview-window, .glass-preview-menu, .glass-preview-dock) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

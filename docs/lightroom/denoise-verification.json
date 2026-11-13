@@ -1,0 +1,285 @@
+{
+  "date": "2026-11-13",
+  "scope": "LopeOS desktop; native IndexedDB inspection; no development source imports",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "Standard luminance/color noise controls process real pixels offline before any model download and zero restores the source render",
+    "Cancelling the optional model/engine download leaves no partial installed package or photo change",
+    "Verified learned weights run locally and produce a real before/after 100% detail preview",
+    "Noise and focus changes refresh automatically; changes during inference remain editable and the latest settings win",
+    "Amount updates the preview without another inference; zero is identical to the original",
+    "Cancelling full-resolution inference terminates the AI worker and creates no partial derivative",
+    "Full inference works offline with cached tools; an injected quota failure leaves no orphan asset and retry saves without rerunning the model",
+    "The result is a separate 16-bit TIFF with inherited edits, saved model provenance and unchanged source bytes/recipe",
+    "Reload restores the denoised photo and edit recipe; verified local tools remain installed",
+    "Corrupt cached weights are refused by SHA-256 validation with an actionable error",
+    "Removing model tools retains denoised photos, which still export independently"
+  ],
+  "errors": [],
+  "fixture": {
+    "type": "original procedural clipped Gaussian-noise PNG16",
+    "width": 384,
+    "height": 288,
+    "sigma": 25
+  },
+  "result": {
+    "count": 2,
+    "parent": {
+      "id": "20495632-dcdb-4e80-a312-e35bf04bc23a",
+      "hash": "4a5545530ec32e53b48b106fc389444d70c9e87c135887d196e616af6fb084ea",
+      "actual": "4a5545530ec32e53b48b106fc389444d70c9e87c135887d196e616af6fb084ea",
+      "recipe": {
+        "version": 1,
+        "engine": "lope-photo/1.0.0",
+        "profile": "color",
+        "values": {
+          "exposure": 0.3,
+          "contrast": 0,
+          "highlights": 0,
+          "shadows": 0,
+          "whites": 0,
+          "blacks": 0,
+          "temperature": 0,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "vignette": 0,
+          "grain": 0,
+          "sharpening": 0,
+          "noise": 0,
+          "colorNoise": 0,
+          "distortion": 0,
+          "fringing": 0,
+          "straighten": 0,
+          "vertical": 0,
+          "horizontal": 0
+        },
+        "curve": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "mixer": [
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          }
+        ],
+        "grading": {
+          "shadows": [
+            0,
+            0
+          ],
+          "midtones": [
+            0,
+            0
+          ],
+          "highlights": [
+            0,
+            0
+          ]
+        },
+        "crop": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false,
+        "masks": [],
+        "retouch": []
+      }
+    },
+    "child": {
+      "id": "91a6fad9-03fa-457d-9d4b-f5835380daf9",
+      "name": "denoise-noisy-Denoise.tif",
+      "hash": "56c407413a4263200a1e6ad2ec8c1d01ded1eefcc4704db8ac5ea5ea58ac4091",
+      "actual": "56c407413a4263200a1e6ad2ec8c1d01ded1eefcc4704db8ac5ea5ea58ac4091",
+      "recipe": {
+        "version": 1,
+        "engine": "lope-photo/1.0.0",
+        "profile": "color",
+        "values": {
+          "exposure": 0.3,
+          "contrast": 0,
+          "highlights": 0,
+          "shadows": 0,
+          "whites": 0,
+          "blacks": 0,
+          "temperature": 0,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "vignette": 0,
+          "grain": 0,
+          "sharpening": 0,
+          "noise": 0,
+          "colorNoise": 0,
+          "distortion": 0,
+          "fringing": 0,
+          "straighten": 0,
+          "vertical": 0,
+          "horizontal": 0
+        },
+        "curve": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "mixer": [
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          }
+        ],
+        "grading": {
+          "shadows": [
+            0,
+            0
+          ],
+          "midtones": [
+            0,
+            0
+          ],
+          "highlights": [
+            0,
+            0
+          ]
+        },
+        "crop": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false,
+        "masks": [],
+        "retouch": []
+      },
+      "metadata": {
+        "orientation": 1,
+        "width": 384,
+        "height": 288,
+        "bitDepth": 16,
+        "format": "tiff",
+        "decoder": "Lope TIFF 1.0 · FFDNet Color AI denoise",
+        "colorSpace": "linear sRGB",
+        "warnings": [
+          "AI denoise uses a local FFDNet model on developed sRGB. The source photo and its original bytes are preserved."
+        ],
+        "raw": false
+      },
+      "enhancement": {
+        "type": "ai-denoise",
+        "modelId": "ffdnet-color-clip-v1",
+        "modelSha256": "28c8ca2616c3283792a6db51ae26830ec44d1c8b5b823614c25788f785140f24",
+        "runtime": "onnxruntime-web 1.31.1",
+        "backend": "wasm",
+        "engineVersion": "lope-photo/1.0.0",
+        "sourceDecoder": "Lope PNG16 1.0",
+        "sourceAssetId": "20495632-dcdb-4e80-a312-e35bf04bc23a",
+        "sourceHash": "4a5545530ec32e53b48b106fc389444d70c9e87c135887d196e616af6fb084ea",
+        "sigma": 25,
+        "amount": 75,
+        "created": "2026-11-13T18:47:47.429Z",
+        "processingDomain": "developed-srgb",
+        "tileSize": 160,
+        "halo": 32,
+        "durationMs": 3805.9000000003725
+      },
+      "parentId": "20495632-dcdb-4e80-a312-e35bf04bc23a"
+    }
+  }
+}

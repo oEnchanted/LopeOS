@@ -1,0 +1,31 @@
+(node:79755) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 19 tests using 2 workers
+
+(node:79764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79765) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79765) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+  ✓   2 [chromium] › tests/settings/preferences.spec.ts:4:1 › migration preserves legacy preferences and separates documents, assets, and history (10ms)
+  ✓   3 [chromium] › tests/settings/preferences.spec.ts:5:1 › storage failure retains session changes and accurately reports persistence (1ms)
+  ✓   4 [chromium] › tests/settings/preferences.spec.ts:6:1 › imports reject corrupt files, secret keys, invalid scope, duplicate status items, and out-of-range values (8ms)
+  ✓   5 [chromium] › tests/settings/preferences.spec.ts:8:1 › authorized wallpaper migration replaces the temporary fallback once and preserves personal choices (3ms)
+  ✓   6 [chromium] › tests/settings/preferences.spec.ts:16:1 › setup writes every chosen preference into defaults and the new account without sharing later changes (2ms)
+  ✓   7 [chromium] › tests/settings/preferences.spec.ts:38:1 › setup surfaces a failed account-scope write and leaves system defaults available (2ms)
+  ✓   8 [chromium] › tests/settings/preferences.spec.ts:51:1 › account refresh reads its own values and setup only changes system defaults (1ms)
+  ✓   1 [chromium] › tests/settings/settings.spec.ts:7:1 › all categories render without permission requests; search reveals a matching control and navigation works (2.8s)
+  ✓   9 [chromium] › tests/settings/settings.spec.ts:8:1 › quick controls and settings share persistence, validated import previews, and reset preserves documents (4.1s)
+  ✓  10 [chromium] › tests/settings/settings.spec.ts:9:1 › dock placement, scale, titlebar minimize, show desktop, and privacy cover retain windows (2.2s)
+  ✓  11 [chromium] › tests/settings/settings.spec.ts:10:1 › real browser media preview stops from status, feature policy, and closing Settings (2.1s)
+  ✓  12 [chromium] › tests/settings/settings.spec.ts:11:1 › denied capture is explained; pending location is cancelled by the LopeOS access switch (1.7s)
+  ✓  13 [chromium] › tests/settings/settings.spec.ts:12:1 › notifications obey DND, preview suppression, per-app alerts, and retained-history deletion (1.9s)
+  ✓  14 [chromium] › tests/settings/settings.spec.ts:13:1 › workspace search uses permitted names and respects shared file access without altering files (2.1s)
+  ✓  15 [chromium] › tests/settings/settings.spec.ts:14:1 › safely closing apps checks editor unsaved-work guards before destroying any window (2.0s)
+  ✓  16 [chromium] › tests/settings/settings.spec.ts:15:1 › unavailable storage and unsupported device APIs leave an honest usable Settings screen (1.6s)
+  ✓  17 [chromium] › tests/settings/settings.spec.ts:16:1 › screen capture suppresses previews and the browser stop action ends its media track (1.7s)
+  ✓  18 [chromium] › tests/settings/settings.spec.ts:17:1 › hidden chrome remains keyboard accessible and short-height Settings has no horizontal overflow (969ms)
+  ✓  19 [chromium] › tests/settings/settings.spec.ts:19:1 › approved PerfectHue artwork loads with the exact credit, while original and uploaded images keep their attribution (3.1s)
+
+  19 passed (27.2s)

@@ -1,0 +1,59 @@
+
+Running 5 tests using 2 workers
+
+(node:34092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:34091) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/5] [chromium] › tests/setup/local-ai.spec.ts:9:1 › Local AI explains all browser models, stays optional, and never downloads on its own
+[2/5] [chromium] › tests/setup/local-ai.spec.ts:29:1 › real model byte progress and speed continue across setup navigation and can be cancelled
+[3/5] [chromium] › tests/setup/local-ai.spec.ts:62:1 › failed model downloads can retry, verify the real package, and reuse it after reload
+[4/5] [chromium] › tests/setup/local-ai.spec.ts:91:1 › Download all queues supported models and cancelling clears the remaining queue
+[5/5] [chromium] › tests/setup/local-ai.spec.ts:113:1 › Spotlight download populates its existing runtime caches without loading inference
+  1) [chromium] › tests/setup/local-ai.spec.ts:113:1 › Spotlight download populates its existing runtime caches without loading inference 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-model-id="spotlight"]')
+    Expected: "installed"
+    Received: "checking"
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-model-id="spotlight"]') with timeout 8000ms
+      - waiting for locator('[data-model-id="spotlight"]')
+        2 × locator resolved to <article data-model-id="spotlight" data-status="downloading" aria-label="Spotlight AI" class="setup-ai-card glass-inset">…</article>
+          - unexpected value "downloading"
+        17 × locator resolved to <article data-status="checking" data-model-id="spotlight" aria-label="Spotlight AI" class="setup-ai-card glass-inset">…</article>
+           - unexpected value "checking"
+
+
+      135 |   await expect(model(page, 'spotlight')).toHaveAttribute('data-status', 'available');
+      136 |   await model(page, 'spotlight').getByRole('button', { name: 'Download Spotlight AI', exact: true }).click();
+    > 137 |   await expect(model(page, 'spotlight')).toHaveAttribute('data-status', 'installed');
+          |                                          ^
+      138 |   expect(downloaded).toHaveLength(5);
+      139 |   expect(downloaded).toEqual(expect.arrayContaining(['mlc-chat-config.json', 'tensor-cache.json', 'tokenizer.json', 'params_shard_0.bin']));
+      140 |   const cached = await page.evaluate(async () => {
+        at /Users/luke/Documents/LopeOS 100/tests/setup/local-ai.spec.ts:137:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../private/tmp/lope-local-ai-final-results/local-ai-Spotlight-downloa-99498-s-without-loading-inference-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../private/tmp/lope-local-ai-final-results/local-ai-Spotlight-downloa-99498-s-without-loading-inference-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../private/tmp/lope-local-ai-final-results/local-ai-Spotlight-downloa-99498-s-without-loading-inference-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../private/tmp/lope-local-ai-final-results/local-ai-Spotlight-downloa-99498-s-without-loading-inference-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [chromium] › tests/setup/local-ai.spec.ts:113:1 › Spotlight download populates its existing runtime caches without loading inference 
+  4 passed (31.4s)

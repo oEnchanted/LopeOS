@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "Production bundles load the nested RAW worker and WASM and import real sensor data",
+    "Production RAW development exports an actual 16-bit TIFF without source-module URLs",
+    "Production AI download, verified Blob modules and CPU WASM perform real denoise on LibRaw-developed sensor-only DNG pixels",
+    "RAW original remains separate and the TIFF16 copy retains its edits and decoder/model provenance",
+    "Production AI derivative exports as a genuine TIFF16 through the regular photo export workflow"
+  ],
+  "errors": [],
+  "exportBytes": 74500,
+  "aiDenoiseExportBytes": 74500,
+  "aiDenoiseProvenance": {
+    "type": "ai-denoise",
+    "modelId": "ffdnet-color-clip-v1",
+    "modelSha256": "28c8ca2616c3283792a6db51ae26830ec44d1c8b5b823614c25788f785140f24",
+    "runtime": "onnxruntime-web 1.31.1",
+    "backend": "wasm",
+    "engineVersion": "lope-photo/1.0.0",
+    "sourceDecoder": "LibRaw WASM 1.6.0; 16-bit linear sensor development",
+    "sourceAssetId": "a821bc66-2002-4955-afef-36ffb3d9a2d8",
+    "sourceHash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+    "sigma": 25,
+    "amount": 75,
+    "created": "2026-11-13T18:47:24.539Z",
+    "processingDomain": "developed-srgb",
+    "tileSize": 160,
+    "halo": 32,
+    "durationMs": 983
+  }
+}

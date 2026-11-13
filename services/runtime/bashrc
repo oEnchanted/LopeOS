@@ -1,0 +1,7 @@
+# Bash provides quoting, completion, pipelines, signals and job control itself.
+export HISTFILE="$HOME/.bash_history"
+export HISTSIZE=10000 HISTFILESIZE=20000
+shopt -s histappend checkwinsize
+PROMPT_COMMAND='history -a; history -n'
+PS1='\[\e[38;5;81m\]\u@lope\[\e[0m\]:\[\e[38;5;153m\]\w\[\e[0m\]\$ '
+bind 'set completion-ignore-case on'

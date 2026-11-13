@@ -1,0 +1,103 @@
+[WebServer] (node:27738) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 52 tests using 2 workers
+
+(node:27752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27751) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [chromium] › tests/integration/accessibility.spec.ts:22:1 › an already-open Downloads folder reflects an external filesystem invalidation (1.4s)
+  ✓   1 [chromium] › tests/integration/accessibility.spec.ts:4:1 › keyboard-only application launch, calculation, focus ring, and menu navigation (1.8s)
+  ✓   3 [chromium] › tests/integration/applications.spec.ts:8:1 › Files creates, renames, moves, uploads, downloads, and deletes through the shared adapter (1.7s)
+  ✓   5 [chromium] › tests/integration/applications.spec.ts:53:1 › Save As uses the shared dialog and atomic creation; a new file survives reload (1.1s)
+  ✓   4 [chromium] › tests/integration/applications.spec.ts:35:1 › Files opens documents; editor commands save, undo, replace, and protect conflicts and unsaved work (2.5s)
+  ✓   6 [chromium] › tests/integration/applications.spec.ts:60:1 › Calculator accepts keyboard arithmetic, reports errors, and persists usable history (1.4s)
+  ✓   7 [chromium] › tests/integration/applications.spec.ts:71:1 › preferences update several applications immediately and persist across reload (1.9s)
+  ✓   8 [chromium] › tests/integration/applications.spec.ts:82:1 › Weather and widget share requests, location, and units; offline data is labelled (1.1s)
+  ✓   9 [chromium] › tests/integration/applications.spec.ts:92:1 › runtime and weather failures show recoverable errors (1.1s)
+  ✓  10 [chromium] › tests/integration/applications.spec.ts:99:1 › Dock launch, pointer move and resize, minimize, restore, and keyboard window actions work (824ms)
+  -  12 [chromium] › tests/integration/live-runtime.spec.ts:6:3 › live Linux workspace › Terminal → Files → Text Editor → Terminal, then reload
+  -  13 [chromium] › tests/integration/live-runtime.spec.ts:24:3 › live browser transfer › Lope Browser download appears in an already-open Files window
+  ✓  14 [chromium] › tests/integration/logic.spec.ts:9:1 › arithmetic is exact for decimal input, respects precedence, and rejects executable or excessive input (5ms)
+  ✓  15 [chromium] › tests/integration/logic.spec.ts:16:1 › editor undo/redo, literal replacement, external reload, and in-flight save acknowledgment preserve text (1ms)
+  ✓  16 [chromium] › tests/integration/logic.spec.ts:27:1 › weather validates provider data and shares in-flight requests with caching and bounded retry (29ms)
+  ✓  17 [chromium] › tests/integration/logic.spec.ts:40:1 › PerfectHue selections require recorded permission and a valid credit URL (0ms)
+  ✓  11 [chromium] › tests/integration/applications.spec.ts:109:1 › active menus and shortcuts follow two editor windows; modal keyboard focus is contained (1.5s)
+  ✓  18 [chromium] › tests/integration/template.spec.ts:4:1 › the SDK template registers through an extension manifest and uses shared menus, dialog, settings, and files (1.6s)
+  ✓  19 [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 light (1.6s)
+  ✓  20 [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 dark (1.5s)
+  ✓  21 [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 light (2.2s)
+  ✓  22 [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 dark (2.0s)
+  ✓  23 [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 light (999ms)
+  ✓  24 [chromium] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 dark (1.5s)
+  ✓  26 [chromium] › tests/integration/wallpaper.spec.ts:19:1 › authorized wallpaper metadata renders a visible lowercase desktop credit (472ms)
+  ✓  25 [chromium] › tests/integration/wallpaper.spec.ts:7:1 › personal wallpaper metadata and image persist; unsupported files leave the active wallpaper intact (1.2s)
+(node:27827) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 [webkit] › tests/integration/accessibility.spec.ts:4:1 › keyboard-only application launch, calculation, focus ring, and menu navigation (2.1s)
+  ✓  28 [webkit] › tests/integration/accessibility.spec.ts:22:1 › an already-open Downloads folder reflects an external filesystem invalidation (2.1s)
+  ✓  29 [webkit] › tests/integration/applications.spec.ts:8:1 › Files creates, renames, moves, uploads, downloads, and deletes through the shared adapter (2.2s)
+  ✓  30 [webkit] › tests/integration/applications.spec.ts:35:1 › Files opens documents; editor commands save, undo, replace, and protect conflicts and unsaved work (2.9s)
+  ✓  31 [webkit] › tests/integration/applications.spec.ts:53:1 › Save As uses the shared dialog and atomic creation; a new file survives reload (1.5s)
+  ✓  32 [webkit] › tests/integration/applications.spec.ts:60:1 › Calculator accepts keyboard arithmetic, reports errors, and persists usable history (1.7s)
+  ✓  33 [webkit] › tests/integration/applications.spec.ts:71:1 › preferences update several applications immediately and persist across reload (2.2s)
+  ✓  34 [webkit] › tests/integration/applications.spec.ts:82:1 › Weather and widget share requests, location, and units; offline data is labelled (1.6s)
+  ✓  36 [webkit] › tests/integration/applications.spec.ts:99:1 › Dock launch, pointer move and resize, minimize, restore, and keyboard window actions work (1.2s)
+  ✓  35 [webkit] › tests/integration/applications.spec.ts:92:1 › runtime and weather failures show recoverable errors (1.7s)
+  -  38 [webkit] › tests/integration/live-runtime.spec.ts:6:3 › live Linux workspace › Terminal → Files → Text Editor → Terminal, then reload
+  -  39 [webkit] › tests/integration/live-runtime.spec.ts:24:3 › live browser transfer › Lope Browser download appears in an already-open Files window
+  ✓  40 [webkit] › tests/integration/logic.spec.ts:9:1 › arithmetic is exact for decimal input, respects precedence, and rejects executable or excessive input (6ms)
+  ✓  41 [webkit] › tests/integration/logic.spec.ts:16:1 › editor undo/redo, literal replacement, external reload, and in-flight save acknowledgment preserve text (2ms)
+  ✓  42 [webkit] › tests/integration/logic.spec.ts:27:1 › weather validates provider data and shares in-flight requests with caching and bounded retry (16ms)
+  ✓  43 [webkit] › tests/integration/logic.spec.ts:40:1 › PerfectHue selections require recorded permission and a valid credit URL (1ms)
+  ✓  44 [webkit] › tests/integration/template.spec.ts:4:1 › the SDK template registers through an extension manifest and uses shared menus, dialog, settings, and files (1.7s)
+  ✘  37 [webkit] › tests/integration/applications.spec.ts:109:1 › active menus and shortcuts follow two editor windows; modal keyboard focus is contained (1.9s)
+(node:27909) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  45 [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 light (3.3s)
+  ✓  46 [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1440×900 dark (3.5s)
+  ✓  47 [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 light (4.4s)
+  ✓  48 [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 1920×1080 dark (4.5s)
+  ✓  49 [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 light (2.1s)
+  ✓  50 [webkit] › tests/integration/visual.spec.ts:8:5 › visual review 390×844 dark (1.9s)
+  ✓  51 [webkit] › tests/integration/wallpaper.spec.ts:7:1 › personal wallpaper metadata and image persist; unsupported files leave the active wallpaper intact (1.2s)
+  ✓  52 [webkit] › tests/integration/wallpaper.spec.ts:19:1 › authorized wallpaper metadata renders a visible lowercase desktop credit (807ms)
+
+
+  1) [webkit] › tests/integration/applications.spec.ts:109:1 › active menus and shortcuts follow two editor windows; modal keyboard focus is contained 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      116 |   await page.getByRole('menuitem', { name: 'File', exact: true }).click(); await expect(page.getByRole('menu', { name: 'File', exact: true }).getByRole('menuitem', { name: /New Folder/ })).toBeVisible(); await page.keyboard.press('Escape');
+      117 |   await page.getByTestId('files-app').getByRole('button', { name: 'New folder', exact: true }).click(); const dialog = page.getByRole('dialog', { name: 'New folder', exact: true }); await dialog.getByLabel('Name', { exact: true }).focus();
+    > 118 |   for (let i = 0; i < 6; i++) { await page.keyboard.press('Tab'); expect(await dialog.evaluate(node => node.contains(document.activeElement))).toBe(true); }
+          |                                                                                                                                                ^
+      119 |   await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0);
+      120 | });
+      121 |
+        at /Users/luke/Documents/LopeOS 100/tests/integration/applications.spec.ts:118:144
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tests/integration/results/applications-active-menus--ad893-keyboard-focus-is-contained-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tests/integration/results/applications-active-menus--ad893-keyboard-focus-is-contained-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    tests/integration/results/applications-active-menus--ad893-keyboard-focus-is-contained-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace tests/integration/results/applications-active-menus--ad893-keyboard-focus-is-contained-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests/integration/applications.spec.ts:109:1 › active menus and shortcuts follow two editor windows; modal keyboard focus is contained 
+  4 skipped
+  47 passed (40.3s)

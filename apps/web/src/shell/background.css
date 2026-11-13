@@ -1,0 +1,8 @@
+/* Shared sky palette. The same tokens render setup previews and the desktop. */
+:root {
+  --sky-morning: linear-gradient(160deg, #426e9f 0%, #9fc9de 48%, #f2c6af 100%);
+  --sky-afternoon: linear-gradient(160deg, #216ba5 0%, #65b2d4 52%, #d3e6e8 100%);
+  --sky-blue-hour: linear-gradient(160deg, #152c61 0%, #46609c 52%, #b08fba 100%);
+  --sky-midnight: linear-gradient(160deg, #071322 0%, #142e51 55%, #335a77 100%);
+  --sky-automatic: linear-gradient(90deg, #142e51 0%, #46609c 49.8%, #65b2d4 50%, #d3e6e8 100%);
+}

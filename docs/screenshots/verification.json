@@ -1,0 +1,29 @@
+{
+  "conditions": "Chromium headless, macOS arm64, device scale 1; foreground page, 1440×900; animation frame intervals during automated mouse input. Not a physical-display GPU benchmark.",
+  "checks": [
+    "Initial desktop renders without JavaScript errors",
+    "Pointer dragging changes window bounds",
+    "Minimize, Dock restore, maximize and restore",
+    "Application search launches a functioning Calculator",
+    "Settings update dark appearance, transparency, wallpaper; keyboard menu navigation",
+    "Editor before-close dialog preserves or discards unsaved changes",
+    "Layout and preferences survive reload",
+    "1920×1080 viewport inspected without document overflow",
+    "390×844 viewport inspected without document overflow"
+  ],
+  "metrics": {
+    "drag": {
+      "samples": 127,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 16.700000000000273,
+      "over33ms": 0
+    },
+    "dock": {
+      "samples": 155,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 16.799999999999955,
+      "over33ms": 1
+    }
+  },
+  "errors": []
+}

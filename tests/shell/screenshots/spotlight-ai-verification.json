@@ -1,0 +1,26 @@
+{
+  "checks": [
+    "Opening the main Spotlight input checks capability without loading a model or creating a worker",
+    "Explicit model load shows progress and cancellation terminates its worker",
+    "A failed load can be retried and an empty message cannot be sent",
+    "Math in the main input uses the exact calculator instead of the LLM",
+    "Filename queries enable workspace search and open files without invoking the model",
+    "Oversized Unicode prompts stay editable when the model context limit rejects them",
+    "Enter streams a response while keeping prompts out of persistent storage and network requests",
+    "Follow-up messages include the current conversation context",
+    "Switching to math and application search keeps an active reply running",
+    "Stop response interrupts generation and returns keyboard focus to the input",
+    "New chat clears conversation text without persisting it",
+    "Generation failures are visible and Retry response resends the same prompt successfully",
+    "Website-like text goes to the local model and does not navigate or search the web",
+    "Closing Spotlight stops generation before reopening the conversation",
+    "Unload model releases its worker and GPU resources",
+    "Remove download requests cache deletion and returns to the opt-in state",
+    "The integrated Spotlight fits a narrow viewport and scrolls to model controls and keyboard help",
+    "Unsupported browsers receive an explanation while normal Spotlight calculations still work",
+    "An unavailable workspace lookup reaches its deadline and allows ordinary text to reach the model",
+    "Enter opens the selected matching file while other workspace folders are still pending"
+  ],
+  "errors": [],
+  "externalRequests": []
+}

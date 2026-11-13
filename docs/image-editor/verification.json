@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-13",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "scale": 1
+  },
+  "checks": [
+    "SDK binary Open/Save and real layer painting at 400% zoom",
+    "Painting a mask preserves source pixels and changes composited alpha",
+    "Undo and redo restore mask transactions",
+    "Marquee selection constrains painting in document coordinates",
+    "Layer visibility toggles real document state",
+    "Painting keeps correct document coordinates after pan and zoom",
+    "Duplicate, blend, drag reorder and group change real layer structure",
+    "Nondestructive adjustment layer preserves source pixels",
+    "Text remains editable after native save, close and reopen",
+    "Embedded source transform and reset preserve original pixels",
+    "Transparent PNG export has correct dimensions and alpha",
+    "Layered PSD export uses a real writer after displaying conversion losses",
+    "Saved workspace restores and Reset Essentials restores default docking",
+    "External-change detection prevents overwriting and Save As preserves edits",
+    "Lifecycle close guard cancels closing a dirty document",
+    "IndexedDB recovery restores an interrupted editable document",
+    "Single-letter tools do not trigger while typing in a dialog"
+  ],
+  "errors": [],
+  "timings": {
+    "profile": {
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "layers": 8,
+      "strokeMs": [
+        8.100000001490116,
+        14.399999998509884,
+        4.400000000372529,
+        4.400000000372529
+      ],
+      "compositeMs": 95.09999999962747,
+      "tileBytes": 589824,
+      "heap": {
+        "used": 47400000,
+        "total": 103000000
+      },
+      "hardwareConcurrency": 8,
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36",
+      "backend": "Canvas 2D",
+      "devicePixelRatio": 1
+    }
+  },
+  "host": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpus": "Apple M1 Pro",
+    "memory": 17179869184
+  }
+}

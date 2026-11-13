@@ -1,0 +1,21 @@
+✔ name derivation removes accents and punctuation, starts with a letter, and falls back to user (2.546959ms)
+✔ name derivation skips reserved and occupied names, including long suffixes (0.663708ms)
+✔ validation normalizes names without changing passwords (0.893042ms)
+✔ validation identifies invalid display names, account names, reserved names, and duplicates (0.211542ms)
+✔ password mismatch targets confirmation, including an empty first password (0.099125ms)
+✔ credentials use PBKDF2 SHA-256 with independent salts and never contain the password (253.968791ms)
+✔ empty password is stored without a credential and only accepts empty input (0.201791ms)
+✔ creation, sign-in, reload, and sign-out retain only the account id in session storage (207.898958ms)
+✔ creation rechecks duplicate names after async hashing and serializes concurrent writes (97.367ms)
+✔ storage failures throw without silently signing in or overwriting unreadable accounts (0.44775ms)
+✔ automatic first sign-in is limited to the exact newly created account object (0.17825ms)
+✔ concurrent automatic sign-in attempts consume the creation capability only once (0.166791ms)
+✔ separate account stores retain both accounts and reject duplicate names under Web Locks (0.163667ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 744.237042

@@ -1,0 +1,45 @@
+# Deploy-LopeFrontend.ps1 fills these placeholders from the selected release.
+__LOPE_SITE_HOST__ {
+    encode zstd gzip
+
+    handle /api/accounts/* {
+        reverse_proxy 127.0.0.1:4176 {
+            header_up X-Forwarded-For {remote_host}
+        }
+    }
+    # Public per-visitor Chromium/streaming provisioning is not configured yet.
+    handle /api/browser/* {
+        respond "Lope Browser hosting is not configured." 503
+    }
+    handle /api/* {
+        reverse_proxy 127.0.0.1:4174 {
+            header_up X-Forwarded-For {remote_host}
+        }
+    }
+
+    # Keep immutable chunks from previous releases available to open tabs.
+    handle /assets/* {
+        root * "__LOPE_ASSET_ROOT__"
+        file_server
+    }
+    handle /__lope/* {
+        root * "__LOPE_WEB_ROOT__"
+        header Cache-Control "no-store"
+        file_server
+    }
+    handle /lope-sw.js {
+        root * "__LOPE_WEB_ROOT__"
+        header Cache-Control "no-cache"
+        file_server
+    }
+    handle {
+        root * "__LOPE_WEB_ROOT__"
+        header Cache-Control "no-cache"
+        try_files {path} /index.html
+        file_server
+    }
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}

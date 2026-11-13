@@ -1,0 +1,18 @@
+--- a/packages/ui/src/index.tsx
++++ b/packages/ui/src/index.tsx
+@@ -12,7 +12,14 @@
+   useEffect(() => { const previous = document.activeElement as HTMLElement; const frame = requestAnimationFrame(() => ref.current?.querySelector<HTMLElement>('input:not([hidden]),button,select,textarea,[tabindex="0"]')?.focus()); return () => { cancelAnimationFrame(frame); if (previous?.isConnected) previous.focus(); }; }, []);
+   return createPortal(<div className="ui-dialog-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }} onKeyDown={e => {
+     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onClose(); }
+-    if (e.key === 'Tab') { const nodes = [...ref.current!.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled):not([hidden]),select,textarea,[tabindex="0"]')]; const first = nodes[0], last = nodes.at(-1); if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); } }
++    if (e.key === 'Tab') {
++      const nodes = [...ref.current!.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled):not([type="hidden"]),select:not(:disabled),textarea:not(:disabled),a[href],[tabindex]:not([tabindex="-1"])')].filter(node => node.getClientRects().length && !node.closest('[hidden],[inert]'));
++      if (!nodes.length) return;
++      e.preventDefault();
++      const index = nodes.indexOf(document.activeElement as HTMLElement);
++      const next = index < 0 ? (e.shiftKey ? nodes.length - 1 : 0) : (index + (e.shiftKey ? -1 : 1) + nodes.length) % nodes.length;
++      nodes[next].focus();
++    }
+   }}><section ref={ref} className="ui-dialog glass" role="dialog" aria-modal="true" aria-labelledby={label}><header><h2 id={label}>{title}</h2><button aria-label="Close dialog" onClick={onClose}>×</button></header>{children}</section></div>, document.querySelector('.desktop') ?? document.body);
+ }
+ export function Toolbar({ children }: { children: ReactNode }) { return <div className="ui-toolbar" role="toolbar">{children}</div>; }

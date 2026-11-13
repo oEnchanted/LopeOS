@@ -1,0 +1,172 @@
+{
+  "date": "2026-11-12",
+  "fixture": "Original procedural uncompressed 16-bit Bayer DNG 1.4; 128x96; no embedded preview; LopeOS synthetic camera",
+  "results": [
+    {
+      "browser": "Chromium",
+      "version": "158.0.8127.18",
+      "status": "passed",
+      "metadata": {
+        "camera": "LopeOS Synthetic Bayer",
+        "lens": "",
+        "iso": 0,
+        "shutter": 0,
+        "aperture": 0,
+        "focalLength": 0,
+        "orientation": 1,
+        "width": 128,
+        "height": 96,
+        "bitDepth": 16,
+        "format": "dng",
+        "decoder": "LibRaw WASM 1.6.0; 16-bit linear sensor development",
+        "colorSpace": "linear sRGB",
+        "warnings": [
+          "Independent LibRaw demosaicing and camera characterization; Adobe rendering equivalence is not claimed. Model/compression coverage must be tested individually."
+        ],
+        "raw": true
+      },
+      "width": 128,
+      "height": 96,
+      "originalSum": 7299669,
+      "editedSum": 9177738,
+      "formats": [
+        {
+          "format": "jpeg",
+          "mime": "image/jpeg",
+          "size": 1395,
+          "signature": [
+            255,
+            216,
+            255,
+            226,
+            2,
+            68,
+            73,
+            67
+          ],
+          "width": 64,
+          "height": 48
+        },
+        {
+          "format": "png",
+          "mime": "image/png",
+          "size": 4961,
+          "signature": [
+            137,
+            80,
+            78,
+            71,
+            13,
+            10,
+            26,
+            10
+          ],
+          "width": 64,
+          "height": 48
+        },
+        {
+          "format": "tiff",
+          "mime": "image/tiff",
+          "size": 19204,
+          "signature": [
+            73,
+            73,
+            42,
+            0,
+            8,
+            0,
+            0,
+            0
+          ],
+          "browserDecode": false
+        }
+      ]
+    },
+    {
+      "browser": "Firefox",
+      "status": "unavailable",
+      "error": "Error: browserType.launchPersistentContext: Failed to launch the browser process.\nBrowser logs:\n\n<launching> /Users/luke/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /private/tmp/lope-photo-firefox-KSViXX -juggler-pipe about:blank\n<launched> pid=61510\n[pid=61510][err] *** You are running in headless mode.\n[pid=61510][err] Could not find profile folder.\n[pid=61510] <process did exit: exitCode=1, signal=null>\n[pid=61510] starting temporary directories cleanup"
+    },
+    {
+      "browser": "WebKit",
+      "version": "27.2",
+      "status": "passed",
+      "metadata": {
+        "camera": "LopeOS Synthetic Bayer",
+        "lens": "",
+        "iso": 0,
+        "shutter": 0,
+        "aperture": 0,
+        "focalLength": 0,
+        "orientation": 1,
+        "width": 128,
+        "height": 96,
+        "bitDepth": 16,
+        "format": "dng",
+        "decoder": "LibRaw WASM 1.6.0; 16-bit linear sensor development",
+        "colorSpace": "linear sRGB",
+        "warnings": [
+          "Independent LibRaw demosaicing and camera characterization; Adobe rendering equivalence is not claimed. Model/compression coverage must be tested individually."
+        ],
+        "raw": true
+      },
+      "width": 128,
+      "height": 96,
+      "originalSum": 7299669,
+      "editedSum": 9177738,
+      "formats": [
+        {
+          "format": "jpeg",
+          "mime": "image/jpeg",
+          "size": 2183,
+          "signature": [
+            255,
+            216,
+            255,
+            226,
+            2,
+            68,
+            73,
+            67
+          ],
+          "width": 64,
+          "height": 48
+        },
+        {
+          "format": "png",
+          "mime": "image/png",
+          "size": 5044,
+          "signature": [
+            137,
+            80,
+            78,
+            71,
+            13,
+            10,
+            26,
+            10
+          ],
+          "width": 64,
+          "height": 48
+        },
+        {
+          "format": "tiff",
+          "mime": "image/tiff",
+          "size": 19204,
+          "signature": [
+            73,
+            73,
+            42,
+            0,
+            8,
+            0,
+            0,
+            0
+          ],
+          "width": 64,
+          "height": 48
+        }
+      ]
+    }
+  ]
+}

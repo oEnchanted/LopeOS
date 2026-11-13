@@ -1,0 +1,46 @@
+{
+  "screenshots": [
+    "before-desktop-1440.png",
+    "before-settings-1440.png",
+    "after-desktop-1440.png",
+    "after-settings-1440.png",
+    "after-dark-1440.png",
+    "after-privacy-dark-1440.png",
+    "after-contrast-1440.png",
+    "after-settings-small-window.png",
+    "before-desktop-1920.png",
+    "before-settings-1920.png",
+    "after-desktop-1920.png",
+    "after-settings-1920.png",
+    "after-settings-390.png",
+    "after-settings-720.png"
+  ],
+  "errors": [],
+  "layouts": [
+    {
+      "name": "small-window",
+      "width": 523,
+      "scrollWidth": 523
+    },
+    {
+      "name": "viewport-390",
+      "width": 374,
+      "scrollWidth": 374,
+      "body": 390
+    },
+    {
+      "name": "viewport-720",
+      "width": 678,
+      "scrollWidth": 678,
+      "body": 720
+    }
+  ],
+  "engines": [],
+  "performance": {
+    "samples": 170,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 33.400000000000546,
+    "over33ms": 62
+  },
+  "contrast": []
+}

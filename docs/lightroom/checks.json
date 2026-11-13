@@ -1,0 +1,60 @@
+{
+  "verifiedAt": "2026-11-13",
+  "application": "Lightroom",
+  "appId": "lope.lightroom",
+  "separateFrom": {
+    "name": "Image Editor",
+    "appId": "lope.image-editor",
+    "implementationModifiedByThisTask": false
+  },
+  "checks": {
+    "productionBuild": "passed",
+    "photoEngine": {
+      "passed": 24,
+      "failed": 0,
+      "includes": [
+        "core development/codecs",
+        "AI tiling/blending/limits",
+        "classical luminance/chroma denoise"
+      ]
+    },
+    "browserWorkflows": {
+      "status": "prior complete report passed; final development reruns interrupted by concurrent shell edits/reloads",
+      "passed": 19,
+      "errors": 0,
+      "report": "docs/lightroom/verification.json",
+      "currentFeatureCoverage": "11 denoise UI checks passed against the built desktop; separate five-check production RAW/AI/export report passed"
+    },
+    "productionRawImportEditTiffExport": "passed",
+    "imageEditorNativeHandoff": "passed",
+    "independentPillowLittleCmsReaders": "passed",
+    "fullRepositorySuite": {
+      "status": "passed",
+      "lastRun": {
+        "passed": 108,
+        "failed": 0,
+        "skipped": 3
+      },
+      "note": "Docker/gVisor integration checks skipped on this host. Local HTTP/WebSocket tests passed with permitted localhost networking."
+    },
+    "firefox": {
+      "status": "environment unavailable",
+      "reason": "Installed executable could not initialize profile"
+    },
+    "aiAndStandardDenoiseUi": {
+      "passed": 11,
+      "errors": 0,
+      "environment": "built LopeOS desktop in Chromium; no development imports",
+      "report": "docs/lightroom/denoise-verification.json"
+    },
+    "productionRawAndAiDenoiseImportEditTiffExport": {
+      "passed": 5,
+      "errors": 0,
+      "report": "docs/lightroom/production-verification.json"
+    },
+    "localAiEngineBrowsers": {
+      "Chromium": "158.0.8127.18, real quality probe and complete workflow",
+      "WebKit": "27.2, cache installation and real inference; full workflow not tested"
+    }
+  }
+}

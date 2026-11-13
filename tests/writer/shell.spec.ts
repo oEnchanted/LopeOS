@@ -1,0 +1,31 @@
+import { seedSession } from '../setup/seed-session.mjs';
+import { test, expect } from '@playwright/test';
+import { writerFilesystem } from './runtime';
+test('LopeOS manifest, window, global menus, and lifecycle use the same Writer commands',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await writerFilesystem(page);
+ await page.setViewportSize({width:1440,height:1000});
+ await page.addInitScript(()=>{
+  localStorage.setItem('lope.layout.v1',JSON.stringify([{id:'writer-sdk-check',appId:'lope.writer',title:'Writer',state:'normal',bounds:{x:36,y:42,width:1366,height:840},zIndex:1,launchArgs:{}}]));
+  localStorage.setItem('lope.writer.autosave','false');
+ });
+ await seedSession(page);await page.goto('/');
+ const app=page.locator('[data-app-id="lope.writer"]');await expect(app).toBeVisible();
+ await expect(app.getByRole('button',{name:'Save',exact:true})).toBeEnabled({timeout:30000});
+ await page.locator('.menubar').getByRole('menuitem',{name:'Writer',exact:true}).click();
+ await page.getByRole('menuitem',{name:/^Preferences/}).click();
+ await expect(app.getByRole('dialog',{name:'Writer Preferences',exact:true})).toBeVisible();
+ await app.getByRole('button',{name:'Close Preferences',exact:true}).click();
+ await expect(app.getByRole('dialog',{name:'Writer Preferences',exact:true})).toHaveCount(0);
+ await page.locator('.menubar').getByRole('menuitem',{name:'Format',exact:true}).click();
+ await page.getByRole('menuitem',{name:/^Font/}).click();
+ await expect(app.getByRole('dialog',{name:'Font',exact:true})).toBeVisible();
+ await app.getByRole('button',{name:'Cancel',exact:true}).click();
+ await page.screenshot({path:'docs/writer/screenshots/lopeos-integration.png'});
+ await app.getByRole('textbox',{name:'Document content',exact:true}).click({position:{x:110,y:110}});
+ await page.keyboard.type('A document in LopeOS.');
+ await app.locator('.window-titlebar .close').click();
+ await expect(app.getByRole('dialog',{name:'Save your changes?',exact:true})).toBeVisible();
+ await app.getByRole('button',{name:'Cancel',exact:true}).click();
+ await expect(app).toBeVisible();expect(errors).toEqual([]);
+});

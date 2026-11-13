@@ -1,0 +1,55 @@
+{
+  "width": 192,
+  "height": 144,
+  "beforeMse": 0.009426184666044815,
+  "afterMse": 0.00012114169593718787,
+  "psnrGainDb": 18.910422943367024,
+  "durationMs": 1474,
+  "progress": [
+    {
+      "phase": "loading",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "phase": "loading",
+      "completed": 1,
+      "total": 1
+    },
+    {
+      "phase": "decoding",
+      "completed": 0,
+      "total": 1
+    },
+    {
+      "phase": "decoding",
+      "completed": 1,
+      "total": 1
+    },
+    {
+      "phase": "processing",
+      "completed": 1,
+      "total": 4
+    },
+    {
+      "phase": "processing",
+      "completed": 2,
+      "total": 4
+    },
+    {
+      "phase": "processing",
+      "completed": 3,
+      "total": 4
+    },
+    {
+      "phase": "processing",
+      "completed": 4,
+      "total": 4
+    }
+  ],
+  "installedBytes": 18362651,
+  "browser": {
+    "name": "webkit",
+    "version": "27.2"
+  }
+}

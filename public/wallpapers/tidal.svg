@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1500" viewBox="0 0 2400 1500" fill="none">
+<defs>
+<linearGradient id="base" x1="200" y1="0" x2="2200" y2="1500" gradientUnits="userSpaceOnUse"><stop stop-color="#dce9eb"/><stop offset=".3" stop-color="#c5e1e8"/><stop offset=".65" stop-color="#80c3d3"/><stop offset="1" stop-color="#2e87a8"/></linearGradient>
+<linearGradient id="wave" x1="1200" y1="300" x2="1550" y2="1350" gradientUnits="userSpaceOnUse"><stop stop-color="#e9f8f5"/><stop offset=".3" stop-color="#94d1d5"/><stop offset=".7" stop-color="#55aec9"/><stop offset="1" stop-color="#0b709d"/></linearGradient>
+<linearGradient id="deep" x1="200" y1="900" x2="1800" y2="1250" gradientUnits="userSpaceOnUse"><stop stop-color="#8dc9d4"/><stop offset=".6" stop-color="#62b1cc"/><stop offset="1" stop-color="#2e92bd"/></linearGradient>
+<linearGradient id="rim" x1="1700" y1="400" x2="700" y2="1400" gradientUnits="userSpaceOnUse"><stop stop-color="#f0fffa" stop-opacity=".95"/><stop offset=".45" stop-color="#e4f9f1" stop-opacity=".5"/><stop offset="1" stop-color="#d9fcff" stop-opacity="0"/></linearGradient>
+<radialGradient id="light"><stop stop-color="#fffdf0" stop-opacity=".75"/><stop offset="1" stop-color="#fffdf0" stop-opacity="0"/></radialGradient>
+<filter id="soft"><feGaussianBlur stdDeviation="35"/></filter><filter id="glow"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<path fill="url(#base)" d="M0 0h2400v1500H0z"/>
+<ellipse cx="400" cy="110" rx="1350" ry="1100" fill="url(#light)"/>
+<path d="M-200 1510C-20 1110 650 1120 1030 860 1470 560 1330 310 1890 150c320-92 600 50 730 90v1400Z" fill="#2c7c9955" filter="url(#soft)"/>
+<path d="M-100 1500c440-420 750-310 1160-675 390-347 260-533 850-641 285-53 440 16 580 82v1234Z" fill="url(#wave)"/>
+<path d="M-100 1500c440-420 750-310 1160-675 390-347 260-533 850-641 285-53 440 16 580 82" stroke="url(#rim)" stroke-width="12" filter="url(#glow)"/>
+<path d="M-100 1500c440-420 750-310 1160-675 390-347 260-533 850-641 285-53 440 16 580 82" stroke="url(#rim)" stroke-width="2"/>
+<path d="M-50 1560c590-110 940-280 1205-436 281-165 555-378 960-300 180 35 280 115 400 192v544Z" fill="url(#deep)"/>
+<path d="M-50 1560c590-110 940-280 1205-436 281-165 555-378 960-300 180 35 280 115 400 192" stroke="#bef1e5" stroke-opacity=".45" stroke-width="3"/>
+</svg>

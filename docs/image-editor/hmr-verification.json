@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-13",
+  "checks": [
+    "dialogs.tsx accepts React Fast Refresh without invalidating the parent or closing/resetting the open dialog",
+    "tools.tsx accepts React Fast Refresh without invalidating the parent or closing/resetting the open dialog",
+    "panels.tsx accepts React Fast Refresh without invalidating the parent or closing/resetting the open dialog",
+    "menus.tsx accepts React Fast Refresh without invalidating the parent or closing/resetting the open dialog",
+    "No browser reload; document revision remains stable and Undo still executes after four component updates",
+    "Control reproduction: restoring the old filterNames object export triggers the actual Vite incompatible-export invalidation"
+  ],
+  "errors": [],
+  "controlInvalidation": {
+    "path": "/apps/web/src/apps/image-editor/dialogs.tsx",
+    "message": "Could not Fast Refresh (\"filterNames\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports",
+    "firstInvalidatedBy": "/apps/web/src/apps/image-editor/dialogs.tsx"
+  },
+  "limits": "Simulated HMR transport with the real Vite/React runtime, isolated from the shared server. Changes to component hook signatures still legitimately remount components; persistent editor sessions protect document/history state."
+}

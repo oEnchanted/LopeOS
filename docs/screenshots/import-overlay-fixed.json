@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "Actual development desktop renders without an import overlay",
+    "Calculator launches and calculates",
+    "Settings loads its stylesheet and renders",
+    "Clear caches completes successfully",
+    "Image Editor imports, launches, and renders its sample document",
+    "Narrow desktop has no document overflow"
+  ],
+  "errors": [],
+  "url": "http://127.0.0.1:5174/"
+}

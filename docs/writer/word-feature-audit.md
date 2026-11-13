@@ -1,0 +1,50 @@
+# Writer / Microsoft Word feature audit
+
+Date: **2026-11-13**. Scope: Writer ribbon, dialogs, Preferences, document adapter, and existing Writer regression assertions. Reference: Microsoft Word desktop for Microsoft 365. **Writer does not contain every Microsoft Word feature.** A familiar tab or Preferences category is not evidence of a complete workflow.
+
+Microsoft's own [desktop/web feature comparison](https://support.microsoft.com/en-us/word/word-features-comparison-word-for-the-web-vs-desktop.) includes capabilities beyond basic document editing, such as mail merge, envelopes/labels, accessibility checking, dictation, and protection. These are part of the coverage assessment, even where Writer intentionally has no connected provider.
+
+## Coverage matrix
+
+**Tested subset** means behavior/output assertions exist in `tests/writer`; it does not certify every Word option. **Exposed subset** means real public engine operations are wired, with important untested variants or missing controls. **Unavailable** means the complete workflow cannot currently be performed in Writer. The [feature inventory](feature-inventory.md) maps individual commands to evidence; the [parity report](parity-report.md) describes compatibility limits.
+
+| Feature family | Current status | Practical boundary |
+|---|---|---|
+| DOCX editing, save, Save As, recovery, conflicts | Tested subset | Binary workspace saves, version conflicts, recovery and close guard. Legacy DOC conversion, encrypted document editing and full embedded-object editing unavailable. |
+| Character formatting and undo | Tested/exposed subset | Size, bold, selected formatting preservation and native history tested. Super/subscript toggles now tested through saved DOCX and undo. Full advanced font/effects workflow missing. |
+| Change Case | Unavailable | Unsafe cached-preview/plain-text replacement removed. Formatting-preserving, complete-range case conversion requires a supported and verified implementation. |
+| Paragraph formatting | Tested/exposed subset | Selected-paragraph batch changes, alignment, left/right indents, spacing, tabs and keep/flow options. Live Layout values show Mixed. Complete first-line/hanging-indent UI, precise line-height variants and complete dialog mixed-property display missing. |
+| Lists and styles | Exposed subset; selected style output tested | Basic bullet/numbered lists, nesting, supplied styles and style modification. Complete multilevel templates, arbitrary style creation and full linked-style management missing. |
+| Clipboard and Format Painter | Tested/exposed subset | Full long-selection Ribbon Copy/Cut, native Cut undo, Paste/Symbol continuation and tracked text insertion/replacement tested. Native editor rich clipboard is not separately certified. No complete Word paste-special/formatting-options workflow; Format Painter remains exposed. |
+| Find, Replace and navigation | Tested/exposed subset | Search and selecting/replacing a clicked occurrence tested. Replace All and every pattern/selection variant are not certified. Search/headings bounded; thumbnails schematic. |
+| Tables | Tested/exposed subset | Spanning table, cell edits and row insertion tested. Other real merge/split/column/delete commands and property variants need individual regressions; full table-style/border/row UI missing. |
+| Pictures | Tested/exposed subset | Native image parts, resizing, crop and wrapping output tested. Host UI has picture chooser and symmetric crop; complete position, rotation, per-edge crop and wrap controls missing. |
+| Shapes, charts, SmartArt, text boxes, WordArt, ink | Unavailable | No complete creation/editing workflow in Writer. Preservation of imported objects is separate from authoring support. |
+| Headers, footers and page numbers | Tested/exposed subset | Native structures/PAGE field output tested. Text dialog appends in first section; no complete existing-story, first-page, odd/even or linked-section editor. |
+| Notes and table of contents | Tested/exposed subset | Footnote and TOC output tested; endnotes exposed. Full note navigation/configuration, references/captions, citations/bibliography and index UI missing. |
+| Page layout and breaks | Tested/exposed subset | All-section Letter/A4, orientation, correct per-edge Normal/Narrow/Moderate/Wide margins and equal columns. This audit routes caret Page Break/Blank Page to adapter helpers and One Page to actual page fit; tracked break insertion requires Editing mode. No complete section-aware setup gallery. |
+| Comments and tracked changes | Tested/exposed subset | Comments, replies, resolve/reopen, insertion/deletion decisions and retained hidden review data tested. Full markup filtering, every bulk/context decision and every tracked structural edit not certified. |
+| Compare, document protection and macros | Unavailable | No compare/merge or protection-authoring workflow; VBA execution unavailable. A saved security preference does not implement a macro runtime. |
+| Proofing, translation, dictation, accessibility analysis | Unavailable | Provider-dependent features are disabled or explain availability. Local accessibility/motion preferences do not constitute a document accessibility checker. |
+| Mailings, cloud services, sharing and add-ins | Unavailable | No mail merge/envelope/label workflow or connected collaboration, account sharing, AI or add-in provider. |
+| Print, PDF, zoom and reading modes | Tested/exposed subset | Three-page print/PDF assertions and print options exist. Mode active states now tested. Vertical layout only; web/outline, split, side-to-side and multiple-page views unavailable. |
+| Preferences and OS integration | Tested/exposed subset | Theme, author, local AutoCorrect rules, print preferences, persistence and reduced-motion assertions exist. Unsupported Word options must remain disabled; storing a preference alone is not feature implementation. OS material/accessibility review is separate from document parity. |
+
+## Corrections made during this audit
+
+- Super/subscript reads the current uniform `vertAlign` value and toggles an already active setting back to baseline. Other run properties and text remain intact; native undo is retained.
+- Read Mode and Print Layout reflect actual viewing/editing state. Viewing disables the superscript/subscript mutations; font controls respect readiness. The only available page movement, Vertical, is selected and disabled instead of presenting an enabled no-op.
+- Change Case is explicitly unavailable. The former implementation could replace selected text with a stale/truncated preview and discard run formatting. Word desktop offers five case variants, which Writer does not currently provide. [Microsoft Change Case documentation](https://support.microsoft.com/en-us/word/change-the-capitalization-or-case-of-text).
+- Layout paragraph controls now read real values from selected paragraph models, show Mixed for differing values, and use neutral dialog launchers when reliable values are unavailable. Margin presets now preserve the separate top/bottom and left/right dimensions.
+- Page Break and Blank Page were previously miswired to paragraph break-before and an empty paragraph respectively. They now call dedicated adapter operations. A blank page and a single page break have different behavior: a blank page adds a complete page, while a page break moves following content to the next page. [Microsoft blank-page documentation](https://support.microsoft.com/en-us/word/insert-a-blank-page-in-word). Adapter-specific validation is reported separately by the engine audit.
+- Paste and Symbol now advance the caret using native insertion receipts, including tracked text. Selected-range replacement, native Undo/Redo and multiline/emoji continuation are covered by adapter regressions. Cut/Copy read a fresh complete native selection; clipboard mutations reject a changed document.
+- Preferences follows live OS theme, text size, increased contrast and motion settings. Option search and AutoCorrect keyboard navigation are verified; opening another file freezes the previous editor until the new document is ready.
+
+Focused verification: all **four** scenarios in `ribbon-audit.spec.ts` passed on the isolated local test server (three ribbon scenarios plus the separately rerun Layout scenario). It checks saved DOCX run properties, text/bold retention, toggle undo, read/print mode state, read-only character controls, explicit case-conversion unavailability, live/mixed Layout values and saved per-edge margin presets. This focused result does not replace the full Writer suite or native Word validation.
+
+## Remaining priorities
+
+1. **Selection/property completeness:** Layout values resolve at most 100 selected paragraph models and defer to a neutral dialog launcher for unsupported content or character-based indents. Paragraph dialogs still need the complete Word property set and full mixed-property representation.
+2. **Incomplete enabled workflows:** Header/footer append behavior, Show Markup opening a pane instead of offering filters, partial picture controls and incomplete styles/lists should remain described as subsets. Test the unverified table/list/clipboard/revision variants before upgrading their status.
+3. **Feasible local authoring additions:** Public API declarations include caption, watermark, line-numbering, page-border, image rotation, citation, index, comparison and protection operation families. Availability in a declaration does not prove that the installed browser facade supports every operation. Capability checks plus DOCX/undo/round-trip tests are required before exposing a workflow. No proprietary engine implementation was inspected to create this audit.
+4. **Broader validation:** Native Word reopen/render comparison, assistive technologies, IME, bidirectional text, rich clipboard and complex mixed-section/drawing documents remain outside the existing automated evidence. Do not certify complete Word compatibility or universal lossless preservation from the current fixture corpus.

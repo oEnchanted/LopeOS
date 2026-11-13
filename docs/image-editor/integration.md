@@ -1,0 +1,13 @@
+# Integration handoff
+
+- Application manifest: `apps/web/src/apps/image-editor/manifest.ts`; stable ID **lope.image-editor**, singleton window with internal document tabs, 1320 × 840 default and 740 × 500 minimum.
+- Registration uses `apps/web/src/shell/extensions.ts`, preserving the concurrently added Writer extension and development example. No replacement shell, title bar or window manager was introduced.
+- Shared `AppContext` provides commands, binary workspace files, file dialogs, notifications, settings and before-close lifecycle. Internal and active-application menus invoke the same `image.*` handlers through the shell's per-window registry.
+- Associations include `.lopeimage`, `.psd`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif`, `.bmp` and relevant image MIME types. The shell's generic association routing and Image icon mapping are present in the current shared integration.
+- `@lopeos/image-engine` declares **ag-psd ^31.0.0**, resolved to **31.0.3** in `pnpm-lock.yaml`. No additional rendering libraries or fonts are required for core editing. Optional portrait AI downloads its pinned model and WASM runtime only on request. Root shared dependency inputs were left to the architecture integration.
+- Styling is scoped beneath `.lope-image-editor`; its fixed dark appearance is independent of LopeOS window chrome. No global application styles or shell material tokens are changed by this app.
+- Settings use `image-editor.*`; crash recovery uses IndexedDB `lope.image-editor`, stores `sessions`, `documents`, `assets` and legacy `recovery`. Native project extension is `.lopeimage`; it is separate from PSD and export copies.
+- Worker code is bundled from `packages/image-engine/src/worker.ts`. The production build includes its artifact; core editing needs no external CDN or image service. Local AI installation uses pinned Hugging Face/jsDelivr assets, then inference runs offline; optional generation calls only the user-selected localhost engine.
+- Existing LopeOS tests and source are preserved. The new tests live under `tests/image-editor/` and have explicit run commands in the README; `tests/apps/image-editor.test.ts` includes the engine suite in the existing standard test command without changing shared scripts. The image-engine package also exposes its engine test script.
+
+The SDK integration fixture is intentionally isolated in `tests/image-editor/`. It supplies versioned in-memory test files and dialogs only for tests; the production application always uses LopeOS services. Runtime outages are reported, with an explicit Open from Device/Download copy workflow available when desired.

@@ -1,0 +1,11 @@
+.lope-example{height:100%;min-height:0;display:flex;background:var(--surface);color:var(--text);font-size:12px}
+.lope-example>.ui-sidebar{width:170px;flex:none;display:flex;flex-direction:column;gap:12px}
+.lope-example .example-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.lope-example .example-main>.ui-toolbar{justify-content:space-between;flex-wrap:wrap}
+.lope-example .example-content{padding:25px;overflow:auto}
+.lope-example form,.lope-example form label{display:flex;flex-direction:column;gap:10px}
+.lope-example form{align-items:flex-start;margin-bottom:25px}
+.lope-example form label{width:100%;line-height:1.6}
+.lope-example li{padding:10px 0;border-bottom:1px solid var(--border)}
+.lope-example.compact li{padding:4px 0}
+@media(max-width:600px){.lope-example>.ui-sidebar{width:115px;padding:10px}.lope-example .example-content{padding:15px}}

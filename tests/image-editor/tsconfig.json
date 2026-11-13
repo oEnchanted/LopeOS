@@ -1,0 +1,1 @@
+{"extends":"../../tsconfig.json","include":["../../apps/web/src/apps/image-editor","../../packages/image-engine","../../packages/contracts","../../packages/sdk","../../apps/web/src/apps/hooks.ts"]}

@@ -1,0 +1,15 @@
+{
+  "name": "@lopeos/runtime",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test *.test.js",
+    "test:linux": "node --test acceptance.test.js",
+    "postinstall": "node prepare-native.js"
+  },
+  "dependencies": {
+    "node-pty": "^1.1.0",
+    "ws": "^8.18.0"
+  }
+}

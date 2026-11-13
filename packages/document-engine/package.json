@@ -1,0 +1,8 @@
+{
+  "name": "@lope/document-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": { "superdoc": "2.30.0", "fflate": "0.8.2" }
+}

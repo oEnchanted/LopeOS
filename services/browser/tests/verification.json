@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-12",
+  "host": "macOS",
+  "engine": "Chrome/157.0.8103.78",
+  "node": "26.12.1",
+  "chromiumSandboxDisabled": false,
+  "command": "LOPE_TEST_CHROMIUM=1 node --test services/browser/tests/*.test.mjs",
+  "tests": { "passed": 7, "failed": 0, "skipped": 0 },
+  "browserTypecheck": "passed",
+  "startupScriptSyntax": "passed",
+  "verified": [
+    "real JavaScript forms and Unicode text insertion",
+    "cookies, localStorage, IndexedDB and service workers",
+    "WebSockets through validating egress proxy",
+    "navigation, redirects, history, popups and opener relationships",
+    "tab creation, duplicate, pin/reorder, close/reopen and session restore",
+    "selected file uploads, completed downloads and shared runtime bridge contract",
+    "WAV and VP8/WebM playback inside the engine",
+    "find, viewport scale and headless PDF generation",
+    "normal profile persistence, private isolation, clear data and engine recovery",
+    "HTTP/origin/credential checks, stream proxy HTTP/WS headers and administrative route blocking",
+    "private/special IP and mixed-DNS denial",
+    "browser component controls, shared dialogs and dev-server credential/profile file denial"
+  ],
+  "notVerified": [
+    "Linux container build and production isolation",
+    "Selkies end-to-end media, audible output, pointer/resize/scaling and OS IME",
+    "live Docker workspace file transfers",
+    "external OAuth providers, DRM and hardware APIs",
+    "remote page accessibility semantics"
+  ],
+  "releaseGate": "streaming.acceptance.md"
+}

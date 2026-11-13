@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "../../apps/web/src/apps/files", "../../apps/web/src/apps/text-editor",
+    "../../apps/web/src/apps/settings", "../../apps/web/src/apps/weather",
+    "../../apps/web/src/apps/calculator", "../../apps/web/src/apps/hooks.ts",
+    "../../apps/web/src/apps/manifests.ts", "../../apps/web/src/apps/AppContent.tsx",
+    "../../packages/app-template"
+  ]
+}

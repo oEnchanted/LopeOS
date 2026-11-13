@@ -1,0 +1,16 @@
+[
+  {
+    "browser": "chromium",
+    "checks": [
+      "Light and dark glass rendering",
+      "Focus and notification preview toggles",
+      "Mute and native keyboard volume controls",
+      "Privacy screen opens and returns",
+      "Transparency, contrast, and low effects fallbacks",
+      "390×600 viewport with 150% text has no horizontal overflow",
+      "Reduced motion",
+      "Automatic theme and Escape dismissal"
+    ],
+    "errors": []
+  }
+]

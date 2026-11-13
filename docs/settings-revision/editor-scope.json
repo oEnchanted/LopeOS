@@ -1,0 +1,73 @@
+{
+  "apps": [
+    {
+      "name": "Writer",
+      "unchanged": true,
+      "surfaces": [
+        {
+          "selector": ".writer-app",
+          "color": "rgb(36, 36, 36)",
+          "background": "rgb(243, 243, 243)",
+          "font": "12px / 15.6px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "0px"
+        },
+        {
+          "selector": ".writer-command-area",
+          "color": "rgb(36, 36, 36)",
+          "background": "rgb(243, 243, 243)",
+          "font": "12px / 15.6px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "0px"
+        },
+        {
+          "selector": ".writer-ribbon",
+          "color": "rgb(36, 36, 36)",
+          "background": "rgb(255, 255, 255)",
+          "font": "12px / 15.6px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "7px"
+        }
+      ]
+    },
+    {
+      "name": "Image Editor",
+      "unchanged": true,
+      "surfaces": [
+        {
+          "selector": ".lope-image-editor",
+          "color": "rgb(210, 210, 210)",
+          "background": "rgb(40, 40, 40)",
+          "font": "11px / 14.85px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "0px"
+        },
+        {
+          "selector": ".ie-menubar",
+          "color": "rgb(210, 210, 210)",
+          "background": "rgb(41, 41, 41)",
+          "font": "11px / 14.85px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "0px"
+        },
+        {
+          "selector": ".ie-options",
+          "color": "rgb(210, 210, 210)",
+          "background": "rgb(52, 52, 52)",
+          "font": "11px / 14.85px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "0px"
+        },
+        {
+          "selector": ".ie-toolbar",
+          "color": "rgb(210, 210, 210)",
+          "background": "rgb(51, 51, 51)",
+          "font": "11px / 14.85px \"Segoe UI\", Arial, sans-serif",
+          "fontFamily": "\"Segoe UI\", Arial, sans-serif",
+          "borderRadius": "0px"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

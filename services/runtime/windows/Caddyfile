@@ -1,0 +1,27 @@
+# Set LOPE_SITE_HOST and LOPE_WEB_ROOT on the Windows Caddy host.
+{$LOPE_SITE_HOST} {
+    encode zstd gzip
+    @accounts path /api/accounts/*
+    handle @accounts {
+        reverse_proxy 127.0.0.1:4176 {
+            header_up X-Forwarded-For {remote_host}
+        }
+    }
+    @runtime path /api/*
+    handle @runtime {
+        reverse_proxy 127.0.0.1:4174 {
+            # The backend trusts this header only from its loopback proxy.
+            header_up X-Forwarded-For {remote_host}
+            # Origin and visitor cookies pass through. Never inject a shared token.
+        }
+    }
+    handle {
+        root * "{$LOPE_WEB_ROOT}"
+        try_files {path} /index.html
+        file_server
+    }
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}

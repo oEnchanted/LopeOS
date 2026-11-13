@@ -1,0 +1,32 @@
+/* Boot is intentionally black; the OS glass returns with Setup Assistant. */
+.reset-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  overflow: auto;
+  background: #000;
+  color: #fff;
+  color-scheme: dark;
+  opacity: 1;
+  transition: opacity 600ms ease;
+}
+.reset-boot[data-phase=revealing] { opacity: 0; pointer-events: none; }
+.reset-boot__logo { position: absolute; top: 44%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; }
+.reset-boot__logo svg { display: block; width: 88px; height: 88px; }
+.reset-boot__lower { position: absolute; top: 66%; left: 50%; transform: translateX(-50%); width: min(380px, calc(100% - 48px)); padding-bottom: 32px; text-align: center; }
+.reset-boot__progress { width: 196px; max-width: 100%; height: 5px; margin: 0 auto; overflow: hidden; border-radius: 10px; background: #ffffff26; box-shadow: 0 0 0 1px #ffffff12; }
+.reset-boot__progress > span { display: block; height: 100%; border-radius: inherit; background: #fff; transition: width 900ms cubic-bezier(.2, .7, .2, 1); }
+.reset-boot__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.reset-boot__error { margin-top: 25px; font-size: 13px; line-height: 1.6; }
+.reset-boot__error h1 { margin: 0 0 8px; font-size: 17px; font-weight: 550; }
+.reset-boot__error p { margin: 0 auto 17px; color: #b9b9be; }
+.reset-boot__error button { padding: 9px 19px; border: 1px solid #ffffff40; border-radius: 9px; background: #ffffff12; color: #fff; font-size: 13px; }
+.reset-boot__error button:hover { background: #ffffff24; }
+.reset-boot__error button:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.reset-boot[data-reduce-motion=true], .reset-boot[data-reduce-motion=true] .reset-boot__progress > span { transition: none; }
+@media (prefers-reduced-motion: reduce) { .reset-boot, .reset-boot__progress > span { transition: none; } }
+@media (max-height: 480px) {
+  .reset-boot__logo { top: 30%; }
+  .reset-boot__logo svg { width: 64px; height: 64px; }
+  .reset-boot__lower { top: 52%; }
+}

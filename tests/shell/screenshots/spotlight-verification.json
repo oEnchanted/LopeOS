@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "Spotlight has one main input with no separate Ask or Web category",
+    "Spotlight opens and focuses its search field",
+    "Tab navigation stays within the Spotlight dialog",
+    "Typo-tolerant application search launches Calculator with Enter",
+    "Escape restores focus to the prior application control",
+    "Inline exact decimal calculation copies the answer",
+    "Percentages, conversions, and invalid arithmetic render inline",
+    "Calculator Copy result appears in Spotlight clipboard and can be deleted",
+    "Clipboard history opts in, imports, and deduplicates text",
+    "Clipboard pins, saves, searches full text, and copies an item",
+    "Denied clipboard read remains recoverable without losing saved text",
+    "Denied clipboard writes show an error and preserve the shelf",
+    "Clear history removes clipboard items",
+    "Clipboard text remains in memory and is cleared on reload",
+    "Actions can change desktop appearance from the keyboard",
+    "Spotlight fits a narrow viewport without overflow",
+    "Reduced transparency, contrast, and keyboard focus preferences apply to Spotlight",
+    "Scoped file search opens the matching workspace document"
+  ],
+  "errors": []
+}

@@ -1,0 +1,48 @@
+import { seedSession } from '../setup/seed-session.mjs';
+import { chromium, expect } from '@playwright/test';
+import { mkdir, writeFile } from 'node:fs/promises';
+
+const browser = await chromium.launch({ headless: true });
+const errors = [], checks = [];
+const previewURL = process.env.LOPE_QA_URL || 'http://127.0.0.1:5173/';
+try {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  page.on('pageerror', error => errors.push(error.message));
+  await seedSession(page);await page.goto(previewURL, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.welcome-main h1')).toBeVisible();
+  await expect(page.locator('vite-error-overlay')).toHaveCount(0);
+  checks.push('Actual development desktop renders without an import overlay');
+  await page.getByRole('button', { name: 'Open Calculator', exact: true }).click();
+  const input = page.getByRole('textbox', { name: 'Expression', exact: true });
+  await input.fill('0.1+0.2'); await input.press('Enter'); await expect(input).toHaveValue('0.3');
+  checks.push('Calculator launches and calculates');
+  await page.getByRole('button', { name: 'Open Settings', exact: true }).click();
+  const settings = page.getByTestId('settings-app'); await expect(settings).toBeVisible();
+  checks.push('Settings loads its stylesheet and renders');
+  await settings.getByRole('button', { name: 'Privacy & Security', exact: true }).click();
+  await settings.getByRole('button', { name: 'Clear caches', exact: true }).click();
+  await expect(settings.getByRole('status')).toContainText('LopeOS caches cleared');
+  checks.push('Clear caches completes successfully');
+  await settings.getByRole('button', { name: 'Appearance', exact: true }).click();
+  await expect(settings.getByRole('heading', { name: 'Appearance', level: 1, exact: true })).toBeVisible();
+  await expect(page.locator('vite-error-overlay')).toHaveCount(0); expect(errors).toEqual([]);
+  await mkdir('docs/screenshots', { recursive: true });
+  await page.screenshot({ path: 'docs/screenshots/import-overlay-fixed.png' });
+  await page.getByRole('button', { name: 'Open Image Editor', exact: true }).click();
+  const imageEditor = page.getByTestId('image-editor-app');
+  await expect(imageEditor).toBeVisible({ timeout: 30000 });
+  await expect(imageEditor.getByRole('tab', { name: /Alpine study/ })).toBeVisible();
+  expect(await imageEditor.locator('canvas').count()).toBeGreaterThan(0);
+  await expect(page.locator('vite-error-overlay')).toHaveCount(0);
+  checks.push('Image Editor imports, launches, and renders its sample document');
+  await page.screenshot({ path: 'docs/screenshots/import-overlay-image-editor.png' });
+  await page.getByRole('button', { name: 'Open Settings', exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(settings).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: 'docs/screenshots/import-overlay-fixed-narrow.png' });
+  checks.push('Narrow desktop has no document overflow');
+  expect(errors).toEqual([]);
+  await writeFile('docs/screenshots/import-overlay-fixed.json', JSON.stringify({ checks, errors, url: page.url() }, null, 2) + '\n');
+  console.log(JSON.stringify({ checks, errors }));
+} finally { await browser.close(); }

@@ -1,0 +1,31 @@
+✔ name derivation removes accents and punctuation, starts with a letter, and falls back to user (2.566916ms)
+✔ name derivation skips reserved and occupied names, including long suffixes (1.266125ms)
+✔ validation normalizes names without changing passwords (0.599291ms)
+✔ validation identifies invalid display names, account names, reserved names, and duplicates (0.145ms)
+✔ password mismatch targets confirmation, including an empty first password (0.068833ms)
+✔ credentials use PBKDF2 SHA-256 with independent salts and never contain the password (292.769167ms)
+✔ empty password is stored without a credential and only accepts empty input (0.174458ms)
+✔ creation, sign-in, reload, and sign-out retain only the account id in session storage (332.480667ms)
+✔ creation rechecks duplicate names after async hashing and serializes concurrent writes (122.531125ms)
+✔ storage failures throw without silently signing in or overwriting unreadable accounts (4.418667ms)
+✔ automatic first sign-in is limited to the exact newly created account object (0.433958ms)
+✔ concurrent automatic sign-in attempts consume the creation capability only once (0.275292ms)
+✔ separate account stores retain both accounts and reject duplicate names under Web Locks (0.507084ms)
+✔ WebLLM prefetch writes every asset to the same scopes and keys consumed by chat (35.974375ms)
+✔ a cancelled transfer retains complete files but never installs a partial shard (2.185167ms)
+✔ truncated weights are rejected instead of appearing installed (1.453042ms)
+✔ manifest validation rejects ambiguous or unsafe shard metadata (0.177958ms)
+✔ recent network byte rate decays to zero during a stalled download (0.108875ms)
+✔ inspection is network-free and download-all skips unsupported chat while saving other models (0.552042ms)
+✔ one model failing does not discard successful models and retry is independent (0.601042ms)
+✔ cancel stops the active download and clears the rest of the queue (0.291542ms)
+✔ inspection rejects an incomplete older cache response without a size header (2.831125ms)
+✔ repeated inspect and install requests share checks and never duplicate active jobs (0.327917ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2068.473542

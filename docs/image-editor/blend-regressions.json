@@ -1,0 +1,4005 @@
+{
+  "date": "2026-11-13",
+  "checks": 222,
+  "maxChannelError": 4,
+  "records": [
+    {
+      "fixture": "normal 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        64,
+        153,
+        255
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        255
+      ]
+    },
+    {
+      "fixture": "normal 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        64,
+        153,
+        255
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        255
+      ]
+    },
+    {
+      "fixture": "normal 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        152,
+        85,
+        170,
+        190
+      ],
+      "expected": [
+        151,
+        86,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "normal 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        152,
+        86,
+        170,
+        190
+      ],
+      "expected": [
+        151,
+        86,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "normal 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        204,
+        62,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "normal 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "multiply 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        41,
+        32,
+        122,
+        255
+      ],
+      "expected": [
+        41,
+        32,
+        122,
+        255
+      ]
+    },
+    {
+      "fixture": "multiply 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        41,
+        32,
+        122,
+        255
+      ],
+      "expected": [
+        41,
+        32,
+        122,
+        255
+      ]
+    },
+    {
+      "fixture": "multiply 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        98,
+        75,
+        160,
+        190
+      ],
+      "expected": [
+        97,
+        76,
+        161,
+        190
+      ]
+    },
+    {
+      "fixture": "multiply 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        98,
+        75,
+        160,
+        190
+      ],
+      "expected": [
+        97,
+        76,
+        161,
+        190
+      ]
+    },
+    {
+      "fixture": "multiply 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "multiply 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "screen 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        214,
+        160,
+        235,
+        255
+      ],
+      "expected": [
+        214,
+        160,
+        235,
+        255
+      ]
+    },
+    {
+      "fixture": "screen 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        214,
+        160,
+        235,
+        255
+      ],
+      "expected": [
+        214,
+        160,
+        235,
+        255
+      ]
+    },
+    {
+      "fixture": "screen 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        156,
+        117,
+        196,
+        190
+      ],
+      "expected": [
+        154,
+        118,
+        197,
+        190
+      ]
+    },
+    {
+      "fixture": "screen 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        154,
+        117,
+        197,
+        190
+      ],
+      "expected": [
+        154,
+        118,
+        197,
+        190
+      ]
+    },
+    {
+      "fixture": "screen 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "screen 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "overlay 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        82,
+        65,
+        214,
+        255
+      ],
+      "expected": [
+        82,
+        65,
+        214,
+        255
+      ]
+    },
+    {
+      "fixture": "overlay 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        82,
+        65,
+        214,
+        255
+      ],
+      "expected": [
+        82,
+        65,
+        214,
+        255
+      ]
+    },
+    {
+      "fixture": "overlay 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        113,
+        86,
+        189,
+        190
+      ],
+      "expected": [
+        111,
+        86,
+        191,
+        190
+      ]
+    },
+    {
+      "fixture": "overlay 128/177/0.7",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        111,
+        86,
+        191,
+        190
+      ],
+      "expected": [
+        111,
+        86,
+        191,
+        190
+      ]
+    },
+    {
+      "fixture": "overlay 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "overlay 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "darken 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        51,
+        64,
+        153,
+        255
+      ],
+      "expected": [
+        51,
+        64,
+        153,
+        255
+      ]
+    },
+    {
+      "fixture": "darken 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        51,
+        64,
+        153,
+        255
+      ],
+      "expected": [
+        51,
+        64,
+        153,
+        255
+      ]
+    },
+    {
+      "fixture": "darken 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        102,
+        86,
+        169,
+        190
+      ],
+      "expected": [
+        101,
+        86,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "darken 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        102,
+        86,
+        170,
+        190
+      ],
+      "expected": [
+        101,
+        86,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "darken 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "darken 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "lighten 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        204,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "lighten 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        204,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "lighten 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        152,
+        106,
+        187,
+        190
+      ],
+      "expected": [
+        151,
+        107,
+        187,
+        190
+      ]
+    },
+    {
+      "fixture": "lighten 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        152,
+        107,
+        187,
+        190
+      ],
+      "expected": [
+        151,
+        107,
+        187,
+        190
+      ]
+    },
+    {
+      "fixture": "lighten 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "lighten 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "difference 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        153,
+        64,
+        51,
+        255
+      ],
+      "expected": [
+        153,
+        64,
+        51,
+        255
+      ]
+    },
+    {
+      "fixture": "difference 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        153,
+        64,
+        51,
+        255
+      ],
+      "expected": [
+        153,
+        64,
+        51,
+        255
+      ]
+    },
+    {
+      "fixture": "difference 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        134,
+        85,
+        137,
+        190
+      ],
+      "expected": [
+        134,
+        86,
+        137,
+        190
+      ]
+    },
+    {
+      "fixture": "difference 128/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        136,
+        86,
+        137,
+        190
+      ],
+      "expected": [
+        134,
+        86,
+        137,
+        190
+      ]
+    },
+    {
+      "fixture": "difference 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "difference 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "hue 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        210,
+        57,
+        154,
+        255
+      ],
+      "expected": [
+        210,
+        57,
+        154,
+        255
+      ]
+    },
+    {
+      "fixture": "hue 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        210,
+        57,
+        154,
+        255
+      ],
+      "expected": [
+        210,
+        57,
+        154,
+        255
+      ]
+    },
+    {
+      "fixture": "hue 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        153,
+        83,
+        170,
+        190
+      ],
+      "expected": [
+        153,
+        84,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "hue 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        153,
+        85,
+        170,
+        190
+      ],
+      "expected": [
+        153,
+        84,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "hue 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "hue 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "saturation 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        56,
+        127,
+        196,
+        255
+      ],
+      "expected": [
+        56,
+        127,
+        196,
+        255
+      ]
+    },
+    {
+      "fixture": "saturation 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        56,
+        127,
+        196,
+        255
+      ],
+      "expected": [
+        56,
+        127,
+        196,
+        255
+      ]
+    },
+    {
+      "fixture": "saturation 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        103,
+        106,
+        185,
+        190
+      ],
+      "expected": [
+        103,
+        107,
+        185,
+        190
+      ]
+    },
+    {
+      "fixture": "saturation 128/177/0.7",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        103,
+        107,
+        185,
+        190
+      ],
+      "expected": [
+        103,
+        107,
+        185,
+        190
+      ]
+    },
+    {
+      "fixture": "saturation 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "saturation 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "color 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        201,
+        61,
+        150,
+        255
+      ],
+      "expected": [
+        201,
+        61,
+        150,
+        255
+      ]
+    },
+    {
+      "fixture": "color 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        201,
+        61,
+        150,
+        255
+      ],
+      "expected": [
+        201,
+        61,
+        150,
+        255
+      ]
+    },
+    {
+      "fixture": "color 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        150,
+        85,
+        169,
+        190
+      ],
+      "expected": [
+        150,
+        85,
+        170,
+        190
+      ]
+    },
+    {
+      "fixture": "color 128/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        152,
+        85,
+        170,
+        190
+      ],
+      "expected": [
+        150,
+        85,
+        170,
+        190
+      ]
+    },
+    {
+      "fixture": "color 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "color 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "luminosity 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        54,
+        131,
+        207,
+        255
+      ],
+      "expected": [
+        54,
+        131,
+        207,
+        255
+      ]
+    },
+    {
+      "fixture": "luminosity 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        54,
+        131,
+        207,
+        255
+      ],
+      "expected": [
+        54,
+        131,
+        207,
+        255
+      ]
+    },
+    {
+      "fixture": "luminosity 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        102,
+        107,
+        188,
+        190
+      ],
+      "expected": [
+        102,
+        108,
+        188,
+        190
+      ]
+    },
+    {
+      "fixture": "luminosity 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        102,
+        107,
+        187,
+        190
+      ],
+      "expected": [
+        102,
+        108,
+        188,
+        190
+      ]
+    },
+    {
+      "fixture": "luminosity 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "luminosity 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "color dodge 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        171,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        171,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "color dodge 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        171,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        171,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "color dodge 128/177/0.7",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        168,
+        121,
+        204,
+        190
+      ],
+      "expected": [
+        168,
+        121,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "color dodge 128/177/0.7",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        168,
+        121,
+        204,
+        190
+      ],
+      "expected": [
+        168,
+        121,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "color dodge 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "color dodge 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "color burn 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        0,
+        170,
+        255
+      ],
+      "expected": [
+        0,
+        0,
+        170,
+        255
+      ]
+    },
+    {
+      "fixture": "color burn 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        0,
+        170,
+        255
+      ],
+      "expected": [
+        0,
+        0,
+        170,
+        255
+      ]
+    },
+    {
+      "fixture": "color burn 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        85,
+        64,
+        176,
+        190
+      ],
+      "expected": [
+        84,
+        65,
+        176,
+        190
+      ]
+    },
+    {
+      "fixture": "color burn 128/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        86,
+        64,
+        174,
+        190
+      ],
+      "expected": [
+        84,
+        65,
+        176,
+        190
+      ]
+    },
+    {
+      "fixture": "color burn 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "color burn 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "hard light 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        173,
+        64,
+        214,
+        255
+      ],
+      "expected": [
+        173,
+        64,
+        214,
+        255
+      ]
+    },
+    {
+      "fixture": "hard light 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        173,
+        64,
+        214,
+        255
+      ],
+      "expected": [
+        173,
+        64,
+        214,
+        255
+      ]
+    },
+    {
+      "fixture": "hard light 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        142,
+        86,
+        189,
+        190
+      ],
+      "expected": [
+        141,
+        86,
+        191,
+        190
+      ]
+    },
+    {
+      "fixture": "hard light 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        142,
+        86,
+        191,
+        190
+      ],
+      "expected": [
+        141,
+        86,
+        191,
+        190
+      ]
+    },
+    {
+      "fixture": "hard light 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "hard light 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "soft light 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        89,
+        96,
+        209,
+        255
+      ],
+      "expected": [
+        89,
+        96,
+        209,
+        255
+      ]
+    },
+    {
+      "fixture": "soft light 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        89,
+        96,
+        209,
+        255
+      ],
+      "expected": [
+        89,
+        96,
+        209,
+        255
+      ]
+    },
+    {
+      "fixture": "soft light 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        114,
+        97,
+        188,
+        190
+      ],
+      "expected": [
+        113,
+        97,
+        189,
+        190
+      ]
+    },
+    {
+      "fixture": "soft light 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        114,
+        97,
+        188,
+        190
+      ],
+      "expected": [
+        113,
+        97,
+        189,
+        190
+      ]
+    },
+    {
+      "fixture": "soft light 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "soft light 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "exclusion 255/255/1",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        173,
+        128,
+        113,
+        255
+      ],
+      "expected": [
+        173,
+        128,
+        112,
+        255
+      ]
+    },
+    {
+      "fixture": "exclusion 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        173,
+        128,
+        112,
+        255
+      ],
+      "expected": [
+        173,
+        128,
+        112,
+        255
+      ]
+    },
+    {
+      "fixture": "exclusion 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        142,
+        106,
+        156,
+        190
+      ],
+      "expected": [
+        141,
+        107,
+        157,
+        190
+      ]
+    },
+    {
+      "fixture": "exclusion 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        142,
+        107,
+        157,
+        190
+      ],
+      "expected": [
+        141,
+        107,
+        157,
+        190
+      ]
+    },
+    {
+      "fixture": "exclusion 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "exclusion 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear burn 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        0,
+        102,
+        255
+      ],
+      "expected": [
+        0,
+        0,
+        102,
+        255
+      ]
+    },
+    {
+      "fixture": "linear burn 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        0,
+        102,
+        255
+      ],
+      "expected": [
+        0,
+        0,
+        102,
+        255
+      ]
+    },
+    {
+      "fixture": "linear burn 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        85,
+        64,
+        153,
+        190
+      ],
+      "expected": [
+        84,
+        65,
+        154,
+        190
+      ]
+    },
+    {
+      "fixture": "linear burn 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        85,
+        64,
+        153,
+        190
+      ],
+      "expected": [
+        84,
+        65,
+        154,
+        190
+      ]
+    },
+    {
+      "fixture": "linear burn 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear burn 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear dodge 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        192,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        192,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "linear dodge 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        192,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        192,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "linear dodge 128/177/0.7",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        168,
+        128,
+        204,
+        190
+      ],
+      "expected": [
+        168,
+        128,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "linear dodge 128/177/0.7",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        168,
+        128,
+        204,
+        190
+      ],
+      "expected": [
+        168,
+        128,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "linear dodge 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear dodge 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "darker color 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        51,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        51,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "darker color 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        51,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        51,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "darker color 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        102,
+        107,
+        187,
+        190
+      ],
+      "expected": [
+        101,
+        107,
+        187,
+        190
+      ]
+    },
+    {
+      "fixture": "darker color 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        102,
+        107,
+        187,
+        190
+      ],
+      "expected": [
+        101,
+        107,
+        187,
+        190
+      ]
+    },
+    {
+      "fixture": "darker color 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "darker color 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "lighter color 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        64,
+        153,
+        255
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        255
+      ]
+    },
+    {
+      "fixture": "lighter color 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        64,
+        153,
+        255
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        255
+      ]
+    },
+    {
+      "fixture": "lighter color 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        152,
+        86,
+        170,
+        190
+      ],
+      "expected": [
+        151,
+        86,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "lighter color 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        152,
+        86,
+        170,
+        190
+      ],
+      "expected": [
+        151,
+        86,
+        171,
+        190
+      ]
+    },
+    {
+      "fixture": "lighter color 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "lighter color 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "vivid light 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        128,
+        2,
+        255,
+        255
+      ],
+      "expected": [
+        128,
+        2,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "vivid light 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        128,
+        2,
+        255,
+        255
+      ],
+      "expected": [
+        128,
+        2,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "vivid light 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        128,
+        64,
+        203,
+        190
+      ],
+      "expected": [
+        126,
+        66,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "vivid light 128/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        128,
+        64,
+        203,
+        190
+      ],
+      "expected": [
+        126,
+        66,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "vivid light 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "vivid light 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear light 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        1,
+        255,
+        255
+      ],
+      "expected": [
+        204,
+        1,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "linear light 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        204,
+        1,
+        255,
+        255
+      ],
+      "expected": [
+        204,
+        1,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "linear light 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        153,
+        64,
+        203,
+        190
+      ],
+      "expected": [
+        151,
+        66,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "linear light 128/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        153,
+        64,
+        203,
+        190
+      ],
+      "expected": [
+        151,
+        66,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "linear light 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear light 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "pin light 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        153,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        153,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "pin light 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        153,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        153,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "pin light 128/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        136,
+        106,
+        187,
+        190
+      ],
+      "expected": [
+        134,
+        107,
+        187,
+        190
+      ]
+    },
+    {
+      "fixture": "pin light 128/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        136,
+        106,
+        187,
+        190
+      ],
+      "expected": [
+        134,
+        107,
+        187,
+        190
+      ]
+    },
+    {
+      "fixture": "pin light 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "pin light 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "hard mix 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        0,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        0,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "hard mix 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        0,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        0,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "hard mix 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        168,
+        64,
+        204,
+        190
+      ],
+      "expected": [
+        168,
+        65,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "hard mix 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        168,
+        64,
+        204,
+        190
+      ],
+      "expected": [
+        168,
+        65,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "hard mix 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "hard mix 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "subtract 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        64,
+        51,
+        255
+      ],
+      "expected": [
+        0,
+        64,
+        51,
+        255
+      ]
+    },
+    {
+      "fixture": "subtract 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        64,
+        51,
+        255
+      ],
+      "expected": [
+        0,
+        64,
+        51,
+        255
+      ]
+    },
+    {
+      "fixture": "subtract 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        85,
+        86,
+        137,
+        190
+      ],
+      "expected": [
+        84,
+        86,
+        137,
+        190
+      ]
+    },
+    {
+      "fixture": "subtract 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        85,
+        86,
+        137,
+        190
+      ],
+      "expected": [
+        84,
+        86,
+        137,
+        190
+      ]
+    },
+    {
+      "fixture": "subtract 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "subtract 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "divide 255/255/1",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        64,
+        255,
+        255,
+        255
+      ],
+      "expected": [
+        64,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "divide 255/255/1",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        64,
+        255,
+        255,
+        255
+      ],
+      "expected": [
+        64,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "divide 128/177/0.7",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        106,
+        148,
+        204,
+        190
+      ],
+      "expected": [
+        105,
+        149,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "divide 128/177/0.7",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        106,
+        148,
+        204,
+        190
+      ],
+      "expected": [
+        105,
+        149,
+        204,
+        190
+      ]
+    },
+    {
+      "fixture": "divide 0/177/0.7",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "divide 0/177/0.7",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        206,
+        64,
+        152,
+        124
+      ],
+      "expected": [
+        204,
+        64,
+        153,
+        124
+      ]
+    },
+    {
+      "fixture": "linear burn mask/fill",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        68,
+        98,
+        181,
+        151
+      ],
+      "expected": [
+        67,
+        98,
+        180,
+        151
+      ]
+    },
+    {
+      "fixture": "linear burn mask/fill",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        68,
+        98,
+        181,
+        151
+      ],
+      "expected": [
+        67,
+        98,
+        180,
+        151
+      ]
+    },
+    {
+      "fixture": "linear burn clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        28,
+        66,
+        153,
+        128
+      ],
+      "expected": [
+        26,
+        66,
+        154,
+        128
+      ]
+    },
+    {
+      "fixture": "linear burn repeated clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        28,
+        66,
+        153,
+        128
+      ],
+      "expected": [
+        26,
+        66,
+        154,
+        128
+      ]
+    },
+    {
+      "fixture": "linear burn isolated group",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        27,
+        66,
+        154,
+        255
+      ],
+      "expected": [
+        26,
+        66,
+        154,
+        255
+      ]
+    },
+    {
+      "fixture": "linear burn viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        68,
+        98,
+        181,
+        151
+      ],
+      "expected": [
+        68,
+        98,
+        181,
+        151
+      ]
+    },
+    {
+      "fixture": "linear dodge mask/fill",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        106,
+        127,
+        204,
+        151
+      ],
+      "expected": [
+        106,
+        128,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "linear dodge mask/fill",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        106,
+        127,
+        204,
+        151
+      ],
+      "expected": [
+        106,
+        128,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "linear dodge clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        151,
+        159,
+        227,
+        128
+      ],
+      "expected": [
+        150,
+        159,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "linear dodge repeated clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        151,
+        159,
+        227,
+        128
+      ],
+      "expected": [
+        150,
+        159,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "linear dodge isolated group",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        150,
+        159,
+        229,
+        255
+      ],
+      "expected": [
+        150,
+        159,
+        229,
+        255
+      ]
+    },
+    {
+      "fixture": "linear dodge viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        106,
+        127,
+        204,
+        151
+      ],
+      "expected": [
+        106,
+        127,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "darker color mask/fill",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        74,
+        118,
+        196,
+        151
+      ],
+      "expected": [
+        75,
+        118,
+        196,
+        151
+      ]
+    },
+    {
+      "fixture": "darker color mask/fill",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        74,
+        118,
+        196,
+        151
+      ],
+      "expected": [
+        75,
+        118,
+        196,
+        151
+      ]
+    },
+    {
+      "fixture": "darker color clipping",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 4,
+      "actual": [
+        52,
+        128,
+        203,
+        128
+      ],
+      "expected": [
+        51,
+        128,
+        204,
+        128
+      ]
+    },
+    {
+      "fixture": "darker color repeated clipping",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 4,
+      "actual": [
+        52,
+        128,
+        203,
+        128
+      ],
+      "expected": [
+        51,
+        128,
+        204,
+        128
+      ]
+    },
+    {
+      "fixture": "darker color isolated group",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        51,
+        128,
+        204,
+        255
+      ],
+      "expected": [
+        51,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "darker color viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        74,
+        118,
+        196,
+        151
+      ],
+      "expected": [
+        74,
+        118,
+        196,
+        151
+      ]
+    },
+    {
+      "fixture": "lighter color mask/fill",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        100,
+        108,
+        187,
+        151
+      ],
+      "expected": [
+        98,
+        108,
+        188,
+        151
+      ]
+    },
+    {
+      "fixture": "lighter color mask/fill",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        100,
+        108,
+        187,
+        151
+      ],
+      "expected": [
+        98,
+        108,
+        188,
+        151
+      ]
+    },
+    {
+      "fixture": "lighter color clipping",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 4,
+      "actual": [
+        126,
+        96,
+        179,
+        128
+      ],
+      "expected": [
+        125,
+        97,
+        179,
+        128
+      ]
+    },
+    {
+      "fixture": "lighter color repeated clipping",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 4,
+      "actual": [
+        126,
+        96,
+        179,
+        128
+      ],
+      "expected": [
+        125,
+        97,
+        179,
+        128
+      ]
+    },
+    {
+      "fixture": "lighter color isolated group",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        126,
+        96,
+        179,
+        255
+      ],
+      "expected": [
+        125,
+        97,
+        179,
+        255
+      ]
+    },
+    {
+      "fixture": "lighter color viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        100,
+        108,
+        187,
+        151
+      ],
+      "expected": [
+        100,
+        108,
+        187,
+        151
+      ]
+    },
+    {
+      "fixture": "vivid light mask/fill",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        88,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        86,
+        99,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "vivid light mask/fill",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        88,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        86,
+        99,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "vivid light clipping",
+      "path": "Canvas",
+      "max": 4,
+      "tolerance": 4,
+      "actual": [
+        92,
+        66,
+        227,
+        128
+      ],
+      "expected": [
+        88,
+        67,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "vivid light repeated clipping",
+      "path": "Canvas",
+      "max": 4,
+      "tolerance": 4,
+      "actual": [
+        92,
+        66,
+        227,
+        128
+      ],
+      "expected": [
+        88,
+        67,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "vivid light isolated group",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        89,
+        66,
+        229,
+        255
+      ],
+      "expected": [
+        88,
+        67,
+        229,
+        255
+      ]
+    },
+    {
+      "fixture": "vivid light viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        88,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        88,
+        98,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "linear light mask/fill",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        100,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        98,
+        99,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "linear light mask/fill",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        100,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        98,
+        99,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "linear light clipping",
+      "path": "Canvas",
+      "max": 3,
+      "tolerance": 4,
+      "actual": [
+        128,
+        66,
+        227,
+        128
+      ],
+      "expected": [
+        125,
+        66,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "linear light repeated clipping",
+      "path": "Canvas",
+      "max": 3,
+      "tolerance": 4,
+      "actual": [
+        128,
+        66,
+        227,
+        128
+      ],
+      "expected": [
+        125,
+        66,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "linear light isolated group",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        126,
+        66,
+        229,
+        255
+      ],
+      "expected": [
+        125,
+        66,
+        229,
+        255
+      ]
+    },
+    {
+      "fixture": "linear light viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        100,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        100,
+        98,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "pin light mask/fill",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        91,
+        117,
+        196,
+        151
+      ],
+      "expected": [
+        90,
+        118,
+        196,
+        151
+      ]
+    },
+    {
+      "fixture": "pin light mask/fill",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        91,
+        117,
+        196,
+        151
+      ],
+      "expected": [
+        90,
+        118,
+        196,
+        151
+      ]
+    },
+    {
+      "fixture": "pin light clipping",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 4,
+      "actual": [
+        102,
+        128,
+        203,
+        128
+      ],
+      "expected": [
+        101,
+        128,
+        204,
+        128
+      ]
+    },
+    {
+      "fixture": "pin light repeated clipping",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 4,
+      "actual": [
+        102,
+        128,
+        203,
+        128
+      ],
+      "expected": [
+        101,
+        128,
+        204,
+        128
+      ]
+    },
+    {
+      "fixture": "pin light isolated group",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        102,
+        127,
+        204,
+        255
+      ],
+      "expected": [
+        101,
+        128,
+        204,
+        255
+      ]
+    },
+    {
+      "fixture": "pin light viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        91,
+        117,
+        196,
+        151
+      ],
+      "expected": [
+        91,
+        117,
+        196,
+        151
+      ]
+    },
+    {
+      "fixture": "hard mix mask/fill",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        106,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        106,
+        98,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "hard mix mask/fill",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        106,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        106,
+        98,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "hard mix clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        151,
+        66,
+        227,
+        128
+      ],
+      "expected": [
+        150,
+        66,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "hard mix repeated clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        151,
+        66,
+        227,
+        128
+      ],
+      "expected": [
+        150,
+        66,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "hard mix isolated group",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        150,
+        66,
+        229,
+        255
+      ],
+      "expected": [
+        150,
+        66,
+        229,
+        255
+      ]
+    },
+    {
+      "fixture": "hard mix viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        106,
+        98,
+        204,
+        151
+      ],
+      "expected": [
+        106,
+        98,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "subtract mask/fill",
+      "path": "Canvas",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        68,
+        108,
+        172,
+        151
+      ],
+      "expected": [
+        67,
+        108,
+        172,
+        151
+      ]
+    },
+    {
+      "fixture": "subtract mask/fill",
+      "path": "WebGL",
+      "max": 1,
+      "tolerance": 3,
+      "actual": [
+        68,
+        108,
+        172,
+        151
+      ],
+      "expected": [
+        67,
+        108,
+        172,
+        151
+      ]
+    },
+    {
+      "fixture": "subtract clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        28,
+        98,
+        129,
+        128
+      ],
+      "expected": [
+        26,
+        97,
+        130,
+        128
+      ]
+    },
+    {
+      "fixture": "subtract repeated clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        28,
+        98,
+        129,
+        128
+      ],
+      "expected": [
+        26,
+        97,
+        130,
+        128
+      ]
+    },
+    {
+      "fixture": "subtract isolated group",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        26,
+        97,
+        130,
+        255
+      ],
+      "expected": [
+        26,
+        97,
+        130,
+        255
+      ]
+    },
+    {
+      "fixture": "subtract viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        68,
+        108,
+        172,
+        151
+      ],
+      "expected": [
+        68,
+        108,
+        172,
+        151
+      ]
+    },
+    {
+      "fixture": "divide mask/fill",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        78,
+        137,
+        204,
+        151
+      ],
+      "expected": [
+        76,
+        138,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "divide mask/fill",
+      "path": "WebGL",
+      "max": 2,
+      "tolerance": 3,
+      "actual": [
+        78,
+        137,
+        204,
+        151
+      ],
+      "expected": [
+        76,
+        138,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "divide clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        58,
+        189,
+        227,
+        128
+      ],
+      "expected": [
+        57,
+        190,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "divide repeated clipping",
+      "path": "Canvas",
+      "max": 2,
+      "tolerance": 4,
+      "actual": [
+        58,
+        189,
+        227,
+        128
+      ],
+      "expected": [
+        57,
+        190,
+        229,
+        128
+      ]
+    },
+    {
+      "fixture": "divide isolated group",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        57,
+        190,
+        229,
+        255
+      ],
+      "expected": [
+        57,
+        190,
+        229,
+        255
+      ]
+    },
+    {
+      "fixture": "divide viewport",
+      "path": "worker",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        78,
+        137,
+        204,
+        151
+      ],
+      "expected": [
+        78,
+        137,
+        204,
+        151
+      ]
+    },
+    {
+      "fixture": "Hard Mix 256 threshold boundaries",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "Hard Mix 256 threshold boundaries",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "expected": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "fixture": "darker color 256 equal totals",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        255,
+        0,
+        255
+      ],
+      "expected": [
+        0,
+        255,
+        0,
+        255
+      ]
+    },
+    {
+      "fixture": "darker color 256 equal totals",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        255,
+        0,
+        255
+      ],
+      "expected": [
+        0,
+        255,
+        0,
+        255
+      ]
+    },
+    {
+      "fixture": "lighter color 256 equal totals",
+      "path": "Canvas",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        255,
+        0,
+        255
+      ],
+      "expected": [
+        0,
+        255,
+        0,
+        255
+      ]
+    },
+    {
+      "fixture": "lighter color 256 equal totals",
+      "path": "WebGL",
+      "max": 0,
+      "tolerance": 3,
+      "actual": [
+        0,
+        255,
+        0,
+        255
+      ],
+      "expected": [
+        0,
+        255,
+        0,
+        255
+      ]
+    }
+  ],
+  "backend": "WebGL2",
+  "errors": []
+}

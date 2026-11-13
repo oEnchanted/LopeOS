@@ -1,0 +1,66 @@
+.lope-app.files-view .application-sidebar { min-width: 0; min-height: 0; padding-bottom: 12px; color: var(--glass-text); }
+.files-sidebar-content { min-height: 0; flex: 1; overflow: auto; }
+.files-locations { display: flex; flex-direction: column; gap: 4px; }
+.lope-app.files-view .files-storage { flex-shrink: 0; margin-top: auto; padding: 13px 10px 11px; border-radius: 10px; color: var(--glass-text); }
+.files-storage-heading { display: flex; align-items: center; gap: 7px; }
+.files-storage-heading > svg { flex-shrink: 0; color: var(--glass-muted); }
+.files-storage-heading strong { font-size: 11px; font-weight: 600; flex: 1; }
+.files-storage-heading button { display: flex; align-items: center; justify-content: center; width: 22px; height: 24px; flex-shrink: 0; padding: 0; border: 0; border-radius: 5px; color: var(--glass-muted); background: transparent; }
+.files-storage-heading button:hover { background: var(--glass-hover); color: var(--glass-text); }
+.files-storage-heading button:disabled { opacity: .45; }
+.files-storage-meter { height: 5px; overflow: hidden; border-radius: 4px; margin: 13px 0 9px; background: var(--glass-track); }
+.files-storage-meter span { display: block; height: 100%; border-radius: inherit; background: var(--glass-fill); }
+.files-storage p { font-size: 10px; line-height: 1.55; margin: 0; overflow-wrap: anywhere; }
+.files-storage-amount strong { font-weight: 600; }
+.files-storage-free, .files-storage small { color: var(--glass-muted); }
+.files-storage small { display: block; font-size: 9px; line-height: 1.45; margin-top: 8px; }
+.files-storage-unavailable { padding-top: 9px; color: var(--glass-muted); }
+.lope-app.files-view .files-location-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+.lope-app.files-view .file-drop-target { outline: 2px solid var(--accent); outline-offset: -3px; background: var(--accent-soft); }
+.lope-app.files-view .file-cut .file-item-name { opacity: .5; }
+.lope-app.files-view .application-status > span { overflow-wrap: anywhere; min-width: 0; }
+.lope-app.files-view .application-status .control-group { flex-wrap: wrap; }
+.lope-app.files-view .file-controls > .ui-button { flex-shrink: 0; padding: 8px; }
+.lope-app.files-view .file-controls { gap: 6px; }
+.files-action-menu { position: fixed; z-index: 10000; width: 236px; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow-y: auto; padding: 5px; border-radius: 10px; font-size: 12px; }
+.files-action-menu button { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; border: 0; border-radius: 5px; padding: 7px 10px; color: var(--glass-text); background: transparent; text-align: left; font: inherit; }
+.files-action-menu button:not(:disabled):is(:hover,:focus-visible) { background: var(--glass-hover); outline: none; }
+.files-action-menu button:disabled { opacity: .4; }
+.files-action-menu kbd { color: var(--glass-muted); font-family: inherit; font-size: 10px; white-space: nowrap; }
+.files-action-menu [role=separator] { height: 1px; background: var(--glass-inset-border); margin: 5px; }
+@container (max-width: 600px) {
+  .lope-app.files-view .files-storage { padding: 10px 7px; }
+  .files-storage-heading { flex-wrap: wrap; gap: 5px; }
+  .files-storage-heading strong { font-size: 10px; }
+  .lope-app.files-view .files-location-title { max-width: 100px; }
+}
+@container (max-width: 440px) {
+  .lope-app.files-view .application-sidebar { flex-basis: 112px; padding: 13px 6px 8px; }
+  .lope-app.files-view .application-sidebar .ui-button { justify-content: flex-start; padding: 9px 6px; gap: 6px; font-size: 10px; }
+  .lope-app.files-view .application-sidebar .ui-button > span { position: static; width: auto; height: auto; clip-path: none; }
+  .lope-app.files-view .sidebar-caption { display: block; font-size: 8px; margin: 6px 6px 10px; }
+  .files-storage-heading > svg { width: 14px; }
+  .files-storage-heading strong { flex-basis: 55px; }
+  .files-storage-heading button { width: 16px; }
+  .files-storage p { font-size: 9px; }
+  .files-storage small { font-size: 8px; }
+  .lope-app.files-view .files-content { padding: 12px 9px; }
+  .lope-app.files-view .application-heading { margin: 16px 0; flex-wrap: wrap; gap: 5px; }
+  .lope-app.files-view .application-heading h1 { font-size: 20px; }
+  .lope-app.files-view .application-heading p { font-size: 11px; }
+  .lope-app.files-view .file-controls select { width: auto; min-width: 0; flex: 1; }
+  .lope-app.files-view .ui-toolbar { gap: 5px; padding: 8px; }
+  .lope-app.files-view .ui-toolbar .ui-button { padding: 6px; }
+  .lope-app.files-view .files-location-title { max-width: 80px; }
+  .lope-app.files-view .file-item-heading, .lope-app.files-view .list .file-item { grid-template-columns: minmax(0,1fr) 44px; gap: 5px; padding: 10px 7px; }
+  .lope-app.files-view .file-item-name { gap: 5px; font-size: 11px; }
+  .lope-app.files-view .file-item-name svg { flex-shrink: 0; width: 17px; }
+  .lope-app.files-view .grid .file-item-name svg { width: 39px; }
+  .lope-app.files-view .file-items.grid { grid-template-columns: repeat(auto-fill,minmax(80px,1fr)); gap: 7px; }
+}
+.files-cloud-status { margin: 14px 10px; display: grid; gap: 10px; min-width: 0; }
+.files-cloud-status > button { width: 100%; white-space: normal; height: auto; min-height: 32px; }
+.files-cloud-status .account-status { min-width: 0; }
+@media (max-width: 600px) {
+  .files-locations button > span { white-space: normal; line-height: 1.4; }
+}

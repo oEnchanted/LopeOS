@@ -1,0 +1,710 @@
+{
+  "config": {
+    "argv": [
+      "/opt/homebrew/Cellar/node/26.12.1/bin/node",
+      "/Users/luke/Documents/LopeOS 100/node_modules/@playwright/test/cli.js",
+      "test",
+      "-c",
+      "tests/settings/playwright.config.ts"
+    ],
+    "configFile": "/Users/luke/Documents/LopeOS 100/tests/settings/playwright.config.ts",
+    "rootDir": "/Users/luke/Documents/LopeOS 100/tests/settings",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/luke/Documents/LopeOS 100/tests/settings/results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/luke/Documents/LopeOS 100/tests/settings",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 35000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/luke/Documents/LopeOS 100/tests/settings/results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "chromium",
+        "testDir": "/Users/luke/Documents/LopeOS 100/tests/settings",
+        "snapshotDir": "/Users/luke/Documents/LopeOS 100/tests/settings",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 35000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4182",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "launchOptions": {
+            "args": [
+              "--use-fake-device-for-media-stream",
+              "--use-fake-ui-for-media-stream"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/settings-revision/test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.0",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "preferences.spec.ts",
+      "file": "preferences.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "migration preserves legacy preferences and separates documents, assets, and history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:40.855Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14778efd97370ce75a77-80c2b0d7455ef6b0580b",
+          "file": "preferences.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "storage failure retains session changes and accurately reports persistence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:40.887Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14778efd97370ce75a77-0a6b07c6e50d2b6168c3",
+          "file": "preferences.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "imports reject corrupt files, secret keys, invalid scope, duplicate status items, and out-of-range values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:40.894Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14778efd97370ce75a77-0191967cabf18353cfdf",
+          "file": "preferences.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "authorized wallpaper migration replaces the temporary fallback once and preserves personal choices",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:40.907Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14778efd97370ce75a77-bf39b571b138e70990f5",
+          "file": "preferences.spec.ts",
+          "line": 8,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "settings.spec.ts",
+      "file": "settings.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all categories render without permission requests; search reveals a matching control and navigation works",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1902,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:40.857Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-b276cf8a6a8f692c9964",
+          "file": "settings.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "quick controls and settings share persistence, validated import previews, and reset preserves documents",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1728,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:43.045Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-8062f6e94d75b2f48b53",
+          "file": "settings.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "dock placement, scale, titlebar minimize, show desktop, and privacy cover retain windows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1294,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:44.782Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-ebac5157881722880d0d",
+          "file": "settings.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "real browser media preview stops from status, feature policy, and closing Settings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1400,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:46.086Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-04aa0b8795ce8e50833a",
+          "file": "settings.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "denied capture is explained; pending location is cancelled by the LopeOS access switch",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 989,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:47.491Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-0c0c065a5da90bf0b833",
+          "file": "settings.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "notifications obey DND, preview suppression, per-app alerts, and retained-history deletion",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1014,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:48.486Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-b3d7088a8132c96e6dc4",
+          "file": "settings.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "workspace search uses permitted names and respects shared file access without altering files",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1714,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:49.509Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-80a9ec990d15306ed487",
+          "file": "settings.spec.ts",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "safely closing apps checks editor unsaved-work guards before destroying any window",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1699,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:51.229Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-e94ad7ff4e2bddc86f3f",
+          "file": "settings.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "unavailable storage and unsupported device APIs leave an honest usable Settings screen",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 896,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:52.933Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-a32b81d4752a89fbd72b",
+          "file": "settings.spec.ts",
+          "line": 15,
+          "column": 1
+        },
+        {
+          "title": "screen capture suppresses previews and the browser stop action ends its media track",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 995,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:53.835Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-0e81dcd3155d4cd1df99",
+          "file": "settings.spec.ts",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "hidden chrome remains keyboard accessible and short-height Settings has no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 784,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:54.840Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-7fa9ef5fc95a1f848ebe",
+          "file": "settings.spec.ts",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "approved PerfectHue artwork loads with the exact credit, while original and uploaded images keep their attribution",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 35000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 1443,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1335\u001b[39m\nReceived:   \u001b[31m1340\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1335\u001b[39m\nReceived:   \u001b[31m1340\u001b[39m\n    at /Users/luke/Documents/LopeOS 100/tests/settings/settings.spec.ts:25:191",
+                    "location": {
+                      "file": "/Users/luke/Documents/LopeOS 100/tests/settings/settings.spec.ts",
+                      "column": 191,
+                      "line": 25
+                    },
+                    "snippet": " \u001b[90m 23 |\u001b[39m   \u001b[36mawait\u001b[39m open(page)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m category(page\u001b[33m,\u001b[39m\u001b[32m'Wallpaper'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m settings(page)\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Aurora Glass · Dark'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.desktop'\u001b[39m))\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'data-wallpaper'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'perfecthue-dark'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 24 |\u001b[39m   \u001b[36mawait\u001b[39m settings(page)\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Tidal'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(credit)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mreload()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.desktop'\u001b[39m))\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'data-wallpaper'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'aurora'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 25 |\u001b[39m   \u001b[36mawait\u001b[39m pref(page\u001b[33m,\u001b[39m{wallpaper\u001b[33m:\u001b[39m\u001b[32m'perfecthue-light'\u001b[39m\u001b[33m,\u001b[39mdockPosition\u001b[33m:\u001b[39m\u001b[32m'right'\u001b[39m\u001b[33m,\u001b[39mdockSize\u001b[33m:\u001b[39m\u001b[35m68\u001b[39m})\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m c\u001b[33m=\u001b[39m\u001b[36mawait\u001b[39m credit\u001b[33m.\u001b[39mboundingBox()\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m d\u001b[33m=\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.dock'\u001b[39m)\u001b[33m.\u001b[39mboundingBox()\u001b[33m;\u001b[39mexpect(c\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mx\u001b[33m+\u001b[39mc\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mwidth)\u001b[33m.\u001b[39mtoBeLessThan(d\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mx)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 26 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 27 |\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/luke/Documents/LopeOS 100/tests/settings/settings.spec.ts",
+                        "column": 191,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1335\u001b[39m\nReceived:   \u001b[31m1340\u001b[39m\n\n  23 |   await open(page);await category(page,'Wallpaper');await settings(page).getByRole('button',{name:'Aurora Glass · Dark',exact:true}).click();await expect(page.locator('.desktop')).toHaveAttribute('data-wallpaper','perfecthue-dark');\n  24 |   await settings(page).getByRole('button',{name:'Tidal',exact:true}).click();await expect(credit).toHaveCount(0);await page.reload();await expect(page.locator('.desktop')).toHaveAttribute('data-wallpaper','aurora');\n> 25 |   await pref(page,{wallpaper:'perfecthue-light',dockPosition:'right',dockSize:68});const c=await credit.boundingBox();const d=await page.locator('.dock').boundingBox();expect(c!.x+c!.width).toBeLessThan(d!.x);\n     |                                                                                                                                                                                               ^\n  26 | });\n  27 |\n    at /Users/luke/Documents/LopeOS 100/tests/settings/settings.spec.ts:25:191"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T22:19:55.636Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/luke/Documents/LopeOS 100/tests/settings/results/settings-approved-PerfectH-6f6ac-ages-keep-their-attribution-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/luke/Documents/LopeOS 100/tests/settings/results/settings-approved-PerfectH-6f6ac-ages-keep-their-attribution-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/luke/Documents/LopeOS 100/tests/settings/settings.spec.ts",
+                    "column": 191,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d877ffdf71ec720167ae-c260b62bd796bb09a922",
+          "file": "settings.spec.ts",
+          "line": 19,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T22:19:40.366Z",
+    "duration": 16788.131,
+    "expected": 15,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

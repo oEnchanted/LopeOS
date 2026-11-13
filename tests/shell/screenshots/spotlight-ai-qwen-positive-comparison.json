@@ -1,0 +1,153 @@
+{
+  "modelIds": [
+    "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"
+  ],
+  "temperature": 0.3,
+  "topP": 0.9,
+  "seed": 11,
+  "maxTokens": 256,
+  "testedAt": "2026-11-13T18:55:10.477Z",
+  "results": [
+    {
+      "modelId": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+      "metadata": {
+        "bytes": 880289238,
+        "weightBytes": 868547584
+      },
+      "initializationMs": 21759.199999999255,
+      "cases": [
+        {
+          "name": "paris-clean",
+          "system": "positive",
+          "prompt": "where is paris france",
+          "text": "Paris is the capital city of France. It's located in northern France, on the Seine River. The city sits on both banks of the river and extends into the Marais district. Paris has a population of around 2. 1 million people as of recent estimates.",
+          "chunks": 56,
+          "firstTokenMs": 660.9000000003725,
+          "durationMs": 1829.300000000745
+        },
+        {
+          "name": "paris-followup",
+          "system": "positive",
+          "prompt": "What river runs through it?",
+          "text": "The Seine River runs through Paris. It starts in the Marais district and flows westward, passing through many of the city's most famous landmarks such as Notre Dame Cathedral, the Louvre Museum, and the Eiffel Tower. The river then empties into the English Channel at Le Havre.",
+          "chunks": 62,
+          "firstTokenMs": 310.40000000037253,
+          "durationMs": 1693.5
+        },
+        {
+          "name": "paris-contaminated",
+          "system": "positive",
+          "prompt": "where is paris france",
+          "text": "Paris, France is located in the northwestern part of the country. It's situated on both banks of the Seine River and lies at the confluence of the Marne and Oise rivers. The city covers an area of approximately 108 square kilometers (42 square miles). Paris is known for its iconic landmarks such as the Eiffel Tower, Notre Dame Cathedral, and the Louvre Museum.",
+          "chunks": 84,
+          "firstTokenMs": 259.40000000037253,
+          "durationMs": 2082.199999999255
+        },
+        {
+          "name": "australia-capital",
+          "system": "positive",
+          "prompt": "What is the capital of Australia? Answer in one short sentence.",
+          "text": "The capital of Australia is Canberra.",
+          "chunks": 7,
+          "firstTokenMs": 166.09999999962747,
+          "durationMs": 299.19999999925494
+        },
+        {
+          "name": "short-draft",
+          "system": "positive",
+          "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+          "text": "\"Hi Sam, I'm sorry for the delay. I'll be a bit late but not by much.\"",
+          "chunks": 22,
+          "firstTokenMs": 155.39999999850988,
+          "durationMs": 595.7999999988824
+        },
+        {
+          "name": "word-count",
+          "system": "positive",
+          "prompt": "Return only the number of letters in the word \"planet\".",
+          "text": "6",
+          "chunks": 1,
+          "firstTokenMs": 163.09999999962747,
+          "durationMs": 183.90000000037253
+        },
+        {
+          "name": "format",
+          "system": "positive",
+          "prompt": "Give exactly three common fruits, separated by commas. No explanation.",
+          "text": "Apple, banana, orange",
+          "chunks": 5,
+          "firstTokenMs": 173.7000000011176,
+          "durationMs": 280.2000000011176
+        },
+        {
+          "name": "paris-clean",
+          "system": "provider-default",
+          "prompt": "where is paris france",
+          "text": "Paris is the capital city of France. It is located in northern central western Europe, on the Seine River, facing the English Channel to its west and south. The city has a population of over 2 million people and covers an area of about 105 square kilometers (41 square miles).",
+          "chunks": 62,
+          "firstTokenMs": 154.2999999988824,
+          "durationMs": 1874.699999999255
+        },
+        {
+          "name": "paris-followup",
+          "system": "provider-default",
+          "prompt": "What river runs through it?",
+          "text": "The Seine River runs through Paris. It is the city's most important river and a major transportation route, as well as an important source of water for drinking and other uses. The Seine flows from north to south through central Paris before emptying into the English Channel at Le Havre.",
+          "chunks": 59,
+          "firstTokenMs": 454.8999999985099,
+          "durationMs": 2218.5999999996275
+        },
+        {
+          "name": "paris-contaminated",
+          "system": "provider-default",
+          "prompt": "where is paris france",
+          "text": "Paris, France is located in the northwestern part of the country. It's situated on both banks of the Seine River and lies along the western bank. The city covers a large area with several districts, including the central district known as the \"Île-de-France,\" which includes Paris proper, as well as other regions such as the suburbs to the west and south-west.",
+          "chunks": 77,
+          "firstTokenMs": 335.30000000074506,
+          "durationMs": 2768.10000000149
+        },
+        {
+          "name": "australia-capital",
+          "system": "provider-default",
+          "prompt": "What is the capital of Australia? Answer in one short sentence.",
+          "text": "The capital of Australia is Canberra.",
+          "chunks": 7,
+          "firstTokenMs": 218.09999999962747,
+          "durationMs": 410.40000000037253
+        },
+        {
+          "name": "short-draft",
+          "system": "provider-default",
+          "prompt": "Write a friendly two-sentence note telling Sam I will be ten minutes late.",
+          "text": "Hi Sam, I'm sorry for the delay. I'll be a bit late but it won't take long.",
+          "chunks": 23,
+          "firstTokenMs": 214.2999999988824,
+          "durationMs": 892.5
+        },
+        {
+          "name": "word-count",
+          "system": "provider-default",
+          "prompt": "Return only the number of letters in the word \"planet\".",
+          "text": "5",
+          "chunks": 1,
+          "firstTokenMs": 230.39999999850988,
+          "durationMs": 264.59999999962747
+        },
+        {
+          "name": "format",
+          "system": "provider-default",
+          "prompt": "Give exactly three common fruits, separated by commas. No explanation.",
+          "text": "apple\nbanana\norange",
+          "chunks": 5,
+          "firstTokenMs": 218.59999999962747,
+          "durationMs": 346.59999999962747
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "quota": 10737418240,
+    "usage": 0,
+    "usageDetails": {}
+  }
+}

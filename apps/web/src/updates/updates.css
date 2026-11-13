@@ -1,0 +1,41 @@
+.software-update-summary { display: flex; align-items: center; gap: 17px; padding: 10px 3px 25px; }
+.software-update-summary__mark { display: grid; place-items: center; width: 64px; height: 64px; flex: 0 0 auto; color: var(--text); }
+.software-update-summary h2 { margin: 0 0 5px; font-size: 23px; font-weight: 600; letter-spacing: -.7px; }
+.software-update-summary p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.software-update-cache-state { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; }
+.software-update-error { margin: 0 0 18px; padding: 12px 14px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 9px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.software-update-prompt { color: var(--glass-text); }
+.software-update-prompt > p { margin: 15px 0; line-height: 1.6; }
+.software-update-prompt__release { display: flex; align-items: center; gap: 15px; border-radius: 12px; padding: 15px; }
+.software-update-prompt__release > span { display: grid; place-items: center; flex-shrink: 0; }
+.software-update-prompt__release strong { display: block; font-size: 18px; font-weight: 600; }
+.software-update-prompt__release small { display: block; color: var(--glass-muted); margin-top: 3px; line-height: 1.5; }
+.software-update-prompt__details { display: grid; gap: 8px; margin: 18px 0; }
+.software-update-prompt__details > div { display: flex; justify-content: space-between; gap: 15px; }
+.software-update-prompt__details dt { color: var(--glass-muted); }
+.software-update-prompt__details dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.software-update-prompt .dialog-actions { flex-wrap: wrap; margin-top: 22px; }
+
+/* The update boot shares Reset's intentionally opaque black surface. */
+.software-update-boot { z-index: 200001; }
+.software-update-boot:focus { outline: none; }
+.software-update-boot .reset-boot__lower { width: min(420px, calc(100% - 48px)); }
+.software-update-boot .reset-boot__progress { width: 220px; }
+.software-update-boot .reset-boot__progress > span { transition-duration: 250ms; transition-timing-function: linear; }
+.software-update-boot__phase { margin: 24px 0 8px; font-size: 15px; font-weight: 550; line-height: 1.5; color: #fff; }
+.software-update-boot__version { margin: 0 0 15px; font-size: 12px; line-height: 1.5; color: #b9b9be; }
+.software-update-boot__download { margin: 0 0 5px; font-size: 12px; line-height: 1.5; color: #e0e0e3; font-variant-numeric: tabular-nums; }
+.software-update-boot__detail { margin: 0; font-size: 11px; line-height: 1.5; color: #b9b9be; font-variant-numeric: tabular-nums; }
+.software-update-boot__hint { margin: 19px auto 0; max-width: 320px; font-size: 11px; line-height: 1.6; color: #b9b9be; }
+.software-update-boot__actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.software-update-boot .reset-boot__error { margin-top: 15px; }
+.software-update-boot .reset-boot__error button:disabled { opacity: .5; }
+@media (max-height: 620px) {
+  .software-update-boot .reset-boot__logo { top: 25%; }
+  .software-update-boot .reset-boot__logo svg { width: 64px; height: 64px; }
+  .software-update-boot .reset-boot__lower { top: 44%; }
+}
+@media (max-height: 380px) {
+  .software-update-boot .reset-boot__logo { position: relative; top: auto; left: auto; transform: none; padding: 28px 0; }
+  .software-update-boot .reset-boot__lower { position: relative; top: auto; left: auto; transform: none; margin: 0 auto; }
+}

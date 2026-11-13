@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#b6cbd6"/>
+    <title>LopeOS</title>
+    <style>html[data-resetting],html[data-resetting] body{background:#000}</style>
+    <script>
+      // Preserve the black boot background while the reset document loads.
+      try {
+        if (localStorage.getItem('lope.reset.pending.v1') || sessionStorage.getItem('lope.reset.pending.v1')) document.documentElement.dataset.resetting = 'true';
+      } catch { /* The application reports unavailable browser storage. */ }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/apps/web/src/main.tsx"></script>
+  </body>
+</html>

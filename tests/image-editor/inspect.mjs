@@ -1,0 +1,17 @@
+import { seedSession } from '../setup/seed-session.mjs';
+import { chromium, expect } from '@playwright/test';
+import { mkdir, writeFile } from 'node:fs/promises';
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:1600,height:1000},deviceScaleFactor:1});
+const errors=[];page.on('pageerror',error=>errors.push(error.message));
+await seedSession(page);await page.goto('http://127.0.0.1:5176/',{waitUntil:'domcontentloaded'});
+await page.waitForSelector('.desktop',{timeout:30000}).catch(async error=>{console.log(JSON.stringify({errors,body:await page.locator('body').innerText()}));throw error;});
+await page.keyboard.press('Control+k');const search=page.getByRole('dialog',{name:'Find applications'});await search.getByRole('button',{name:'Applications',exact:true}).click();await search.getByRole('textbox').fill('Image Editor');await expect(search.getByRole('option').first()).toContainText('Image Editor');await page.keyboard.press('Enter');
+await page.getByTestId('image-editor-app').waitFor({timeout:30000});
+await page.waitForTimeout(2000);await mkdir('docs/image-editor/screenshots',{recursive:true});
+await page.screenshot({path:'docs/image-editor/screenshots/initial-shell.png'});
+const app=page.getByTestId('image-editor-app');const rowCount=await app.locator('[data-layer-id]').count();await app.getByTestId('image-canvas-area').focus();await page.keyboard.press('Control+Shift+n');await expect(app.locator('[data-layer-id]')).toHaveCount(rowCount+1);await page.keyboard.press('Control+z');await expect(app.locator('[data-layer-id]')).toHaveCount(rowCount);
+const pixels=await page.getByTestId('image-composite').evaluate(c=>[...c.getContext('2d').getImageData(100,100,1,1).data]);expect(pixels[3]).toBe(255);
+await page.goto('http://127.0.0.1:5176/docs/image-editor/visual-comparison.html');await expect(page.locator('#state option')).toHaveCount(18);await page.locator('#state').selectOption('color-picker');await expect(page.locator('#capture')).toHaveAttribute('src','screenshots/color-picker.png');await page.locator('#regions').uncheck();await expect(page.locator('#overlays')).toBeHidden();await page.locator('#layout').click();await expect(page.locator('#grid')).toHaveClass(/single/);expect(errors).toEqual([]);
+const report={date:'2026-11-13',checks:['Real shell search launches Image Editor','Scoped application shortcuts create and undo a layer','Sample composite renders opaque image pixels','Interactive visual report changes states, overlays and layout'],errors};await writeFile('docs/image-editor/shell-verification.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+await browser.close();

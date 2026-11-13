@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LopeOS Image Editor · Visual review</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#191b1e;color:#e2e5e9;font:14px/1.6 system-ui,sans-serif}main{max-width:1640px;margin:0 auto;padding:36px 32px 60px}h1{font-size:28px;letter-spacing:-.6px;font-weight:550;margin:0 0 9px}h2{font-size:16px;font-weight:550;margin:0 0 14px}p{max-width:1000px;color:#b7bec9;margin:0 0 18px}a{color:#92c1f4}header{border-bottom:1px solid #343840;padding-bottom:22px;margin-bottom:26px}.note{border-left:3px solid #d9b780;padding:10px 15px;background:#2c2923;color:#e6d8c1;margin-top:20px;max-width:1120px}nav{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:20px 0}select,button{background:#2c3037;color:#e4e8ed;border:1px solid #4c535f;border-radius:5px;padding:8px 12px;font:inherit}label{display:flex;align-items:center;gap:8px}input{accent-color:#7eb9f4}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:25px;align-items:start}.grid.single{grid-template-columns:1fr}.grid.single .reference{display:none}figure{margin:0;min-width:0}.frame{position:relative;background:#111;border:1px solid #414752;line-height:0;overflow:hidden}.frame img{display:block;width:100%;height:auto}figcaption{font-size:12px;color:#a5aebc;margin:10px 0 20px;line-height:1.6}.overlay{position:absolute;pointer-events:none;border:1px solid var(--tint);background:color-mix(in srgb,var(--tint) 9%,transparent);z-index:1}.overlay span{position:absolute;left:2px;top:2px;background:#111d;color:var(--tint);font:10px/1.3 system-ui;padding:3px;max-width:100%;white-space:nowrap}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;margin:14px 0 22px;color:#b7bec9}.legend i{display:inline-block;width:8px;height:8px;margin-right:5px;background:var(--tint)}table{border-collapse:collapse;width:100%;max-width:880px;margin-top:12px;font-size:12px}th,td{text-align:left;border-bottom:1px solid #353b44;padding:9px 14px 9px 0}th{color:#9da8b7;font-weight:450}.status{display:inline-block;font-size:11px;color:#b6d4b3;border:1px solid #4b624d;border-radius:20px;padding:3px 10px;margin-bottom:14px}.links{margin-top:24px;display:flex;gap:20px;flex-wrap:wrap;font-size:12px}@media(max-width:900px){main{padding:24px 16px}.grid{grid-template-columns:1fr}h1{font-size:23px}}
+</style>
+</head>
+<body><main>
+<header><span class="status">Implementation evidence · 2026-11-13</span><h1>Image Editor / visual review</h1><p>Desktop workspace, contextual tools, panels and dialogs. Implementation captures use the same original Alpine study at 50% canvas zoom, 1440 × 900, browser DPR 1.</p><div class="note">Adobe’s public screenshot uses different artwork and collapsed panels. Its exact desktop build, operating system and display scale are unreported. These images support structural review; a same-fixture Windows Photoshop pixel comparison remains unverified.</div></header>
+<nav><label>Workspace state <select id="state" aria-label="Workspace state"></select></label><label><input id="regions" type="checkbox" checked>Measured regions</label><button id="layout">Expand implementation</button></nav>
+<div class="grid" id="grid">
+  <figure class="reference"><h2>Adobe desktop documentation reference</h2><div class="frame"><img src="reference/adobe-workspace-2026.jpg" alt="Adobe's official annotated Photoshop desktop workspace reference, with a tree and night-sky document and collapsed right panels"></div><figcaption>Adobe copyright. Source: <a href="https://helpx.adobe.com/photoshop/desktop/get-started/learn-the-basics/workspace-overview.html">Photoshop desktop workspace overview</a>, observed November 12, 2026. No Adobe artwork is included in the application’s runtime assets.</figcaption></figure>
+  <figure><h2 id="state-title">Essentials</h2><div class="frame" id="implementation"><img id="capture" src="screenshots/essentials.png" alt="LopeOS Image Editor dark Essentials workspace"><div id="overlays"></div></div><figcaption id="caption">Original layered Alpine study. LopeOS supplies the outer operating-system window; this capture shows the internal application.</figcaption></figure>
+</div>
+<div class="legend" id="legend"></div>
+<h2>Measured implementation geometry</h2><p>Coordinates and dimensions below are CSS pixels within the fixed implementation capture. Adobe’s region sizes cannot be compared numerically without a matching reference build and viewport.</p>
+<table><thead><tr><th>Region</th><th>X, Y</th><th>Width × height</th><th>Reference match</th></tr></thead><tbody id="measurements"></tbody></table>
+<div class="links"><a href="reference-inventory.md">Reference inventory</a><a href="parity-inventory.json">Command and control records</a><a href="verification.md">Functional and pixel verification</a><a href="remaining-gaps.md">Remaining gaps</a></div>
+<script type="application/json" id="capture-data">{
+  "date": "2026-11-13",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "scale": 1
+  },
+  "fixture": "Original Alpine study, 1440 × 960, 50% zoom",
+  "states": [
+    {
+      "name": "essentials",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "brush-options",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "tool-flyout",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "mask-target",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "selection-taskbar",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 425.453125,
+          "y": 812,
+          "width": 310.09375,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "crop",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 476.4765625,
+          "y": 812,
+          "width": 208.046875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "type-dialog",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 213.15625,
+          "width": 580,
+          "height": 473.6875
+        }
+      }
+    },
+    {
+      "name": "transform-dialog",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 274.5,
+          "width": 580,
+          "height": 351
+        }
+      }
+    },
+    {
+      "name": "color-picker",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 245.5,
+          "width": 580,
+          "height": 409
+        }
+      }
+    },
+    {
+      "name": "new-document",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 250,
+          "y": 171.25,
+          "width": 940,
+          "height": 557.484375
+        }
+      }
+    },
+    {
+      "name": "image-size",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 270.28125,
+          "width": 580,
+          "height": 359.4375
+        }
+      }
+    },
+    {
+      "name": "canvas-size",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 274.953125,
+          "width": 580,
+          "height": 350.09375
+        }
+      }
+    },
+    {
+      "name": "export",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        },
+        ".ie-modal": {
+          "x": 430,
+          "y": 290.5,
+          "width": 580,
+          "height": 319
+        }
+      }
+    },
+    {
+      "name": "history",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "channels",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "floating-panels",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "collapsed-panels",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1365,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1347,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1440,
+          "y": 65,
+          "width": 0,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1440,
+          "y": 562,
+          "width": 0,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 581.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    },
+    {
+      "name": "layer-menu",
+      "regions": {
+        ".ie-menubar": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 27
+        },
+        ".ie-options": {
+          "x": 0,
+          "y": 27,
+          "width": 1440,
+          "height": 38
+        },
+        ".ie-toolbar": {
+          "x": 0,
+          "y": 65,
+          "width": 40,
+          "height": 835
+        },
+        ".ie-document-tabs": {
+          "x": 40,
+          "y": 65,
+          "width": 1081,
+          "height": 28
+        },
+        ".ie-canvas-area": {
+          "x": 58,
+          "y": 111,
+          "width": 1063,
+          "height": 766
+        },
+        ".ie-panels": {
+          "x": 1156,
+          "y": 65,
+          "width": 284,
+          "height": 835
+        },
+        ".ie-panel-layers": {
+          "x": 1157,
+          "y": 562,
+          "width": 283,
+          "height": 336
+        },
+        ".ie-contextual-bar": {
+          "x": 439.5390625,
+          "y": 812,
+          "width": 281.921875,
+          "height": 37
+        }
+      }
+    }
+  ],
+  "errors": []
+}</script>
+<script>
+  const data=JSON.parse(document.getElementById('capture-data').textContent);
+  const definitions={'.ie-menubar':['Menus','#a8bdf9'],'.ie-options':['Options','#edb27a'],'.ie-toolbar':['Tools','#de9bae'],'.ie-document-tabs':['Document tabs','#c7a9ec'],'.ie-canvas-area':['Canvas area','#d8ce79'],'.ie-panels':['Panel dock','#82c5a7'],'.ie-panel-layers':['Layers','#6fc9db'],'.ie-contextual-bar':['Task bar','#c2a7df'],'.ie-modal':['Dialog','#e8a398']};
+  const pretty=name=>name.split('-').map(word=>word[0].toUpperCase()+word.slice(1)).join(' ');
+  const state=document.getElementById('state');data.states.forEach(item=>{const option=document.createElement('option');option.value=item.name;option.textContent=pretty(item.name);state.appendChild(option);});
+  function render(){const selected=data.states.find(item=>item.name===state.value)||data.states[0];document.getElementById('capture').src='screenshots/'+selected.name+'.png';document.getElementById('capture').alt='LopeOS Image Editor: '+pretty(selected.name);document.getElementById('state-title').textContent=pretty(selected.name);const overlays=document.getElementById('overlays');overlays.replaceChildren();const rows=document.getElementById('measurements');rows.replaceChildren();const legend=document.getElementById('legend');legend.replaceChildren();for(const [key,region]of Object.entries(selected.regions)){const [label,tint]=definitions[key]||[key,'#ddd'];const box=document.createElement('div');box.className='overlay';box.style.cssText=`--tint:${tint};left:${region.x/data.viewport.width*100}%;top:${region.y/data.viewport.height*100}%;width:${region.width/data.viewport.width*100}%;height:${region.height/data.viewport.height*100}%`;const text=document.createElement('span');text.textContent=label;box.appendChild(text);overlays.appendChild(box);const row=document.createElement('tr');[label,`${Math.round(region.x)}, ${Math.round(region.y)}`,`${Math.round(region.width)} × ${Math.round(region.height)}`,'Unverified'].forEach(value=>{const cell=document.createElement('td');cell.textContent=value;row.appendChild(cell);});rows.appendChild(row);const entry=document.createElement('span');entry.style.setProperty('--tint',tint);const dot=document.createElement('i');entry.append(dot,document.createTextNode(label));legend.appendChild(entry);}overlays.hidden=!document.getElementById('regions').checked;}
+  state.addEventListener('change',render);document.getElementById('regions').addEventListener('change',render);document.getElementById('layout').addEventListener('click',event=>{const single=document.getElementById('grid').classList.toggle('single');event.target.textContent=single?'Show reference alongside':'Expand implementation';});render();
+</script>
+</main></body></html>

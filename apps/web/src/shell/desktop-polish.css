@@ -1,0 +1,240 @@
+/* Desktop chrome only. Creative application surfaces and shared tokens are unchanged. */
+.menubar {
+  background: linear-gradient(180deg, #ffffff38, #ffffff08), rgba(245, 249, 255, var(--menu-alpha, .55));
+  border-bottom-color: #ffffff70;
+  box-shadow: 0 1px 10px #16334c12;
+}
+.desktop[data-theme=dark] .menubar {
+  background: linear-gradient(180deg, #ffffff10, transparent), rgba(24, 30, 41, var(--menu-alpha, .55));
+  border-bottom-color: #ffffff20;
+}
+.menubar .menu-trigger { border-radius: 5px; }
+.menubar .menu-trigger:is(:hover, .is-open),
+.system-status > button:is(:hover, [aria-expanded=true]) { background: var(--hover); }
+.system-status > button { border-radius: 6px; }
+.system-status .clock-button { font-variant-numeric: tabular-nums; }
+
+/* Brief, quiet feedback keeps menu navigation feeling immediate. */
+.menubar .menu-trigger,
+.menubar .system-status > button {
+  transition: background-color 110ms ease-out, color 110ms ease-out, opacity 80ms ease-out;
+}
+.menubar .menu-trigger:active,
+.menubar .system-status > button:active { opacity: .78; }
+.menubar .dropdown-menu > button:not(:disabled) {
+  transition: background-color 80ms ease-out, color 80ms ease-out;
+}
+.menubar .dropdown-menu {
+  transform-origin: top left;
+  animation: menu-bar-surface-in 120ms cubic-bezier(.2, .8, .2, 1);
+}
+.desktop > .system-popover {
+  transform-origin: top right;
+  animation: menu-bar-surface-in 150ms cubic-bezier(.2, .8, .2, 1);
+}
+.desktop > .system-popover button,
+.desktop > .system-popover .quick-tile > svg {
+  transition: background-color 110ms ease-out, border-color 110ms ease-out, color 110ms ease-out, opacity 80ms ease-out;
+}
+.desktop > .system-popover button:active:not(:disabled) { opacity: .8; }
+/* Shared reduced-motion rules disable these animations and transitions. */
+@keyframes menu-bar-surface-in {
+  from { opacity: 0; transform: translateY(-2px) scale(.995); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Preserve the creative apps' existing window geometry and styling. */
+.os-window:not([data-app-id="lope.writer"], [data-app-id="lope.lightroom"], [data-app-id="lope.image-editor"]) {
+  border-radius: 16px;
+  box-shadow: 0 24px 64px -18px #102b4859, 0 8px 22px -10px #102b4840, 0 0 0 1px #18334b24, inset 0 1px 0 #ffffff85;
+}
+.os-window:not([data-app-id="lope.writer"], [data-app-id="lope.lightroom"], [data-app-id="lope.image-editor"]) > .window-titlebar {
+  border-radius: 15px 15px 0 0;
+  background: linear-gradient(180deg, #ffffff28, transparent), var(--chrome-material);
+}
+.os-window:not([data-app-id="lope.writer"], [data-app-id="lope.lightroom"], [data-app-id="lope.image-editor"]) > .window-content {
+  border-radius: 0 0 15px 15px;
+}
+.desktop[data-theme=dark] .os-window:not([data-app-id="lope.writer"], [data-app-id="lope.lightroom"], [data-app-id="lope.image-editor"]) {
+  box-shadow: 0 26px 64px -16px #0009, 0 8px 24px -8px #0006, 0 0 0 1px #0005, inset 0 1px #ffffff20;
+}
+.os-window:not([data-app-id="lope.writer"], [data-app-id="lope.lightroom"], [data-app-id="lope.image-editor"], .is-focused) {
+  box-shadow: 0 12px 34px -12px #102b4838, 0 0 0 1px var(--separator);
+}
+
+.dock {
+  background: linear-gradient(155deg, #ffffff48, #ffffff08 50%, #ffffff20), var(--floating-material);
+  border-color: #ffffffa6;
+  box-shadow: inset 0 1px 1px #ffffffe0, inset 0 -1px 1px #ffffff45, 0 14px 34px -10px #082a5266, 0 0 0 1px #294c6224;
+}
+.dock:before { border-color: #ffffff26; border-bottom-color: #ffffff40; }
+.desktop[data-theme=dark] .dock {
+  background: linear-gradient(155deg, #ffffff12, transparent 55%, #ffffff06), var(--floating-material);
+  border-color: #ffffff40;
+  box-shadow: inset 0 1px 1px #ffffff40, inset 0 -1px #ffffff10, 0 14px 34px -10px #0009, 0 0 0 1px #0004;
+}
+.dock-tooltip { padding: 7px 11px; border-radius: 8px; font-size: 12px; }
+.dock-item[aria-current=true] .running-indicator { width: 9px; border-radius: 3px; opacity: 1; }
+.desktop-items > button { border: 1px solid transparent; }
+.desktop-items > button:focus-visible { background: #eaf8ff30; border-color: #ffffff80; outline-offset: 2px; }
+
+/* Floating controls share a denser glass for legibility over any wallpaper. */
+:is(.dropdown-menu, .system-popover, .spotlight, .toast, .file-dialog) {
+  background: linear-gradient(145deg, #ffffff38, #ffffff08), color-mix(in srgb, var(--surface) 80%, transparent);
+  border: 1px solid var(--edge-light);
+  box-shadow: 0 18px 54px -16px #102a4c59, 0 4px 14px -5px #102a4c2e, inset 0 1px #ffffff65;
+}
+.desktop[data-theme=dark] :is(.dropdown-menu, .system-popover, .spotlight, .toast, .file-dialog) {
+  background: linear-gradient(145deg, #ffffff0c, transparent), color-mix(in srgb, var(--surface) 88%, transparent);
+  box-shadow: 0 18px 54px -16px #0009, 0 4px 14px -5px #0007, inset 0 1px #ffffff1a;
+}
+.dropdown-menu { padding: 6px; border-radius: 11px; }
+.desktop .dropdown-menu > button {
+  min-height: 30px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-size: calc(12px * var(--ui-text-scale, 1));
+}
+.dropdown-menu kbd { font-family: inherit; font-size: 10px; opacity: .8; }
+.dropdown-menu > button:disabled { background: transparent; color: var(--muted); }
+.system-popover { width: 320px; padding: 16px; border-radius: 18px; }
+.popover-heading { min-height: 22px; margin-bottom: 14px; font-size: 14px; letter-spacing: -.02em; }
+.popover-heading button {
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.popover-heading button:hover { background: var(--hover); color: var(--text); }
+.quick-grid { gap: 9px; }
+.quick-tile { padding: 13px; border-radius: 12px; min-height: 116px; }
+.quick-tile > svg {
+  box-sizing: content-box;
+  padding: 8px;
+  margin-bottom: 10px;
+  background: var(--accent-soft);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+}
+.quick-tile.active { border-color: color-mix(in srgb, var(--accent) 40%, var(--separator)); }
+.quick-tile.active > svg { background: var(--accent); color: var(--accent-ink); }
+.desktop .system-popover :is(.quick-row, .quick-tile strong) { font-size: calc(12px * var(--ui-text-scale, 1)); }
+.quick-tile strong { font-weight: 600; }
+.quick-tile small { font-size: 11px; line-height: 1.4; }
+.quick-tile:hover, .quick-row:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--separator)); }
+.quick-segment { border-radius: 10px; padding: 4px; margin: 12px 0; }
+.quick-segment button { font-size: 11px; min-height: 31px; border-radius: 6px; gap: 6px; }
+.quick-segment button[aria-pressed=true] { font-weight: 600; }
+.quick-slider { padding: 13px; border-radius: 12px; font-size: 12px; }
+.quick-slider b { font-size: 11px; font-variant-numeric: tabular-nums; }
+.quick-slider input { display: block; margin: 13px 0 0; cursor: pointer; }
+.quick-row { margin-top: 9px; min-height: 43px; border-radius: 10px; }
+.quick-row > svg:first-child { color: var(--accent); }
+.quick-row[aria-pressed=true] { background: var(--accent-soft); }
+.desktop[data-theme=dark] :is(.quick-tile:not(.active) > svg, .quick-row > svg:first-child, .welcome-sidebar > button.selected svg, .spotlight-input > svg) {
+  color: color-mix(in srgb, var(--accent) 65%, white);
+}
+.calendar-date { font-size: 12px; }
+.calendar-popover h2 { font-size: 30px; font-weight: 550; letter-spacing: -.04em; margin: 6px 0 24px; }
+.calendar-month { font-size: 13px; }
+.calendar-grid { gap: 5px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.calendar-grid b { font-size: 10px; }
+.calendar-grid .today { background: var(--accent); color: var(--accent-ink); box-shadow: 0 2px 5px #10364a20; }
+.calendar-popover > p { font-size: 11px; }
+.notification-item { border: 1px solid var(--separator); border-radius: 11px; background: var(--row-material); padding: 13px; margin-top: 9px; }
+.notification-item strong { font-size: 12px; }
+.notification-item p { margin: 6px 0 8px; font-size: 12px; }
+.notification-item small { font-size: 10px; }
+.notifications-empty { padding: 30px 10px; text-align: center; }
+.notifications-empty > svg { color: var(--accent); }
+.notifications-empty span { font-size: 12px; line-height: 1.5; }
+.toast { border-radius: 16px; }
+.toast > button { display: grid; place-items: center; min-width: 22px; min-height: 22px; border-radius: 6px; }
+.toast > button:hover { background: var(--hover); }
+
+.spotlight { width: 620px; border-radius: 20px; }
+.spotlight-input { padding: 20px 22px; gap: 13px; }
+.spotlight-input > svg { color: var(--accent); }
+.spotlight-input input { font-size: 21px; letter-spacing: -.025em; }
+.spotlight-input > button { min-width: 28px; min-height: 28px; border-radius: 7px; }
+.spotlight-input > button:hover { background: var(--hover); }
+.spotlight-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; padding: 17px 23px 9px; }
+.spotlight-results { max-height: 390px; padding: 0 10px 10px; }
+.spotlight-results > button { padding: 11px 12px; border-radius: 10px; margin: 1px 0; }
+.spotlight-results > button > span:nth-child(2) { min-width: 0; }
+.desktop .spotlight-results strong { font-size: calc(13px * var(--ui-text-scale, 1)); font-weight: 600; }
+.desktop .spotlight-results small { font-size: calc(11px * var(--ui-text-scale, 1)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spotlight-results > button.selected { background: var(--accent-soft); }
+.search-recent { padding: 13px 22px 0; gap: 7px; }
+.search-recent > button { font-size: 11px; padding: 5px 8px; border-radius: 6px; }
+.search-status { font-size: 11px; line-height: 1.5; }
+.spotlight-footer { padding: 12px 22px; font-size: 11px; gap: 18px; }
+.spotlight-footer span { display: flex; align-items: center; gap: 6px; }
+.spotlight-footer kbd { font: inherit; min-width: 19px; padding: 2px 4px; border: 1px solid var(--separator); border-radius: 4px; text-align: center; }
+.search-announcement { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; }
+
+/* Welcome follows the same sidebar, grouped surfaces and type hierarchy as Settings. */
+.welcome-sidebar { width: 210px; padding: 25px 13px 20px; background: linear-gradient(160deg, #ffffff35, transparent), var(--sidebar-material); }
+.desktop[data-theme=dark] .welcome-sidebar { background: linear-gradient(160deg, #ffffff06, transparent), var(--sidebar-material); }
+.welcome-brand { gap: 10px; }
+.welcome-sidebar > button { min-height: 39px; margin: 2px 0; border: 1px solid transparent; border-radius: 9px; }
+.welcome-sidebar > button.selected,
+.desktop[data-theme=dark] .welcome-sidebar > button.selected {
+  background: var(--accent-soft);
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 18%, transparent);
+  box-shadow: inset 0 1px #ffffff25, 0 2px 5px #102b4806;
+  font-weight: 600;
+}
+.welcome-sidebar > button.selected svg { color: var(--accent); }
+.welcome-main, .desktop[data-theme=dark] .welcome-main { padding: 30px 34px 24px; }
+.welcome-main h1 { font-size: 31px; font-weight: 600; letter-spacing: -.045em; }
+.welcome-lede { font-size: 14px; line-height: 1.65; }
+.welcome-emblem { margin-bottom: 18px; }
+.welcome-actions { gap: 9px; }
+.welcome-actions .ui-button { min-height: 35px; border-radius: 8px; padding: 9px 13px; }
+.welcome-actions .ui-button--secondary { background: var(--row-material); }
+.welcome-divider { margin: 25px 0 19px; }
+.welcome-section-title h2 { font-size: 13px; }
+.welcome-section-title > button { font-size: 12px; padding: 4px; border-radius: 5px; }
+.welcome-section-title > button:hover { color: var(--text); background: var(--hover); }
+.essentials-grid { gap: 10px; }
+.essential-card { padding: 12px; gap: 12px; border-radius: 12px; box-shadow: inset 0 1px var(--edge-light), 0 2px 5px #122d4305; }
+.essential-card:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--separator)); background: var(--accent-soft); }
+.essential-card strong { font-size: 13px; font-weight: 600; }
+.essential-card small { font-size: 11px; line-height: 1.4; white-space: normal; }
+.essential-card > svg { align-self: center; }
+.welcome-tip { font-size: 11px; line-height: 1.6; gap: 9px; margin-top: 20px; }
+.welcome-tip kbd { font-family: inherit; font-size: 10px; padding: 2px 5px; margin: 0 2px; border: 1px solid var(--separator); border-radius: 4px; background: var(--row-material); white-space: nowrap; }
+.shortcut-list { border: 1px solid var(--separator); background: var(--row-material); border-radius: 12px; overflow: hidden; }
+.shortcut-list > div { padding: 15px; gap: 14px; }
+.shortcut-list > div:last-child { border-bottom: 0; }
+.shortcut-list kbd { flex-shrink: 0; }
+
+/* Preferences and narrow layouts take precedence over decorative materials. */
+.desktop[data-reduce-transparency=true] :is(.menubar, .dock, .dropdown-menu, .system-popover, .spotlight, .toast, .file-dialog, .welcome-sidebar),
+.desktop[data-increase-contrast=true] :is(.menubar, .dock, .dropdown-menu, .system-popover, .spotlight, .toast, .file-dialog, .welcome-sidebar) {
+  background: var(--surface);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-color: var(--separator);
+}
+.desktop[data-effects=low] :is(.dock, .dropdown-menu, .system-popover, .spotlight, .toast, .file-dialog) { background: var(--surface); }
+.desktop[data-effects=low] .os-window:not([data-app-id="lope.writer"], [data-app-id="lope.lightroom"], [data-app-id="lope.image-editor"]) { box-shadow: 0 5px 14px #173c4e24; }
+.desktop[data-compact=true] .welcome-main { padding: 24px; }
+.desktop[data-compact=true] .welcome-main h1 { font-size: 27px; }
+.desktop[data-compact=true] .welcome-lede { font-size: 13px; }
+.desktop[data-compact=true] .welcome-tip { align-items: flex-start; flex-wrap: nowrap; }
+.desktop[data-compact=true] .welcome-tip > svg { margin-top: 3px; }
+.desktop[data-compact=true] .spotlight-input { padding: 17px 15px; gap: 10px; }
+.desktop[data-compact=true] .spotlight-input input { font-size: 16px; }
+.desktop[data-compact=true] .spotlight-footer { justify-content: center; padding: 11px; gap: 13px; font-size: 10px; }
+.desktop[data-compact=true] .system-popover { max-height: calc(100% - 60px); overflow: auto; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :is(.dock, .dropdown-menu, .system-popover, .spotlight, .toast, .file-dialog) { background: var(--surface); }
+}

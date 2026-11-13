@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:5173/?workspace=lopeos",
+  "title": "LopeOS",
+  "heading": "Appearance",
+  "wallpaper": "perfecthue-light",
+  "credit": "perfecthue",
+  "windowBlur": "blur(32px) saturate(1.15)",
+  "errors": []
+}
