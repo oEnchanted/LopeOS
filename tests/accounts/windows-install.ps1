@@ -1,5 +1,6 @@
 $ErrorActionPreference = 'Stop'
-$root = Join-Path $env:TEMP ('lope-accounts-test-' + [Guid]::NewGuid().ToString('N'))
+# Local Service must not depend on access to the runner user's private profile.
+$root = Join-Path $env:ProgramData ('lope-accounts-test-' + [Guid]::NewGuid().ToString('N'))
 $taskName = 'LopeOS test ' + [Guid]::NewGuid().ToString('N')
 $install = Join-Path $root 'service'
 $data = Join-Path $root 'data'

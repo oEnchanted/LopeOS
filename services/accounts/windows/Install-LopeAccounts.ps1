@@ -81,7 +81,13 @@ try {
             $healthy = $true; break
         } catch { Start-Sleep -Seconds 1 }
     }
-    if (-not $healthy) { throw "Accounts did not become healthy. See $InstallPath/logs/service.log." }
+    if (-not $healthy) {
+        $info = Get-ScheduledTaskInfo -TaskName $TaskName
+        Write-Output "Account task result: $($info.LastTaskResult); state: $((Get-ScheduledTask -TaskName $TaskName).State)"
+        $logPath = Join-Path $InstallPath 'logs/service.log'
+        if (Test-Path $logPath) { Get-Content -LiteralPath $logPath -Tail 20 | Write-Output }
+        throw "Accounts did not become healthy. See $logPath."
+    }
     Write-Output "Accounts ready on 127.0.0.1:$Port; persistent data: $DataPath."
 } catch {
     $failure = $_
