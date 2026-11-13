@@ -67,6 +67,9 @@ jobs:
       - name: Install, restart, and verify persistent accounts
         shell: powershell
         run: ./tests/accounts/windows-install.ps1
+      - name: Verify atomic Caddy configuration replacement
+        shell: powershell
+        run: ./tests/updates/windows-config.ps1
 
   deploy:
     name: Publish the tested desktop

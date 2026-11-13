@@ -25,12 +25,14 @@ function Invoke-Caddy([string[]]$CaddyArguments) {
 
 function Write-AtomicConfig([byte[]]$Bytes) {
     $temporary = "$Caddyfile.$([Guid]::NewGuid().ToString('N')).tmp"
+    $backup = "$temporary.backup"
     try {
         [IO.File]::WriteAllBytes($temporary, $Bytes)
-        if (Test-Path -LiteralPath $Caddyfile) { [IO.File]::Replace($temporary, $Caddyfile, $null) }
+        if (Test-Path -LiteralPath $Caddyfile) { [IO.File]::Replace($temporary, $Caddyfile, $backup) }
         else { [IO.File]::Move($temporary, $Caddyfile) }
     } finally {
         if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force }
+        if (Test-Path -LiteralPath $backup) { Remove-Item -LiteralPath $backup -Force }
     }
 }
 
