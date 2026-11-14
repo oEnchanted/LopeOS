@@ -7,6 +7,7 @@ on:
   push:
     branches: [main]
     paths:
+      - .github/workflows/deploy-browser.yml
       - services/browser/**
       - packages/browser-client/**
       - services/runtime/browser-bridge.js
@@ -16,8 +17,11 @@ on:
 permissions:
   contents: read
 
+# Not the site deploy's lope-production group: GitHub keeps one pending run per
+# group, so a site deploy queued behind another cancelled this one. The host has a
+# single runner, which already runs the two deploys one at a time.
 concurrency:
-  group: lope-production
+  group: lope-browser-production
   cancel-in-progress: false
 
 jobs:
