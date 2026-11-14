@@ -51,6 +51,8 @@ export class BrowserEngine extends EventEmitter {
   async start() {
     this.generation = id();
     await mkdir(this.profileRoot, { recursive: true, mode: 0o700 });
+    // Transfers now live on the persistent profile volume; drop leftovers from an earlier run.
+    await rm(this.transferRoot, { recursive: true, force: true }).catch(() => {});
     this.normal = this.makeSession('normal', 'normal');
     let saved;
     try { saved = JSON.parse(await readFile(join(this.profileRoot, 'session.json'), 'utf8')); } catch {}
@@ -425,6 +427,11 @@ export class BrowserEngine extends EventEmitter {
         const actual = await realpath(result.path);
         if (!actual.startsWith((await realpath(directory)) + sep) || !(await stat(actual)).isFile()) throw new Error('File bridge returned an invalid path.');
         paths.push(actual);
+      } else if (file.path) {
+        // Staged by the server under this session's staging folder; move it, never copy it.
+        const actual = await realpath(file.path);
+        if (!actual.startsWith((await realpath(join(this.transferRoot, sessionId, 'staged'))) + sep)) throw new Error('Invalid staged upload.');
+        await rename(actual, target); paths.push(target);
       } else { await writeFile(target, file.bytes, { flag: 'wx', mode: 0o600 }); paths.push(target); }
     }
     await this.send(tab, 'DOM.setFileInputFiles', { files: paths, backendNodeId: request.nodeId });
