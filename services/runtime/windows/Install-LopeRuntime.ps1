@@ -23,8 +23,17 @@ if (-not (Test-Path (Join-Path $source 'services/runtime/install-public-linux.sh
 $linuxSource = ((& wsl.exe --distribution $Distro --user root --exec wslpath -a $source) -join '').Trim()
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($linuxSource)) { throw "This runner account cannot access the $Distro WSL distribution." }
 
-& wsl.exe --distribution $Distro --user root --exec bash "$linuxSource/services/runtime/install-public-linux.sh" $SiteOrigin $linuxSource
-if ($LASTEXITCODE -ne 0) { throw 'Linux runtime installation failed; see the output above.' }
+$installLog = New-Object System.Collections.Generic.List[string]
+# Native stderr is progress output here, not a PowerShell error.
+$ErrorActionPreference = 'Continue'
+& wsl.exe --distribution $Distro --user root --exec bash "$linuxSource/services/runtime/install-public-linux.sh" $SiteOrigin $linuxSource 2>&1 | ForEach-Object { $line = ("$_" -replace "`0", ''); $installLog.Add($line); Write-Output $line }
+$installExit = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
+if ($installExit -ne 0) {
+    # Job logs need authentication; keep the failing lines readable in the run annotations.
+    $tail = ($installLog | Where-Object { $_.Trim() } | Select-Object -Last 25) -join ' | '
+    throw "Linux runtime installation failed (exit $installExit): $tail"
+}
 
 # Keep the distribution, and with it the systemd service, running from boot.
 $taskName = 'LopeOS visitor runtime'
@@ -45,6 +54,6 @@ for ($attempt = 0; $attempt -lt 60; $attempt++) {
     catch { $reachable = [bool]$_.Exception.Response }
     if ($reachable) { Write-Output 'Visitor runtime is listening on loopback port 4174.'; return }
 }
-$status = ((& wsl.exe --distribution $Distro --user root --exec /bin/sh -c 'systemctl status lope-visitor-runtime.service --no-pager -n 30 2>&1') -join "`n")
-Write-Output $status
-throw 'The visitor runtime did not become reachable from Windows on 127.0.0.1:4174.'
+$ErrorActionPreference = 'Continue'
+$status = ((& wsl.exe --distribution $Distro --user root --exec journalctl -u lope-visitor-runtime.service --no-pager -n 15 -o cat 2>&1) -replace "`0", '' | Where-Object { $_.Trim() }) -join ' | '
+throw "The visitor runtime did not become reachable from Windows on 127.0.0.1:4174. Service log: $status"
