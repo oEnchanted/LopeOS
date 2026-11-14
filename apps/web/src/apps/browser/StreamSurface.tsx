@@ -17,6 +17,11 @@ export function StreamSurface({ url, visible, muted, onStatus, onShortcut, onAct
       if (event.data?.type === 'pipelineStatusUpdate' && typeof event.data.video === 'boolean') {
         setPlaying(event.data.video); if (event.data.video) { setTimedOut(false); onStatus('Streaming'); }
       }
+      // Selkies 2.2 reports its pipeline through stats replies instead of pipelineStatusUpdate.
+      if (event.data?.type === 'stats' && (event.data.data?.isVideoPipelineActive === true || Number(event.data.data?.clientFps) > 0)) {
+        setPlaying(true); setTimedOut(false); onStatus('Streaming');
+        frame.current?.contentWindow?.postMessage({ type: 'statsOpen', open: false }, location.origin);
+      }
       if (event.data?.type === 'clientRoleUpdate') onStatus('Connecting stream');
     };
     window.addEventListener('message', receive); return () => window.removeEventListener('message', receive);
@@ -28,6 +33,13 @@ export function StreamSurface({ url, visible, muted, onStatus, onShortcut, onAct
   useEffect(() => {
     if (loaded) frame.current?.contentWindow?.postMessage({ type: 'setMute', value: muted }, location.origin);
   }, [muted, loaded]);
+  useEffect(() => {
+    if (!loaded || playing) return;
+    const child = frame.current?.contentWindow;
+    child?.postMessage({ type: 'statsOpen', open: true }, location.origin);
+    const poll = setInterval(() => child?.postMessage({ type: 'getStats' }, location.origin), 1000);
+    return () => clearInterval(poll);
+  }, [loaded, playing]);
   useEffect(() => {
     if (!loaded) return;
     const child = frame.current?.contentWindow;
