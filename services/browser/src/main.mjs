@@ -15,7 +15,7 @@ const engine = new BrowserEngine({ executable,
   dataRoot: resolve(process.env.LOPE_BROWSER_DATA || 'services/browser/.data'),
   headless: process.env.LOPE_BROWSER_HEADLESS === 'true',
   transferRoot: process.env.LOPE_BROWSER_TRANSFERS,
-  streamUrl: streamEnabled ? (process.env.LOPE_BROWSER_STREAM_PATH || '/api/browser/stream') + '/selkies/' : null,
+  streamUrl: streamEnabled ? (process.env.LOPE_BROWSER_STREAM_PATH || '/api/browser/stream') + '/' : null,
   files: process.env.LOPE_RUNTIME_TRANSFER_URL ? createRuntimeFileBridge({ url: process.env.LOPE_RUNTIME_TRANSFER_URL,
     stagingRoot: resolve(process.env.LOPE_BROWSER_TRANSFERS || resolve(process.env.LOPE_BROWSER_DATA || 'services/browser/.data', 'transfers')), validateSession: id => engine.get(id),
     getToken: async () => process.env.LOPE_RUNTIME_TRANSFER_TOKEN || (process.env.LOPE_RUNTIME_TRANSFER_TOKEN_FILE ? (await readFile(process.env.LOPE_RUNTIME_TRANSFER_TOKEN_FILE, 'utf8')).trim() : null) }) : null });

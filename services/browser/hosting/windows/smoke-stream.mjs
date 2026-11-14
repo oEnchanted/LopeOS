@@ -21,7 +21,9 @@ import { DockerBrowserAllocator } from '../docker.mjs';
 const result = { kind: 'lope-browser-stream-smoke', passed: false, stage: 'configuration', node: process.versions.node,
   checks: { worker: false, mediaFrames: false, movingPixels: false, remotePointerAndKeyboard: false }, cleanup: false };
 const distro = process.env.LOPE_BROWSER_WSL_DISTRO || 'Ubuntu-24.04';
-let temporary, allocator, worker, server, browser;
+let temporary, allocator, worker, server, browser, debugPage;
+// Optional: a directory for failure screenshots and a redacted error, for operators only.
+const debugDirectory = process.env.LOPE_BROWSER_SMOKE_DEBUG_DIR;
 const sockets = new Set();
 const id = randomUUID(), ownerKey = randomBytes(32).toString('hex');
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -106,7 +108,7 @@ try {
     if (request.url === '/' && request.method === 'GET') {
       response.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
       response.end(`<!doctype html><html><head><title>Lope streaming smoke host</title><style>html,body,iframe{margin:0;width:100%;height:100%;border:0;overflow:hidden}</style></head><body>
-<iframe id="stream" src="/api/browser/stream/${id}/selkies/" allow="autoplay"></iframe><script>
+<iframe id="stream" src="/api/browser/stream/${id}/" allow="autoplay"></iframe><script>
 window.smokeStats=null; const frame=document.getElementById('stream');
 window.addEventListener('message',event=>{if(event.origin===location.origin&&event.source===frame.contentWindow&&event.data?.type==='stats')window.smokeStats=event.data.data;});
 frame.onload=()=>{frame.contentWindow.postMessage({type:'resetResolutionToWindow'},location.origin);frame.contentWindow.postMessage({type:'setMute',value:true},location.origin);frame.contentWindow.postMessage({type:'statsOpen',open:true},location.origin);};
@@ -137,6 +139,7 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
     ...(process.env.LOPE_BROWSER_SMOKE_CHROMIUM ? { executablePath: process.env.LOPE_BROWSER_SMOKE_CHROMIUM } : {}) });
   result.client = browser.version();
   const page = await browser.newPage({ viewport: { width: 1024, height: 768 }, deviceScaleFactor: 1 });
+  debugPage = page;
   let binaryFrames = 0;
   page.on('websocket', socket => socket.on('framereceived', frame => { if (typeof frame.payload !== 'string') binaryFrames++; }));
   await page.goto(origin, { waitUntil: 'domcontentloaded', timeout: 30000 });
@@ -162,20 +165,31 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   const second = createHash('sha256').update(await page.screenshot({ clip })).digest('hex');
   if (first === second) throw new Error('Stream pixels did not change while the remote fixture animated.');
   result.checks.movingPixels = true;
+  if (debugDirectory) await page.screenshot({ path: join(debugDirectory, 'before-input.png') }).catch(() => {});
   result.stage = 'remote-input';
   const remotePoint = (x, y) => ({ x: geometry.x + x * geometry.width / geometry.remoteWidth, y: geometry.y + y * geometry.height / geometry.remoteHeight });
   const inputPoint = remotePoint(160, 72), buttonPoint = remotePoint(560, 72);
-  await page.mouse.click(inputPoint.x, inputPoint.y);
+  // Move first and let the stream deliver the pointer position before pressing, as a
+  // person's pointer does; Selkies sends motion at frame rate but buttons immediately.
+  const click = async point => { await page.mouse.move(point.x, point.y, { steps: 5 }); await delay(400); await page.mouse.down(); await delay(80); await page.mouse.up(); };
+  await click(inputPoint);
   await page.keyboard.type('smoke42', { delay: 65 });
-  await page.mouse.click(buttonPoint.x, buttonPoint.y);
+  await delay(400);
+  await click(buttonPoint);
   await until(async () => (await api('sessions/normal')).tabs.some(tab => tab.title === 'Lope smoke submitted smoke42'));
   result.checks.remotePointerAndKeyboard = true;
   result.binaryFramesObserved = binaryFrames;
   result.passed = true; result.stage = 'complete';
-} catch {
+} catch (error) {
   // Error strings can contain command arguments, credentials, URLs or page content.
   // Report only the fixed stage and booleans; use a separate reviewed host check.
   result.passed = false;
+  if (debugDirectory) {
+    const redact = value => String(value).replace(/[a-f0-9]{32,}/gi, '[hex]').replace(/(token|password|authorization|bearer)\S*/gi, '$1 [redacted]').slice(0, 600);
+    console.log('debug error:', redact(error?.message ?? error));
+    try { console.log('debug tabs:', JSON.stringify((await api('sessions/normal')).tabs.map(tab => tab.title))); } catch {}
+    await debugPage?.screenshot({ path: join(debugDirectory, 'failure.png') }).catch(() => {});
+  }
 } finally {
   await browser?.close().catch(() => {});
   for (const socket of sockets) socket.destroy();

@@ -52,7 +52,7 @@ LopeOS browser chrome ── authenticated HTTP/SSE ── per-owner browser wor
                                                 ordinary website origins
 ```
 
-Only the trusted Selkies core is framed, at `/api/browser/stream/selkies/`. Websites load as normal top-level pages inside Chromium. Website TLS, origin isolation, cookies, CSP and service workers remain Chromium's responsibility. Certificate failures are not bypassed. Chromium starts without sandbox-disabling or web-security-disabling flags; DevTools travels on inherited pipe descriptors, with no published debugging port.
+Only the trusted Selkies core is framed, at `/api/browser/stream/<worker id>/` (Selkies 2.2 serves its web client at its configured subfolder). Websites load as normal top-level pages inside Chromium. Website TLS, origin isolation, cookies, CSP and service workers remain Chromium's responsibility. Certificate failures are not bypassed. Chromium starts without sandbox-disabling or web-security-disabling flags; DevTools travels on inherited pipe descriptors, with no published debugging port.
 
 The exported `browserApplication` manifest registers `lope.browser`, supplies File/Edit/View/History/Bookmarks/Window/Help contributions and declares HTTP/HTTPS protocols. The shell registry consumes it, the default Dock includes it, and LopeOS's URL service launches it with `launchArgs.url`. These defaults apply inside LopeOS. The component uses shared Button, Toolbar, Popover and Dialog components; the shell supplies the window frame. Tabs require custom content because the shared Tabs component has no close/pin/reorder interface.
 

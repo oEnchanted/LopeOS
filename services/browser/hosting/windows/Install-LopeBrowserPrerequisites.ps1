@@ -27,8 +27,15 @@ if ($distros -notcontains $Distro) {
     & wsl.exe @installArgs
     if ($LASTEXITCODE -ne 0) { throw 'Ubuntu installation did not complete. No Windows restart was performed.' }
 }
-& wsl.exe --set-version $Distro 2
-if ($LASTEXITCODE -ne 0) { throw 'The browser requires WSL2. Check virtualization support; no Windows restart was performed.' }
+# `--set-version` fails with WSL_E_VM_MODE_INVALID_STATE when the distro is already
+# WSL2, so only convert when the listed version is not 2.
+$env:WSL_UTF8 = '1'
+$listed = @((& wsl.exe --list --verbose) -join "`n" -replace "`0", '' -split "`n" | Where-Object { $_ -match ('^\s*\*?\s*' + [regex]::Escape($Distro) + '\s') })
+$wslVersion = if ($listed.Count -and $listed[0] -match '(\d)\s*$') { $Matches[1] } else { '' }
+if ($wslVersion -ne '2') {
+    & wsl.exe --set-version $Distro 2
+    if ($LASTEXITCODE -ne 0) { throw 'The browser requires WSL2. Check virtualization support; no Windows restart was performed.' }
+}
 & wsl.exe --distribution $Distro --user root --exec /usr/bin/id -u
 if ($LASTEXITCODE -ne 0) { throw 'The runner cannot start its Ubuntu WSL2 distro as root.' }
 $source = (Resolve-Path $SourcePath).Path

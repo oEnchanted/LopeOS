@@ -36,7 +36,7 @@ test('public gateway isolates encrypted accounts and guests; cookies and vault m
   const allocator = {
     async create(input) {
       allocations.push(input); const token = randomBytes(32).toString('hex');
-      const state = id => ({ id, mode: id === 'normal' ? 'normal' : 'private', tabs: [{ id: 'tab-' + input.id, url: 'about:blank', title: input.id }], streamUrl: '/api/browser/stream/' + input.id + '/selkies/' });
+      const state = id => ({ id, mode: id === 'normal' ? 'normal' : 'private', tabs: [{ id: 'tab-' + input.id, url: 'about:blank', title: input.id }], streamUrl: '/api/browser/stream/' + input.id + '/' });
       const server = createServer(async (req,res) => {
         seen.push({ headers: req.headers, path: req.url });
         assert.equal(req.headers.authorization,'Bearer ' + token); assert.equal(req.headers.cookie,undefined);
@@ -63,7 +63,7 @@ test('public gateway isolates encrypted accounts and guests; cookies and vault m
   const first = await request('/sessions',firstCookie,{method:'POST',body:JSON.stringify({mode:'normal'}),headers:{'X-Lope-Browser-Account':firstAccount.id}});
   assert.equal(first.status,200);const firstDevice=cookie(first);const firstState=await first.json();
   assert.notEqual(firstState.id,'normal');assert.equal(firstState.hosting.accountId,firstAccount.id);
-  assert.equal(firstState.streamUrl,`/api/browser/stream/${allocations[0].id}/selkies/`);
+  assert.equal(firstState.streamUrl,`/api/browser/stream/${allocations[0].id}/`);
   assert.equal(first.headers.get('set-cookie').includes('HttpOnly'),true);
   const aCookie=firstCookie+'; '+firstDevice;
   const same=await request('/sessions',aCookie,{method:'POST',body:'{"mode":"normal"}'});assert.equal((await same.json()).id,firstState.id);assert.equal(allocations.length,1);

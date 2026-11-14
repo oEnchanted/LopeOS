@@ -61,6 +61,9 @@ export class DockerBrowserAllocator {
         '--cpus', '2', '--memory', '2g', '--memory-swap', '2g', '--pids-limit', '512', '--shm-size', '512m',
         '--ulimit', 'core=0:0', '--ulimit', 'nofile=4096:4096', '--ulimit', 'nproc=512:512',
         '--tmpfs', '/tmp:rw,nosuid,nodev,size=536870912,mode=1777', '--tmpfs', '/home/ubuntu:rw,nosuid,nodev,size=134217728,uid=1000,gid=1000,mode=700',
+        // Docker mounts tmpfs noexec unless asked. s6 runs the copied service scripts from
+        // here; /tmp itself (including downloaded files) stays non-executable.
+        '--tmpfs', '/tmp/lope-services:rw,exec,nosuid,nodev,size=16777216,uid=1000,gid=1000,mode=700',
         '--mount', `type=bind,source=${profile},target=/profiles`, '--publish', '127.0.0.1::4175', '--env-file', linuxEnv, this.image];
       await this.docker(args, { timeout: 60000 });
       const ports = JSON.parse(await this.docker(['inspect', '--format', '{{json .NetworkSettings.Ports}}', name]));
@@ -72,7 +75,7 @@ export class DockerBrowserAllocator {
         try {
           const response = await this.request(url + '/api/browser/health', { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(2000), redirect: 'error' });
           if (response.ok && (await response.json()).streaming) {
-            const client = await this.request(url + `/api/browser/stream/${id}/selkies/`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(2000), redirect: 'error' });
+            const client = await this.request(url + `/api/browser/stream/${id}/`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(2000), redirect: 'error' });
             const ready = client.ok && (client.headers.get('content-type') ?? '').includes('text/html');
             await client.body?.cancel();
             if (ready) return { name, token, url, ownerKey };

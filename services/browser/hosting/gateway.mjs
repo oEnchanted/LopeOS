@@ -70,7 +70,7 @@ export function createBrowserGateway({ identity, allocator, origins, idleMs = 18
     if (!value || !Array.isArray(value.tabs) || typeof value.id !== 'string') throw new HostingError(502, 'WORKER', 'The browser worker returned invalid state.');
     const session = publicSession(worker, value.id);
     if (value.mode === 'normal') worker.normalId = session.id;
-    return { ...value, id: session.id, streamUrl: value.streamUrl ? `${PREFIX}/stream/${worker.id}/selkies/` : null,
+    return { ...value, id: session.id, streamUrl: value.streamUrl ? `${PREFIX}/stream/${worker.id}/` : null,
       hosting: { remote: true, accountId: worker.owner.accountId, profile: 'server' } };
   }
   function headers(req, worker) {
