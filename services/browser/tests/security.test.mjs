@@ -128,3 +128,59 @@ test('stream proxy authenticates upgrades and strips LopeOS cookies and credenti
     req.on('error',reject);req.on('upgrade',(res,socket)=>{socket.on('error',reject);socket.once('data',data=>{socket.destroy();resolve(data.toString());});socket.write('echo');});req.end();
   });assert.equal(result,'echo');assert.equal(seen[1].cookie,undefined);assert.equal(seen[1].origin,'http://lope.test');
 });
+
+test('address suggestions put the typed action first, rank host matches and prefer switching to open tabs', async () => {
+  const { addressSuggestions } = await import('../../../packages/browser-client/src/suggestions.ts');
+  const tab = (id, url, title) => ({ id, url, title, pinned: false, loading: false, canGoBack: false, canGoForward: false, zoom: 1 });
+  const sources = {
+    activeTabId: 'a', tabs: [tab('a', 'https://news.example/', 'News'), tab('b', 'https://wiki.example.org/Lope', 'Lope article')],
+    bookmarks: [{ id: 'm', url: 'https://wiki.example.org/Lope', title: 'Lope article', createdAt: 0 }],
+    history: [{ id: '1', url: 'https://docs.example/wiki-guide', title: 'Writing guide', visitedAt: 2 },
+      { id: '2', url: 'https://wiki.example.org/Lope', title: 'Lope article', visitedAt: 1 }],
+  };
+  const rows = addressSuggestions('wiki', sources);
+  assert.deepEqual(rows[0], { kind: 'search', title: 'wiki', url: 'https://duckduckgo.com/?q=wiki' });
+  assert.deepEqual(rows.slice(1).map(row => [row.kind, row.url]), [['tab', 'https://wiki.example.org/Lope'], ['history', 'https://docs.example/wiki-guide']]);
+  assert.equal(rows[1].tabId, 'b');
+  assert.equal(addressSuggestions('example.org', sources)[0].kind, 'url');
+  assert.equal(addressSuggestions('news', sources).some(row => row.tabId === 'a'), false); // Never the current tab.
+  assert.deepEqual(addressSuggestions('javascript:alert(1)', sources), []);
+  assert.deepEqual(addressSuggestions('  ', sources), []);
+});
+
+test('GPU detection parser and worker allocation arguments configure OpenGL', async () => {
+  const { parseGpuReport, gpuOptions } = await import('../hosting/docker.mjs');
+  const { gpuArguments } = await import('../src/cdp.mjs');
+
+  assert.deepEqual(parseGpuReport('KIND=wsl\n'), { kind: 'wsl' });
+  const wslOptions = gpuOptions({ kind: 'wsl' });
+  assert.ok(wslOptions.args.includes('/dev/dxg'));
+  assert.ok(wslOptions.env.includes('LOPE_BROWSER_GPU=wsl'));
+  assert.ok(wslOptions.env.includes('GALLIUM_DRIVER=d3d12'));
+
+  assert.deepEqual(parseGpuReport('KIND=dri\nNODE=/dev/dri/renderD128\nGID=108\nDRIVER=i915\n'), {
+    kind: 'dri', node: '/dev/dri/renderD128', gid: '108', driver: 'i915',
+  });
+  const driOptions = gpuOptions({ kind: 'dri', node: '/dev/dri/renderD128', gid: '108', driver: 'i915' });
+  assert.ok(driOptions.args.includes('/dev/dri/renderD128'));
+  assert.ok(driOptions.args.includes('108'));
+  assert.ok(driOptions.env.includes('LOPE_BROWSER_GPU=dri'));
+
+  const nvidiaOptions = gpuOptions({ kind: 'dri', node: '/dev/dri/renderD128', gid: '108', driver: 'nvidia' });
+  assert.ok(nvidiaOptions.args.includes('--gpus'));
+  assert.ok(nvidiaOptions.env.includes('NVIDIA_DRIVER_CAPABILITIES=all'));
+
+  assert.deepEqual(parseGpuReport('KIND=none\nREASON=No GPU render node on this host\n'), {
+    kind: 'none', reason: 'No GPU render node on this host',
+  });
+  assert.deepEqual(parseGpuReport('invalid-format'), { kind: 'none', reason: 'No usable GPU was found' });
+  assert.deepEqual(gpuOptions({ kind: 'none' }), { args: [], env: [] });
+
+  assert.deepEqual(gpuArguments(undefined), ['--enable-unsafe-swiftshader']);
+  assert.deepEqual(gpuArguments('none'), ['--enable-unsafe-swiftshader']);
+  assert.deepEqual(gpuArguments('wsl'), ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--enable-accelerated-2d-canvas']);
+  const driArgs = gpuArguments('dri');
+  assert.ok(driArgs.includes('--ignore-gpu-blocklist'));
+  assert.ok(driArgs.includes('--enable-gpu-rasterization'));
+  assert.ok(driArgs.some(arg => arg.includes('AcceleratedVideoDecodeLinuxGL')));
+});

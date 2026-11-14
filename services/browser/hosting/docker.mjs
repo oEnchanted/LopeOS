@@ -18,11 +18,48 @@ export function execute(file, args, { input, timeout = 30000, maxBytes = 131072 
   });
 }
 
+/** Parses detect-gpu.sh's report. Anything unexpected means no GPU, never a guessed device. */
+export function parseGpuReport(text) {
+  const report = {};
+  for (const line of String(text ?? '').split(/\r?\n/)) { const at = line.indexOf('='); if (at > 0) report[line.slice(0, at)] = line.slice(at + 1); }
+  if (report.KIND === 'wsl') return { kind: 'wsl' };
+  if (report.KIND === 'dri' && /^\/dev\/dri\/renderD\d{3}$/.test(report.NODE ?? '') && /^\d{1,10}$/.test(report.GID ?? '') && /^[a-z0-9_-]{1,32}$/.test(report.DRIVER ?? ''))
+    return { kind: 'dri', node: report.NODE, gid: report.GID, driver: report.DRIVER };
+  return { kind: 'none', reason: report.KIND === 'none' && /^[\w ,.'-]{1,120}$/.test(report.REASON ?? '') ? report.REASON : 'No usable GPU was found' };
+}
+
+/** Docker options and worker environment that lend a worker the host's GPU. The image defaults are the CPU path. */
+export function gpuOptions(gpu) {
+  if (gpu?.kind === 'wsl') return {
+    // Mesa's D3D12 driver draws Chromium's GL on the Windows GPU through /dev/dxg.
+    // Encoding stays on the CPU, so the stream keeps the image's CPU settings.
+    args: ['--device', '/dev/dxg', '--mount', 'type=bind,source=/usr/lib/wsl,target=/usr/lib/wsl,readonly'],
+    env: ['LOPE_BROWSER_GPU=wsl', 'LD_LIBRARY_PATH=/usr/lib/wsl/lib', 'GALLIUM_DRIVER=d3d12'],
+  };
+  if (gpu?.kind === 'dri') {
+    const nvidia = gpu.driver === 'nvidia';
+    return {
+      args: ['--device', gpu.node, '--group-add', gpu.gid, ...(nvidia ? ['--gpus', 'all'] : [])],
+      // Selkies renders the X server on this node (glamor/DRI3) and encodes on it
+      // (VA-API or NVENC), so the stream can afford full pixel density and every frame.
+      env: ['LOPE_BROWSER_GPU=dri', `DRINODE=${gpu.node}`, `DRI_NODE=${gpu.node}`, ...(nvidia ? ['NVIDIA_DRIVER_CAPABILITIES=all'] : []),
+        'SELKIES_USE_CSS_SCALING=false|locked', 'SELKIES_VIDEO_STREAMING_MODE=true|locked'],
+    };
+  }
+  return { args: [], env: [] };
+}
+
 /** Trusted host-side allocator. Browser requests cannot supply commands, paths, images or tokens. */
 export class DockerBrowserAllocator {
-  constructor({ directory, image = 'lope-browser:local', distro, deploymentId = 'lopeos', run = execute, request = fetch }) {
-    if (!/^[a-zA-Z0-9][a-zA-Z0-9_./:@-]{0,180}$/.test(image) || !/^[a-z0-9-]{1,40}$/.test(deploymentId) || (distro && !/^[a-zA-Z0-9_.-]+$/.test(distro))) throw new Error('Invalid browser host configuration.');
-    Object.assign(this, { directory: resolve(directory), image, distro, deploymentId, run, request });
+  constructor({ directory, image = 'lope-browser:local', distro, deploymentId = 'lopeos', gpu = 'auto', run = execute, request = fetch }) {
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_./:@-]{0,180}$/.test(image) || !/^[a-z0-9-]{1,40}$/.test(deploymentId) || (distro && !/^[a-zA-Z0-9_.-]+$/.test(distro)) || !['auto', 'off'].includes(gpu)) throw new Error('Invalid browser host configuration.');
+    Object.assign(this, { directory: resolve(directory), image, distro, deploymentId, gpuMode: gpu, gpu: { kind: 'none', reason: 'Not checked yet' }, run, request });
+  }
+  /** Re-checked at every gateway start, so adding or removing a GPU needs no reinstall. */
+  async detectGpu() {
+    if (this.gpuMode === 'off') return this.gpu = { kind: 'none', reason: 'Turned off by LOPE_BROWSER_GPU' };
+    // A missing or failing detector (an older install) leaves workers on the CPU path.
+    return this.gpu = parseGpuReport(await this.host('bash', ['/opt/lope-browser/detect-gpu.sh']).catch(() => ''));
   }
   host(file, args, options) {
     return this.distro ? this.run('wsl.exe', ['--distribution', this.distro, '--user', 'root', '--exec', file, ...args], options) : this.run(file, args, options);
@@ -34,6 +71,7 @@ export class DockerBrowserAllocator {
     const network = JSON.parse(await this.docker(['network', 'inspect', 'lope-browser-public']));
     if (network[0]?.Options?.['com.docker.network.bridge.enable_icc'] !== 'false' || network[0]?.Options?.['com.docker.network.bridge.name'] !== 'lope-browser0' || network[0]?.EnableIPv6) throw new Error('The browser egress network has not been prepared.');
     await this.host('bash', ['/opt/lope-browser/check-network.sh']);
+    await this.detectGpu();
     // Remove only our stale workers. Their bearer credentials die with this gateway.
     const stale = await this.docker(['ps', '-aq', '--filter', `label=lope.browser.gateway=${this.deploymentId}`]);
     for (const name of stale.split(/\s+/).filter(Boolean)) if (/^[a-f0-9]{12,64}$/.test(name)) await this.docker(['rm', '-f', name]);
@@ -46,6 +84,7 @@ export class DockerBrowserAllocator {
     const token = randomBytes(32).toString('hex'), password = randomBytes(32).toString('hex');
     const name = 'lope-browser-' + id;
     const envFile = join(this.directory, id + '.env');
+    const gpu = gpuOptions(this.gpu);
     await writeFile(envFile, [
       `LOPE_BROWSER_TOKEN=${token}`, `SELKIES_BASIC_AUTH_PASSWORD=${password}`,
       `LOPE_BROWSER_ORIGINS=${origin}`, `SELKIES_ALLOWED_ORIGINS=${origin}`,
@@ -56,6 +95,7 @@ export class DockerBrowserAllocator {
       // Larger audio buffers: without realtime scheduling, small PipeWire/Pulse
       // periods underrun while video encoding uses the CPU, which chops sound.
       'PULSE_LATENCY_MSEC=60', 'PIPEWIRE_LATENCY=1024/48000',
+      ...gpu.env,
     ].join('\n') + '\n', { flag: 'wx', mode: 0o600 });
     try {
       const linuxEnv = this.distro ? await this.host('wslpath', ['-a', envFile]) : envFile;
@@ -68,7 +108,7 @@ export class DockerBrowserAllocator {
         // Docker mounts tmpfs noexec unless asked. s6 runs the copied service scripts from
         // here; /tmp itself (including downloaded files) stays non-executable.
         '--tmpfs', '/tmp/lope-services:rw,exec,nosuid,nodev,size=16777216,uid=1000,gid=1000,mode=700',
-        '--mount', `type=bind,source=${profile},target=/profiles`, '--publish', '127.0.0.1::4175', '--env-file', linuxEnv, this.image];
+        '--mount', `type=bind,source=${profile},target=/profiles`, ...gpu.args, '--publish', '127.0.0.1::4175', '--env-file', linuxEnv, this.image];
       await this.docker(args, { timeout: 60000 });
       const ports = JSON.parse(await this.docker(['inspect', '--format', '{{json .NetworkSettings.Ports}}', name]));
       const port = ports?.['4175/tcp']?.find(binding => binding.HostIp === '127.0.0.1')?.HostPort;

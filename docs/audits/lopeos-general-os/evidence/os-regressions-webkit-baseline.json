@@ -1,63 +1,15 @@
 {
   "engine": "webkit",
   "base": "http://127.0.0.1:4190",
-  "ranAt": "2026-11-14T00:00:57.250Z",
+  "ranAt": "2026-11-14T00:15:38.173Z",
   "pass": 0,
-  "fail": 15,
+  "fail": 3,
   "results": [
     {
       "id": "state-01",
       "title": "Malformed restored window record does not blank the desktop",
       "result": "FAIL",
-      "ms": 30019,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "state-02",
-      "title": "Non-array recent-apps history does not crash the Dock or block launches",
-      "result": "FAIL",
-      "ms": 30020,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "state-03",
-      "title": "Malformed notification history entries do not crash the notification centre",
-      "result": "FAIL",
-      "ms": 30019,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "state-04",
-      "title": "Personal wallpaper data URL cannot inject extra CSS image layers",
-      "result": "FAIL",
-      "ms": 30021,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "life-01",
-      "title": "Retrying an app whose code chunk failed to load actually reloads it",
-      "result": "FAIL",
-      "ms": 22,
-      "error": "fetch failed",
-      "pageErrors": []
-    },
-    {
-      "id": "life-02",
-      "title": "A failed desktop (Shell) chunk shows a recovery path instead of a blank page",
-      "result": "FAIL",
-      "ms": 17,
-      "error": "fetch failed",
-      "pageErrors": []
-    },
-    {
-      "id": "app-01",
-      "title": "App cannot execute another window’s scoped commands or privileged shell commands",
-      "result": "FAIL",
-      "ms": 30019,
+      "ms": 30042,
       "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
       "pageErrors": []
     },
@@ -65,55 +17,7 @@
       "id": "app-02",
       "title": "File access revoked in Settings is denied at operation time via the API",
       "result": "FAIL",
-      "ms": 30029,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "app-03",
-      "title": "Notification storm from one app stays bounded and does not freeze the shell",
-      "result": "FAIL",
       "ms": 30021,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "app-04",
-      "title": "Window-launch storm from one app is capped",
-      "result": "FAIL",
-      "ms": 30241,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "app-05",
-      "title": "App notifications are attributed so an app cannot impersonate the OS",
-      "result": "FAIL",
-      "ms": 30114,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "app-06",
-      "title": "Closed window context cannot open OS file dialogs or register commands",
-      "result": "FAIL",
-      "ms": 30020,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "a11y-01",
-      "title": "Spotlight keeps Tab focus inside the dialog for 25 presses",
-      "result": "FAIL",
-      "ms": 30103,
-      "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
-      "pageErrors": []
-    },
-    {
-      "id": "a11y-02",
-      "title": "OS file dialog keeps Tab focus inside and Escape cancels it",
-      "result": "FAIL",
-      "ms": 30069,
       "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
       "pageErrors": []
     },
@@ -121,7 +25,7 @@
       "id": "ui-01",
       "title": "PerfectHue credit is visible, unobstructed, and uses the manifest credit URL",
       "result": "FAIL",
-      "ms": 30066,
+      "ms": 30018,
       "error": "page.goto: Timeout 30000ms exceeded. | Call log: |   - navigating to \"http://127.0.0.1:4190/\", waiting until \"load\" | ",
       "pageErrors": []
     }

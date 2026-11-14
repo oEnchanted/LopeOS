@@ -1,0 +1,9 @@
+{
+  "BrowserSignin": 0,
+  "SyncDisabled": true,
+  "PrivacySandboxPromptEnabled": false,
+  "DefaultBrowserSettingEnabled": false,
+  "MetricsReportingEnabled": false,
+  "BackgroundModeEnabled": false,
+  "HardwareAccelerationModeEnabled": true
+}

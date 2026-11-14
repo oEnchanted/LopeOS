@@ -11,6 +11,7 @@ install -d -m 700 /opt/lope-browser /etc/lope-browser /var/lib/lope-browser /var
 install -m 700 "$source_dir/services/browser/hosting/linux/prepare-profile.sh" /opt/lope-browser/prepare-profile.sh
 install -m 700 "$source_dir/services/browser/hosting/linux/prepare-network.sh" /opt/lope-browser/prepare-network.sh
 install -m 700 "$source_dir/services/browser/hosting/linux/check-network.sh" /opt/lope-browser/check-network.sh
+install -m 700 "$source_dir/services/browser/hosting/linux/detect-gpu.sh" /opt/lope-browser/detect-gpu.sh
 node "$source_dir/services/browser/hosting/linux/make-seccomp.mjs" "$source_dir/services/browser/hosting/linux/docker-default-seccomp.json" /etc/lope-browser/seccomp.json
 chmod 600 /etc/lope-browser/seccomp.json
 bash /opt/lope-browser/prepare-network.sh

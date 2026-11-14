@@ -1,15 +1,23 @@
 import { EventEmitter } from 'node:events';
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { createReadStream } from 'node:fs';
 import { mkdir, readFile, writeFile, rename, rm, realpath, stat } from 'node:fs/promises';
 import { join, basename, resolve, sep } from 'node:path';
 import { ChromiumPipe } from './cdp.mjs';
 import { createEgressProxy } from './network.mjs';
-import { destination, safeHostUrl, openedFile, openedFileUrl, openableFileType, OPENED_FILE_DOMAIN, MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
+import { PAGE_BINDING, PAGE_SCRIPT, PAGE_WORLD, findExpression } from './page-scripts.mjs';
+import { SEARCH_PROVIDERS, destination, safeHostUrl, openedFile, openedFileUrl, openableFileType, OPENED_FILE_DOMAIN, MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
 
-// HTML files opened from LopeDrive. Each is answered by request interception on its own
-// reserved origin, so it never reaches the network and nothing else on that origin exists.
+// HTML files opened from LopeDrive, each on its own reserved origin that never reaches the
+// network. Request interception gates every load. Files up to OPENED_INLINE_BYTES are answered
+// in one CDP message over https (a secure context). Chromium cannot take much larger messages,
+// so bigger files use http and the egress proxy streams them from disk, but only for a request
+// that carries a single-use pass the gate added.
+const OPENED_INLINE_BYTES = 16 * 1024 * 1024;
 const OPENED_FILES_PER_SESSION = 20;
-const OPENED_BYTES_PER_SESSION = 128 * 1024 * 1024;
+const OPENED_BYTES_TOTAL = 512 * 1024 * 1024; // All sessions share the 2 GB profile volume.
+const OPENED_PASS_HEADER = 'x-lope-opened-file-pass';
+const OPENED_HEADERS = { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff' };
 const MISSING_FILE_PAGE = Buffer.from(`<!doctype html><meta charset="utf-8"><meta name="color-scheme" content="light dark"><title>File not available</title>
 <body style="font:15px/1.5 system-ui,sans-serif;max-width:34em;margin:4em auto;padding:0 1em"><h1 style="font-size:20px">This file isn’t available</h1>
 <p>Lope Browser shows the HTML file you open from Files, but not other files it links to. Files also close when the browser restarts.</p>
@@ -17,18 +25,6 @@ const MISSING_FILE_PAGE = Buffer.from(`<!doctype html><meta charset="utf-8"><met
 // Untitled opened files show their name, not the reserved address Chromium reports.
 const pageTitle = (url, title) => { const file = openedFile(url); return file && (!title || title.includes(OPENED_FILE_DOMAIN)) ? file.name : title; };
 
-// Kiosk Chromium never draws its own context menu, so LopeOS draws one. This runs in an
-// isolated world: page scripts cannot see or call the binding that reports right-clicks.
-const CONTEXT_WORLD = 'lope-context';
-const CONTEXT_BINDING = 'lopeContextMenu';
-const CONTEXT_SCRIPT = `if (window === window.top) document.addEventListener('contextmenu', event => {
-  const path = event.composedPath ? event.composedPath() : [event.target];
-  const image = path.find(node => node instanceof HTMLImageElement);
-  const link = path.find(node => node instanceof HTMLAnchorElement && node.href);
-  if (!image && !link) return;
-  globalThis.${CONTEXT_BINDING}(JSON.stringify({ x: event.clientX, y: event.clientY, width: innerWidth, height: innerHeight,
-    image: image ? (image.currentSrc || image.src || '') : '', link: link ? link.href : '' }));
-}, true);`;
 const IMAGE_TYPES = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/gif': 'gif', 'image/webp': 'webp', 'image/svg+xml': 'svg', 'image/avif': 'avif', 'image/bmp': 'bmp', 'image/x-icon': 'ico' };
 function savedFileName(url, type) {
   const extension = IMAGE_TYPES[String(type).split(';')[0].trim().toLowerCase()];
@@ -59,11 +55,13 @@ export class BrowserEngine extends EventEmitter {
   uploadRequests = new Map();
   closedTabs = new Map();
   openedFiles = new Map();
+  dirty = new Set();
   constructor(options) {
     super(); this.options = options;
     this.profileRoot = resolve(options.dataRoot);
     this.transferRoot = resolve(options.transferRoot || join(this.profileRoot, 'transfers'));
     this.streamUrl = options.streamUrl ?? null;
+    this.gpuEnabled = options.webgl ?? options.gpu ?? !!process.env.LOPE_BROWSER_GPU;
   }
   async start() {
     this.generation = id();
@@ -77,7 +75,8 @@ export class BrowserEngine extends EventEmitter {
       this.normal.history = saved.history ?? []; this.normal.bookmarks = saved.bookmarks ?? [];
       this.normal.searchProvider = ['google', 'bing'].includes(saved.searchProvider) ? saved.searchProvider : 'duckduckgo';
     }
-    this.egress = await createEgressProxy({ testOrigins: this.options.testOrigins ?? [] });
+    this.egress = await createEgressProxy({ testOrigins: this.options.testOrigins ?? [], reservedDomain: OPENED_FILE_DOMAIN,
+      serveReserved: (url, request, response) => this.streamOpenedFile(url, request, response) });
     this.cdp = new ChromiumPipe(this.options.executable, {
       profile: join(this.profileRoot, 'chromium'), headless: this.options.headless,
       proxyPort: this.egress.port,
@@ -91,6 +90,8 @@ export class BrowserEngine extends EventEmitter {
     this.titleTimer = setInterval(() => { this.syncActiveTitles().catch(() => {}); }, 2000);
     this.titleTimer.unref?.();
     this.version = (await this.cdp.send('Browser.getVersion')).product;
+    const graphics = await this.cdp.graphics().catch(() => null);
+    if (graphics?.accelerated) this.gpuEnabled = true;
     await this.configureContext(this.normal);
     await this.cdp.send('Target.setDiscoverTargets', { discover: true });
     const { targetInfos } = await this.cdp.send('Target.getTargets');
@@ -125,12 +126,17 @@ export class BrowserEngine extends EventEmitter {
     const session = this.get(sessionId);
     return { ...session, generation: this.generation, contextId: undefined, tabs: session.tabs.map(publicTab), engineVersion: this.version,
       streamUrl: this.streamUrl, capabilities: { stream: !!this.streamUrl, audio: !!this.streamUrl,
-        deviceForwarding: false, workspaceFiles: !!this.options.files } };
+        deviceForwarding: false, workspaceFiles: !!this.options.files, webgl: this.gpuEnabled, opengl: this.gpuEnabled } };
   }
   changed(session) {
     session.revision++;
     if (session.mode === 'normal' && session.tabs.length) this.restoreTabs = restorable(session);
-    this.emit('state', this.snapshot(session.id));
+    // Coalesce bursts (a page load changes state many times) into one snapshot per session.
+    this.dirty.add(session.id);
+    this.emitTimer ??= setTimeout(() => {
+      this.emitTimer = null; const ids = [...this.dirty]; this.dirty.clear();
+      for (const sessionId of ids) if (this.sessions.has(sessionId)) this.emit('state', this.snapshot(sessionId));
+    }, 20);
     if (session.mode === 'normal' && !this.stopping) {
       clearTimeout(this.saveTimer); this.saveTimer = setTimeout(() => this.persist().catch(() => {}), 250);
     }
@@ -209,14 +215,20 @@ export class BrowserEngine extends EventEmitter {
     const { frameTree } = await this.send(tab, 'Page.getFrameTree');
     const remember = tree => { this.frames.set(tree.frame.id, tab.id); for (const child of tree.childFrames ?? []) remember(child); };
     remember(frameTree); tab._frame = frameTree.frame.id;
-    await this.send(tab, 'Runtime.addBinding', { name: CONTEXT_BINDING, executionContextName: CONTEXT_WORLD }).catch(() => {});
-    await this.send(tab, 'Page.addScriptToEvaluateOnNewDocument', { source: CONTEXT_SCRIPT, worldName: CONTEXT_WORLD }).catch(() => {});
-    const world = await this.send(tab, 'Page.createIsolatedWorld', { frameId: tab._frame, worldName: CONTEXT_WORLD }).catch(() => null);
-    if (world?.executionContextId) await this.send(tab, 'Runtime.evaluate', { expression: CONTEXT_SCRIPT, contextId: world.executionContextId }).catch(() => {});
+    await this.send(tab, 'Runtime.addBinding', { name: PAGE_BINDING, executionContextName: PAGE_WORLD }).catch(() => {});
+    await this.send(tab, 'Page.addScriptToEvaluateOnNewDocument', { source: PAGE_SCRIPT, worldName: PAGE_WORLD }).catch(() => {});
+    await this.inPage(tab, PAGE_SCRIPT).catch(() => {});
     if (info.openerId) { await this.activate(session, tab); }
     await this.refresh(tab); this.changed(session); return tab;
   }
   send(tab, method, params = {}) { return this.cdp.send(method, params, tab._cdp); }
+  /** Evaluates LopeOS code in the page's isolated world, out of reach of page scripts. */
+  async inPage(tab, expression) {
+    const { executionContextId } = await this.send(tab, 'Page.createIsolatedWorld', { frameId: tab._frame, worldName: PAGE_WORLD });
+    const { result, exceptionDetails } = await this.send(tab, 'Runtime.evaluate', { expression, contextId: executionContextId, returnByValue: true });
+    if (exceptionDetails) throw new Error('The page could not run this action.');
+    return result?.value;
+  }
   async createTab(session, url = 'about:blank') {
     if (session.tabs.length >= 60) throw new Error('This session has reached its 60-tab limit.');
     const { targetId } = await this.cdp.send('Target.createTarget', { url: 'about:blank',
@@ -351,8 +363,9 @@ export class BrowserEngine extends EventEmitter {
     const [x, y, width, height] = [value.x, value.y, value.width, value.height].map(number);
     const link = typeof value.link === 'string' && value.link.length <= 8192 && /^https?:\/\//i.test(value.link) ? value.link : null;
     const image = typeof value.image === 'string' && value.image.length <= 8192 && /^(https?:\/\/|data:image\/)/i.test(value.image) ? value.image : null;
-    if (x === null || y === null || !width || !height || (!link && !image)) return;
-    session.contextMenu = { id: id(), tabId: tab.id, x, y, width, height, link, image };
+    const selection = typeof value.selection === 'string' && value.selection.trim() ? value.selection.slice(0, 20000) : null;
+    if (x === null || y === null || !width || !height) return;
+    session.contextMenu = { id: id(), tabId: tab.id, x, y, width, height, link, image, selection, editable: value.editable === true };
     this.changed(session);
   }
   takeContextMenu(session, menuId) {
@@ -393,7 +406,7 @@ export class BrowserEngine extends EventEmitter {
     await this.completeDownload(item, session);
   }
   async onEvent({ method, params, sessionId }) {
-    if (method === 'Runtime.bindingCalled' && params.name === CONTEXT_BINDING) { this.openContextMenu(sessionId, params.payload); return; }
+    if (method === 'Runtime.bindingCalled' && params.name === PAGE_BINDING) { this.openContextMenu(sessionId, params.payload); return; }
     if (method === 'Target.targetCreated') { await this.attach(params.targetInfo); return; }
     if (method === 'Target.targetInfoChanged') {
       const tab = this.targets.get(params.targetInfo.targetId);
@@ -427,7 +440,8 @@ export class BrowserEngine extends EventEmitter {
     if (method === 'Page.frameAttached') this.frames.set(params.frameId, tab.id);
     if (method === 'Page.frameDetached') this.frames.delete(params.frameId);
     if (method === 'Page.frameNavigated' && !params.frame.parentId) {
-      tab._frame = params.frame.id; tab.url = params.frame.url;
+      tab._frame = params.frame.id; tab.url = params.frame.url; tab.find = undefined;
+      if (session.contextMenu?.tabId === tab.id) session.contextMenu = null;
       if (!params.frame.unreachableUrl) tab.error = undefined;
       await this.refresh(tab);
     }
@@ -538,6 +552,14 @@ export class BrowserEngine extends EventEmitter {
         await this.closeTab(tab); break;
       }
       case 'tab.duplicate': await this.createTab(session, tab.url); break;
+      case 'tab.closeOthers': case 'tab.closeRight': {
+        // Pinned tabs stay open, as in other browsers.
+        const index = session.tabs.indexOf(tab);
+        const closing = session.tabs.filter((item, position) => item !== tab && !item.pinned && (command.type === 'tab.closeOthers' || position > index));
+        await this.activate(session, tab);
+        for (const item of closing) { this.closedTabs.get(sessionId).unshift({ url: item.url, pinned: false }); await this.closeTab(item); }
+        this.closedTabs.set(sessionId, this.closedTabs.get(sessionId).slice(0, 20)); break;
+      }
       case 'tab.pin': tab.pinned = !!command.pinned; session.tabs.sort((a, b) => Number(b.pinned) - Number(a.pinned)); break;
       case 'tab.reorder': {
         if (!Number.isInteger(command.index)) throw new Error('Invalid tab position.');
@@ -569,7 +591,16 @@ export class BrowserEngine extends EventEmitter {
       }
       case 'find': {
         if (typeof command.text !== 'string' || command.text.length > 1000) throw new Error('Invalid find text.');
-        await this.send(tab, 'Runtime.evaluate', { expression: `window.find(${JSON.stringify(command.text)},false,${command.forward === false},true,false,false,false)` }); break;
+        // Runs in the isolated world: the page cannot read the search text by replacing window.find.
+        const step = !command.text ? 'clear' : tab.find?.text === command.text ? (command.forward === false ? 'previous' : 'next') : 'start';
+        const result = await this.inPage(tab, findExpression(command.text, step, tab.find?.active));
+        tab.find = command.text ? { text: command.text, active: result?.active ?? 0, total: result?.total ?? 0 } : undefined; break;
+      }
+      case 'find.clear': await this.inPage(tab, findExpression('', 'clear')).catch(() => {}); tab.find = undefined; break;
+      case 'select-all': {
+        // An editing command, so it selects within a focused field or else the whole page.
+        await this.send(tab, 'Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'a', code: 'KeyA', windowsVirtualKeyCode: 65, commands: ['selectAll'] });
+        await this.send(tab, 'Input.dispatchKeyEvent', { type: 'keyUp', key: 'a', code: 'KeyA', windowsVirtualKeyCode: 65 }); break;
       }
       case 'print': {
         const { data } = await this.send(tab, 'Page.printToPDF', { printBackground: true });
@@ -584,6 +615,12 @@ export class BrowserEngine extends EventEmitter {
         const menu = this.takeContextMenu(session, command.menuId);
         if (!menu.link) throw new Error('This link is no longer available.');
         await this.createTab(session, destination(menu.link, session.searchProvider)); break;
+      }
+      case 'context.search': {
+        const menu = this.takeContextMenu(session, command.menuId);
+        if (!menu.selection) throw new Error('Select some text to search for.');
+        // Always a search, even when the selection looks like an address.
+        await this.createTab(session, SEARCH_PROVIDERS[session.searchProvider].url + encodeURIComponent(menu.selection.trim().replace(/\s+/g, ' ').slice(0, 1000))); break;
       }
       case 'context.saveLink': case 'context.saveImage': {
         const menu = this.takeContextMenu(session, command.menuId);
@@ -648,7 +685,7 @@ export class BrowserEngine extends EventEmitter {
     } finally { this.titleSyncing = false; }
   }
   async close() {
-    this.stopping = true; clearTimeout(this.saveTimer); clearInterval(this.titleTimer);
+    this.stopping = true; clearTimeout(this.saveTimer); clearInterval(this.titleTimer); clearTimeout(this.emitTimer); this.emitTimer = null; this.dirty.clear();
     if (this.normal) await this.persist();
     for (const session of [...this.sessions.values()]) if (session.mode === 'private') await this.destroy(session.id).catch(() => {});
     // Opened files are gone after a restart; drop any site data their origins kept.

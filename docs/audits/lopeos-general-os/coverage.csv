@@ -1,0 +1,27 @@
+requirement,os_surface_or_boundary,test,result,evidence,fix_or_owner
+"ASVS 5.0.0 V3 Web Frontend Security: anti-framing (frame-ancestors / X-Frame-Options)",Hosting headers,curl -I lopeos.online; headers-browser.mjs framing probe,FAIL (production) / PASS (proposed patch),evidence/headers-chromium.json; findings OS-16,patches/caddy-security-headers.patch — deployment owner
+"ASVS 5.0.0 V3: Content-Security-Policy script/object/base restrictions",Hosting headers,headers-browser.mjs,FAIL (production none) / PARTIAL (structural enforced + report-only script-src proposed),evidence/headers-chromium.json,OS-16/OS-17 — deployment + app owners
+"ASVS 5.0.0 V3: HSTS",Hosting headers,curl -I lopeos.online,FAIL (production),findings OS-16,patch — deployment owner
+"ASVS 5.0.0 V3: X-Content-Type-Options, Referrer-Policy",Hosting headers,curl -I lopeos.online,PASS,curl output in findings,—
+"ASVS 5.0.0 V3: Permissions-Policy / feature delegation",Hosting headers,headers-browser.mjs (no unrecognised-feature warnings),FAIL (production) / PASS (patch),evidence/headers-chromium.json,OS-16
+"ASVS 5.0.0 V1 Encoding & Sanitization: output encoding of untrusted data (titles, notifications, wallpaper)",Shell rendering,state-01 state-03 state-04; grep for HTML sinks (none in OS code),PASS after fix,evidence/os-regressions-*-fixed.json,OS-01 OS-03 OS-11
+"ASVS 5.0.0 V2 Validation & Business Logic: validate persisted/synced data",Session restore; histories; preferences,state-01..03; preference schema review,PASS after fix,evidence/os-regressions-chromium-fixed.json,OS-01..03
+"ASVS 5.0.0 V8 Authorization: operation-time authorization of file access",Scoped FileService,app-02,PASS (policy; same-origin bypass inherent),evidence/os-regressions-chromium-fixed.json,OS-19 documented
+"ASVS 5.0.0 V8: cross-context command authorization",Command registry,app-01,PASS after fix (policy),evidence,OS-06
+"ASVS 5.0.0 V7 Session Management: cookie flags, logout, rotation, expiry",services/accounts,code review + existing services/accounts/*.test.mjs (pass),PASS,unit suite 281/287 pass 0 fail,—
+"ASVS 5.0.0 V6 Authentication: password storage, brute force",services/accounts,code review (scrypt N=32768; timing-safe; rate limits),PASS with residual,findings OS-20,Accounts owner
+"ASVS 5.0.0 V3/V4: CSRF / origin checks on state-changing API",services/accounts,code review + existing tests,PASS,—,—
+"ASVS 5.0.0 V15 Secure Coding & Architecture: dynamically loaded code integrity",Release service worker; model downloads,tests/updates/*.test.mjs (pass),PASS,unit suite,—
+"Availability: resource limits against app storms",Window manager; notifications,app-03 app-04,PASS after fix,evidence,OS-10
+"Reliability: failed module loads recoverable",Boot; app lifecycle,life-01 life-02,PASS after fix (Chromium + WebKit 2388),evidence,OS-04 OS-05
+"Reliability: unsaved-work guard before reload/close",Shell lifecycle,existing tests/shell/desktop.mjs (not re-run),UNVERIFIED this session,—,Re-run with dev server
+"WCAG 2.2 2.1.2 No Keyboard Trap / 2.4.3 Focus Order (modal containment)",Spotlight; file dialog,a11y-01 a11y-02,PASS after fix (a11y-02 flaky 1/3),evidence,OS-12 OS-21
+"WCAG 2.2 2.1.1 Keyboard (global shortcuts reachable)",Dock,kbd-01,PASS after fix,evidence,OS-13
+"WCAG 2.2 1.4.3 Contrast over varied wallpapers",Shell chrome,not measured,UNVERIFIED,—,Next pass
+"WCAG 2.2 1.4.4/1.4.10 200% zoom and reflow",Shell,not measured,UNVERIFIED,—,Next pass
+"Screen reader spot check",Shell,not performed,UNVERIFIED,—,Next pass
+"Wallpaper credit visible and unobstructed",Desktop,ui-01,PASS,evidence/screenshots/*-credit.png,OS-15
+"Privacy: external requests inventory",Shell boot,headers-browser.mjs external host log,PARTIAL (boot contacts api.open-meteo.com for the weather status item),evidence/headers-chromium.json,—
+"Performance: boot / idle CPU / leak over repeated launch-close",Shell,not measured this session,UNVERIFIED,—,Next pass
+"Multi-tab / multi-profile separation",Preferences; accounts,not exercised,UNVERIFIED,—,Next pass
+"Cross-browser",All,Chromium 158 + WebKit 27.2 (Playwright 2388) pass; Firefox 1572 fails to launch on this host,PARTIAL,verification.md,Test Firefox elsewhere

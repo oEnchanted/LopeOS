@@ -1,7 +1,7 @@
 import type { AppManifest, MenuDefinition } from '../../../../../packages/contracts/src';
 export const browserMenus: MenuDefinition[] = [
   { label: 'File', items: ['browser.new-tab', 'browser.private', 'browser.open-file', 'browser.duplicate', 'browser.close-tab', { separator: true }, 'browser.print'] },
-  { label: 'Edit', items: ['browser.copy-address', 'browser.paste', 'browser.find'] },
+  { label: 'Edit', items: ['browser.copy-address', 'browser.paste', 'browser.find', 'browser.find-next', 'browser.find-previous'] },
   { label: 'View', items: ['browser.reload', 'browser.stop', 'browser.home', { separator: true }, 'browser.zoom-in', 'browser.zoom-out', 'browser.zoom-reset', { separator: true }, 'browser.devtools'] },
   { label: 'History', items: ['browser.back', 'browser.forward', 'browser.reopen', { separator: true }, 'browser.history', 'browser.clear-data'] },
   { label: 'Bookmarks', items: ['browser.bookmark', 'browser.bookmarks'] },

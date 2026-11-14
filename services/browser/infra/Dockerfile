@@ -4,8 +4,18 @@ FROM node:24-trixie-slim AS node
 FROM ghcr.io/selkies-project/selkies/base:2.2.1-debiantrixie
 USER 0
 SHELL ["/bin/sh", "-c"]
-RUN apt-get update && apt-get install -y --no-install-recommends chromium chromium-sandbox openbox x11-utils fonts-noto-color-emoji \
-    && rm -rf /var/lib/apt/lists/* \
+# Google Chrome on x86-64: the same browser, codecs (H.264/AAC) and Widevine DRM
+# people run on their own computers, fetched fresh from Google on every image build.
+# Other architectures, which Google does not build for, keep Debian Chromium.
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl openbox x11-utils fonts-noto-color-emoji \
+    && if [ "$(dpkg --print-architecture)" = amd64 ]; then \
+         curl -fsSL --retry 5 --connect-timeout 30 -o /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+         && apt-get install -y --no-install-recommends /tmp/google-chrome.deb && rm -f /tmp/google-chrome.deb \
+         && test -x /opt/google/chrome/chrome && ln -s /opt/google/chrome/chrome /usr/local/bin/lope-chrome; \
+       else \
+         apt-get install -y --no-install-recommends chromium chromium-sandbox && ln -s /usr/bin/chromium /usr/local/bin/lope-chrome; \
+       fi \
+    && rm -rf /var/lib/apt/lists/* /etc/cron.daily/google-chrome \
     && find / -xdev -type f -perm /6000 -exec chmod a-s {} + \
     && rm -f /usr/local/bin/sudo-root \
     && mkdir -p /opt/lope /profiles /opt/lope-services \
@@ -17,6 +27,9 @@ COPY --chown=0:0 services/runtime/browser-bridge.js services/runtime/config.js /
 COPY --chown=0:0 services/browser/infra/entrypoint.sh /opt/lope/entrypoint.sh
 COPY --chown=0:0 services/browser/infra/worker.run /opt/lope-services/browser/run
 COPY --chown=0:0 services/browser/infra/openbox.run /opt/lope-services/openbox/run
+# Keep first-run promotions (sign-in, privacy notices, default-browser checks) off the kiosk window.
+COPY --chown=0:0 services/browser/infra/chrome-policies.json /etc/opt/chrome/policies/managed/lope.json
+COPY --chown=0:0 services/browser/infra/chrome-policies.json /etc/chromium/policies/managed/lope.json
 # s6 and its supervision files live in ephemeral writable storage.
 RUN cp -a /etc/service/. /opt/lope-services/ \
     && sed -i 's|/etc/service|/tmp/lope-services|g' /etc/container-entrypoint.sh \
@@ -33,8 +46,12 @@ ENV SELKIES_WAYLAND=false SELKIES_ENABLE_HTTPS=false SELKIES_ADDR=127.0.0.1 SELK
     SELKIES_ENABLE_CLIPBOARD=true SELKIES_CLIPBOARD_SEAMLESS="false|locked" \
     SELKIES_UI_SHOW_SIDEBAR=false SELKIES_ENABLE_INTERNAL_TURN=false SELKIES_ENABLE_DUAL_MODE=false \
     LOPE_BROWSER_BIND=0.0.0.0 LOPE_BROWSER_HOSTS=browser-worker,127.0.0.1,localhost \
-    LOPE_BROWSER_DATA=/profiles/normal CHROMIUM_EXECUTABLE=/usr/bin/chromium \
+    LOPE_BROWSER_DATA=/profiles/normal CHROMIUM_EXECUTABLE=/usr/local/bin/lope-chrome \
     SELKIES_URL=http://127.0.0.1:8080
+# CPU path; the host allocator overrides these when a GPU encodes. Stream at CSS
+# pixels: HiDPI on a 2x screen makes Chromium render and x264 encode 4x the pixels.
+# Encode only when the screen changes, not every frame of a still page.
+ENV SELKIES_USE_CSS_SCALING="true|locked" SELKIES_VIDEO_STREAMING_MODE="false|locked"
 WORKDIR /opt/lope
 EXPOSE 4175
 ENTRYPOINT ["/opt/lope/entrypoint.sh"]

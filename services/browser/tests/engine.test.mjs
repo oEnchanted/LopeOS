@@ -93,8 +93,50 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   await eventually(()=>engine.normal.tabs.length===1,'close reopened tab');
   await engine.command('normal', { type: 'zoom', tabId: tab.id, value: 1.5 }); assert.equal(tab.zoom, 1.5);
   assert.equal((await engine.send(tab,'Page.getLayoutMetrics')).visualViewport.scale,tab.zoom);
-  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'Real browser fixture' });
-  assert.equal(await evaluate(engine,tab,'getSelection().toString()'),'Real browser fixture');
+  // Find runs in the isolated world: counts and highlights matches without touching the selection.
+  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'real   BROWSER' });
+  assert.deepEqual(tab.find, { text: 'real   BROWSER', active: 1, total: 1 });
+  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'o' });
+  const total = tab.find.total; assert.ok(total > 3); assert.equal(tab.find.active, 1);
+  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'o' }); assert.equal(tab.find.active, 2);
+  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'o', forward: false });
+  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'o', forward: false }); assert.equal(tab.find.active, total);
+  assert.equal(await evaluate(engine, tab, "CSS.highlights.get('lope-find').size"), total);
+  assert.equal(await evaluate(engine, tab, 'getSelection().toString()'), '');
+  await engine.command('normal', { type: 'find', tabId: tab.id, text: 'no such words' }); assert.deepEqual(tab.find, { text: 'no such words', active: 0, total: 0 });
+  await engine.command('normal', { type: 'find.clear', tabId: tab.id }); assert.equal(tab.find, undefined);
+  assert.equal(await evaluate(engine, tab, "CSS.highlights.has('lope-find') || document.adoptedStyleSheets.length"), 0);
+  // A real right-click reports the selection; synthetic page events and page-handled menus do not.
+  await evaluate(engine, tab, "getSelection().selectAllChildren(document.querySelector('h1'))");
+  const click = async (type, x, y) => engine.send(tab, 'Input.dispatchMouseEvent', { type, x, y, button: 'right', buttons: type === 'mousePressed' ? 2 : 0, clickCount: 1 });
+  const heading = await evaluate(engine, tab, "(() => { const r = document.querySelector('h1').getBoundingClientRect(); return { x: r.left + 5, y: r.top + r.height / 2 }; })()");
+  await click('mousePressed', heading.x, heading.y); await click('mouseReleased', heading.x, heading.y);
+  await eventually(() => engine.normal.contextMenu?.selection === 'Real browser fixture', 'page context menu');
+  assert.equal(engine.normal.contextMenu.editable, false); assert.equal(engine.normal.contextMenu.link, null);
+  const navigated = [], navigate = engine.navigate.bind(engine);
+  engine.navigate = (session, target, input) => { navigated.push(input); return navigate(session, target, input); };
+  await engine.command('normal', { type: 'context.search', menuId: engine.normal.contextMenu.id });
+  engine.navigate = navigate;
+  const searchTab = engine.normal.tabs.find(item => item.id === engine.normal.activeTabId);
+  assert.notEqual(searchTab.id, tab.id);
+  assert.deepEqual(navigated, ['https://duckduckgo.com/?q=Real%20browser%20fixture']); // Egress blocks the real request in tests.
+  await engine.command('normal', { type: 'tab.close', tabId: searchTab.id });
+  await eventually(() => engine.normal.tabs.length === 1, 'search tab closed');
+  await engine.command('normal', { type: 'tab.activate', tabId: tab.id });
+  await evaluate(engine, tab, "document.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }))");
+  await evaluate(engine, tab, "document.addEventListener('contextmenu', event => event.preventDefault(), { once: true })");
+  await click('mousePressed', heading.x, heading.y); await click('mouseReleased', heading.x, heading.y);
+  await new Promise(ok => setTimeout(ok, 300)); assert.equal(engine.normal.contextMenu, null);
+  await evaluate(engine, tab, "document.querySelector('#name').value = 'select me'; document.querySelector('#name').focus()");
+  await engine.command('normal', { type: 'select-all', tabId: tab.id });
+  assert.deepEqual(await evaluate(engine, tab, "[document.querySelector('#name').selectionStart, document.querySelector('#name').selectionEnd]"), [0, 9]);
+  // Close other tabs keeps pinned tabs and the chosen tab, and remembers the rest for reopening.
+  for (let index = 0; index < 3; index++) await engine.command('normal', { type: 'tab.create' });
+  const kept = engine.normal.tabs[2];
+  await engine.command('normal', { type: 'tab.closeRight', tabId: kept.id }); assert.equal(engine.normal.tabs.length, 3);
+  await engine.command('normal', { type: 'tab.closeOthers', tabId: kept.id });
+  assert.deepEqual(engine.normal.tabs.map(item => item.id), [tab.id, kept.id]); assert.equal(engine.normal.activeTabId, kept.id);
+  await engine.command('normal', { type: 'tab.close', tabId: kept.id }); await engine.command('normal', { type: 'tab.activate', tabId: tab.id });
   await engine.command('normal', { type: 'print', tabId: tab.id });
   assert.equal((await readFile(engine.downloads.get(engine.normal.downloads[0].id).path)).subarray(0, 4).toString(), '%PDF');
   const staged=engine.downloads.get(engine.normal.downloads[0].id).path;

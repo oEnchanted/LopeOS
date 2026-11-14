@@ -1,5 +1,6 @@
 export * from './contracts.ts';
 export * from './navigation.ts';
+export * from './suggestions.ts';
 import type { BrowserCommand, BrowserMode, BrowserSession } from './contracts.ts';
 import { MAX_OPENED_FILE_BYTES, openableFileType } from './navigation.ts';
 

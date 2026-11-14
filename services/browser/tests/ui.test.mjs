@@ -48,9 +48,20 @@ test('browser controls operate real tabs and expose unavailable streaming honest
   await address.fill(fixture.origin); await address.press('Enter');
   await page.getByRole('heading', { name: 'Interactive browsing is unavailable', exact: true }).waitFor();
   await page.locator('.lb-tab.active').filter({ hasText: 'Lope Browser test application' }).waitFor();
+  // Find in page counts matches in the remote page.
+  await page.keyboard.press('Meta+f'); await page.getByRole('textbox', { name: 'Find in page', exact: true }).fill('browser');
+  await page.locator('.lb-find-count').filter({ hasText: /^1 of \d+$/ }).waitFor();
+  await page.getByRole('button', { name: 'Close find', exact: true }).click();
   await page.getByRole('button', { name: 'Bookmark page', exact: true }).click();
   await page.getByRole('button', { name: 'Remove bookmark', exact: true }).waitFor();
   assert.equal(engine.normal.bookmarks.length, 1);
+  await page.getByRole('button', { name: 'Start page', exact: true }).click();
+  await page.getByRole('heading', { name: 'New Tab', exact: true }).waitFor();
+  // The address list is keyboard-operable: arrow to the bookmark and press Enter.
+  await address.fill('test application');
+  await page.getByRole('option', { name: /Lope Browser test application/ }).waitFor();
+  await address.press('ArrowDown'); await address.press('Enter');
+  await page.locator('.lb-tab.active').filter({ hasText: 'Lope Browser test application' }).waitFor();
   await page.getByRole('button', { name: 'Start page', exact: true }).click();
   await page.getByRole('heading', { name: 'New Tab', exact: true }).waitFor();
   await page.getByRole('button', { name: 'Downloads', exact: true }).click();

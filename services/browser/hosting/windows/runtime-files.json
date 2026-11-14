@@ -10,6 +10,7 @@
   "services/browser/hosting/linux/NOTICE.md",
   "services/browser/hosting/linux/check-network.sh",
   "services/browser/hosting/linux/configure-wsl.sh",
+  "services/browser/hosting/linux/detect-gpu.sh",
   "services/browser/hosting/linux/docker-default-seccomp.json",
   "services/browser/hosting/linux/install-prerequisites.sh",
   "services/browser/hosting/linux/install.sh",
