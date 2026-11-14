@@ -51,10 +51,7 @@ ENV SELKIES_WAYLAND=false SELKIES_ENABLE_HTTPS=false SELKIES_ADDR=127.0.0.1 SELK
 # CPU path; the host allocator overrides these when a GPU encodes. Stream at CSS
 # pixels: HiDPI on a 2x screen makes Chromium render and x264 encode 4x the pixels.
 # Encode only when the screen changes, not every frame of a still page.
-# Software x264 on a CPU host: 30 fps and 4:2:0 color roughly halve encode time against
-# Selkies' 60 fps 4:4:4 defaults. People can still raise the frame rate up to 60.
-ENV SELKIES_USE_CSS_SCALING="true|locked" SELKIES_VIDEO_STREAMING_MODE="false|locked" \
-    SELKIES_FRAMERATE="30,8-60" SELKIES_VIDEO_FULLCOLOR="false" UV_THREADPOOL_SIZE=16
+ENV SELKIES_USE_CSS_SCALING="true|locked" SELKIES_VIDEO_STREAMING_MODE="false|locked" UV_THREADPOOL_SIZE=16
 WORKDIR /opt/lope
 EXPOSE 4175
 ENTRYPOINT ["/opt/lope/entrypoint.sh"]

@@ -43,7 +43,7 @@ export function gpuOptions(gpu) {
       // Selkies renders the X server on this node (glamor/DRI3) and encodes on it
       // (VA-API or NVENC), so the stream can afford full pixel density and every frame.
       env: ['LOPE_BROWSER_GPU=dri', `DRINODE=${gpu.node}`, `DRI_NODE=${gpu.node}`, ...(nvidia ? ['NVIDIA_DRIVER_CAPABILITIES=all'] : []),
-        'SELKIES_USE_CSS_SCALING=false|locked', 'SELKIES_VIDEO_STREAMING_MODE=true|locked', 'SELKIES_FRAMERATE=60,8-120', 'SELKIES_VIDEO_FULLCOLOR=true'],
+        'SELKIES_USE_CSS_SCALING=false|locked', 'SELKIES_VIDEO_STREAMING_MODE=true|locked'],
     };
   }
   return { args: [], env: [] };
