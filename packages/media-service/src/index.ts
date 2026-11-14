@@ -27,7 +27,11 @@ export async function probe(blob:Blob):Promise<MediaInfo> {
     return info;
   } finally {input.dispose();}
 }
-type Handle={input?:Input;image?:ImageBitmap;video?:InputVideoTrack|null;audio?:InputAudioTrack|null;sink?:CanvasSink;width?:number;start:number};
+type Wrapped={canvas:HTMLCanvasElement|OffscreenCanvas;timestamp:number;duration:number};
+type Reader={iterator:AsyncGenerator<Wrapped,void,unknown>;current:Wrapped|null;next:Wrapped|null};
+type Handle={input?:Input;image?:ImageBitmap;video?:InputVideoTrack|null;audio?:InputAudioTrack|null;sink?:CanvasSink;width?:number;start:number;readers:Map<string,Reader>};
+/** Forward reads within this distance decode through instead of seeking to a keyframe. */
+const SEQUENTIAL_REACH=3;
 /** Per-renderer LRU. No URLs or network uploads; callers supply managed local Blobs. */
 export class LocalMediaService implements MediaService {
   handles=new Map<string,Handle>(); pcm=new Map<string,PCMWindow>(); private pcmBytes=0;
@@ -36,18 +40,35 @@ export class LocalMediaService implements MediaService {
   private async open(key:string) {
     let h=this.handles.get(key);if(h){this.handles.delete(key);this.handles.set(key,h);return h;}
     const blob=await this.resolve(key);
-    if(await isStill(blob))h={image:await createImageBitmap(blob),start:0};
-    else {const input=new Input({formats:ALL_FORMATS,source:new BlobSource(blob)});try{h={input,video:await input.getPrimaryVideoTrack(),audio:await input.getPrimaryAudioTrack(),start:await input.getFirstTimestamp()};}catch(e){input.dispose();throw e;}}
+    if(await isStill(blob))h={image:await createImageBitmap(blob),start:0,readers:new Map()};
+    else {const input=new Input({formats:ALL_FORMATS,source:new BlobSource(blob)});try{h={input,video:await input.getPrimaryVideoTrack(),audio:await input.getPrimaryAudioTrack(),start:await input.getFirstTimestamp(),readers:new Map()};}catch(e){input.dispose();throw e;}}
     h.start=Math.max(0,h.start);
     await ensureAudioDecoder(h.audio);
     this.handles.set(key,h);
-    while(this.handles.size>this.maxHandles){const [k,old]=this.handles.entries().next().value!;old.input?.dispose();old.image?.close();this.handles.delete(k);}
+    while(this.handles.size>this.maxHandles){const [k,old]=this.handles.entries().next().value!;closeReaders(old);old.input?.dispose();old.image?.close();this.handles.delete(k);}
     return h;
   }
-  async frame(key:string,time:number,width?:number) {
+  /**
+   * Frames are read through one decoder per `slot` (a timeline clip, a viewer).
+   * Moving forward a little decodes only the frames in between, so playback
+   * costs one decode per frame instead of a keyframe seek per frame.
+   */
+  async frame(key:string,time:number,width?:number,slot='default') {
     const h=await this.open(key);if(h.image)return h.image;if(!h.video)return null;
-    if(!h.sink||h.width!==width){h.sink=new CanvasSink(h.video,{width,alpha:true,poolSize:2});h.width=width;}
-    return (await h.sink.getCanvas(Math.max(0,time)+h.start))?.canvas||null;
+    if(!h.sink||h.width!==width){closeReaders(h);h.sink=new CanvasSink(h.video,{width,alpha:true});h.width=width;}
+    const t=Math.max(0,time)+h.start;let r=h.readers.get(slot);
+    if(r&&r.current&&t>=r.current.timestamp-1e-6&&t<r.current.timestamp+SEQUENTIAL_REACH){
+      while(r.next&&r.next.timestamp<=t+1e-6){r.current=r.next;r.next=(await r.iterator.next()).value||null;}
+      if(r.next||t<r.current.timestamp+r.current.duration+1e-6)return r.current.canvas;
+    }
+    if(r)void r.iterator.return();
+    // Each reader owns a small canvas pool; sharing one would recycle another reader's frame.
+    const iterator=new CanvasSink(h.video,{width,alpha:true,poolSize:4}).canvases(t) as AsyncGenerator<Wrapped,void,unknown>;
+    const current=(await iterator.next()).value||null;
+    if(!current){void iterator.return();h.readers.delete(slot);return (await h.sink.getCanvas(t))?.canvas||null;}
+    r={iterator,current,next:(await iterator.next()).value||null};h.readers.set(slot,r);
+    while(r.next&&r.next.timestamp<=t+1e-6){r.current=r.next;r.next=(await r.iterator.next()).value||null;}
+    return r.current!.canvas;
   }
   async audio(key:string,from:number,to:number):Promise<PCMWindow> {
     const h=await this.open(key);if(!h.audio)return {start:0,sampleRate:48000,channels:[]};
@@ -69,8 +90,9 @@ export class LocalMediaService implements MediaService {
     while(this.pcmBytes+bytes>24*1024*1024&&this.pcm.size){const [k,v]=this.pcm.entries().next().value!;this.pcm.delete(k);this.pcmBytes-=v.channels.reduce((n,p)=>n+p.byteLength,0);}
     this.pcm.set(cacheKey,result);this.pcmBytes+=bytes;return result;
   }
-  release(){for(const h of this.handles.values()){h.input?.dispose();h.image?.close();}this.handles.clear();this.pcm.clear();this.pcmBytes=0;}
+  release(){for(const h of this.handles.values()){closeReaders(h);h.input?.dispose();h.image?.close();}this.handles.clear();this.pcm.clear();this.pcmBytes=0;}
 }
+function closeReaders(h:Handle){for(const r of h.readers.values())void r.iterator.return().catch(()=>{});h.readers.clear();}
 export async function encoderCapabilities(width=1920,height=1080) {
   const video=await Promise.all((['avc','hevc','vp8','vp9','av1'] as VideoCodec[]).map(async codec=>({codec,supported:await canEncodeVideo(codec,{width,height}).catch(()=>false)})));
   const audio=await Promise.all((['aac','opus','pcm-s16'] as AudioCodec[]).map(async codec=>({codec,supported:await canEncodeAudio(codec,{sampleRate:48000,numberOfChannels:2}).catch(()=>false)})));

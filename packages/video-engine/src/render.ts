@@ -3,7 +3,9 @@ import { sourceTick, valueAt, type Clip, type Effect, type Project, type Sequenc
 import { TIME_BASE, frameSeconds, rateValue } from './time.ts';
 type Canvas=OffscreenCanvas;
 const canvas=(w:number,h:number)=>new OffscreenCanvas(w,h);
-const ctx=(c:Canvas)=>{const v=c.getContext('2d',{willReadFrequently:true,colorSpace:'srgb'});if(!v)throw new Error('A 2D drawing context is unavailable.');return v;};
+// Pixel readback is only needed for color, LUT and mask passes. Everything else
+// stays on accelerated canvases, which is what keeps full-resolution playback real time.
+const ctx=(c:Canvas,readback=false)=>{const v=c.getContext('2d',{willReadFrequently:readback,colorSpace:'srgb'});if(!v)throw new Error('A 2D drawing context is unavailable.');return v;};
 const clamp=(x:number,min=0,max=1)=>Math.max(min,Math.min(max,x));
 const linear=(x:number)=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4;
 const srgb=(x:number)=>x<=.0031308?x*12.92:1.055*Math.max(0,x)**(1/2.4)-.055;
@@ -51,7 +53,7 @@ export class SequenceRenderer {
     if(c.kind==='media') {
       const angle=c.multicam?.angles[c.multicam.active],a=p.assets.find(a=>a.id===(angle?.assetId||c.assetId));
       if(!a||a.missing)throw new Error(`Media offline: ${c.name}. Use Link Media.`);
-      const source=await this.media.frame(this.proxies&&a.proxyKey?a.proxyKey:a.blobKey,sourceTick(c,local,s.fps)/TIME_BASE+(angle?.offset||0)/TIME_BASE,Math.min(w,a.width)||w);
+      const source=await this.media.frame(this.proxies&&a.proxyKey?a.proxyKey:a.blobKey,sourceTick(c,local,s.fps)/TIME_BASE+(angle?.offset||0)/TIME_BASE,Math.min(w,a.width)||w,`${s.id}/${c.id}/${c.multicam?.active??0}`);
       if(source){const sw='width'in source?Number(source.width):a.width,sh='height'in source?Number(source.height):a.height,scale=Math.min(w/sw,h/sh);g.drawImage(source,(w-sw*scale)/2,(h-sh*scale)/2,sw*scale,sh*scale);}
     } else if(c.kind==='nested') {
       const n=p.sequences.find(n=>n.id===c.sequenceId)!;const nf=sourceTick(c,local,s.fps)/TIME_BASE*rateValue(n.fps);const source=await this.frame(p,n,nf,w,false,depth+1);g.drawImage(source,0,0,w,h);
@@ -61,14 +63,18 @@ export class SequenceRenderer {
       else {g.fillStyle=v.color;if(v.type==='ellipse'){g.beginPath();g.ellipse(x+gw/2,y+gh/2,gw/2,gh/2,0,0,Math.PI*2);g.fill();}else g.fillRect(x,y,gw,gh);}
     }
     out=this.effects(out,c,local,s);
-    if(c.mask){const m=c.mask,g=ctx(out),pixels=g.getImageData(0,0,w,h);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const nx=x/w,ny=y/h,dx=Math.abs(nx-m.x-m.width/2),dy=Math.abs(ny-m.y-m.height/2);const d=m.kind==='ellipse'?(1-Math.sqrt((dx/(m.width/2))**2+(dy/(m.height/2))**2))*Math.min(m.width,m.height)/2:Math.min(m.width/2-dx,m.height/2-dy);const alpha=m.feather?clamp(d/(m.feather/100)+.5):(d>=0?1:0);pixels.data[(y*w+x)*4+3]*=m.invert?1-alpha:alpha;}g.putImageData(pixels,0,0);}
+    if(c.mask){const m=c.mask,g=ctx(out,true),pixels=g.getImageData(0,0,w,h);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const nx=x/w,ny=y/h,dx=Math.abs(nx-m.x-m.width/2),dy=Math.abs(ny-m.y-m.height/2);const d=m.kind==='ellipse'?(1-Math.sqrt((dx/(m.width/2))**2+(dy/(m.height/2))**2))*Math.min(m.width,m.height)/2:Math.min(m.width/2-dx,m.height/2-dy);const alpha=m.feather?clamp(d/(m.feather/100)+.5):(d>=0?1:0);pixels.data[(y*w+x)*4+3]*=m.invert?1-alpha:alpha;}g.putImageData(pixels,0,0);}
     return out;
   }
   private effects(input:Canvas,c:Clip,frame:number,s:Sequence) {
     let out=input;const w=out.width,h=out.height;
     for(const fx of c.effects.filter(f=>f.enabled)) {
       const p=parameters(fx,frame);
-      if(fx.type==='color'||fx.type==='lut'){const g=ctx(out),image=g.getImageData(0,0,w,h);colorPixels(image.data,fx,frame);g.putImageData(image,0,0);continue;}
+      if(fx.type==='color'||fx.type==='lut'){const g=ctx(out,true),image=g.getImageData(0,0,w,h);colorPixels(image.data,fx,frame);g.putImageData(image,0,0);continue;}
+      if(fx.type==='transform'&&!p.x&&!p.y&&(p.scale??100)===100&&!p.rotation)continue;
+      if(fx.type==='opacity'&&(p.opacity??100)>=100)continue;
+      if(fx.type==='crop'&&!p.left&&!p.top&&!p.right&&!p.bottom)continue;
+      if(fx.type==='blur'&&!(p.radius>0))continue;
       const next=canvas(w,h),g=ctx(next);
       if(fx.type==='transform'){const ax=w*(p.anchorX??50)/100,ay=h*(p.anchorY??50)/100;g.translate(ax+(p.x||0)*w/s.width,ay+(p.y||0)*h/s.height);g.rotate((p.rotation||0)*Math.PI/180);g.scale((p.scale??100)/100,(p.scale??100)/100);g.translate(-ax,-ay);}
       if(fx.type==='opacity')g.globalAlpha=clamp((p.opacity??100)/100);
@@ -93,6 +99,7 @@ export class AudioMixer {
       const bus=Array.from({length:channels},()=>new Float32Array(count));
       const candidates=s.clips.filter(c=>c.trackId===t.id&&c.enabled&&c.start+c.duration+(s.transitions.find(tr=>tr.left===c.id)?.duration||0)/2>startFrame&&c.start-(s.transitions.find(tr=>tr.right===c.id)?.duration||0)/2<endFrame);
       for(const c of candidates) {
+        const inTransition=s.transitions.some(tr=>tr.left===c.id||tr.right===c.id);
         // A held picture is silent; repeating one audio sample would introduce DC.
         if(c.freeze!==undefined)continue;
         if(c.kind==='nested'){
@@ -107,7 +114,7 @@ export class AudioMixer {
         const minF=Math.max(startFrame,c.start-(s.transitions.find(tr=>tr.right===c.id)?.duration||0)/2),maxF=Math.min(endFrame,c.start+c.duration+(s.transitions.find(tr=>tr.left===c.id)?.duration||0)/2);
         const times=[source(minF),source(maxF),...c.remap.filter(k=>k.frame+c.start>minF&&k.frame+c.start<maxF).map(k=>k.value/TIME_BASE)];const pcm=await this.media.audio(a.blobKey,Math.max(0,Math.min(...times)),Math.max(...times));
         for(let i=0;i<count;i++) {
-          const f=(startSample+i)/rate*fps,active=transitionClips(s,t,f).find(x=>x.clip.id===c.id);if(!active)continue;
+          const f=(startSample+i)/rate*fps,active=inTransition?transitionClips(s,t,f).find(x=>x.clip.id===c.id):f>=c.start&&f<c.start+c.duration?{weight:1}:undefined;if(!active)continue;
           const local=f-c.start,pos=source(f)*pcm.sampleRate-pcm.start,j=Math.floor(pos),mix=pos-j;
           const fade=Math.min(1,c.fadeIn?Math.max(0,local)/c.fadeIn:1,c.fadeOut?Math.max(0,c.duration-local)/c.fadeOut:1),gain=10**(valueAt(c.gain,local)/20)*fade*active.weight,pan=clamp(valueAt(c.pan,local)+t.pan,-1,1);
           for(let ch=0;ch<channels;ch++){const index=t.channels[ch]??Math.min(ch,pcm.channels.length-1),plane=pcm.channels[index];if(!plane)continue;const v=(plane[j]||0)*(1-mix)+(plane[j+1]||0)*mix;bus[ch][i]+=v*gain*(channels===1?1:ch===0?Math.min(1,1-pan):Math.min(1,1+pan));}

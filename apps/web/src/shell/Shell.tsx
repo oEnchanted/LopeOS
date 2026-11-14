@@ -96,7 +96,8 @@ function WindowApplication({ win, services, title, close, restore }: { win: Wind
   }, [win.id, services.files]);
   // A context can outlive its window (async continuations, retained references).
   const alive = useRef(true);
-  useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
+  // A layout effect runs before children's passive effects, so apps can register commands after a StrictMode remount.
+  useLayoutEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   const scopedServices = useMemo<SharedServices>(() => {
     const dialog = <T,>(open: () => Promise<T>) => !alive.current ? Promise.reject(new Error('This window has closed.')) : storage.getSnapshot().fileAccess[win.appId] !== false ? open() : Promise.reject(new Error('Workspace file access is disabled for this application in Settings.'));
     return { ...services, files, dialogs: { openFile: options => dialog(() => services.dialogs.openFile(options)), saveFile: options => dialog(() => services.dialogs.saveFile(options)) }, openFile: path => storage.getSnapshot().fileAccess[win.appId] !== false ? services.openFile(path) : Promise.reject(new Error('Workspace file access is disabled for this application in Settings.')), notify: n => services.notify({ ...n, appId: win.appId } as Notification), commands: {

@@ -209,6 +209,13 @@ try {
   await fixtures(filesPage, { theme: 'dark', reduceTransparency: true, increaseContrast: true, strongFocus: true, reduceMotion: true });
   await filesPage.goto(origin, { waitUntil: 'domcontentloaded' });
   await expect(filesPage.locator('.welcome-main h1')).toBeVisible();
+  // Spotlight searches LopeDrive's Documents and Downloads by default, not the server workspace.
+  await filesPage.evaluate(async () => {
+    const { fileService } = await import('/packages/runtime-client/src/index.ts');
+    const { ensureLopeFolders } = await import('/packages/runtime-client/src/lope-drive.ts');
+    await ensureLopeFolders(fileService);
+    await fileService.writeBinary('/LopeDrive/Documents/hello.txt', new TextEncoder().encode('Hello from the shared workspace.\n'), { createOnly: true });
+  });
   const fileInput = await open(filesPage);
   await filesPage.keyboard.press('Control+1');
   const appearance = await filesPage.locator('.spotlight').evaluate(element => {

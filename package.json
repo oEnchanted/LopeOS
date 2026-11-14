@@ -29,10 +29,14 @@
     "test:updates": "npm run build && node --test tests/updates/*.test.mjs tests/updates/*.test.ts && playwright test -c tests/updates/playwright.config.ts",
     "test:photos:denoise": "node tests/lightroom/denoise-probe.mjs && node tests/lightroom/denoise-browser.mjs",
     "prepare:photo-ai": "node scripts/prepare-denoise-runtime.mjs",
+    "test:media-player": "node --test tests/apps/media-player.test.ts && node tests/apps/media-player-browser.mjs && NOMP4=1 node tests/apps/media-player-browser.mjs",
     "test:sheets": "node --test tests/spreadsheet/*.test.ts && playwright test -c tests/spreadsheet/playwright.config.ts",
     "check:sheets": "tsc --noEmit -p tests/spreadsheet/tsconfig.json"
   },
   "dependencies": {
+    "@ffmpeg/core": "0.12.10",
+    "@ffmpeg/ffmpeg": "0.12.15",
+    "@ffmpeg/util": "0.12.2",
     "@mlc-ai/web-llm": "0.2.88",
     "@vitejs/plugin-react": "latest",
     "libraw-wasm": "1.6.0",

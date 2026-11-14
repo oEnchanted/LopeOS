@@ -26,6 +26,8 @@ const palettes: Record<string, [string, string]> = {
   lightroom: ['#62d5ca', '#247e9b'],
   'movie-maker': ['#a68de4', '#6150ad'],
   'video-editor': ['#719bd4', '#36568e'],
+  'media-player': ['#f6a54b', '#d4502a'],
+  preview: ['#7fcaf6', '#3466c8'],
   'image-generator': ['#e59ad6', '#7d4fc0'],
   sheets: ['#55bd8d', '#18734e'],
 };
@@ -49,6 +51,18 @@ export function AppIcon({ name, size = 48 }: { name: string; size?: number }) {
         <path d="m13 47 11-12 8 8 6-5 10 9" fill="var(--icon-ink, #5b3596)" fillOpacity=".55" stroke="var(--icon-light, #fbefff)" strokeWidth="2" strokeLinecap="round"/>
         <path d="m45 7 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" fill="var(--icon-light, #fff)"/>
         <circle cx="22" cy="25" r="3" fill="var(--icon-accent, #ffd9f4)"/>
+      </g>;
+      case 'preview': return <g strokeLinejoin="round">
+        <rect x="13" y="9" width="36" height="30" rx="4" transform="rotate(-9 31 24)" fill="var(--glass-icon-background)" stroke="var(--icon-light, #eaf6ff)" strokeOpacity=".7" strokeWidth="1.5"/>
+        <rect x="15" y="20" width="38" height="32" rx="4" fill="var(--icon-light, #f7fbff)"/>
+        <rect x="19" y="24" width="30" height="20" rx="2" fill="var(--icon-mid, #bfe3ff)"/>
+        <path d="m19 44 9-10 6 6 4-3 11 7H19Z" fill="var(--icon-ink, #2d5fb8)"/>
+        <circle cx="41" cy="30" r="3" fill="var(--icon-accent, #ffd66b)"/>
+      </g>;
+      case 'media-player': return <g strokeLinejoin="round">
+        <circle cx="29" cy="32" r="18" fill="var(--icon-light, #fff4e8)"/>
+        <path d="m24 23.5 14 8.5-14 8.5v-17Z" fill="var(--icon-ink, #c2461f)"/>
+        <path d="M50 22a15 15 0 0 1 0 20M45 26.5a8.5 8.5 0 0 1 0 11" stroke="var(--icon-light, #fff4e8)" strokeWidth="3.2" strokeLinecap="round" fill="none"/>
       </g>;
       case 'video-editor': return <g strokeLinejoin="round">
         <rect x="9" y="11" width="46" height="31" rx="4" fill="#152b49" stroke="#d3e7ff" strokeWidth="2"/>

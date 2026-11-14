@@ -14,6 +14,8 @@ const buildId = new Date().toISOString();
 export default defineConfig({
   define: { 'import.meta.env.VITE_APP_VERSION': JSON.stringify(appVersion), 'import.meta.env.VITE_BUILD_ID': JSON.stringify(buildId) },
   plugins: [react(), releasePlugin(appVersion, buildId)],
+  // ffmpeg.wasm spawns its own module worker; pre-bundling would break its URL.
+  optimizeDeps: { exclude: ['@ffmpeg/ffmpeg', '@ffmpeg/util'] },
   server: {
     host: '127.0.0.1', port: 5173, strictPort: true,
     fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/.runtime/**', '**/.accounts-data/**', '**/.browser-data/**', '**/.browser-host/**', '**/services/browser/.data/**'] },
