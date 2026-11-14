@@ -300,6 +300,30 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
     <div className="lb-body">
       <main className="lb-content" aria-label="Page content">
         {session?.streamUrl && <StreamSurface url={session.streamUrl} visible={!onNewTab && !tab?.error} muted={muted} onStatus={setStreamStatus} onShortcut={shortcut} onActivity={activity}/>}
+        {(() => {
+          // Remote Chromium runs in kiosk mode without its own context menu; the worker
+          // reports right-clicks on links and images and LopeOS draws the menu here.
+          const menu = session?.contextMenu;
+          if (!menu || menu.tabId !== tab?.id || onNewTab) return null;
+          const dismiss = () => void run({ type: 'context.dismiss' });
+          const copy = (text: string) => { void navigator.clipboard?.writeText(text).catch(() => {}); dismiss(); };
+          const flip = `${menu.x / menu.width > 0.7 ? ' lb-context-menu--left' : ''}${menu.y / menu.height > 0.6 ? ' lb-context-menu--up' : ''}`;
+          return <div className="lb-context-layer" onPointerDown={dismiss} onContextMenu={event => event.preventDefault()}>
+            <div className={`lb-context-menu${flip}`} style={{ left: `${menu.x / menu.width * 100}%`, top: `${menu.y / menu.height * 100}%` }} onPointerDown={event => event.stopPropagation()}>
+              <Popover label="Page actions">
+                {menu.link && <>
+                  <button onClick={() => void run({ type: 'context.openLink', menuId: menu.id })}>Open link in new tab</button>
+                  <button onClick={() => void run({ type: 'context.saveLink', menuId: menu.id })}>Save link to LopeDrive</button>
+                  <button onClick={() => copy(menu.link!)}>Copy link address</button>
+                </>}
+                {menu.image && <>
+                  <button onClick={() => void run({ type: 'context.saveImage', menuId: menu.id })}>Save image to LopeDrive</button>
+                  {!menu.image.startsWith('data:') && <button onClick={() => copy(menu.image!)}>Copy image address</button>}
+                </>}
+              </Popover>
+            </div>
+          </div>;
+        })()}
         {onNewTab ? <div className="lb-start"><div className="lb-start-top"><span><Compass size={13}/> Lope Browser</span><button onClick={() => setPanel('settings')} aria-label="Browser preferences"><SlidersHorizontal size={15}/></button></div>
           <div className="lb-start-center"><div className="lb-mark"><Compass size={35} strokeWidth={1.35}/></div><h1>New Tab</h1>
             <form className="lb-start-search" onSubmit={event => { event.preventDefault(); navigate(String(new FormData(event.currentTarget).get('search') ?? '')); }}><Search size={19}/><input name="search" aria-label="Search the web" placeholder={`Search with ${SEARCH_PROVIDERS[session?.searchProvider ?? 'duckduckgo'].name} or enter a URL`} autoComplete="off"/><button title="Search" aria-label="Search"><ArrowRight size={18}/></button></form>

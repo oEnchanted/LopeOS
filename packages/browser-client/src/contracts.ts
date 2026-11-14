@@ -20,6 +20,8 @@ export interface BrowserPermission {
   supported: boolean; explanation: string;
 }
 export interface BrowserUpload { id: string; tabId: string; multiple: boolean }
+/** A right-click on a link or image in the remote page. Positions are page CSS pixels within width × height. */
+export interface BrowserContextMenu { id: string; tabId: string; x: number; y: number; width: number; height: number; link: string | null; image: string | null }
 export interface BrowserSession {
   hosting?: { remote: true; accountId: string | null; profile: 'server' };
   generation: string;
@@ -28,6 +30,7 @@ export interface BrowserSession {
   tabs: BrowserTab[]; activeTabId: string | null;
   history: BrowserVisit[]; bookmarks: BrowserBookmark[]; downloads: BrowserTransfer[];
   uploads: BrowserUpload[]; permissions: BrowserPermission[];
+  contextMenu?: BrowserContextMenu | null;
   searchProvider: SearchProvider; engineVersion: string;
   /** Same-origin, authenticated Selkies core URL; never an arbitrary website. */
   streamUrl: string | null;
@@ -51,7 +54,9 @@ export type BrowserCommand =
   | { type: 'upload.cancel'; id: string }
   | { type: 'settings'; searchProvider: SearchProvider }
   | { type: 'data.clear' }
-  | { type: 'engine.restart' };
+  | { type: 'engine.restart' }
+  | { type: 'context.dismiss' }
+  | { type: 'context.openLink' | 'context.saveLink' | 'context.saveImage'; menuId: string };
 
 /** Agent 2: pass an already-authorized bridge on the server. Never exposed to websites. */
 export interface BrowserFileBridge {

@@ -6,6 +6,29 @@ import { ChromiumPipe } from './cdp.mjs';
 import { createEgressProxy } from './network.mjs';
 import { destination, safeHostUrl } from '../../../packages/browser-client/src/navigation.ts';
 
+// Kiosk Chromium never draws its own context menu, so LopeOS draws one. This runs in an
+// isolated world: page scripts cannot see or call the binding that reports right-clicks.
+const CONTEXT_WORLD = 'lope-context';
+const CONTEXT_BINDING = 'lopeContextMenu';
+const CONTEXT_SCRIPT = `if (window === window.top) document.addEventListener('contextmenu', event => {
+  const path = event.composedPath ? event.composedPath() : [event.target];
+  const image = path.find(node => node instanceof HTMLImageElement);
+  const link = path.find(node => node instanceof HTMLAnchorElement && node.href);
+  if (!image && !link) return;
+  globalThis.${CONTEXT_BINDING}(JSON.stringify({ x: event.clientX, y: event.clientY, width: innerWidth, height: innerHeight,
+    image: image ? (image.currentSrc || image.src || '') : '', link: link ? link.href : '' }));
+}, true);`;
+const IMAGE_TYPES = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/gif': 'gif', 'image/webp': 'webp', 'image/svg+xml': 'svg', 'image/avif': 'avif', 'image/bmp': 'bmp', 'image/x-icon': 'ico' };
+function savedFileName(url, type) {
+  const extension = IMAGE_TYPES[String(type).split(';')[0].trim().toLowerCase()];
+  let name = 'image';
+  if (!url.startsWith('data:')) {
+    try { const parsed = new URL(url); name = decodeURIComponent(parsed.pathname.split('/').filter(Boolean).pop() || '') || parsed.hostname; } catch {}
+  }
+  if (extension && !/\.[a-z0-9]{2,5}$/i.test(name)) name += '.' + extension;
+  return name;
+}
+
 const id = () => randomUUID();
 const internal = tab => tab.url === 'about:blank';
 const cleanName = name => basename(name).replace(/[\x00-\x1f\x7f/\\]/g, '_').slice(0, 160) || 'download';
@@ -170,6 +193,10 @@ export class BrowserEngine extends EventEmitter {
     const { frameTree } = await this.send(tab, 'Page.getFrameTree');
     const remember = tree => { this.frames.set(tree.frame.id, tab.id); for (const child of tree.childFrames ?? []) remember(child); };
     remember(frameTree); tab._frame = frameTree.frame.id;
+    await this.send(tab, 'Runtime.addBinding', { name: CONTEXT_BINDING, executionContextName: CONTEXT_WORLD }).catch(() => {});
+    await this.send(tab, 'Page.addScriptToEvaluateOnNewDocument', { source: CONTEXT_SCRIPT, worldName: CONTEXT_WORLD }).catch(() => {});
+    const world = await this.send(tab, 'Page.createIsolatedWorld', { frameId: tab._frame, worldName: CONTEXT_WORLD }).catch(() => null);
+    if (world?.executionContextId) await this.send(tab, 'Runtime.evaluate', { expression: CONTEXT_SCRIPT, contextId: world.executionContextId }).catch(() => {});
     if (info.openerId) { await this.activate(session, tab); }
     await this.refresh(tab); this.changed(session); return tab;
   }
@@ -187,7 +214,7 @@ export class BrowserEngine extends EventEmitter {
   async activate(session, tab) {
     if (!tab) return;
     await this.cdp.send('Target.activateTarget', { targetId: tab.id });
-    session.activeTabId = tab.id; this.foreground = session.id; this.changed(session);
+    session.activeTabId = tab.id; session.contextMenu = null; this.foreground = session.id; this.changed(session);
   }
   async closeTab(tab) {
     // Page.close respects beforeunload; retry while navigation replaces the active
@@ -240,7 +267,57 @@ export class BrowserEngine extends EventEmitter {
       tab.loading = false; this.changed(session);
     }
   }
+  openContextMenu(cdpSession, payload) {
+    const tab = [...this.targets.values()].find(item => item._cdp === cdpSession); if (!tab) return;
+    const session = this.sessions.get(tab._session); if (!session || session.activeTabId !== tab.id) return;
+    let value; try { value = JSON.parse(payload); } catch { return; }
+    const number = n => Number.isFinite(n) && n >= 0 && n <= 20000 ? Math.round(n) : null;
+    const [x, y, width, height] = [value.x, value.y, value.width, value.height].map(number);
+    const link = typeof value.link === 'string' && value.link.length <= 8192 && /^https?:\/\//i.test(value.link) ? value.link : null;
+    const image = typeof value.image === 'string' && value.image.length <= 8192 && /^(https?:\/\/|data:image\/)/i.test(value.image) ? value.image : null;
+    if (x === null || y === null || !width || !height || (!link && !image)) return;
+    session.contextMenu = { id: id(), tabId: tab.id, x, y, width, height, link, image };
+    this.changed(session);
+  }
+  takeContextMenu(session, menuId) {
+    const menu = session.contextMenu; session.contextMenu = null;
+    if (!menu || menu.id !== menuId) throw new Error('That menu is no longer available. Right-click again.');
+    return menu;
+  }
+  async saveUrl(session, tabId, url) {
+    const tab = this.targets.get(tabId);
+    if (!tab || tab._session !== session.id) throw new Error('This tab is no longer available.');
+    let bytes, type = '';
+    if (url.startsWith('data:')) {
+      const match = /^data:([^;,]*)(;base64)?,(.*)$/is.exec(url);
+      if (!match) throw new Error('This image cannot be saved.');
+      type = match[1]; bytes = match[2] ? Buffer.from(match[3], 'base64') : Buffer.from(decodeURIComponent(match[3]));
+    } else {
+      // The page's own network stack fetches it: same cookies, cache and egress rules as the page.
+      const { resource } = await this.send(tab, 'Network.loadNetworkResource', { frameId: tab._frame, url, options: { disableCache: false, includeCredentials: true } });
+      if (!resource?.success || !resource.stream) throw new Error('This file could not be downloaded.');
+      const chunks = []; let size = 0;
+      try {
+        for (;;) {
+          const part = await this.send(tab, 'IO.read', { handle: resource.stream, size: 1048576 });
+          const chunk = Buffer.from(part.data ?? '', part.base64Encoded ? 'base64' : 'utf8');
+          size += chunk.length;
+          if (size > 256 * 1024 * 1024) throw new Error('Downloads are limited to 256 MiB.');
+          chunks.push(chunk); if (part.eof) break;
+        }
+      } finally { await this.send(tab, 'IO.close', { handle: resource.stream }).catch(() => {}); }
+      bytes = Buffer.concat(chunks);
+      type = Object.entries(resource.headers ?? {}).find(([key]) => key.toLowerCase() === 'content-type')?.[1] ?? '';
+    }
+    const guid = id(); this.downloadStarted({ guid, frameId: tab._frame, suggestedFilename: savedFileName(url, type) });
+    const item = this.downloads.get(guid); if (!item) throw new Error('This session has too many downloads.');
+    await mkdir(join(this.transferRoot, session.id), { recursive: true, mode: 0o700 });
+    await writeFile(item.path, bytes, { mode: 0o600 });
+    item.transfer.receivedBytes = item.transfer.totalBytes = bytes.length;
+    await this.completeDownload(item, session);
+  }
   async onEvent({ method, params, sessionId }) {
+    if (method === 'Runtime.bindingCalled' && params.name === CONTEXT_BINDING) { this.openContextMenu(sessionId, params.payload); return; }
     if (method === 'Target.targetCreated') { await this.attach(params.targetInfo); return; }
     if (method === 'Target.targetInfoChanged') {
       const tab = this.targets.get(params.targetInfo.targetId);
@@ -420,6 +497,18 @@ export class BrowserEngine extends EventEmitter {
         await this.completeDownload(item, session); break;
       }
       case 'devtools': await this.cdp.send('Target.openDevTools', { targetId: tab.id }); break;
+      case 'context.dismiss': session.contextMenu = null; break;
+      case 'context.openLink': {
+        const menu = this.takeContextMenu(session, command.menuId);
+        if (!menu.link) throw new Error('This link is no longer available.');
+        await this.createTab(session, destination(menu.link, session.searchProvider)); break;
+      }
+      case 'context.saveLink': case 'context.saveImage': {
+        const menu = this.takeContextMenu(session, command.menuId);
+        const url = command.type === 'context.saveImage' ? menu.image : menu.link;
+        if (!url) throw new Error('There is nothing to save here.');
+        await this.saveUrl(session, menu.tabId, url); break;
+      }
       case 'bookmark.add': {
         if (safeHostUrl(tab.url) && !session.bookmarks.some(b => b.url === tab.url)) session.bookmarks.push({ id: id(), url: tab.url, title: tab.title, createdAt: Date.now() }); break;
       }
