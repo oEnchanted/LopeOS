@@ -1,19 +1,24 @@
 import http from 'node:http';
+import { execFile } from 'node:child_process';
 import { createHash, randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import { mkdir, open, readFile, rename, readdir, stat, unlink } from 'node:fs/promises';
 import { resolve, join, dirname } from 'node:path';
 import { isIP } from 'node:net';
+import { availableParallelism, cpus, freemem, totalmem } from 'node:os';
+import { setTimeout as delay } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
 export const QUOTA_BYTES = 1_000_000_000;
-export const UNLOCKED_QUOTA_BYTES = 10_000_000_000;
-// "Unlock 10 GB" code. This repository is public, so only a salted scrypt hash is stored.
+export const UNLOCKED_QUOTA_BYTES = 25_000_000_000;
+// "Unlock 25 GB" code. This repository is public, so only a salted scrypt hash is stored.
 const STORAGE_UNLOCK = { salt: '0a9be21c4765937d9be07dd4561a1ed4', hash: '0b48bf2bc34eacf74e6ed2dea403d1980821811ea554e432e1d45ba29d07646d' };
 const gigabytes = bytes => `${Math.round(bytes / 1e9)} GB`;
 export const MAX_BLOB_BYTES = 1024 * 1024 * 1024 + 28;
 const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 const STAGING_MS = 60 * 60 * 1000;
+const PRESENCE_MS = 90 * 1000;
+const presencePattern = /^[A-Za-z0-9_-]{16,64}$/;
 const hashPattern = /^[a-f0-9]{64}$/;
 const accountPattern = /^[a-z][a-z0-9_-]{0,31}$/;
 const reserved = new Set(['guest', 'shared', 'root', 'system', 'admin', 'administrator', 'everyone', 'nobody']);
@@ -26,6 +31,21 @@ class ServiceError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
 }
 const fail = (status, code, message) => { throw new ServiceError(status, code, message); };
+const execFileAsync = promisify(execFile);
+let darwinAvailable = null, darwinAvailableAt = 0;
+/** Bytes of memory available for new work. macOS reports only never-used pages as free, so add reclaimable inactive pages there. */
+async function availableMemory() {
+  if (process.platform !== 'darwin') return freemem();
+  if (darwinAvailable !== null && Date.now() - darwinAvailableAt < 2_000) return darwinAvailable;
+  try {
+    const { stdout } = await execFileAsync('/usr/bin/vm_stat', [], { timeout: 2_000 });
+    const pages = name => Number(new RegExp(`^Pages ${name}:\\s+(\\d+)`, 'm').exec(stdout)?.[1]);
+    const bytes = (pages('free') + pages('inactive')) * Number(/page size of (\d+) bytes/.exec(stdout)?.[1]);
+    darwinAvailable = Number.isFinite(bytes) ? bytes : freemem();
+  } catch { darwinAvailable = freemem(); }
+  darwinAvailableAt = Date.now();
+  return darwinAvailable;
+}
 async function syncDirectory(directory) {
   let folder;
   try { folder = await open(directory, 'r'); await folder.sync(); }
@@ -132,14 +152,63 @@ export async function createAccountServer(options = {}) {
     });
     registryQueue = result; return result;
   }
-  function rate(key, capacity, duration) {
-    const now = Date.now(), bucket = buckets.get(key);
-    if (!bucket && buckets.size >= 10_000) {
-      for (const [name, value] of buckets) if (value.until <= now) buckets.delete(name);
-      if (buckets.size >= 10_000) fail(429, 'RATE_LIMIT', 'The account service is busy. Please try again later.');
+  function rate(key, capacity, duration, store = buckets) {
+    const now = Date.now(), bucket = store.get(key);
+    if (!bucket && store.size >= 10_000) {
+      for (const [name, value] of store) if (value.until <= now) store.delete(name);
+      if (store.size >= 10_000) fail(429, 'RATE_LIMIT', 'The account service is busy. Please try again later.');
     }
     if (bucket && bucket.until > now) { if (bucket.count >= capacity) fail(429, 'RATE_LIMIT', 'Too many attempts. Please try again later.'); bucket.count++; }
-    else buckets.set(key, { until: now + duration, count: 1 });
+    else store.set(key, { until: now + duration, count: 1 });
+  }
+  function clientAddress(req) {
+    const direct = req.socket.remoteAddress ?? 'unknown', forwarded = req.headers['x-forwarded-for'];
+    return trustProxy && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(direct) && typeof forwarded === 'string' && isIP(forwarded) ? forwarded : direct;
+  }
+  // Desktop server widget: aggregate host load and anonymous presence, held in memory only.
+  const presenceMs = options.presenceMs ?? PRESENCE_MS;
+  const presence = new Map(), presenceByAddress = new Map(), hostBuckets = new Map();
+  let presencePrunedAt = 0, cpuBaseline = null, cpuPercent = null, cpuSampledAt = 0, cpuPending = null;
+  const cpuTimes = () => cpus().reduce((sum, core) => {
+    const { user, nice, sys, idle, irq } = core.times;
+    return { idle: sum.idle + idle, total: sum.total + user + nice + sys + idle + irq, at: sum.at };
+  }, { idle: 0, total: 0, at: Date.now() });
+  async function processorLoad() {
+    if (cpuPercent !== null && Date.now() - cpuSampledAt < 1500) return cpuPercent;
+    cpuPending ??= (async () => {
+      // Load is a delta between samples; a missing or stale baseline gets a short window of its own.
+      if (!cpuBaseline || Date.now() - cpuBaseline.at > 15_000) { cpuBaseline = cpuTimes(); await delay(250); }
+      const current = cpuTimes(), total = current.total - cpuBaseline.total;
+      cpuPercent = total > 0 ? Math.min(100, Math.max(0, 100 * (1 - (current.idle - cpuBaseline.idle) / total))) : null;
+      cpuBaseline = current; cpuSampledAt = current.at;
+    })().finally(() => { cpuPending = null; });
+    await cpuPending;
+    return cpuPercent;
+  }
+  function forgetPresence(id, entry) {
+    presence.delete(id);
+    const remaining = (presenceByAddress.get(entry.address) ?? 1) - 1;
+    if (remaining > 0) presenceByAddress.set(entry.address, remaining); else presenceByAddress.delete(entry.address);
+  }
+  function markPresent(id, address, account) {
+    const now = Date.now(), existing = presence.get(id);
+    if (existing) { existing.seen = now; existing.accountId = account?.id ?? null; return; }
+    // Bounded: one address, or a flood of invented identifiers, cannot grow this without limit.
+    const full = () => presence.size >= 5_000 || (presenceByAddress.get(address) ?? 0) >= 24;
+    if (now - presencePrunedAt > 5_000 || full()) {
+      presencePrunedAt = now;
+      for (const [key, entry] of presence) if (entry.seen + presenceMs <= now) forgetPresence(key, entry);
+    }
+    if (full()) return;
+    presence.set(id, { seen: now, address, accountId: account?.id ?? null });
+    presenceByAddress.set(address, (presenceByAddress.get(address) ?? 0) + 1);
+  }
+  function onlineCounts() {
+    const now = Date.now(), accounts = new Set();
+    let guests = 0;
+    // A person signed in on several devices counts once; each guest browser counts once.
+    for (const entry of presence.values()) if (entry.seen + presenceMs > now) { if (entry.accountId) accounts.add(entry.accountId); else guests++; }
+    return { people: guests + accounts.size, signedIn: accounts.size };
   }
   const accountDir = account => join(directory, account.id);
   const blobPath = (account, hash) => join(accountDir(account), 'blobs', hash);
@@ -218,9 +287,21 @@ export async function createAccountServer(options = {}) {
       if ((origin && !origins.includes(origin)) || req.headers['sec-fetch-site'] === 'cross-site') fail(403, 'ORIGIN', 'This website is not allowed to use the account service.');
       if (!['GET', 'HEAD'].includes(req.method) && !origins.includes(origin)) fail(403, 'ORIGIN', 'An allowed website origin is required.');
       if (req.method === 'GET' && url.pathname === '/api/accounts/session') return json(res, 200, await summary(identity(req, false)));
+      if (req.method === 'POST' && url.pathname === '/api/accounts/host') {
+        const address = clientAddress(req);
+        rate(`host:${address}`, 600, 60_000, hostBuckets);
+        const input = await jsonBody(req, 1024);
+        if (typeof input.presence !== 'string' || !presencePattern.test(input.presence)) fail(400, 'INVALID_PRESENCE', 'A presence identifier is required.');
+        markPresent(input.presence, address, identity(req, false));
+        const [percent, available] = await Promise.all([processorLoad(), availableMemory()]), totalBytes = totalmem();
+        return json(res, 200, {
+          cpu: { percent: percent === null ? null : Math.round(percent * 10) / 10, cores: availableParallelism() },
+          memory: { usedBytes: Math.min(totalBytes, Math.max(0, totalBytes - available)), totalBytes },
+          online: onlineCounts(),
+        });
+      }
       if (req.method === 'POST' && ['/api/accounts/register', '/api/accounts/login', '/api/accounts/recover', '/api/accounts/recovery-key', '/api/accounts/recovery-info', '/api/accounts/upgrade'].includes(url.pathname)) {
-        const direct = req.socket.remoteAddress ?? 'unknown', forwarded = req.headers['x-forwarded-for'];
-        const address = trustProxy && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(direct) && typeof forwarded === 'string' && isIP(forwarded) ? forwarded : direct;
+        const address = clientAddress(req);
         rate(`auth:${address}`, 30, 15 * 60_000);
         if (authActive >= 4) fail(429, 'BUSY', 'Sign-in is busy. Try again shortly.');
         const input = await jsonBody(req, url.pathname.endsWith('/upgrade') ? 32 * 1024 * 1024 : 16 * 1024);
@@ -335,8 +416,7 @@ export async function createAccountServer(options = {}) {
       if (expectedAccount !== undefined && expectedAccount !== account.id) fail(409, 'SESSION_CHANGED', 'Your account session changed. Sign in again before syncing.');
       if (url.pathname === '/api/accounts/storage/unlock' && req.method === 'POST') {
         const input = await jsonBody(req);
-        const direct = req.socket.remoteAddress ?? 'unknown', forwarded = req.headers['x-forwarded-for'];
-        const address = trustProxy && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(direct) && typeof forwarded === 'string' && isIP(forwarded) ? forwarded : direct;
+        const address = clientAddress(req);
         rate(`unlock:${account.id}`, 10, 15 * 60_000); rate(`unlock-ip:${address}`, 30, 15 * 60_000);
         const code = typeof input.code === 'string' ? input.code.trim() : '';
         if (!code || code.length > 200) fail(400, 'INVALID_CODE', 'Enter an unlock code.');

@@ -229,17 +229,47 @@ test('new account registration requires encryption by default', async t => {
   assert.equal((await f.call('/register', { method: 'POST', data: { accountName: 'alice', displayName: 'Alice', password } })).status, 400);
 });
 
-test('an unlock code raises only that account to 10 GB, persists, and wrong codes are refused', async t => {
+test('an unlock code raises only that account to 25 GB, persists, and wrong codes are refused', async t => {
   const f = await fixture(t);
   const alice = (await f.register('alice')).cookie, bob = (await f.register('bob')).cookie;
   assert.equal((await f.call('/storage/unlock', { method: 'POST', data: { code: 'not the code' }, cookie: alice })).status, 403);
   assert.equal((await f.call('/storage/unlock', { method: 'POST', data: { code: 'TheFutureOfEntertainment' } })).status, 401);
   const unlocked = await f.call('/storage/unlock', { method: 'POST', data: { code: ' TheFutureOfEntertainment ' }, cookie: alice });
   assert.equal(unlocked.status, 200, JSON.stringify(unlocked.body));
-  assert.equal(unlocked.body.quotaBytes, 10_000_000_000);
-  assert.equal((await f.call('/manifest', { cookie: alice })).body.quotaBytes, 10_000_000_000);
+  assert.equal(unlocked.body.quotaBytes, 25_000_000_000);
+  assert.equal((await f.call('/manifest', { cookie: alice })).body.quotaBytes, 25_000_000_000);
   assert.equal((await f.call('/session', { cookie: bob })).body.quotaBytes, 1_000_000_000);
   assert.equal((await readFile(join(f.directory, 'registry.json'), 'utf8')).includes('TheFutureOfEntertainment'), false);
   await f.restart();
-  assert.equal((await f.call('/session', { cookie: alice })).body.quotaBytes, 10_000_000_000);
+  assert.equal((await f.call('/session', { cookie: alice })).body.quotaBytes, 25_000_000_000);
+});
+
+test('host status reports bounded load and anonymous, deduplicated presence', async t => {
+  const f = await fixture(t, { presenceMs: 400 });
+  const id = suffix => `presence-${suffix}`.padEnd(22, 'x');
+  const host = (presence, options = {}) => f.call('/host', { method: 'POST', data: { presence }, ...options });
+  const first = await host(id('a'));
+  assert.equal(first.status, 200, JSON.stringify(first.body));
+  const { cpu, memory, online } = first.body;
+  assert.ok(cpu.percent === null || (cpu.percent >= 0 && cpu.percent <= 100));
+  assert.ok(Number.isInteger(cpu.cores) && cpu.cores > 0);
+  assert.ok(memory.totalBytes > 0 && memory.usedBytes >= 0 && memory.usedBytes <= memory.totalBytes);
+  assert.deepEqual(online, { people: 1, signedIn: 0 });
+  assert.deepEqual(Object.keys(first.body).sort(), ['cpu', 'memory', 'online']);
+  // Repeated heartbeats from one browser count once.
+  assert.deepEqual((await host(id('a'))).body.online, { people: 1, signedIn: 0 });
+  assert.equal((await host(id('b'))).body.online.people, 2);
+  // One account signed in on two browsers is one person.
+  const { cookie } = await f.register();
+  await host(id('c'), { cookie });
+  assert.deepEqual((await host(id('d'), { cookie })).body.online, { people: 3, signedIn: 1 });
+  assert.equal((await host('short')).status, 400);
+  assert.equal((await host(id('e'), { headers: { origin: 'https://evil.example' } })).status, 403);
+  assert.equal((await f.call('/host', { method: 'POST', data: 'x', headers: { 'content-type': 'text/plain' } })).status, 415);
+  // A single address cannot inflate the count without limit.
+  for (let index = 0; index < 40; index++) await host(id(`flood-${index}`));
+  assert.ok((await host(id('a'))).body.online.people <= 24);
+  // Presence expires when heartbeats stop.
+  await new Promise(resolve => setTimeout(resolve, 450));
+  assert.deepEqual((await host(id('z'))).body.online, { people: 1, signedIn: 0 });
 });
