@@ -210,6 +210,23 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   await until(async () => (await api('sessions/normal')).tabs.some(tab => tab.title === `Lope smoke file ${uploadBytes}`), 20000);
   result.checks.largeUpload = true;
   result.binaryFramesObserved = binaryFrames;
+  // Real page loads through Chromium, the worker's egress proxy and the host's network, so slow
+  // DNS, slow egress and slow software rendering can be told apart. Timings only, never content.
+  result.stage = 'page-load';
+  result.loads = {};
+  for (const [label, url] of [['example', 'https://example.com/'], ['wikipedia', 'https://en.wikipedia.org/wiki/Horse']]) {
+    const started = Date.now();
+    await api('sessions/normal/commands', 'POST', { type: 'tab.create', url });
+    try {
+      await until(async () => (await api('sessions/normal')).tabs.some(tab => tab.url?.startsWith(url) && !tab.loading && tab.title), 60000);
+      result.loads[label] = Date.now() - started;
+    } catch { result.loads[label] = 'timeout'; }
+  }
+  try {
+    const dns = await allocator.docker(['exec', worker.name, 'node', '-e',
+      "const d=require('dns/promises');const t=Date.now();Promise.all(['www.google.com','en.wikipedia.org','github.com'].map(h=>d.lookup(h))).then(()=>console.log(Date.now()-t)).catch(()=>console.log(-1))"], { timeout: 30000 });
+    result.loads.dnsMs = Number(dns);
+  } catch { result.loads.dnsMs = 'failed'; }
   result.passed = true; result.stage = 'complete';
 } catch (error) {
   // Error strings can contain command arguments, credentials, URLs or page content.
