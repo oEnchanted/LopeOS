@@ -1,8 +1,10 @@
 import { EventEmitter } from 'node:events';
 import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, writeFile, rename, rm, realpath, stat } from 'node:fs/promises';
+import { release } from 'node:os';
 import { join, basename, resolve, sep } from 'node:path';
 import { ChromiumPipe } from './cdp.mjs';
+import { DisplayHub } from './display.mjs';
 import { createEgressProxy } from './network.mjs';
 import { PAGE_BINDING, PAGE_SCRIPT, PAGE_WORLD, findExpression } from './page-scripts.mjs';
 import { SEARCH_PROVIDERS, destination, safeHostUrl, openedFile, openedFileUrl, openableFileType, OPENED_FILE_DOMAIN, MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
@@ -31,6 +33,10 @@ function savedFileName(url, type) {
 
 const id = () => randomUUID();
 const internal = tab => tab.url === 'about:blank';
+const DIALOG_TYPES = new Set(['alert', 'confirm', 'prompt', 'beforeunload']);
+const originOf = url => { try { const value = new URL(url); return /^https?:$/.test(value.protocol) ? value.origin : ''; } catch { return ''; } };
+// Headless windows report this much browser frame above the page, like a windowed browser.
+const WINDOW_FRAME_HEIGHT = 87;
 const cleanName = name => basename(name).replace(/[\x00-\x1f\x7f/\\]/g, '_').slice(0, 160) || 'download';
 const publicTab = tab => Object.fromEntries(Object.entries(tab).filter(([key]) => !key.startsWith('_')));
 // Opened files do not outlive the worker, so restarts restore website tabs only.
@@ -48,12 +54,13 @@ export class BrowserEngine extends EventEmitter {
   uploadRequests = new Map();
   closedTabs = new Map();
   openedFiles = new Map();
+  selectContexts = new Map();
+  windowSizes = new Map();
   dirty = new Set();
   constructor(options) {
     super(); this.options = options;
     this.profileRoot = resolve(options.dataRoot);
     this.transferRoot = resolve(options.transferRoot || join(this.profileRoot, 'transfers'));
-    this.streamUrl = options.streamUrl ?? null;
     this.gpuEnabled = options.webgl ?? options.gpu ?? !!process.env.LOPE_BROWSER_GPU;
   }
   async start() {
@@ -70,8 +77,7 @@ export class BrowserEngine extends EventEmitter {
     }
     this.egress = await createEgressProxy({ testOrigins: this.options.testOrigins ?? [] });
     this.cdp = new ChromiumPipe(this.options.executable, {
-      profile: join(this.profileRoot, 'chromium'), headless: this.options.headless,
-      proxyPort: this.egress.port,
+      profile: join(this.profileRoot, 'chromium'), proxyPort: this.egress.port,
     });
     this.cdp.on('event', packet => { this.onEvent(packet).catch(() => {}); });
     this.cdp.on('disconnected', () => {
@@ -81,16 +87,19 @@ export class BrowserEngine extends EventEmitter {
     // keep each session's active tab title current (unread counts, media titles).
     this.titleTimer = setInterval(() => { this.syncActiveTitles().catch(() => {}); }, 2000);
     this.titleTimer.unref?.();
-    this.version = (await this.cdp.send('Browser.getVersion')).product;
+    // Headless Chromium names itself HeadlessChrome; report the browser it is.
+    this.version = (await this.cdp.send('Browser.getVersion')).product.replace(/^HeadlessChrome\//, 'Chrome/');
     const graphics = this.graphics = await this.cdp.graphics().catch(() => null);
     if (graphics?.accelerated) this.gpuEnabled = true;
     // WebGL also runs without a GPU, in SwiftShader. Only Chromium's own "off" states mean none.
     this.webglEnabled = this.gpuEnabled || !/^(disabled|unavailable_off)/.test(graphics?.webgl ?? '');
+    this.display = await new DisplayHub(this, this.options.display).start();
     await this.configureContext(this.normal);
     await this.cdp.send('Target.setDiscoverTargets', { discover: true });
     const { targetInfos } = await this.cdp.send('Target.getTargets');
     for (const info of targetInfos.filter(t => t.type === 'page' && !t.url.startsWith('devtools:'))) await this.attach(info);
     if (!this.normal.tabs.length) await this.createTab(this.normal);
+    await this.learnClientHints(this.normal.tabs[0]);
     if (saved?.tabs?.length) {
       const first = this.normal.tabs[0];
       const restored = saved.tabs.filter(tab => tab.url === 'about:blank' || safeHostUrl(tab.url)).slice(0, 60);
@@ -123,8 +132,10 @@ export class BrowserEngine extends EventEmitter {
   }
   snapshot(sessionId) {
     const session = this.get(sessionId);
-    return { ...session, generation: this.generation, contextId: undefined, tabs: session.tabs.map(publicTab), engineVersion: this.version,
-      streamUrl: this.streamUrl, capabilities: { stream: !!this.streamUrl, audio: !!this.streamUrl,
+    const display = this.display, video = !!display?.video && session.mode !== 'private';
+    return { ...session, generation: this.generation, contextId: undefined, viewport: undefined, client: undefined, tabs: session.tabs.map(publicTab), engineVersion: this.version,
+      streamUrl: display ? `/api/browser/sessions/${encodeURIComponent(session.id)}/stream` : null,
+      capabilities: { stream: !!display, audio: video && !!display.encoders.opus, display: video ? 'video' : 'jpeg',
         deviceForwarding: false, workspaceFiles: !!this.options.files, webgl: !!this.webglEnabled, opengl: this.gpuEnabled } };
   }
   changed(session) {
@@ -177,6 +188,7 @@ export class BrowserEngine extends EventEmitter {
   async destroy(sessionId) {
     const session = this.get(sessionId);
     if (session.mode !== 'private') throw new Error('Use clear browsing data to erase the normal profile.');
+    this.display?.sessionClosed(sessionId);
     for (const transfer of session.downloads) this.downloads.get(transfer.id)?.abort?.abort();
     // First close engine contexts; then remove all staging and in-memory private state.
     await this.cdp.send('Target.disposeBrowserContext', { browserContextId: session.contextId });
@@ -196,7 +208,8 @@ export class BrowserEngine extends EventEmitter {
     try { return await promise; } finally { this.attaching.delete(info.targetId); }
   }
   async attachTarget(info) {
-    if (info.type !== 'page' || info.url.startsWith('devtools:')) return;
+    // Extension pages (the display helper) are never browser tabs.
+    if (info.type !== 'page' || info.url.startsWith('devtools:') || info.url.startsWith('chrome-extension:')) return;
     const owner = [...this.sessions.values()].find(s => s.contextId && s.contextId === info.browserContextId);
     if (!owner && this.defaultContextId && info.browserContextId && this.defaultContextId !== info.browserContextId) return;
     const session = owner ?? this.normal;
@@ -217,8 +230,64 @@ export class BrowserEngine extends EventEmitter {
     await this.send(tab, 'Runtime.addBinding', { name: PAGE_BINDING, executionContextName: PAGE_WORLD }).catch(() => {});
     await this.send(tab, 'Page.addScriptToEvaluateOnNewDocument', { source: PAGE_SCRIPT, worldName: PAGE_WORLD }).catch(() => {});
     await this.inPage(tab, PAGE_SCRIPT).catch(() => {});
+    await this.present(tab, session);
     if (info.openerId) { await this.activate(session, tab); }
     await this.refresh(tab); this.changed(session); return tab;
+  }
+  /** Reads the brand list Chromium itself reports, so client hints stay genuine. */
+  async learnClientHints(tab) {
+    if (!tab || !this.cdp.userAgent || this.clientHints) return;
+    const { result } = await this.send(tab, 'Runtime.evaluate', { expression: 'JSON.stringify(navigator.userAgentData?.brands ?? [])', returnByValue: true }).catch(() => ({}));
+    let brands = [];
+    try { brands = JSON.parse(result?.value ?? '[]').filter(item => typeof item?.brand === 'string' && typeof item?.version === 'string'); } catch {}
+    if (!brands.length) return;
+    const full = this.cdp.fullVersion ?? '';
+    const platform = process.platform === 'darwin' ? 'macOS' : process.platform === 'win32' ? 'Windows' : 'Linux';
+    this.clientHints = { brands, fullVersion: full, platform, platformVersion: /^\d+\.\d+\.\d+/.exec(release())?.[0] ?? '',
+      fullVersionList: brands.map(item => ({ brand: item.brand, version: /Chrom/.test(item.brand) && full ? full : item.version + '.0.0.0' })),
+      architecture: process.arch === 'arm64' ? 'arm' : 'x86', bitness: '64', model: '', mobile: false, wow64: false };
+    for (const session of this.sessions.values()) for (const item of session.tabs) { item._identity = null; await this.present(item, session); }
+  }
+  /** Applies what the viewer's own browser would present: viewport, density, language, time zone and genuine client hints. */
+  async present(tab, session = this.sessions.get(tab._session)) {
+    if (!session || !this.targets.has(tab.id)) return;
+    const viewport = session.viewport, client = session.client ?? {};
+    const identity = JSON.stringify([this.clientHints ? 1 : 0, client.languages ?? null]);
+    if (this.cdp.userAgent && tab._identity !== identity) {
+      tab._identity = identity;
+      await this.send(tab, 'Emulation.setUserAgentOverride', { userAgent: this.cdp.userAgent,
+        platform: process.platform === 'darwin' ? 'MacIntel' : process.platform === 'win32' ? 'Win32' : 'Linux x86_64',
+        ...(client.languages?.length ? { acceptLanguage: client.languages.join(',') } : {}), ...(this.clientHints ? { userAgentMetadata: this.clientHints } : {}) }).catch(() => { tab._identity = null; });
+    }
+    if (client.timeZone && tab._timeZone !== client.timeZone) {
+      tab._timeZone = client.timeZone;
+      await this.send(tab, 'Emulation.setTimezoneOverride', { timezoneId: client.timeZone }).catch(() => {});
+    }
+    if (client.languages?.[0] && tab._locale !== client.languages[0]) {
+      tab._locale = client.languages[0];
+      await this.send(tab, 'Emulation.setLocaleOverride', { locale: client.languages[0] }).catch(() => {});
+    }
+    if (!viewport) return;
+    const key = `${viewport.width}x${viewport.height}@${viewport.dsf}`;
+    if (tab._viewport !== key) {
+      tab._viewport = key;
+      await this.send(tab, 'Emulation.setDeviceMetricsOverride', { width: viewport.width, height: viewport.height, deviceScaleFactor: viewport.dsf,
+        mobile: false, screenWidth: viewport.width, screenHeight: viewport.height }).catch(() => { tab._viewport = null; });
+      // Keep window.outer* consistent with the page, as a windowed browser's would be.
+      const { windowId } = await this.cdp.send('Browser.getWindowForTarget', { targetId: tab.id }).catch(() => ({}));
+      if (windowId && this.windowSizes.get(windowId) !== key) {
+        this.windowSizes.set(windowId, key);
+        await this.cdp.send('Browser.setWindowBounds', { windowId, bounds: { width: viewport.width, height: viewport.height + WINDOW_FRAME_HEIGHT } }).catch(() => {});
+      }
+    }
+    if (tab._touch !== !!viewport.touch) {
+      tab._touch = !!viewport.touch;
+      await this.send(tab, 'Emulation.setTouchEmulationEnabled', { enabled: !!viewport.touch, ...(viewport.touch ? { maxTouchPoints: 5 } : {}) }).catch(() => {});
+    }
+  }
+  /** Presents every tab of a session for its viewer. */
+  async applyViewport(session) {
+    await Promise.all(session.tabs.map(tab => this.present(tab, session)));
   }
   send(tab, method, params = {}) { return this.cdp.send(method, params, tab._cdp); }
   /** Evaluates LopeOS code in the page's isolated world, out of reach of page scripts. */
@@ -241,7 +310,8 @@ export class BrowserEngine extends EventEmitter {
   async activate(session, tab) {
     if (!tab) return;
     await this.cdp.send('Target.activateTarget', { targetId: tab.id });
-    session.activeTabId = tab.id; session.contextMenu = null; this.foreground = session.id; this.changed(session);
+    session.activeTabId = tab.id; session.contextMenu = null; session.selectMenu = null; this.foreground = session.id; this.changed(session);
+    this.display?.activated(session);
     if (tab._pendingUrl) {
       const url = tab._pendingUrl;
       // Activation is immediate even if this site's first response takes seconds.
@@ -386,10 +456,30 @@ export class BrowserEngine extends EventEmitter {
       await fulfill(404, page ? 'text/html; charset=utf-8' : 'text/plain; charset=utf-8', page ? MISSING_FILE_PAGE : Buffer.alloc(0));
     } catch { await this.send(tab, 'Fetch.failRequest', { requestId, errorReason: 'Failed' }).catch(() => {}); }
   }
-  openContextMenu(cdpSession, payload) {
+  /** Reports from LopeOS's isolated page script: menus, list pickers, the pointer's cursor and text focus. */
+  pageMessage(cdpSession, payload, contextId) {
     const tab = [...this.targets.values()].find(item => item._cdp === cdpSession); if (!tab) return;
     const session = this.sessions.get(tab._session); if (!session || session.activeTabId !== tab.id) return;
     let value; try { value = JSON.parse(payload); } catch { return; }
+    if (value?.type === 'cursor') this.display?.cursor(tab, value.cursor);
+    else if (value?.type === 'editable') this.display?.editable(tab, value.value === true);
+    else if (value?.type === 'select') this.openSelect(tab, session, value, contextId);
+    else this.openContextMenu(tab, session, value);
+  }
+  /** Chromium draws a list's popup outside the page, where tab capture cannot see it; LopeOS draws it instead. */
+  openSelect(tab, session, value, contextId) {
+    const position = n => Number.isFinite(n) ? Math.round(Math.max(-20000, Math.min(20000, n))) : 0;
+    const options = (Array.isArray(value.options) ? value.options : []).slice(0, 1000).map((option, index) => ({ index,
+      label: String(option?.label ?? '').replace(/\s+/g, ' ').slice(0, 300), disabled: option?.disabled === true,
+      group: typeof option?.group === 'string' ? option.group.slice(0, 200) : '' }));
+    if (!options.length || !Number.isInteger(contextId)) return;
+    for (const [menuId, context] of this.selectContexts) if (context.sessionId === session.id) this.selectContexts.delete(menuId);
+    session.selectMenu = { id: id(), tabId: tab.id, x: position(value.x), y: position(value.y), width: position(value.w), height: position(value.h),
+      viewportWidth: position(value.width), viewportHeight: position(value.height), selectedIndex: Number.isInteger(value.selected) ? value.selected : -1, options };
+    this.selectContexts.set(session.selectMenu.id, { sessionId: session.id, tabId: tab.id, contextId });
+    this.changed(session);
+  }
+  openContextMenu(tab, session, value) {
     const number = n => Number.isFinite(n) && n >= 0 && n <= 20000 ? Math.round(n) : null;
     const [x, y, width, height] = [value.x, value.y, value.width, value.height].map(number);
     const link = typeof value.link === 'string' && value.link.length <= 8192 && /^https?:\/\//i.test(value.link) ? value.link : null;
@@ -437,7 +527,12 @@ export class BrowserEngine extends EventEmitter {
     await this.completeDownload(item, session);
   }
   async onEvent({ method, params, sessionId }) {
-    if (method === 'Runtime.bindingCalled' && params.name === PAGE_BINDING) { this.openContextMenu(sessionId, params.payload); return; }
+    if (method === 'Runtime.bindingCalled') {
+      if (this.display?.sessionFor(sessionId)) { if (params.name === 'lopeDisplayOutput') this.display.output(params.payload); }
+      else if (params.name === PAGE_BINDING) this.pageMessage(sessionId, params.payload, params.executionContextId);
+      return;
+    }
+    if (method === 'Page.screencastFrame') { this.display?.screencastFrame(sessionId, params); return; }
     if (method === 'Target.targetCreated') { await this.attach(params.targetInfo); return; }
     if (method === 'Target.targetInfoChanged') {
       const tab = this.targets.get(params.targetInfo.targetId);
@@ -446,8 +541,10 @@ export class BrowserEngine extends EventEmitter {
       return;
     }
     if (method === 'Target.targetDestroyed') {
+      this.display?.targetDestroyed(params.targetId);
       const tab = this.targets.get(params.targetId); if (!tab) return;
       const session = this.sessions.get(tab._session); this.targets.delete(tab.id);
+      if (session?.selectMenu?.tabId === tab.id) session.selectMenu = null;
       for (const [frame, tabId] of this.frames) if (tabId === tab.id) this.frames.delete(frame);
       if (session) { session.tabs = session.tabs.filter(t => t.id !== tab.id);
         session.uploads = session.uploads.filter(item => item.tabId !== tab.id);
@@ -467,6 +564,13 @@ export class BrowserEngine extends EventEmitter {
     const tab = [...this.targets.values()].find(t => t._cdp === sessionId); if (!tab) return;
     if (method === 'Fetch.requestPaused') { await this.serveOpenedFile(tab, params); return; }
     const session = this.sessions.get(tab._session); if (!session) return;
+    // Chromium's own dialog boxes are not part of the page; LopeOS shows them and answers for the person.
+    if (method === 'Page.javascriptDialogOpening') {
+      tab.dialog = { id: id(), type: DIALOG_TYPES.has(params.type) ? params.type : 'alert', message: String(params.message ?? '').slice(0, 5000),
+        defaultPrompt: String(params.defaultPrompt ?? '').slice(0, 5000), origin: originOf(params.url) };
+      this.changed(session); return;
+    }
+    if (method === 'Page.javascriptDialogClosed') { if (tab.dialog) { tab.dialog = undefined; this.changed(session); } return; }
     if (method === 'Page.frameNavigated') this.frames.set(params.frame.id, tab.id);
     if (method === 'Page.frameAttached') this.frames.set(params.frameId, tab.id);
     if (method === 'Page.frameDetached') this.frames.delete(params.frameId);
@@ -478,6 +582,7 @@ export class BrowserEngine extends EventEmitter {
       delete tab._navigationUrl;
       tab._frame = params.frame.id; tab.url = params.frame.url; tab.find = undefined;
       if (session.contextMenu?.tabId === tab.id) session.contextMenu = null;
+      if (session.selectMenu?.tabId === tab.id) session.selectMenu = null;
       if (!params.frame.unreachableUrl) tab.error = undefined;
       await this.refresh(tab);
     }
@@ -569,6 +674,7 @@ export class BrowserEngine extends EventEmitter {
     if (erase) { await rm(join(this.transferRoot, 'normal'), { recursive: true, force: true }); await rm(this.profileRoot, { recursive: true, force: true }); }
     this.sessions.clear(); this.targets.clear(); this.frames.clear(); this.attaching.clear();
     this.downloads.clear(); this.uploadRequests.clear(); this.closedTabs.clear(); this.openedFiles.clear(); this.defaultContextId = null;
+    this.selectContexts.clear(); this.windowSizes.clear(); this.clientHints = null; this.display = null;
     this.stopping = false; this.normal = null;
     await this.start(); this.normal.revision = Math.max(this.normal.revision, revision + 1); this.changed(this.normal);
     return this.snapshot('normal');
@@ -654,7 +760,28 @@ export class BrowserEngine extends EventEmitter {
         item.transfer.receivedBytes = item.transfer.totalBytes = Buffer.byteLength(data, 'base64');
         await this.completeDownload(item, session); break;
       }
-      case 'devtools': await this.cdp.send('Target.openDevTools', { targetId: tab.id }); break;
+      case 'dialog.respond': {
+        if (!tab?.dialog || tab.dialog.id !== command.id) throw new Error('This dialog is no longer open.');
+        const text = typeof command.text === 'string' ? command.text.slice(0, 5000) : undefined;
+        await this.send(tab, 'Page.handleJavaScriptDialog', { accept: command.accept === true, ...(text !== undefined && command.accept ? { promptText: text } : {}) });
+        tab.dialog = undefined; break;
+      }
+      case 'select.choose': case 'select.dismiss': {
+        const menu = session.selectMenu; session.selectMenu = null;
+        const context = menu && this.selectContexts.get(menu.id);
+        if (menu) this.selectContexts.delete(menu.id);
+        if (!menu || menu.id !== command.menuId) throw new Error('That list is no longer open.');
+        const target = this.targets.get(menu.tabId);
+        if (command.type === 'select.choose' && target && context) {
+          if (!Number.isInteger(command.index) || !menu.options[command.index] || menu.options[command.index].disabled) throw new Error('Choose one of the available options.');
+          // Runs in the isolated world that reported the list, where it kept the element.
+          await this.send(target, 'Runtime.evaluate', { expression: `globalThis.__lopeChooseOption?.(${command.index})`, contextId: context.contextId, returnByValue: true })
+            .catch(() => { throw new Error('That list is no longer available.'); });
+        } else if (target && context) {
+          await this.send(target, 'Runtime.evaluate', { expression: 'globalThis.__lopeChooseOption?.(-1)', contextId: context.contextId, returnByValue: true }).catch(() => {});
+        }
+        break;
+      }
       case 'context.dismiss': session.contextMenu = null; break;
       case 'context.openLink': {
         const menu = this.takeContextMenu(session, command.menuId);
@@ -736,6 +863,7 @@ export class BrowserEngine extends EventEmitter {
     for (const session of [...this.sessions.values()]) if (session.mode === 'private') await this.destroy(session.id).catch(() => {});
     // Opened files are gone after a restart; drop any site data their origins kept.
     if (!this.cdp?.closed) for (const file of [...this.openedFiles.values()]) await this.forgetFile(file);
+    await this.display?.close();
     await this.cdp?.close();
     await this.egress?.close();
   }

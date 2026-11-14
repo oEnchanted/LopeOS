@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Lope Browser display",
+  "description": "Shows the selected tab in LopeOS. Only the Lope Browser worker drives it, over its private DevTools pipe.",
+  "version": "1.0.0",
+  "minimum_chrome_version": "134",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyMc1ySWP6c6d9fKEukYHb6YpWvw43H2UdctIdLXS4qPxwYRs0Y3khF1Xoyaey95gI8nuWRiBQAPXKPRwnCotw3aiyjru48ghLj5f40pRgk08wgv6oxbzd9LkdEhyB6qrLbdrGuTjMMJrKHWBdtJRqOryAPrd3ijYeHh+sq8EJNMCmxkZv7MfebidShbPhhsokwuTAXvI2t3eSuPlcNc45wO4wF9AIg3xt7KXdh6Zw0X2VbDAEdPGRnIEfKhuNLen1JQMLHOYbVxE0rXZJ8lFqL+OKqRXmp507W87FE+6rXk8YVtqPiXgDSDax+bfyhtuK+wXoIUQYFb7S12LsZ2uVQIDAQAB",
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "debugger",
+    "clipboardRead",
+    "clipboardWrite"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

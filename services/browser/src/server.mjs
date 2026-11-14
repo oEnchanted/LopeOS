@@ -1,4 +1,4 @@
-import { createServer, request as httpRequest } from 'node:http';
+import { createServer } from 'node:http';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { mkdir, rm, stat } from 'node:fs/promises';
@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
+import { acceptWebSocket } from './websocket.mjs';
 
 const PREFIX = '/api/browser';
 function json(response, status, body) {
@@ -45,55 +46,14 @@ export function createBrowserServer(engine, options) {
     const validHost = !options.hosts || options.hosts.includes((request.headers.host ?? '').split(':')[0]);
     return validOrigin && validHost && expected.length === supplied.length && timingSafeEqual(expected, supplied);
   }
-  function proxy(request, response, upgradeHead) {
-    if (!options.selkies) { if (upgradeHead) response.destroy(); else json(response, 503, { error: 'Streaming is not configured.' }); return; }
-    const target = new URL(options.selkies.url);
-    // Selkies is configured with exactly this subfolder. Only session routes pass through.
-    const path = request.url;
-    let decoded;
-    try { decoded = decodeURIComponent(new URL(path, 'http://worker').pathname); }
-    catch { if (upgradeHead) response.destroy(); else json(response, 400, { error: 'Invalid stream path.' }); return; }
-    if (/\/(api\/tokens|api\/switch|metrics)(?:[/?]|$)/.test(decoded)) {
-      if (upgradeHead) response.destroy(); else json(response, 403, { error: 'Administrative stream routes are private.' }); return;
-    }
-    const headers = { host: target.host, authorization: `Basic ${Buffer.from(`${options.selkies.user}:${options.selkies.password}`).toString('base64')}` };
-    // A small allowlist prevents leaking LopeOS cookies, worker tokens and host headers.
-    for (const key of ['content-type', 'content-length', 'accept', 'range', 'upgrade', 'connection',
-      'sec-websocket-key', 'sec-websocket-version', 'sec-websocket-protocol', 'sec-websocket-extensions']) {
-      if (request.headers[key]) headers[key] = request.headers[key];
-    }
-    if (request.headers.origin) headers.origin = request.headers.origin;
-    const upstream = httpRequest({ hostname: target.hostname, port: target.port || 80, path, method: request.method, headers });
-    upstream.on('error', () => {
-      if (upgradeHead) response.destroy(); else if (!response.headersSent) json(response, 502, { error: 'The streaming runtime is unavailable.' }); else response.destroy();
-    });
-    if (upgradeHead) {
-      upstream.on('upgrade', (reply, socket, head) => {
-        const safeHeaders = Object.entries(reply.headers).filter(([key]) => ['upgrade', 'connection', 'sec-websocket-accept', 'sec-websocket-protocol', 'sec-websocket-extensions'].includes(key));
-        response.write(`HTTP/1.1 101 Switching Protocols\r\n${safeHeaders.map(([k, v]) => `${k}: ${v}`).join('\r\n')}\r\n\r\n`);
-        if (head.length) response.write(head); if (upgradeHead.length) socket.write(upgradeHead);
-        socket.pipe(response).pipe(socket);
-        response.on('error', () => socket.destroy()); socket.on('error', () => response.destroy());
-        response.on('close', () => socket.destroy());
-      });
-      upstream.on('response', () => response.destroy()); upstream.end();
-    } else {
-      upstream.on('response', reply => {
-        const headers = { ...reply.headers, 'cache-control': 'no-store', 'referrer-policy': 'no-referrer' };
-        delete headers['set-cookie']; delete headers['www-authenticate'];
-        response.writeHead(reply.statusCode, headers); reply.pipe(response);
-      });
-      request.pipe(upstream); response.on('close', () => upstream.destroy());
-    }
-  }
   const server = createServer(async (request, response) => {
     if (!authorized(request)) { json(response, 401, { error: 'Sign in to reconnect your browser.' }); return; }
     lastActivity = Date.now();
     try {
       const path = new URL(request.url, 'http://worker').pathname;
-      if (path.startsWith(`${PREFIX}/stream/`)) { proxy(request, response); return; }
       if (path === `${PREFIX}/health` && request.method === 'GET') {
-        json(response, 200, { status: engine.normal.status, engine: engine.version, streaming: !!engine.streamUrl, graphics: engine.graphics ?? null }); return;
+        json(response, 200, { status: engine.normal.status, engine: engine.version, streaming: !!engine.display,
+          display: engine.display ? (engine.display.video ? 'video' : 'jpeg') : null, encoders: engine.display?.encoders ?? null, graphics: engine.graphics ?? null }); return;
       }
       if (path === `${PREFIX}/sessions` && request.method === 'POST') {
         const input = parse(await body(request));
@@ -107,6 +67,8 @@ export function createBrowserServer(engine, options) {
       const [, sessionId, action = ''] = match;
       engine.get(sessionId);
       if (action === 'activity' && request.method === 'POST') { json(response, 200, { alive: true }); return; }
+      // Numbers only: what the display is encoding and sending, for diagnostics.
+      if (action === 'display' && request.method === 'GET') { json(response, 200, await engine.display?.stats(sessionId) ?? null); return; }
       if (!action && request.method === 'GET') { json(response, 200, engine.snapshot(sessionId)); return; }
       if (!action && request.method === 'DELETE') { await engine.destroy(sessionId); json(response, 200, { closed: true }); return; }
       if (action === 'commands' && request.method === 'POST') {
@@ -201,10 +163,17 @@ export function createBrowserServer(engine, options) {
       json(response, 400, { error: message });
     }
   });
+  // The page display: encoded frames to the viewer, its input back to Chromium.
   server.on('upgrade', (request, socket, head) => {
-    if (!authorized(request) || !request.url.startsWith(`${PREFIX}/stream/`)) { socket.destroy(); return; }
-    lastActivity = Date.now(); proxy(request, socket, head);
+    const match = new URL(request.url, 'http://worker').pathname.match(/^\/api\/browser\/sessions\/([a-zA-Z\d-]+)\/stream$/);
+    if (!authorized(request) || !match || !engine.display || !engine.sessions?.has(match[1])) {
+      socket.end('HTTP/1.1 404 Not Found\r\nConnection: close\r\n\r\n'); return;
+    }
+    lastActivity = Date.now();
+    const connection = acceptWebSocket(request, socket, head, { maxMessage: 2 * 1024 * 1024 });
+    if (connection) engine.display.connect(match[1], connection);
   });
+  engine.on?.('activity', () => { lastActivity = Date.now(); });
   // Up to an hour for a large upload body; headers must still arrive within 15 seconds.
   server.requestTimeout = 3600000; server.headersTimeout = 15000;
   const idle = setInterval(() => { if (options.idleMs && Date.now() - lastActivity > options.idleMs) options.onIdle?.(); }, 30000);

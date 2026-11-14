@@ -30,12 +30,18 @@
   "services/browser/infra/worker.example.yaml",
   "services/browser/infra/worker.run",
   "services/browser/src/cdp.mjs",
+  "services/browser/src/display-extension/background.js",
+  "services/browser/src/display-extension/manifest.json",
+  "services/browser/src/display-extension/offscreen.html",
+  "services/browser/src/display-extension/offscreen.js",
+  "services/browser/src/display.mjs",
   "services/browser/src/engine.mjs",
   "services/browser/src/files.mjs",
   "services/browser/src/main.mjs",
   "services/browser/src/network.mjs",
   "services/browser/src/page-scripts.mjs",
   "services/browser/src/server.mjs",
+  "services/browser/src/websocket.mjs",
   "services/runtime/browser-bridge.js",
   "services/runtime/config.js"
 ]

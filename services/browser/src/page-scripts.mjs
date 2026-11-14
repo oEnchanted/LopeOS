@@ -3,13 +3,15 @@
 export const PAGE_WORLD = 'lope-context';
 export const PAGE_BINDING = 'lopeContextMenu';
 
-// Kiosk Chromium never draws its own context menu, so LopeOS draws one. Only trusted (user)
-// events are reported, so a page cannot open LopeOS menus by dispatching synthetic events. A right-click the page handles itself (custom
-// menus in web apps) is left to the page.
+// Headless Chromium draws no context menu, list popup or cursor of its own, so LopeOS draws them.
+// Only trusted (user) events are reported, so a page cannot open LopeOS menus by dispatching
+// synthetic events. A right-click the page handles itself (custom menus in web apps) is left to the page.
 export const PAGE_SCRIPT = `if (window === window.top && !globalThis.__lopePage) {
   globalThis.__lopePage = true;
   const report = value => { try { globalThis.${PAGE_BINDING}(JSON.stringify(value)); } catch {} };
   const editableTypes = new Set(['text', 'search', 'url', 'tel', 'email', 'password', 'number']);
+  const textField = node => node instanceof HTMLElement && !node.inert && !node.disabled && !node.readOnly && (node.isContentEditable
+    || node instanceof HTMLTextAreaElement || (node instanceof HTMLInputElement && editableTypes.has(node.type)));
   document.addEventListener('contextmenu', event => {
     if (!event.isTrusted) return;
     const path = event.composedPath ? event.composedPath() : [event.target];
@@ -28,6 +30,72 @@ export const PAGE_SCRIPT = `if (window === window.top && !globalThis.__lopePage)
         image: image ? (image.currentSrc || image.src || '') : '', link: link ? link.href : '',
         selection: selection.slice(0, 20000), editable: !!field && !field.disabled && !field.readOnly });
     }, 0);
+  }, true);
+  // The pointer's cursor, resolved the way Chromium would draw it over this element.
+  let cursor = '', pointer = null, cursorFrame = 0;
+  const overText = (x, y) => {
+    const node = document.caretPositionFromPoint?.(x, y)?.offsetNode;
+    if (!(node instanceof Text) || !node.data.trim()) return false;
+    const range = document.createRange(); range.selectNodeContents(node);
+    for (const rect of range.getClientRects()) if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) return true;
+    return false;
+  };
+  const resolveCursor = event => {
+    const target = event.composedPath().find(node => node instanceof Element);
+    if (!target) return 'default';
+    const style = getComputedStyle(target), value = style.cursor.split(',').pop().trim();
+    if (value && value !== 'auto') return value;
+    if (target.closest('a[href],area[href]')) return 'pointer';
+    if (textField(target)) return 'text';
+    return style.userSelect !== 'none' && overText(event.clientX, event.clientY) ? 'text' : 'default';
+  };
+  addEventListener('mousemove', event => {
+    if (!event.isTrusted) return;
+    pointer = event;
+    cursorFrame ||= requestAnimationFrame(() => {
+      cursorFrame = 0;
+      const next = pointer ? resolveCursor(pointer) : 'default';
+      if (next !== cursor) { cursor = next; report({ type: 'cursor', cursor }); }
+    });
+  }, { capture: true, passive: true });
+  // Whether typing goes into a text field, so a touch device can show its keyboard.
+  let focused = false;
+  const focusChanged = () => {
+    let element = document.activeElement;
+    while (element?.shadowRoot?.activeElement) element = element.shadowRoot.activeElement;
+    const next = textField(element);
+    if (next !== focused) { focused = next; report({ type: 'editable', value: next }); }
+  };
+  addEventListener('focusin', focusChanged, true);
+  addEventListener('focusout', () => setTimeout(focusChanged, 0), true);
+  // A list's popup is drawn outside the page, so LopeOS lists the choices instead.
+  let list = null;
+  globalThis.__lopeChooseOption = index => {
+    const select = list; list = null;
+    if (!select?.isConnected) return false;
+    select.focus({ preventScroll: true });
+    if (index < 0 || index === select.selectedIndex || !select.options[index] || select.options[index].disabled) return true;
+    select.selectedIndex = index;
+    select.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  };
+  const openList = (select, event) => {
+    if (!(select instanceof HTMLSelectElement) || select.multiple || select.size > 1 || select.disabled) return;
+    event.preventDefault();
+    select.focus({ preventScroll: true }); list = select;
+    const rect = select.getBoundingClientRect();
+    report({ type: 'select', x: rect.left, y: rect.top, w: rect.width, h: rect.height, width: innerWidth, height: innerHeight, selected: select.selectedIndex,
+      options: [...select.options].slice(0, 1000).map(option => ({ label: option.label || option.text,
+        disabled: option.disabled || (option.parentElement instanceof HTMLOptGroupElement && option.parentElement.disabled),
+        group: option.parentElement instanceof HTMLOptGroupElement ? option.parentElement.label : '' })) });
+  };
+  addEventListener('mousedown', event => {
+    if (event.isTrusted && event.button === 0) openList(event.composedPath().find(node => node instanceof HTMLSelectElement), event);
+  }, true);
+  addEventListener('keydown', event => {
+    const select = event.isTrusted && event.composedPath().find(node => node instanceof HTMLSelectElement);
+    if (select && ((event.altKey && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) || event.key === ' ' || event.key === 'F4')) openList(select, event);
   }, true);
 }`;
 

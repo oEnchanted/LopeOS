@@ -10,12 +10,9 @@ if (process.platform === 'linux' && process.getuid?.() === 0) throw new Error('R
 const port = Number(process.env.LOPE_BROWSER_PORT || 4175);
 const executable = process.env.CHROMIUM_EXECUTABLE || (process.platform === 'darwin'
   ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/chromium');
-const streamEnabled = !!process.env.SELKIES_URL && !!process.env.SELKIES_BASIC_AUTH_PASSWORD;
 const engine = new BrowserEngine({ executable,
   dataRoot: resolve(process.env.LOPE_BROWSER_DATA || 'services/browser/.data'),
-  headless: process.env.LOPE_BROWSER_HEADLESS === 'true',
   transferRoot: process.env.LOPE_BROWSER_TRANSFERS,
-  streamUrl: streamEnabled ? (process.env.LOPE_BROWSER_STREAM_PATH || '/api/browser/stream') + '/' : null,
   files: process.env.LOPE_RUNTIME_TRANSFER_URL ? createRuntimeFileBridge({ url: process.env.LOPE_RUNTIME_TRANSFER_URL,
     stagingRoot: resolve(process.env.LOPE_BROWSER_TRANSFERS || resolve(process.env.LOPE_BROWSER_DATA || 'services/browser/.data', 'transfers')), validateSession: id => engine.get(id),
     getToken: async () => process.env.LOPE_RUNTIME_TRANSFER_TOKEN || (process.env.LOPE_RUNTIME_TRANSFER_TOKEN_FILE ? (await readFile(process.env.LOPE_RUNTIME_TRANSFER_TOKEN_FILE, 'utf8')).trim() : null) }) : null });
@@ -25,11 +22,10 @@ const shutdown = async () => { if (closing) return; closing = true; server.close
 const server = createBrowserServer(engine, { token,
   origins: (process.env.LOPE_BROWSER_ORIGINS || 'http://127.0.0.1:5173').split(','),
   hosts: (process.env.LOPE_BROWSER_HOSTS || '127.0.0.1,localhost').split(','),
-  selkies: streamEnabled ? { url: process.env.SELKIES_URL,
-    user: process.env.SELKIES_BASIC_AUTH_USER || 'lope', password: process.env.SELKIES_BASIC_AUTH_PASSWORD } : null,
   idleMs: Number(process.env.LOPE_BROWSER_IDLE_MS || 1800000), onIdle: shutdown,
 });
 server.listen(port, process.env.LOPE_BROWSER_BIND || '127.0.0.1', () => {
-  console.log(`Lope Browser worker ready on port ${port}; media ${streamEnabled ? 'configured' : 'unavailable'}.`);
+  const display = engine.display?.video ? `video (${Object.entries(engine.display.encoders).filter(([, ok]) => ok).map(([name]) => name).join(', ')})` : 'JPEG';
+  console.log(`Lope Browser worker ready on port ${port}; display ${display}.`);
 });
 process.on('SIGTERM', shutdown); process.on('SIGINT', shutdown);
