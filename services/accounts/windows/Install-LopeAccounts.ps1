@@ -3,8 +3,8 @@ param(
     [Parameter(Mandatory = $true)][string]$SourcePath,
     [Parameter(Mandatory = $true)][string]$SiteOrigin,
     [Parameter(Mandatory = $true)][string]$NodeExe,
-    [string]$InstallPath = 'C:\LopeOS\accounts',
-    [string]$DataPath = 'C:\LopeOS\accounts-data',
+    [string]$InstallPath = 'M:\LopeOS\accounts',
+    [string]$DataPath = 'M:\LopeOS\accounts-data',
     [string]$TaskName = 'LopeOS Accounts',
     [int]$Port = 4176
 )

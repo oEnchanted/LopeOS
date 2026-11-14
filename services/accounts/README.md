@@ -21,8 +21,8 @@ checksums, revision conflicts, staged uploads, origin checks, and storage locks.
 Pushes to `main` install/update this service through the Windows deployment workflow.
 The runner needs administrator rights; the account process itself runs as Local
 Service in an at-startup scheduled task named `LopeOS Accounts`. Node and source
-live under `C:/LopeOS/accounts`; persistent account and LopeDrive data lives under
-`C:/LopeOS/accounts-data`, outside website releases. Deployment verifies local
+live under `M:/LopeOS/accounts`; persistent account and LopeDrive data lives under
+`M:/LopeOS/accounts-data`, outside website releases. Deployment verifies local
 and public `/api/accounts/session` responses. See [Windows deployment](../../docs/github-windows-deployment.md).
 
 ## Manual production hosting

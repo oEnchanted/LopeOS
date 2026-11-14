@@ -2,7 +2,7 @@
 
 The deployment workflow builds LopeOS on GitHub and sends the finished website to
 a runner on your Windows server. Caddy serves versioned releases from
-`C:/LopeOS/releases`; its services and user data live outside the runner checkout.
+`M:/LopeOS/releases`; its services and user data live outside the runner checkout.
 The workflow updates the frontend and installs/updates Lope Accounts automatically.
 When creating a deployment template from an existing Caddyfile, it replaces the
 explicit LopeOS HTTPS site and preserves other domains, including shared aliases.
@@ -16,7 +16,7 @@ on your server; they have not been verified on the development Mac.
 
 ## 1. Prepare the host and services
 
-Install Caddy at `C:/Caddy/caddy.exe`. Point your domain's DNS records to the server
+Install Caddy at `M:/Caddy/caddy.exe`. Point your domain's DNS records to the server
 and allow TCP ports 80 and 443 through the Windows firewall and any router or
 hosting firewall. Caddy needs persistent, writable certificate storage under its
 service account. See [Caddy's HTTPS requirements](https://caddyserver.com/docs/automatic-https).
@@ -41,14 +41,14 @@ Lope Accounts is installed by the push workflow. The Windows runner must have
 administrator rights to register its startup task and assign directory permissions.
 The installer runs the account server as **Local Service**, independently of the
 runner, on loopback port 4176. It uses Node 24 from the workflow and copies the
-runtime and account code into versioned folders under `C:/LopeOS/accounts`.
+runtime and account code into versioned folders under `M:/LopeOS/accounts`.
 Accounts, password hashes, sessions, and LopeDrive sync data remain in
-`C:/LopeOS/accounts-data` across releases. Never publish or delete this directory.
+`M:/LopeOS/accounts-data` across releases. Never publish or delete this directory.
 
 The installer gracefully stops its existing task before replacing code, verifies
 its local JSON session endpoint, and restores the previous service configuration
 if the new process fails to start. It refuses to take over a port occupied by a
-manually started server. Logs are at `C:/LopeOS/accounts/logs/service.log`.
+manually started server. Logs are at `M:/LopeOS/accounts/logs/service.log`.
 The task starts at Windows boot and restarts after failures. A stale lock is removed
 only when its recorded process no longer exists; an ambiguous/live lock is retained.
 
@@ -79,21 +79,21 @@ the deployment directories. Run these commands from the repository root. The
 
 ```powershell
 New-Item -ItemType Directory -Force -Path `
-  C:/Caddy, C:/LopeOS/deploy, C:/LopeOS/releases, C:/LopeOS/shared/assets
+  M:/Caddy, M:/LopeOS/deploy, M:/LopeOS/releases, M:/LopeOS/shared/assets
 
-Copy-Item .\services\runtime\windows\Caddyfile.deploy.template C:/Caddy/Caddyfile.template
-Copy-Item .\services\runtime\windows\Deploy-LopeFrontend.ps1 C:/LopeOS/deploy/Deploy-LopeFrontend.ps1
+Copy-Item .\services\runtime\windows\Caddyfile.deploy.template M:/Caddy/Caddyfile.template
+Copy-Item .\services\runtime\windows\Deploy-LopeFrontend.ps1 M:/LopeOS/deploy/Deploy-LopeFrontend.ps1
 
-if (Test-Path C:/LopeOS/releases/initial) { throw 'Choose a new release directory.' }
-Copy-Item -LiteralPath .\dist -Destination C:/LopeOS/releases/initial -Recurse
+if (Test-Path M:/LopeOS/releases/initial) { throw 'Choose a new release directory.' }
+Copy-Item -LiteralPath .\dist -Destination M:/LopeOS/releases/initial -Recurse
 
-& C:/LopeOS/deploy/Deploy-LopeFrontend.ps1 `
-  -ReleasePath C:/LopeOS/releases/initial `
+& M:/LopeOS/deploy/Deploy-LopeFrontend.ps1 `
+  -ReleasePath M:/LopeOS/releases/initial `
   -SiteOrigin https://lope.example.com `
-  -CaddyExe C:/Caddy/caddy.exe `
-  -Caddyfile C:/Caddy/Caddyfile `
-  -CaddyTemplate C:/Caddy/Caddyfile.template `
-  -SharedAssetsPath C:/LopeOS/shared/assets `
+  -CaddyExe M:/Caddy/caddy.exe `
+  -Caddyfile M:/Caddy/Caddyfile `
+  -CaddyTemplate M:/Caddy/Caddyfile.template `
+  -SharedAssetsPath M:/LopeOS/shared/assets `
   -Initialize
 ```
 
@@ -109,7 +109,7 @@ Create and start Caddy's Windows service from elevated PowerShell. Absolute path
 ensure startup does not depend on a working directory:
 
 ```powershell
-sc.exe create caddy start= auto binPath= "C:\Caddy\caddy.exe run --config C:\Caddy\Caddyfile --adapter caddyfile"
+sc.exe create caddy start= auto binPath= "M:\Caddy\caddy.exe run --config M:\Caddy\Caddyfile --adapter caddyfile"
 sc.exe start caddy
 ```
 
@@ -124,7 +124,7 @@ After Caddy has obtained its certificate, verify the initial release:
 
 ```powershell
 $published = Invoke-RestMethod https://lope.example.com/__lope/version.json
-$expected = Get-Content C:/LopeOS/releases/initial/__lope/version.json -Raw | ConvertFrom-Json
+$expected = Get-Content M:/LopeOS/releases/initial/__lope/version.json -Raw | ConvertFrom-Json
 if ($published.build -ne $expected.build) { throw 'The published release does not match.' }
 Invoke-RestMethod https://lope.example.com/api/accounts/session
 ```
@@ -137,15 +137,19 @@ service setup before testing sign-in.
 
 In your private GitHub repository, open **Settings → Actions → Runners → New
 self-hosted runner**, select Windows and x64, and follow the generated commands in
-`C:/actions-runner`. During configuration, add the `lope-production` label and
-choose installation as a Windows service. Use a dedicated Windows runner account with administrator rights; the workflow
-needs to register the Local Service startup task and set private directory ACLs. See
+`M:/actions-runner-LopeOS`. During configuration, add the `lope-production` label.
+The runner must run with administrator rights; the workflow needs to register the
+Local Service startup task and set private directory ACLs. The production host runs
+it from the `LopeOS GitHub runner` scheduled task: at startup, as the administrator
+account (S4U, no stored password, highest privileges), executing `run.cmd`. The
+runner's Windows service is disabled so a restart cannot bring back a non-admin
+runner. See
 [GitHub's runner setup](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/add-runners)
 and [Windows service setup](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/configure-the-application).
 
 The workflow uses Windows PowerShell. Give its service account write access to
-`C:/LopeOS/releases`, `C:/LopeOS/shared`, and the deployment configuration
-files in `C:/Caddy`, including the ability to create/replace configuration files.
+`M:/LopeOS/releases`, `M:/LopeOS/shared`, and the deployment configuration
+files in `M:/Caddy`, including the ability to create/replace configuration files.
 It needs read/execute access to Caddy and the host-installed deployment script.
 The workflow updates the publisher and account service from its tested artifact.
 The runner requires administrative rights, but does not need WSL workspace access.
@@ -168,7 +172,7 @@ templates are preserved; changes beyond the account route remain host-managed.
 ## 4. Check updates and roll back
 
 Each deployment verifies the release manifest, retains hashed `/assets` files in
-`C:/LopeOS/shared/assets`, validates and reloads Caddy, then checks the published
+`M:/LopeOS/shared/assets`, validates and reloads Caddy, then checks the published
 HTTPS build identifier. A failed activation restores the previous Caddy
 configuration. Old release folders and shared assets are retained for rollback
 and browsers with an earlier release open.
@@ -184,13 +188,13 @@ To roll back the frontend, choose a retained release and invoke the same script
 without `-Initialize`. For example:
 
 ```powershell
-& C:/LopeOS/deploy/Deploy-LopeFrontend.ps1 `
-  -ReleasePath C:/LopeOS/releases/initial `
+& M:/LopeOS/deploy/Deploy-LopeFrontend.ps1 `
+  -ReleasePath M:/LopeOS/releases/initial `
   -SiteOrigin https://lope.example.com `
-  -CaddyExe C:/Caddy/caddy.exe `
-  -Caddyfile C:/Caddy/Caddyfile `
-  -CaddyTemplate C:/Caddy/Caddyfile.template `
-  -SharedAssetsPath C:/LopeOS/shared/assets
+  -CaddyExe M:/Caddy/caddy.exe `
+  -Caddyfile M:/Caddy/Caddyfile `
+  -CaddyTemplate M:/Caddy/Caddyfile.template `
+  -SharedAssetsPath M:/LopeOS/shared/assets
 ```
 
 Keep account storage, `/var/lib/lopeos` workspace homes and visitor identities,

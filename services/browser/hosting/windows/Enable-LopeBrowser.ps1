@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$SiteOrigin,
-    [string]$CaddyExe = 'C:/Caddy/caddy.exe',
-    [string]$Caddyfile = 'C:/Caddy/Caddyfile',
-    [string]$Template = 'C:/Caddy/Caddyfile.template',
+    [string]$CaddyExe = 'M:/Caddy/caddy.exe',
+    [string]$Caddyfile = 'M:/Caddy/Caddyfile',
+    [string]$Template = 'M:/Caddy/Caddyfile.template',
     [string]$NodeExe = (Get-Command node -ErrorAction Stop).Source
 )
 $ErrorActionPreference = 'Stop'

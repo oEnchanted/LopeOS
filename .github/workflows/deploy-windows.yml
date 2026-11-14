@@ -84,7 +84,7 @@ jobs:
     timeout-minutes: 15
     env:
       LOPE_SITE_ORIGIN: ${{ vars.LOPE_SITE_ORIGIN }}
-      LOPE_RELEASE_PATH: C:/LopeOS/releases/${{ github.run_id }}-${{ github.run_attempt }}
+      LOPE_RELEASE_PATH: M:/LopeOS/releases/${{ github.run_id }}-${{ github.run_attempt }}
     defaults:
       run:
         # Permit these reviewed workflow scripts for this process only; keep
@@ -115,11 +115,11 @@ jobs:
       - name: Prepare deployment configuration
         run: |
           $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Force -Path C:/LopeOS/deploy, C:/LopeOS/releases, C:/LopeOS/shared/assets | Out-Null
-          Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Deploy-LopeFrontend.ps1" C:/LopeOS/deploy/Deploy-LopeFrontend.ps1 -Force
-          $templatePath = 'C:/Caddy/Caddyfile.template'
+          New-Item -ItemType Directory -Force -Path M:/LopeOS/deploy, M:/LopeOS/releases, M:/LopeOS/shared/assets | Out-Null
+          Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Deploy-LopeFrontend.ps1" M:/LopeOS/deploy/Deploy-LopeFrontend.ps1 -Force
+          $templatePath = 'M:/Caddy/Caddyfile.template'
           if (-not (Test-Path $templatePath)) {
-            & node "$env:RUNNER_TEMP/lope-services/windows/caddy-template.mjs" C:/Caddy/Caddyfile "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $env:LOPE_SITE_ORIGIN $templatePath
+            & node "$env:RUNNER_TEMP/lope-services/windows/caddy-template.mjs" M:/Caddy/Caddyfile "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $env:LOPE_SITE_ORIGIN $templatePath
             if ($LASTEXITCODE -ne 0) { throw 'Could not prepare the LopeOS Caddy template.' }
           }
           $template = Get-Content -LiteralPath $templatePath -Raw
@@ -146,9 +146,9 @@ jobs:
           $deployParameters = @{
             ReleasePath = $env:LOPE_RELEASE_PATH
             SiteOrigin = $env:LOPE_SITE_ORIGIN
-            CaddyExe = 'C:/Caddy/caddy.exe'
-            Caddyfile = 'C:/Caddy/Caddyfile'
-            CaddyTemplate = 'C:/Caddy/Caddyfile.template'
-            SharedAssetsPath = 'C:/LopeOS/shared/assets'
+            CaddyExe = 'M:/Caddy/caddy.exe'
+            Caddyfile = 'M:/Caddy/Caddyfile'
+            CaddyTemplate = 'M:/Caddy/Caddyfile.template'
+            SharedAssetsPath = 'M:/LopeOS/shared/assets'
           }
-          & 'C:/LopeOS/deploy/Deploy-LopeFrontend.ps1' @deployParameters
+          & 'M:/LopeOS/deploy/Deploy-LopeFrontend.ps1' @deployParameters

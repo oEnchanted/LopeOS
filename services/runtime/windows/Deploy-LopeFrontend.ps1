@@ -3,11 +3,11 @@
 param(
     [Parameter(Mandatory = $true)][string]$ReleasePath,
     [Parameter(Mandatory = $true)][string]$SiteOrigin,
-    [string]$CaddyExe = 'C:\Caddy\caddy.exe',
-    [string]$Caddyfile = 'C:\Caddy\Caddyfile',
-    [string]$CaddyTemplate = 'C:\Caddy\Caddyfile.template',
-    [string]$SharedAssetsPath = 'C:\LopeOS\shared\assets',
-    [string]$ReleasesRoot = 'C:\LopeOS\releases',
+    [string]$CaddyExe = 'M:\Caddy\caddy.exe',
+    [string]$Caddyfile = 'M:\Caddy\Caddyfile',
+    [string]$CaddyTemplate = 'M:\Caddy\Caddyfile.template',
+    [string]$SharedAssetsPath = 'M:\LopeOS\shared\assets',
+    [string]$ReleasesRoot = 'M:\LopeOS\releases',
     [switch]$Initialize
 )
 Set-StrictMode -Version Latest

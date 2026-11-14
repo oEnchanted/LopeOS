@@ -26,7 +26,7 @@ The Windows runner must own the Ubuntu WSL distribution and have administrator r
   -SiteOrigin https://lopeos.online -Distro Ubuntu-24.04
 ```
 
-The installer prepares the Linux image/network and registers the `LopeOS Browser` startup task. Code and a private identity key live outside frontend releases, under `C:/LopeOS/browser` and `C:/LopeOS/browser-host-data`. A failed gateway startup restores its previous task configuration. It refuses to take over an unrelated process on port 4177. It does not enable the public route yet.
+The installer prepares the Linux image/network and registers the `LopeOS Browser` startup task. Code and a private identity key live outside frontend releases, under `M:/LopeOS/browser` and `M:/LopeOS/browser-host-data`. A failed gateway startup restores its previous task configuration. It refuses to take over an unrelated process on port 4177. It does not enable the public route yet.
 
 5. Run the real streaming gate in `../tests/streaming.acceptance.md`. Confirm the Chromium sandbox inside the container, real media input/output and resize, account/guest isolation, and selected-file round trips. A healthy static stream client is not evidence of working audio/video.
 6. Once the runtime is verified, run `windows/Enable-LopeBrowser.ps1 -SiteOrigin https://lopeos.online`. It prepares and validates a Caddy candidate, atomically replaces the live configuration, checks public health, and updates the persistent template. Failure restores the old live configuration. Other hostnames, Accounts, runtime routes and release roots are preserved. Custom preexisting browser routes require review and are never silently replaced.

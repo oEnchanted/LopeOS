@@ -3,8 +3,8 @@ param(
     [Parameter(Mandatory=$true)][string]$SiteOrigin,
     [string]$Distro = 'Ubuntu',
     [string]$SourcePath = (Join-Path $PSScriptRoot '../../../..'),
-    [string]$InstallRoot = 'C:/LopeOS/browser',
-    [string]$DataRoot = 'C:/LopeOS/browser-host-data',
+    [string]$InstallRoot = 'M:/LopeOS/browser',
+    [string]$DataRoot = 'M:/LopeOS/browser-host-data',
     [string]$NodeExe = (Get-Command node -ErrorAction Stop).Source,
     [int]$MaxWorkers = 2
 )
