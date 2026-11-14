@@ -84,6 +84,8 @@ export class BrowserEngine extends EventEmitter {
     this.version = (await this.cdp.send('Browser.getVersion')).product;
     const graphics = await this.cdp.graphics().catch(() => null);
     if (graphics?.accelerated) this.gpuEnabled = true;
+    // WebGL also runs without a GPU, in SwiftShader. Only Chromium's own "off" states mean none.
+    this.webglEnabled = this.gpuEnabled || !/^(disabled|unavailable_off)/.test(graphics?.webgl ?? '');
     await this.configureContext(this.normal);
     await this.cdp.send('Target.setDiscoverTargets', { discover: true });
     const { targetInfos } = await this.cdp.send('Target.getTargets');
@@ -118,7 +120,7 @@ export class BrowserEngine extends EventEmitter {
     const session = this.get(sessionId);
     return { ...session, generation: this.generation, contextId: undefined, tabs: session.tabs.map(publicTab), engineVersion: this.version,
       streamUrl: this.streamUrl, capabilities: { stream: !!this.streamUrl, audio: !!this.streamUrl,
-        deviceForwarding: false, workspaceFiles: !!this.options.files, webgl: this.gpuEnabled, opengl: this.gpuEnabled } };
+        deviceForwarding: false, workspaceFiles: !!this.options.files, webgl: !!this.webglEnabled, opengl: this.gpuEnabled } };
   }
   changed(session) {
     session.revision++;
