@@ -7,6 +7,10 @@ export interface TrashEntry extends FileEntry {
   originalPath?: string;
   deletedAt: string;
 }
+export interface TrashListing {
+  entries: TrashEntry[];
+  unavailable: { root: string; message: string }[];
+}
 
 interface TrashMetadata { schema: 1; originalPath: string; deletedAt: string }
 const itemId = /^[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}$/i;
@@ -120,6 +124,23 @@ export async function listTrash(fs: FileService, trashRoot = TRASH_PATH): Promis
   return entries.sort((a, b) => Date.parse(b.deletedAt) - Date.parse(a.deletedAt) || a.name.localeCompare(b.name));
 }
 
+/** Ordinary Trash combines both volumes; an explicit root keeps its volume scope. */
+export async function readTrash(fs: FileService, trashRoot?: string): Promise<TrashListing> {
+  const roots = trashRoot ? [trashRoot] : [TRASH_PATH, DRIVE_TRASH_PATH];
+  const results = await Promise.allSettled(roots.map(root => listTrash(fs, root)));
+  const entries: TrashEntry[] = [], unavailable: TrashListing['unavailable'] = [];
+  for (const [index, result] of results.entries()) {
+    if (result.status === 'fulfilled') entries.push(...result.value);
+    else unavailable.push({ root: roots[index], message: result.reason instanceof Error ? result.reason.message : 'This Trash location could not be loaded.' });
+  }
+  if (unavailable.length === roots.length) throw new Error(unavailable.map(location => location.message).join(' '));
+  return { entries: entries.sort((a, b) => Date.parse(b.deletedAt) - Date.parse(a.deletedAt) || a.name.localeCompare(b.name)), unavailable };
+}
+
+export function trashAvailabilityMessage(unavailable: TrashListing['unavailable']): string {
+  return unavailable.length ? `${unavailable.map(location => location.root === DRIVE_TRASH_PATH ? 'LopeDrive Trash' : 'Workspace Trash').join(' and ')} is unavailable. Showing items from available locations only.` : '';
+}
+
 export function restoreTrashItem(fs: FileService, entry: TrashEntry): Promise<string> {
   return mutate(fs, async () => {
     const bucket = bucketPath(entry);
@@ -145,10 +166,11 @@ export function removeTrashItem(fs: FileService, entry: TrashEntry): Promise<voi
   return mutate(fs, () => removeItem(fs, entry));
 }
 
-export function emptyTrash(fs: FileService, trashRoot = TRASH_PATH): Promise<void> {
+export function emptyTrash(fs: FileService, selection: string | readonly TrashEntry[] = TRASH_PATH): Promise<void> {
+  const snapshot = typeof selection === 'string' ? undefined : [...selection];
   return mutate(fs, async () => {
-    // Delete only the listed contents; new items arriving from another tab survive.
-    const entries = await listTrash(fs, trashRoot);
+    // UIs pass the confirmed snapshot, so new arrivals or recovered volumes survive.
+    const entries = snapshot ?? await listTrash(fs, selection as string);
     for (const entry of entries) {
       try { await removeItem(fs, entry); } catch (error) { if (!missing(error)) throw error; }
     }

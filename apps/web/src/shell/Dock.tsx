@@ -8,7 +8,7 @@ import { appById } from './registry';
 import { readHistory, type StoredNotification } from './system';
 import { interfaceScale, viewport } from './appearance';
 import { scopedFiles } from './filePolicy';
-import { emptyTrash, listTrash, moveToTrash, TRASH_PATH } from './trash';
+import { emptyTrash, readTrash, trashAvailabilityMessage, moveToTrash, TRASH_PATH, DRIVE_TRASH_PATH, type TrashEntry } from './trash';
 import { ensureLopeFolders, LOPE_DOWNLOADS, LOPE_DRIVE } from '../../../../packages/runtime-client/src/lope-drive';
 import './dock.css';
 
@@ -31,9 +31,11 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
   const [downloads, setDownloads] = useState<FileEntry[]>([]);
   const [downloadsLoading, setDownloadsLoading] = useState(false);
   const [downloadsError, setDownloadsError] = useState('');
-  const [trashCount, setTrashCount] = useState(0);
+  const [trashItems, setTrashItems] = useState<TrashEntry[]>([]);
+  const trashCount = trashItems.length;
   const [trashError, setTrashError] = useState('');
-  const [confirmEmpty, setConfirmEmpty] = useState(false);
+  const [trashWarning, setTrashWarning] = useState('');
+  const [confirmEmpty, setConfirmEmpty] = useState<TrashEntry[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [dropActive, setDropActive] = useState(false);
   const [overflow, setOverflow] = useState(false);
@@ -89,12 +91,12 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
     let timer: ReturnType<typeof setTimeout>;
     const refresh = async () => {
       const id = ++request;
-      try { const items = await listTrash(fs); if (active && id === request) { setTrashCount(items.length); setTrashError(''); } }
-      catch (error) { if (active && id === request) { setTrashCount(0); setTrashError(error instanceof Error ? error.message : 'Trash is unavailable.'); } }
+      try { const listing = await readTrash(fs); if (active && id === request) { setTrashItems(listing.entries); setTrashWarning(trashAvailabilityMessage(listing.unavailable)); setTrashError(''); } }
+      catch (error) { if (active && id === request) { setTrashItems([]); setTrashWarning(''); setTrashError(error instanceof Error ? error.message : 'Trash is unavailable.'); } }
     };
     void refresh();
     const release = fs.subscribe(path => {
-      if (path && path !== '/' && path !== TRASH_PATH && !path.startsWith(TRASH_PATH + '/')) return;
+      if (path && path !== '/' && ![TRASH_PATH, DRIVE_TRASH_PATH].some(root => path === root || path.startsWith(root + '/'))) return;
       clearTimeout(timer); timer = setTimeout(() => { void refresh(); }, 150);
     });
     return () => { active = false; clearTimeout(timer); release(); };
@@ -155,9 +157,9 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
     finally { trashBusy.current = false; setBusy(false); }
   }
   async function empty() {
-    if (trashBusy.current) return;
+    if (trashBusy.current || !confirmEmpty) return;
     trashBusy.current = true; setBusy(true); setTrashError('');
-    try { await emptyTrash(fs); setTrashCount((await listTrash(fs)).length); setConfirmEmpty(false); trashButton.current?.focus(); }
+    try { await emptyTrash(fs, confirmEmpty); const listing = await readTrash(fs); setTrashItems(listing.entries); setTrashWarning(trashAvailabilityMessage(listing.unavailable)); setConfirmEmpty(null); trashButton.current?.focus(); }
     catch (error) { setTrashError(error instanceof Error ? error.message : 'Trash could not be emptied.'); }
     finally { trashBusy.current = false; setBusy(false); }
   }
@@ -203,7 +205,7 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
         onKeyDown={event => { if (event.key === 'ContextMenu' || event.shiftKey && event.key === 'F10') { event.preventDefault(); togglePanel({ kind: 'trash', anchor: event.currentTarget }); } }}
         onDragOver={event => { if (!busy && event.dataTransfer.types.includes(FILE_DRAG_TYPE)) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; setDropActive(true); } }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setDropActive(false); }}
         onDrop={event => { event.preventDefault(); setDropActive(false); try { const paths: unknown = JSON.parse(event.dataTransfer.getData(FILE_DRAG_TYPE)); if (Array.isArray(paths) && paths.length && paths.every(path => typeof path === 'string')) void trashPaths(paths); } catch { /* Ignore unrelated drags. */ } }}>
-        <span className="dock-tooltip" id="dock-trash-status">{busy ? 'Updating Trash…' : trashError ? 'Trash unavailable' : trashCount ? `Trash · ${trashCount} ${trashCount === 1 ? 'item' : 'items'}` : 'Trash is empty'}</span><AppIcon name={trashCount ? 'trash-full' : 'trash'} size={p.dockSize}/>
+        <span className="dock-tooltip" id="dock-trash-status">{busy ? 'Updating Trash…' : trashError ? 'Trash unavailable' : trashWarning ? `Trash · ${trashCount} available ${trashCount === 1 ? 'item' : 'items'} · Some locations unavailable` : trashCount ? `Trash · ${trashCount} ${trashCount === 1 ? 'item' : 'items'}` : 'Trash is empty'}</span><AppIcon name={trashCount ? 'trash-full' : 'trash'} size={p.dockSize}/>
       </button>
     </nav>
     {panel && <section ref={popup} className={'dock-panel glass ' + (panel.kind === 'downloads' ? 'dock-downloads' : 'dock-menu')} style={position} role={panel.kind === 'downloads' ? 'dialog' : 'menu'} aria-label={panel.kind === 'downloads' ? 'Downloads' : menuApp ? `${menuApp.name} Dock menu` : 'Trash'} onKeyDown={panelKeys}>
@@ -223,11 +225,11 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
         {running.has(menuApp.id) && <><div className="dock-menu-separator" role="separator"/><button role="menuitem" onClick={() => { dismiss(); void quit(menuApp.id).catch(error => services.notify({ title: 'Couldn’t quit application', message: String(error), tone: 'error' })); }}>Quit {menuApp.name}</button></>}
       </> : <>
         <div className="dock-menu-heading">{trashCount ? `${trashCount} ${trashCount === 1 ? 'item' : 'items'} in Trash` : 'Trash'}</div>
-        {trashError && <p className="dock-menu-error">{trashError}</p>}
+        {(trashError || trashWarning) && <p className="dock-menu-error">{trashError || trashWarning}</p>}
         <button role="menuitem" onClick={() => openLocation(TRASH_PATH)}>Open Trash</button>
-        <button role="menuitem" disabled={!trashCount || busy || !!trashError} onClick={() => { dismiss(true); setConfirmEmpty(true); }}>Empty Trash…</button>
+        <button role="menuitem" disabled={!trashCount || busy || !!trashError} onClick={() => { dismiss(true); setConfirmEmpty([...trashItems]); }}>Empty Trash…</button>
       </>}
     </section>}
-    {confirmEmpty && <Dialog title="Empty Trash?" dismissible={!busy} onClose={() => setConfirmEmpty(false)}><p>All items in Trash will be permanently deleted. You can’t undo this action.</p>{trashError && <p role="alert">{trashError}</p>}<div className="dialog-actions"><Button disabled={busy} onClick={() => setConfirmEmpty(false)}>Cancel</Button><Button variant="primary" disabled={busy} onClick={() => void empty()}>{busy ? 'Emptying…' : 'Empty Trash'}</Button></div></Dialog>}
+    {confirmEmpty && <Dialog title="Empty Trash?" dismissible={!busy} onClose={() => setConfirmEmpty(null)}><p>These {confirmEmpty.length} listed {confirmEmpty.length === 1 ? 'item' : 'items'} will be permanently deleted. Items from unavailable locations and items that arrive later are kept. You can’t undo this action.</p>{trashError && <p role="alert">{trashError}</p>}<div className="dialog-actions"><Button disabled={busy} onClick={() => setConfirmEmpty(null)}>Cancel</Button><Button variant="primary" disabled={busy} onClick={() => void empty()}>{busy ? 'Emptying…' : 'Empty Trash'}</Button></div></Dialog>}
   </>;
 }

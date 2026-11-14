@@ -144,6 +144,11 @@ export class RuntimeClient {
   }
   subscribeFiles(callback: (path?: string) => void, onError?: (error: Error) => void) {
     let stopped = false, ws: WebSocket | null = null, timer: ReturnType<typeof setTimeout> | undefined, attempt = 0;
+    const retry = () => {
+      if (stopped) return;
+      clearTimeout(timer);
+      timer = setTimeout(connect, Math.min(15000, 1000 * 2 ** Math.min(attempt++, 4)));
+    };
     const connect = async () => {
       try {
         const token = await this.options.getToken?.(); if (!token) await this.request('/identity'); if (stopped) return;
@@ -160,10 +165,14 @@ export class RuntimeClient {
         };
         ws.onclose = event => {
           if (stopped || event.code === 4400) return;
-          timer = setTimeout(connect, Math.min(15000, 1000 * 2 ** Math.min(attempt++, 4)));
+          retry();
         };
         ws.onerror = () => {};
-      } catch (e) { onError?.(e instanceof Error ? e : new Error('Filesystem subscription unavailable.')); }
+      } catch (e) {
+        if (stopped) return;
+        onError?.(e instanceof Error ? e : new Error('Filesystem subscription unavailable.'));
+        retry();
+      }
     };
     void connect();
     return () => { stopped = true; clearTimeout(timer); ws?.close(1000, 'Subscription ended.'); };

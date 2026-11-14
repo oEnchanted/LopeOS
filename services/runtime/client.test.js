@@ -72,3 +72,41 @@ test('file client exposes runtime volume capacity and server-side copy', async (
   assert.equal(calls[1].options.method, 'POST');
   assert.deepEqual(JSON.parse(calls[1].options.body), { path: '/Documents/folder', destination: '/Documents/folder copy' });
 });
+
+test('file subscriptions recover when the runtime is unavailable on first use', async t => {
+  const originalFetch = globalThis.fetch, originalSocket = globalThis.WebSocket;
+  t.after(() => { globalThis.fetch = originalFetch; globalThis.WebSocket = originalSocket; });
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  Socket.instances = []; globalThis.WebSocket = Socket;
+  let requests = 0, changes = 0;
+  const errors = [];
+  globalThis.fetch = async () => {
+    if (++requests === 1) throw new TypeError('Failed to fetch');
+    return Response.json({ userId: 'visitor', workspaceId: 'workspace' });
+  };
+  const unsubscribe = new RuntimeClient().subscribeFiles(() => changes++, error => errors.push(error));
+  t.after(unsubscribe);
+  await tick();
+  assert.equal(requests, 1); assert.equal(errors[0].code, 'UNAVAILABLE');
+  assert.equal(Socket.instances.length, 0);
+  t.mock.timers.tick(999); await tick(); assert.equal(requests, 1);
+  t.mock.timers.tick(1); await tick();
+  assert.equal(requests, 2); assert.equal(Socket.instances.length, 1);
+  Socket.instances[0].receive({ type: 'files.ready' });
+  assert.equal(changes, 1);
+  unsubscribe();
+  t.mock.timers.tick(30000); await tick(); assert.equal(requests, 2);
+});
+
+test('unsubscribing during a failed identity request cancels file subscription recovery', async t => {
+  const original = globalThis.fetch;
+  t.after(() => { globalThis.fetch = original; });
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let rejectIdentity, requests = 0;
+  const errors = [];
+  globalThis.fetch = () => { requests++; return new Promise((_resolve, reject) => { rejectIdentity = reject; }); };
+  const unsubscribe = new RuntimeClient().subscribeFiles(() => assert.fail('Subscription was closed'), error => errors.push(error));
+  await tick(); unsubscribe(); rejectIdentity(new TypeError('Failed to fetch'));
+  await tick(); t.mock.timers.tick(30000); await tick();
+  assert.equal(requests, 1); assert.deepEqual(errors, []);
+});

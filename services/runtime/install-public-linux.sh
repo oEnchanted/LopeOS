@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 # Operator installation inside Ubuntu WSL2 or a Linux host. Visitors do nothing.
 set -euo pipefail
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 [[ $(uname -s) = Linux && $EUID = 0 ]] || { echo 'Run this installer as root inside Ubuntu/WSL2.' >&2; exit 1; }
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck source=linux-node-toolchain.sh
+. "$script_dir/linux-node-toolchain.sh"
+lope_linux_node_toolchain
 site_origin=${1:?Pass the exact https:// website origin}
 source_dir=${2:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)}
 # npm builds node-pty from source on Linux; install its toolchain once.
@@ -9,8 +14,7 @@ if ! command -v make >/dev/null || ! command -v g++ >/dev/null || ! command -v p
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends build-essential python3
 fi
-for command in node npm docker systemctl tar mountpoint mkfs.ext4 losetup findmnt; do command -v "$command" >/dev/null || { echo "Install the host prerequisite: $command" >&2; exit 1; }; done
-[[ $(node -p 'Number(process.versions.node.split(".")[0]) >= 24') = true ]] || { echo 'The host runtime requires Node 24+.' >&2; exit 1; }
+for command in docker systemctl tar mountpoint mkfs.ext4 losetup findmnt; do command -v "$command" >/dev/null || { echo "Install the host prerequisite: $command" >&2; exit 1; }; done
 # Check exactly, without letting an operator-supplied origin enter shell code.
 node --input-type=module -e 'const u = new URL(process.argv[1]); if (u.protocol !== "https:" || u.origin !== process.argv[1]) process.exit(1)' "$site_origin"
 [[ $(docker context inspect --format '{{.Endpoints.docker.Host}}') = unix:///var/run/docker.sock ]] || { echo 'Use Docker Engine installed inside this WSL distribution.' >&2; exit 1; }
@@ -22,7 +26,7 @@ chmod 700 /etc/lopeos /var/lib/lopeos /var/lib/lopeos/control
 # Keep native dependencies and persistent visitor data separate from source updates.
 tar --exclude='node_modules' --exclude='test' --exclude='*.test.js' --exclude='__pycache__' -cf - -C "$source_dir/services/runtime" . | tar -xf - -C "$install_dir"
 cd "$install_dir"
-npm install --omit=dev --no-audit --no-fund
+"$LOPE_NODE_EXE" "$LOPE_NPM_CLI" install --omit=dev --no-audit --no-fund
 bash "$install_dir/install-sandbox-linux.sh"
 docker build -t lope-workspace:local .
 # Verify PTYs actually work under gVisor before enabling visitor execution.
@@ -64,7 +68,7 @@ Type=simple
 User=root
 WorkingDirectory=$install_dir
 EnvironmentFile=/etc/lopeos/visitors.env
-ExecStart=$(command -v node) $install_dir/public-server.js
+ExecStart="$LOPE_NODE_EXE" $install_dir/public-server.js
 Restart=always
 RestartSec=3
 TimeoutStopSec=15

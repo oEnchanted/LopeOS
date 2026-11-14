@@ -4,7 +4,7 @@ import { mkdtemp, mkdir, readFile, readdir, rename, rm, rmdir, stat, writeFile }
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { FileEntry, FileService } from '../../packages/contracts/src/index.ts';
-import { emptyTrash, listTrash, moveToTrash, removeTrashItem, restoreTrashItem, TRASH_PATH } from '../../apps/web/src/shell/trash.ts';
+import { emptyTrash, listTrash, readTrash, trashAvailabilityMessage, moveToTrash, removeTrashItem, restoreTrashItem, TRASH_PATH, DRIVE_TRASH_PATH } from '../../apps/web/src/shell/trash.ts';
 
 async function workspace(t: { after(callback: () => Promise<void>): void }) {
   const directory = await mkdtemp(join(tmpdir(), 'lope-trash-test-'));
@@ -162,4 +162,65 @@ test('listing does not disguise permission and connectivity failures as empty Tr
   const fs = await workspace(t);
   fs.list = async () => { throw Object.assign(new Error('Unavailable'), { code: 'UNAVAILABLE' }); };
   await assert.rejects(listTrash(fs), /Unavailable/);
+});
+
+test('ordinary Trash combines both volumes while explicit volume listings stay scoped', async t => {
+  const fs = await workspace(t);
+  await fs.mkdir('/LopeDrive'); await fs.mkdir('/LopeDrive/Documents');
+  await fs.write('/Documents/report.txt', 'workspace report');
+  await fs.write('/LopeDrive/Documents/report.txt', 'personal report');
+  const remote = await moveToTrash(fs, '/Documents/report.txt');
+  const local = await moveToTrash(fs, '/LopeDrive/Documents/report.txt');
+  const listing = await readTrash(fs);
+  assert.deepEqual(new Set(listing.entries.map(item => item.path)), new Set([remote.path, local.path]));
+  assert.deepEqual(listing.unavailable, []);
+  assert.deepEqual((await readTrash(fs, DRIVE_TRASH_PATH)).entries.map(item => item.path), [local.path]);
+  assert.deepEqual((await readTrash(fs, TRASH_PATH)).entries.map(item => item.path), [remote.path]);
+  await restoreTrashItem(fs, local);
+  assert.equal((await fs.read('/LopeDrive/Documents/report.txt')).content, 'personal report');
+  assert.equal((await fs.read(remote.path)).content, 'workspace report');
+});
+
+test('unavailable workspace Trash leaves local items usable and reports the missing volume', async t => {
+  const fs = await workspace(t);
+  await fs.mkdir('/LopeDrive'); await fs.mkdir('/LopeDrive/Documents');
+  await fs.write('/Documents/remote.txt', 'remote content');
+  await fs.write('/LopeDrive/Documents/local.txt', 'local content');
+  const remote = await moveToTrash(fs, '/Documents/remote.txt');
+  const local = await moveToTrash(fs, '/LopeDrive/Documents/local.txt');
+  const list = fs.list.bind(fs);
+  fs.list = async path => { if (path === TRASH_PATH || path.startsWith(TRASH_PATH + '/')) throw Object.assign(new Error('Workspace offline'), { code: 'UNAVAILABLE' }); return list(path); };
+  const partial = await readTrash(fs);
+  assert.deepEqual(partial.entries.map(item => item.path), [local.path]);
+  assert.deepEqual(partial.unavailable, [{ root: TRASH_PATH, message: 'Workspace offline' }]);
+  assert.match(trashAvailabilityMessage(partial.unavailable), /Workspace Trash is unavailable/);
+  assert.deepEqual((await readTrash(fs, DRIVE_TRASH_PATH)).unavailable, []);
+  await assert.rejects(readTrash(fs, TRASH_PATH), /Workspace offline/);
+  await restoreTrashItem(fs, local);
+  assert.equal((await fs.read('/LopeDrive/Documents/local.txt')).content, 'local content');
+  const emptyPartial = await readTrash(fs);
+  assert.deepEqual(emptyPartial.entries, []);
+  assert.equal(emptyPartial.unavailable.length, 1);
+  fs.list = list;
+  assert.deepEqual((await readTrash(fs)).entries.map(item => item.path), [remote.path]);
+});
+
+test('confirmed emptying deletes only its snapshot after a volume recovers or new items arrive', async t => {
+  const fs = await workspace(t);
+  await fs.mkdir('/LopeDrive'); await fs.mkdir('/LopeDrive/Documents');
+  await fs.write('/Documents/remote.txt', 'remote content');
+  await fs.write('/LopeDrive/Documents/local.txt', 'local content');
+  const remote = await moveToTrash(fs, '/Documents/remote.txt');
+  const local = await moveToTrash(fs, '/LopeDrive/Documents/local.txt');
+  const list = fs.list.bind(fs);
+  fs.list = async path => { if (path === TRASH_PATH) throw new Error('Workspace offline'); return list(path); };
+  const confirmed = (await readTrash(fs)).entries;
+  fs.list = list;
+  await fs.write('/LopeDrive/Documents/arrived.txt', 'late arrival');
+  const arrived = await moveToTrash(fs, '/LopeDrive/Documents/arrived.txt');
+  await emptyTrash(fs, confirmed);
+  assert.deepEqual(new Set((await readTrash(fs)).entries.map(item => item.path)), new Set([remote.path, arrived.path]));
+  assert.equal((await fs.read(remote.path)).content, 'remote content');
+  assert.equal((await fs.read(arrived.path)).content, 'late arrival');
+  await assert.rejects(fs.stat(local.path));
 });
