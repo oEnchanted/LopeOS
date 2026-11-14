@@ -52,6 +52,9 @@ export class DockerBrowserAllocator {
       `SELKIES_SUBFOLDER=/api/browser/stream/${id}`, `LOPE_BROWSER_STREAM_PATH=/api/browser/stream/${id}`,
       'LOPE_BROWSER_IDLE_MS=0', 'LOPE_BROWSER_HOSTS=127.0.0.1,localhost',
       'LOPE_BROWSER_TRANSFERS=/tmp/lope-transfers',
+      // Larger audio buffers: without realtime scheduling, small PipeWire/Pulse
+      // periods underrun while video encoding uses the CPU, which chops sound.
+      'PULSE_LATENCY_MSEC=60', 'PIPEWIRE_LATENCY=1024/48000',
     ].join('\n') + '\n', { flag: 'wx', mode: 0o600 });
     try {
       const linuxEnv = this.distro ? await this.host('wslpath', ['-a', envFile]) : envFile;
