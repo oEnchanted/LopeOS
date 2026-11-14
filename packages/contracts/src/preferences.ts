@@ -8,7 +8,7 @@ const color = (value: string): PreferenceSpec<string> => ({ default: value, vali
 const list = (value: string[]): PreferenceSpec<string[]> => ({ default: value, valid: (v): v is string[] => Array.isArray(v) && v.length <= 50 && v.every(s => typeof s === 'string' && s.length <= 256 && !/[\u0000-\u001f]/.test(s)) });
 const statusIds = ['weather','search','notifications','focus','sound','runtime','clock'];
 const statusList = (all = false): PreferenceSpec<string[]> => ({ default: [...statusIds], valid: (v): v is string[] => Array.isArray(v) && v.every(x => statusIds.includes(x)) && new Set(v).size === v.length && (!all || v.length === statusIds.length) });
-const paths: PreferenceSpec<string[]> = { default: ['/Documents','/Downloads'], valid: (v): v is string[] => list([]).valid(v) && v.length > 0 && v.every(x => x.startsWith('/') && !x.split('/').includes('..') && !x.includes('\\')) };
+const paths: PreferenceSpec<string[]> = { default: ['/LopeDrive/Documents','/LopeDrive/Downloads'], valid: (v): v is string[] => list([]).valid(v) && v.length > 0 && v.every(x => x.startsWith('/') && !x.split('/').includes('..') && !x.includes('\\')) };
 const flags = (): PreferenceSpec<Record<string, boolean>> => ({ default: {}, valid: (v): v is Record<string, boolean> => !!v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length <= 100 && Object.entries(v).every(([k, val]) => /^[a-z0-9][a-z0-9._-]{0,80}$/i.test(k) && !['__proto__','constructor','prototype'].includes(k) && typeof val === 'boolean') });
 export interface WeatherLocationPreference { name: string; latitude: number; longitude: number; country?: string; timezone?: string }
 export const MAX_WEATHER_LOCATIONS = 20;

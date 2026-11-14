@@ -9,6 +9,7 @@ import { readHistory, type StoredNotification } from './system';
 import { interfaceScale, viewport } from './appearance';
 import { scopedFiles } from './filePolicy';
 import { emptyTrash, listTrash, moveToTrash, TRASH_PATH } from './trash';
+import { ensureLopeFolders, LOPE_DOWNLOADS, LOPE_DRIVE } from '../../../../packages/runtime-client/src/lope-drive';
 import './dock.css';
 
 const FILE_DRAG_TYPE = 'application/x-lope-files';
@@ -105,13 +106,14 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
     const refresh = async () => {
       const id = ++request; setDownloadsLoading(true);
       try {
-        const entries = await fs.list('/Downloads');
+        await ensureLopeFolders(fs);
+        const entries = await fs.list(LOPE_DOWNLOADS);
         if (active && id === request) { setDownloads(entries.sort((a, b) => new Date(b.modified).valueOf() - new Date(a.modified).valueOf() || a.name.localeCompare(b.name))); setDownloadsError(''); }
       } catch (error) { if (active && id === request) { setDownloads([]); setDownloadsError(error instanceof Error ? error.message : 'Downloads are unavailable.'); } }
       finally { if (active && id === request) setDownloadsLoading(false); }
     };
     void refresh(); const release = fs.subscribe(path => {
-      if (path && path !== '/' && path !== '/Downloads' && !path.startsWith('/Downloads/')) return;
+      if (path && path !== LOPE_DRIVE && path !== LOPE_DOWNLOADS && !path.startsWith(LOPE_DOWNLOADS + '/')) return;
       clearTimeout(timer); timer = setTimeout(() => { void refresh(); }, 150);
     });
     return () => { active = false; clearTimeout(timer); release(); };
@@ -210,7 +212,7 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
         <div className="dock-download-list">
           {downloadsLoading && !downloads.length ? <p className="dock-empty" role="status"><LoaderCircle size={26}/>Loading downloads…</p> : downloadsError ? <p className="dock-empty" role="alert">{downloadsError}</p> : !downloads.length ? <div className="dock-empty"><Download size={30}/><strong>No downloads yet</strong><span>Files saved to Downloads appear here.</span></div> : downloads.slice(0, 20).map(entry => <button key={entry.path} className="dock-download-entry" onClick={() => { void openDownload(entry); }}><span className="glass-inset dock-file-symbol">{entry.type === 'directory' ? <Folder size={22}/> : <FileText size={22}/>}</span><span><strong>{entry.name}</strong><small>{entry.type === 'directory' ? 'Folder' : new Intl.NumberFormat(p.region, { style: 'unit', unit: 'kilobyte', maximumFractionDigits: 1 }).format(entry.size / 1024)}</small></span><ArrowUpRight size={15}/></button>)}
         </div>
-        <button className="dock-panel-footer" onClick={() => openLocation('/Downloads')}>Open in Files <ArrowUpRight size={15}/></button>
+        <button className="dock-panel-footer" onClick={() => openLocation(LOPE_DOWNLOADS)}>Open in Files <ArrowUpRight size={15}/></button>
       </> : panel.kind === 'app' && menuApp ? <>
         <div className="dock-menu-heading">{menuApp.name}</div>
         {appWindows.map(win => <button key={win.id} role="menuitem" className="dock-menu-window" onClick={() => { dismiss(); restore(win.id); }}><span className="dock-check">{win.focused && win.state !== 'minimized' && <Check size={13}/>}</span><span>{win.title}</span>{win.state === 'minimized' && <small>Minimized</small>}</button>)}

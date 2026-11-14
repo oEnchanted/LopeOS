@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUp, Cloud, Download, FileText, Folder, FolderPlus, Home, RefreshCw, Search, X } from 'lucide-react';
 import type { FileEntry } from '../../../../packages/contracts/src';
 import { fileService } from '../../../../packages/runtime-client/src';
+import { ensureLopeFolders, LOPE_DOCUMENTS, LOPE_DOWNLOADS } from '../../../../packages/runtime-client/src/lope-drive';
 import { Button, Input } from '../../../../packages/ui/src';
 import { normalizeWorkspacePath, validateFileName } from '../apps/files/operations';
 import { TRASH_PATH, DRIVE_TRASH_PATH } from './trash';
@@ -11,7 +12,7 @@ import './file-dialog.css';
 export type DialogRequest = { mode: 'open' | 'save'; name: string; extensions?: string[]; resolve: (value: string | null) => void };
 const join = (path: string, name: string) => `${path === '/' ? '' : path}/${name}`;
 const parent = (path: string) => path.slice(0, path.lastIndexOf('/')) || '/';
-const locations = [['/LopeDrive', 'LopeDrive', Cloud], ['/', 'Home', Home], ['/Documents', 'Documents', FileText], ['/Downloads', 'Downloads', Download]] as const;
+const locations = [['/LopeDrive', 'LopeDrive', Cloud], ['/', 'Home', Home], [LOPE_DOCUMENTS, 'Documents', FileText], [LOPE_DOWNLOADS, 'Downloads', Download]] as const;
 const message = (cause: unknown) => cause instanceof Error ? cause.message : 'The folder could not be opened.';
 function initialLocation(name: string) {
   if (name.includes('/')) {
@@ -46,7 +47,7 @@ export function FileDialog({ request, onDone }: { request: DialogRequest; onDone
   useEffect(() => {
     let active = true;
     setLoading(true); setEntries([]); setLoadError('');
-    fileService.list(path).then(value => { if (active) setEntries(value.filter(entry => !isTrashPath(entry.path))); }, cause => { if (active) setLoadError(message(cause)); }).finally(() => { if (active) setLoading(false); });
+    ensureLopeFolders(fileService).catch(() => {}).then(() => fileService.list(path)).then(value => { if (active) setEntries(value.filter(entry => !isTrashPath(entry.path))); }, cause => { if (active) setLoadError(message(cause)); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [path, revision]);
   useEffect(() => fileService.subscribe(() => setRevision(value => value + 1)), []);

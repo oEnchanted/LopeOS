@@ -7,6 +7,16 @@ type RecordEntry = FileEntry & { data?: Blob; version: string };
 const failure = (code: string, message: string) => Object.assign(new Error(message), { code });
 const parent = (path: string) => path.slice(0, path.lastIndexOf('/'));
 export function isLopeDrivePath(path: string) { return path === LOPE_DRIVE || path.startsWith(LOPE_DRIVE + '/'); }
+/** Personal folders live in LopeDrive: always available, offline-capable, and synced. */
+export const LOPE_DOCUMENTS = LOPE_DRIVE + '/Documents';
+export const LOPE_DOWNLOADS = LOPE_DRIVE + '/Downloads';
+/** Create the personal LopeDrive folders if they do not exist yet. */
+export async function ensureLopeFolders(files: Pick<FileService, 'stat' | 'mkdir'>) {
+  for (const path of [LOPE_DOCUMENTS, LOPE_DOWNLOADS]) {
+    const existing = await files.stat(path).catch(() => null);
+    if (!existing) await files.mkdir(path).catch(() => {});
+  }
+}
 export function drivePath(path: string) {
   if (!isLopeDrivePath(path) || path.length > 2048 || /[\u0000-\u001f\u007f\\]/.test(path) || path.split('/').slice(1).some(part => !part || part === '.' || part === '..' || new TextEncoder().encode(part).length > 255)) throw failure('INVALID', 'Choose a valid LopeDrive path.');
   return path;
