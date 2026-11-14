@@ -17,7 +17,7 @@ async function readJSON(req) {
 }
 
 /** Public, cookie-authenticated gateway. Worker tokens never reach the client. */
-export function createBrowserGateway({ identity, allocator, origins, idleMs = 1800000, revokeMs = 5000, maxWorkers = 4, request = fetch, now = Date.now }) {
+export function createBrowserGateway({ identity, allocator, origins, idleMs = 600000, attachedIdleMs = 10800000, revokeMs = 5000, maxWorkers = 4, request = fetch, now = Date.now }) {
   if (!origins?.length || origins.some(origin => new URL(origin).origin !== origin)) throw new Error('Exact browser origins are required.');
   const workers = new Map(), sessions = new Map(), pending = new Map(), buckets = new Map();
   let closing = false;
@@ -100,7 +100,7 @@ export function createBrowserGateway({ identity, allocator, origins, idleMs = 18
         const outgoing = { ...reply.headers, 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' };
         delete outgoing['set-cookie']; delete outgoing['www-authenticate']; delete outgoing['content-length'];
         worker.connections.add(res); resources.add(res);
-        res.on('close', () => { worker.connections.delete(res); resources.delete(res); upstream.destroy(); });
+        res.on('close', () => { worker.connections.delete(res); resources.delete(res); upstream.destroy(); worker.lastActive = now(); });
         if (events && reply.statusCode === 200 && type.includes('text/event-stream')) {
           res.writeHead(200, { ...outgoing, 'x-accel-buffering': 'no' }); res.flushHeaders();
           reply.setEncoding('utf8'); let buffer = '';
@@ -184,14 +184,21 @@ export function createBrowserGateway({ identity, allocator, origins, idleMs = 18
         client.write(`HTTP/1.1 101 Switching Protocols\r\n${safe.map(([k,v]) => `${k}: ${v}`).join('\r\n')}\r\n\r\n`);
         if (remoteHead.length) client.write(remoteHead); if (head.length) remote.write(head);
         remote.pipe(client).pipe(remote); client.on('error', () => remote.destroy()); remote.on('error', () => client.destroy());
-        client.on('close', () => { worker.connections.delete(client); resources.delete(client); remote.destroy(); });
+        client.on('close', () => { worker.connections.delete(client); resources.delete(client); remote.destroy(); worker.lastActive = now(); });
       }); upstream.on('response', () => client.destroy()); upstream.on('error', () => client.destroy()); client.on('close', () => upstream.destroy()); upstream.end();
     } catch { client.end('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n'); }
   });
   let auditing = false;
   const sweep = async () => {
     if (auditing) return; auditing = true;
-    try { for (const worker of [...workers.values()]) if (now() - worker.lastActive > idleMs || !await identity.revalidate(worker.owner)) await stop(worker); }
+    // Free a slot 10 minutes after the last viewer disconnects. While the stream or event
+    // feed is open someone is watching, so only a 3-hour silence counts as abandoned.
+    try {
+      for (const worker of [...workers.values()]) {
+        const idle = now() - worker.lastActive;
+        if ((worker.connections.size ? idle > attachedIdleMs : idle > idleMs) || !await identity.revalidate(worker.owner)) await stop(worker);
+      }
+    }
     finally { auditing = false; }
   };
   const timer = setInterval(() => sweep().catch(() => {}), revokeMs); timer.unref();

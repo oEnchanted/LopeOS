@@ -6,7 +6,7 @@ param(
     [string]$InstallRoot = 'M:/LopeOS/browser',
     [string]$DataRoot = 'M:/LopeOS/browser-host-data',
     [string]$NodeExe = (Get-Command node -ErrorAction Stop).Source,
-    [int]$MaxWorkers = 2
+    [int]$MaxWorkers = 5
 )
 $ErrorActionPreference = 'Stop'
 $origin = [Uri]$SiteOrigin
