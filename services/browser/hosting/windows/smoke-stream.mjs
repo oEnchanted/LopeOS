@@ -19,7 +19,7 @@ import { randomBytes, randomUUID, createHash } from 'node:crypto';
 import { DockerBrowserAllocator } from '../docker.mjs';
 
 const result = { kind: 'lope-browser-stream-smoke', passed: false, stage: 'configuration', node: process.versions.node,
-  checks: { worker: false, mediaFrames: false, movingPixels: false, remotePointerAndKeyboard: false, contextMenuSave: false }, cleanup: false };
+  checks: { worker: false, mediaFrames: false, movingPixels: false, remotePointerAndKeyboard: false, contextMenuSave: false, largeUpload: false }, cleanup: false };
 const distro = process.env.LOPE_BROWSER_WSL_DISTRO || 'Ubuntu-24.04';
 let temporary, allocator, worker, server, browser, debugPage;
 // Optional: a directory for failure screenshots and a redacted error, for operators only.
@@ -127,7 +127,7 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   await api('sessions', 'POST', { mode: 'normal' });
   // A data URL exercises the existing Chromium process without opening host egress
   // or granting a private-network test exception. It contains no account content.
-  const fixture = `<!doctype html><html><head><title>Lope streaming smoke</title><style>html,body{margin:0;overflow:hidden}canvas{position:fixed;inset:0;width:100vw;height:100vh}input,button{position:fixed;top:40px;height:64px;box-sizing:border-box;font:24px sans-serif}input{left:40px;width:400px}button{left:480px;width:180px}</style></head><body><canvas id="motion"></canvas><input id="text" aria-label="Smoke input"><button id="send">Submit</button><img id="pic" alt="Smoke image" style="position:fixed;left:40px;top:160px;width:240px;height:160px" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%27160%27%3E%3Crect width=%27240%27 height=%27160%27 fill=%27%23336%27/%3E%3C/svg%3E"><script>const c=document.getElementById('motion'),x=c.getContext('2d');function draw(t){c.width=innerWidth;c.height=innerHeight;x.fillStyle='hsl('+((t/13)%360)+',85%,50%)';x.fillRect(0,0,c.width,c.height);requestAnimationFrame(draw)}requestAnimationFrame(draw);document.getElementById('send').onclick=()=>document.title='Lope smoke submitted '+document.getElementById('text').value;</script></body></html>`;
+  const fixture = `<!doctype html><html><head><title>Lope streaming smoke</title><style>html,body{margin:0;overflow:hidden}canvas{position:fixed;inset:0;width:100vw;height:100vh}input,button{position:fixed;top:40px;height:64px;box-sizing:border-box;font:24px sans-serif}input{left:40px;width:400px}button{left:480px;width:180px}</style></head><body><canvas id="motion"></canvas><input id="text" aria-label="Smoke input"><button id="send">Submit</button><input type="file" id="upload" aria-label="Smoke upload" style="position:fixed;left:40px;top:360px;width:300px;height:60px"><img id="pic" alt="Smoke image" style="position:fixed;left:40px;top:160px;width:240px;height:160px" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%27160%27%3E%3Crect width=%27240%27 height=%27160%27 fill=%27%23336%27/%3E%3C/svg%3E"><script>const c=document.getElementById('motion'),x=c.getContext('2d');function draw(t){c.width=innerWidth;c.height=innerHeight;x.fillStyle='hsl('+((t/13)%360)+',85%,50%)';x.fillRect(0,0,c.width,c.height);requestAnimationFrame(draw)}requestAnimationFrame(draw);document.getElementById('upload').onchange=e=>{const f=e.target.files[0];document.title='Lope smoke file '+(f?f.size:0)};document.getElementById('send').onclick=()=>document.title='Lope smoke submitted '+document.getElementById('text').value;</script></body></html>`;
   const fixtureUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(fixture);
   await allocator.docker(['exec', worker.name, 'bash', '-c',
     'source "${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}/container-env"; exec /usr/bin/chromium --user-data-dir=/profiles/normal/chromium --kiosk --new-window "$1"',
@@ -188,6 +188,21 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   await api('sessions/normal/commands', 'POST', { type: 'context.saveImage', menuId: menu.id });
   await until(async () => (await api('sessions/normal')).downloads.some(item => item.state === 'completed' && item.totalBytes > 0), 15000);
   result.checks.contextMenuSave = true;
+  result.stage = 'large-upload';
+  // Above the former 32 MB cap: the file streams to the worker's disk, then the page receives it.
+  const chooserPoint = remotePoint(190, 390);
+  await page.mouse.move(chooserPoint.x, chooserPoint.y, { steps: 5 }); await delay(400);
+  await page.mouse.down(); await delay(80); await page.mouse.up();
+  const chooser = await until(async () => (await api('sessions/normal')).uploads[0], 15000);
+  const uploadBytes = 40 * 1024 * 1024;
+  const staged = await fetch(`${worker.url}/api/browser/sessions/normal/uploads/${chooser.id}/files`, { method: 'POST',
+    headers: { authorization: `Bearer ${worker.token}`, 'content-type': 'application/octet-stream', 'x-file-name': 'smoke-upload.bin' },
+    body: new Uint8Array(uploadBytes), signal: AbortSignal.timeout(120000), redirect: 'error' });
+  if (!staged.ok) throw new Error('The staged upload failed.');
+  const { id: stagedId } = await staged.json();
+  await api(`sessions/normal/uploads/${chooser.id}`, 'POST', { staged: [stagedId] });
+  await until(async () => (await api('sessions/normal')).tabs.some(tab => tab.title === `Lope smoke file ${uploadBytes}`), 20000);
+  result.checks.largeUpload = true;
   result.binaryFramesObserved = binaryFrames;
   result.passed = true; result.stage = 'complete';
 } catch (error) {

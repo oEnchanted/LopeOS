@@ -23,12 +23,19 @@ test('downloads enter client LopeDrive create-only, with collisions and no serve
   assert.ok(new TextEncoder().encode(downloadName('世界'.repeat(200))).byteLength <= 180);
 });
 
-test('multiple uploads include only selected file bytes and names', async () => {
-  let body: FormData | undefined;
-  const client = new BrowserClient(async (_url, options) => { body = options?.body as FormData; return Response.json({id:'session'}); });
+test('multiple uploads stream only the selected files, then commit exactly those', async () => {
+  const calls: { url: string; options?: RequestInit }[] = [];
+  let next = 0;
+  const client = new BrowserClient(async (url, options) => {
+    calls.push({ url: String(url), options });
+    return String(url).endsWith('/files') ? Response.json({ id: 'staged-' + next++ }) : Response.json({ id: 'session' });
+  });
   await client.uploadFiles('session','chooser',[new File(['selected one'],'one.txt'),new File(['selected two'],'two.txt')]);
-  assert.deepEqual([...body!.keys()],['files','files']);
-  assert.deepEqual(await Promise.all(body!.getAll('files').map(async item => [(item as File).name,await (item as File).text()])),[['one.txt','selected one'],['two.txt','selected two']]);
+  const staged = calls.filter(call => call.url.endsWith('/uploads/chooser/files'));
+  assert.deepEqual(await Promise.all(staged.map(async call => [decodeURIComponent(new Headers(call.options?.headers).get('x-file-name') ?? ''), await (call.options?.body as File).text()])),[['one.txt','selected one'],['two.txt','selected two']]);
+  const commit = calls.at(-1)!;
+  assert.match(commit.url, /\/uploads\/chooser$/);
+  assert.deepEqual(JSON.parse(String(commit.options?.body)), { staged: ['staged-0', 'staged-1'] });
 });
 
 test('download bytes are not written after the account changes during blob conversion', async () => {

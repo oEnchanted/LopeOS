@@ -51,7 +51,8 @@ export class DockerBrowserAllocator {
       `LOPE_BROWSER_ORIGINS=${origin}`, `SELKIES_ALLOWED_ORIGINS=${origin}`,
       `SELKIES_SUBFOLDER=/api/browser/stream/${id}`, `LOPE_BROWSER_STREAM_PATH=/api/browser/stream/${id}`,
       'LOPE_BROWSER_IDLE_MS=0', 'LOPE_BROWSER_HOSTS=127.0.0.1,localhost',
-      'LOPE_BROWSER_TRANSFERS=/tmp/lope-transfers',
+      // Disk-backed profile volume: uploads up to 1 GB and downloads up to 256 MiB do not fit the in-memory /tmp.
+      'LOPE_BROWSER_TRANSFERS=/profiles/transfers',
       // Larger audio buffers: without realtime scheduling, small PipeWire/Pulse
       // periods underrun while video encoding uses the CPU, which chops sound.
       'PULSE_LATENCY_MSEC=60', 'PIPEWIRE_LATENCY=1024/48000',

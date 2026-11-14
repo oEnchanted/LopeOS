@@ -132,7 +132,8 @@ export function createBrowserGateway({ identity, allocator, origins, idleMs = 60
       }); req.pipe(upstream);
     });
   }
-  const server = createServer({ headersTimeout: 15000, requestTimeout: 120000, maxHeaderSize: 16384 }, async (req, res) => {
+  // requestTimeout covers a whole request body; large uploads can take most of an hour.
+  const server = createServer({ headersTimeout: 15000, requestTimeout: 3600000, maxHeaderSize: 16384 }, async (req, res) => {
     try {
       guard(req); const url = new URL(req.url, 'http://browser');
       if (url.pathname === PREFIX + '/health' && req.method === 'GET') {

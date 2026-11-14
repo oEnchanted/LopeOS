@@ -1,7 +1,10 @@
 import { createServer, request as httpRequest } from 'node:http';
-import { timingSafeEqual } from 'node:crypto';
-import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { randomUUID, timingSafeEqual } from 'node:crypto';
+import { createReadStream, createWriteStream } from 'node:fs';
+import { mkdir, rm, stat } from 'node:fs/promises';
+import { join } from 'node:path';
+import { Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 
 const PREFIX = '/api/browser';
 function json(response, status, body) {
@@ -14,12 +17,24 @@ async function body(request, limit = 64 * 1024) {
   return Buffer.concat(chunks);
 }
 const parse = bytes => { try { return JSON.parse(bytes.toString()); } catch { throw new Error('Invalid JSON request.'); } };
+const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024;
+/** Stream one uploaded file to disk without holding it in memory. */
+async function stageFile(request, directory, limit) {
+  await mkdir(directory, { recursive: true, mode: 0o700 });
+  const path = join(directory, randomUUID());
+  let size = 0;
+  const counter = new Transform({ transform(chunk, _encoding, done) { size += chunk.length; done(size > limit ? new Error('Choose up to 20 files totaling at most 1 GB.') : null, chunk); } });
+  try { await pipeline(request, counter, createWriteStream(path, { flags: 'wx', mode: 0o600 })); }
+  catch (error) { await rm(path, { force: true }); throw error; }
+  return { path, size };
+}
 
 /** This worker belongs to exactly one authenticated owner. An external gateway assigns it. */
 export function createBrowserServer(engine, options) {
   if (!options.token || options.token.length < 32) throw new Error('A strong, session-specific worker token is required.');
   const expected = Buffer.from(`Bearer ${options.token}`);
   const streams = new Map();
+  const stagedUploads = new Map();
   const privateCleanup = new Map();
   let lastActivity = Date.now();
   function authorized(request) {
@@ -117,14 +132,38 @@ export function createBrowserServer(engine, options) {
           }
         }); return;
       }
+      // Large uploads: each file streams to disk first, then one request hands them to the page.
+      const staging = action.match(/^uploads\/([a-zA-Z\d-]+)\/files$/);
+      if (staging && request.method === 'POST') {
+        const chooser = engine.uploadRequests.get(staging[1]);
+        if (!chooser || chooser.sessionId !== sessionId) throw new Error('This file chooser is no longer available.');
+        let name; try { name = decodeURIComponent(String(request.headers['x-file-name'] ?? '')); } catch { name = ''; }
+        if (!name) throw new Error('Select a file to upload.');
+        const key = sessionId + '/' + staging[1];
+        const entry = stagedUploads.get(key) ?? { files: [], total: 0 };
+        if (entry.files.length >= 20) throw new Error('Choose up to 20 files totaling at most 1 GB.');
+        const remaining = MAX_UPLOAD_BYTES - entry.total;
+        if (Number(request.headers['content-length'] ?? 0) > remaining) throw new Error('Choose up to 20 files totaling at most 1 GB.');
+        const file = await stageFile(request, join(engine.transferRoot, sessionId, 'staged', staging[1]), remaining);
+        const id = randomUUID(); entry.files.push({ id, name, path: file.path }); entry.total += file.size;
+        stagedUploads.set(key, entry); json(response, 200, { id }); return;
+      }
       const upload = action.match(/^uploads\/([a-zA-Z\d-]+)$/);
       if (upload && request.method === 'POST') {
         const type = request.headers['content-type'] ?? '';
         let files;
         if (type.startsWith('application/json')) {
           const value = parse(await body(request));
-          if (!Array.isArray(value.fileIds) || value.fileIds.some(v => typeof v !== 'string')) throw new Error('Invalid file selection.');
-          files = value.fileIds.map(fileId => ({ fileId }));
+          if (Array.isArray(value.staged)) {
+            const entry = stagedUploads.get(sessionId + '/' + upload[1]);
+            const chosen = value.staged.map(id => entry?.files.find(file => file.id === id));
+            if (!chosen.length || chosen.some(file => !file)) throw new Error('Some selected files did not finish uploading.');
+            files = chosen.map(file => ({ name: file.name, path: file.path }));
+            stagedUploads.delete(sessionId + '/' + upload[1]);
+          } else {
+            if (!Array.isArray(value.fileIds) || value.fileIds.some(v => typeof v !== 'string')) throw new Error('Invalid file selection.');
+            files = value.fileIds.map(fileId => ({ fileId }));
+          }
         } else if (type.startsWith('multipart/form-data')) {
           const raw = await body(request, 33 * 1024 * 1024);
           const form = await new Response(raw, { headers: { 'Content-Type': type } }).formData();
@@ -159,7 +198,8 @@ export function createBrowserServer(engine, options) {
     if (!authorized(request) || !request.url.startsWith(`${PREFIX}/stream/`)) { socket.destroy(); return; }
     lastActivity = Date.now(); proxy(request, socket, head);
   });
-  server.requestTimeout = 60000; server.headersTimeout = 15000;
+  // Up to an hour for a large upload body; headers must still arrive within 15 seconds.
+  server.requestTimeout = 3600000; server.headersTimeout = 15000;
   const idle = setInterval(() => { if (options.idleMs && Date.now() - lastActivity > options.idleMs) options.onIdle?.(); }, 30000);
   idle.unref(); server.on('close', () => { clearInterval(idle); for (const timeout of privateCleanup.values()) clearTimeout(timeout); });
   return server;
