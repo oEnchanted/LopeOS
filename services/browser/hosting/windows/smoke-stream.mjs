@@ -121,7 +121,9 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   server.listen(0, '127.0.0.1'); await once(server, 'listening');
   const origin = `http://127.0.0.1:${server.address().port}`;
   result.stage = 'isolated-worker';
+  const startedAt = Date.now();
   worker = await allocator.create({ id, ownerKey, origin });
+  result.startMs = Date.now() - startedAt;
   result.checks.worker = true;
   const health = await api('health'); result.engine = health.engine;
   await api('sessions', 'POST', { mode: 'normal' });

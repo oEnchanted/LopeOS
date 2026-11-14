@@ -17,7 +17,7 @@ async function readJSON(req) {
 }
 
 /** Public, cookie-authenticated gateway. Worker tokens never reach the client. */
-export function createBrowserGateway({ identity, allocator, origins, idleMs = 600000, attachedIdleMs = 10800000, revokeMs = 5000, maxWorkers = 4, request = fetch, now = Date.now }) {
+export function createBrowserGateway({ identity, allocator, origins, idleMs = 1800000, attachedIdleMs = 10800000, revokeMs = 5000, maxWorkers = 4, request = fetch, now = Date.now }) {
   if (!origins?.length || origins.some(origin => new URL(origin).origin !== origin)) throw new Error('Exact browser origins are required.');
   const workers = new Map(), sessions = new Map(), pending = new Map(), buckets = new Map();
   let closing = false;
