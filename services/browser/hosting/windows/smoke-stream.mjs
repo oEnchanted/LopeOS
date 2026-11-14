@@ -236,6 +236,12 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   if (typeof error?.workerLog === 'string') result.workerLog = error.workerLog;
   if (error?.code) result.error = String(error.code).slice(0, 40);
   result.gpu = allocator?.gpu?.kind ?? null;
+  // A worker that started but never streamed: its output and the player's last stats say why.
+  if (worker && !result.checks.mediaFrames) {
+    result.workerLog = await allocator.workerLog(worker.name).catch(() => '');
+    result.stats = await debugPage?.evaluate(() => Object.fromEntries(Object.entries(window.smokeStats ?? {})
+      .filter(([, value]) => typeof value === 'number' || typeof value === 'boolean' || (typeof value === 'string' && value.length <= 40)).slice(0, 60))).catch(() => null);
+  }
   if (debugDirectory) {
     const redact = value => String(value).replace(/[a-f0-9]{32,}/gi, '[hex]').replace(/(token|password|authorization|bearer)\S*/gi, '$1 [redacted]').slice(0, 600);
     console.log('debug error:', redact(error?.message ?? error));
