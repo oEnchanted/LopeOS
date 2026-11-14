@@ -58,7 +58,7 @@ export class DockerBrowserAllocator {
       const args = ['run', '-d', '--name', name, '--label', `lope.browser.gateway=${this.deploymentId}`, '--label', `lope.browser.owner=${ownerKey}`,
         '--user', '1000:1000', '--read-only', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
         '--security-opt', 'seccomp=/etc/lope-browser/seccomp.json', '--network', 'lope-browser-public', '--dns', '1.1.1.1', '--ipc', 'private', '--cgroupns', 'private',
-        '--cpus', '2', '--memory', '2g', '--memory-swap', '2g', '--pids-limit', '512', '--shm-size', '512m',
+        '--cpus', '3', '--memory', '2g', '--memory-swap', '2g', '--pids-limit', '512', '--shm-size', '512m',
         '--ulimit', 'core=0:0', '--ulimit', 'nofile=4096:4096', '--ulimit', 'nproc=512:512',
         '--tmpfs', '/tmp:rw,nosuid,nodev,size=536870912,mode=1777', '--tmpfs', '/home/ubuntu:rw,nosuid,nodev,size=134217728,uid=1000,gid=1000,mode=700',
         // Docker mounts tmpfs noexec unless asked. s6 runs the copied service scripts from
