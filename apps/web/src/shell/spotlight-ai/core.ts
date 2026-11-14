@@ -1,12 +1,15 @@
 import type { AIWorkerReply, AIWorkerRequest, ModelMessage } from './protocol.ts';
 
-export const MODEL_NAME = 'Qwen3 1.7B';
-export const MODEL_DOWNLOAD_LABEL = 'About 1 GB';
-export const MAX_MESSAGE_LENGTH = 2000;
-export const MODEL_IDS = ['Qwen3-1.7B-q4f16_1-MLC', 'Qwen3-1.7B-q4f32_1-MLC'] as const;
-export const LEGACY_MODEL_IDS = ['SmolLM2-360M-Instruct-q4f16_1-MLC', 'SmolLM2-360M-Instruct-q4f32_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC'];
-const SYSTEM_MESSAGE = "You are Spotlight, a helpful assistant who is strangely, intensely obsessed with horses. Answer correctly first, then steer the reply toward horses with a horse fact, comparison, or pun, however unrelated the topic. Answer simple factual questions in one short sentence. Follow the user's instructions exactly. When drafting text, preserve the names, numbers, and details the user provides. Keep replies concise.";
-const CONTEXT_BYTES = 2800;
+export const MODEL_NAME = 'Qwen3 4B';
+export const MODEL_DOWNLOAD_LABEL = 'About 2.3 GB';
+export const MAX_MESSAGE_LENGTH = 16000;
+export const MODEL_IDS = ['Qwen3-4B-q4f16_1-MLC', 'Qwen3-4B-q4f32_1-MLC'] as const;
+export const LEGACY_MODEL_IDS = ['SmolLM2-360M-Instruct-q4f16_1-MLC', 'SmolLM2-360M-Instruct-q4f32_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC', 'Qwen3-1.7B-q4f16_1-MLC', 'Qwen3-1.7B-q4f32_1-MLC'];
+const SYSTEM_MESSAGE = "You are Spotlight, a knowledgeable, capable assistant running locally on the user's device, who is strangely, intensely obsessed with horses. Answer correctly first, then steer the reply toward horses with a horse fact, comparison, or pun, however unrelated the topic. Give accurate, direct answers: lead with the answer, then add only the explanation, steps, or examples that help. Match length to the question — a sentence for simple facts, more for explanations, code, or writing. Use Markdown lists or code blocks when they aid clarity. Follow the user's instructions exactly and preserve the names, numbers, and details they provide. If you are unsure or a question needs current information, say so rather than guessing. You have no web access.";
+/** The worker loads an 8192-token window. Prompts stay within ~16 KB of UTF-8 (about 4–5k tokens)
+ * so every reply keeps at least ~3k tokens; replies have no other cap and end naturally. */
+export const CONTEXT_WINDOW_TOKENS = 8192;
+const CONTEXT_BYTES = 16000;
 const encoder = new TextEncoder();
 export interface ChatMessage { id: string; role: 'user' | 'assistant'; content: string; stopped?: boolean }
 export type AIPhase = 'idle' | 'checking' | 'loading' | 'ready' | 'generating' | 'resetting' | 'unsupported' | 'error' | 'removing';
@@ -26,17 +29,17 @@ export interface AIDependencies {
   createWorker(): WorkerPort;
   timeouts?: { support?: number; load?: number; generate?: number; stop?: number; reset?: number; remove?: number };
 }
-type Operation = { id: number; type: 'load' | 'generate' | 'reset' | 'remove'; finish: () => void; timer: ReturnType<typeof setTimeout> };
+type Operation = { id: number; type: 'load' | 'generate' | 'reset' | 'remove'; finish: () => void; timer: ReturnType<typeof setTimeout>; arm: () => void };
 const initialState = (): AISnapshot => ({ phase: 'idle', progress: 0, status: 'Model not loaded.', error: '', modelLoaded: false, modelId: null, messages: [] });
 
-/** Bound UTF-8 bytes conservatively below the 4096-token model window, including reply overhead. */
+/** Fit as much recent conversation as the prompt budget allows, newest turns first. */
 export function buildContext(history: readonly ChatMessage[], text: string): ModelMessage[] {
   if (!text.trim()) throw new Error('Type a message first.');
-  if (text.length > MAX_MESSAGE_LENGTH || encoder.encode(text).length > CONTEXT_BYTES) throw new Error('That message is too long for this small model. Shorten it and try again.');
+  if (text.length > MAX_MESSAGE_LENGTH || encoder.encode(text).length > CONTEXT_BYTES) throw new Error('That message is too long for the local model. Shorten it and try again.');
   const conversation: ModelMessage[] = [{ role: 'user', content: text }];
   let remaining = CONTEXT_BYTES - encoder.encode(text).length;
   // Retain whole recent turns. Interrupted/failed blank replies never enter the context.
-  for (let at = history.length - 2, turns = 0; at >= 0 && turns < 4; at -= 2, turns++) {
+  for (let at = history.length - 2; at >= 0; at -= 2) {
     const user = history[at], assistant = history[at + 1];
     if (user.role !== 'user' || assistant?.role !== 'assistant' || !assistant.content.trim()) break;
     const size = encoder.encode(user.content).length + encoder.encode(assistant.content).length;
@@ -97,10 +100,11 @@ export class SpotlightAI {
   }
   private request(request: AIWorkerRequest & { type: Operation['type'] }, timeout: number) {
     return new Promise<void>(resolve => {
-      const timer = setTimeout(() => {
-        if (this.operation?.id === request.id) this.fail(request.type === 'load' ? 'The model download or startup took too long. Check your connection and try again; downloaded parts may be reused.' : 'Local AI took too long to respond. Load the model again to retry.');
-      }, timeout);
-      this.operation = { id: request.id, type: request.type, finish: resolve, timer };
+      const expire = () => {
+        if (this.operation?.id === request.id) this.fail(request.type === 'load' ? 'The model download or startup stalled. Check your connection and try again; downloaded parts may be reused.' : 'Local AI took too long to respond. Load the model again to retry.');
+      };
+      const operation: Operation = { id: request.id, type: request.type, finish: resolve, timer: setTimeout(expire, timeout), arm: () => { clearTimeout(operation.timer); operation.timer = setTimeout(expire, timeout); } };
+      this.operation = operation;
       try { this.worker!.postMessage(request); } catch { this.fail('Local AI could not start. Try loading the model again.'); }
     });
   }
@@ -108,6 +112,8 @@ export class SpotlightAI {
     if (!reply || reply.id !== this.operation?.id) return;
     switch (reply.type) {
       case 'progress':
+        // A multi-gigabyte download is bounded by stalls, not total duration.
+        if (this.operation.type === 'load') this.operation.arm();
         if (this.operation.type === 'load') this.update({ progress: Number.isFinite(reply.progress) ? Math.max(0, Math.min(1, reply.progress)) : 0, status: reply.text || 'Loading model…' });
         break;
       case 'ready':
@@ -117,7 +123,6 @@ export class SpotlightAI {
         const last = this.snapshot.messages.at(-1);
         if (!last || last.role !== 'assistant') break;
         const content = last.content + reply.text;
-        if (content.length > 16000) { this.stop(); break; }
         this.update({ messages: [...this.snapshot.messages.slice(0, -1), { ...last, content }], status: 'Writing a reply…' }); break;
       }
       case 'done': {

@@ -2,6 +2,7 @@ import type { MLCEngine } from '@mlc-ai/web-llm';
 import type { AIWorkerReply, AIWorkerRequest } from './protocol';
 import { deleteCachedModels } from './cache';
 import { createResponseFilter } from './response';
+import { CONTEXT_WINDOW_TOKENS } from './core';
 
 const scope = globalThis as unknown as { postMessage(message: AIWorkerReply): void; onmessage: ((event: MessageEvent<AIWorkerRequest>) => void) | null };
 let engine: MLCEngine | null = null;
@@ -15,6 +16,7 @@ function readableError(error: unknown) {
   if (/quota|storage.*(?:full|space)|not enough.*(?:space|storage)/i.test(diagnostic)) return 'There is not enough browser storage for this model. Free some browser storage or choose Remove download, then try again.';
   if (/device.*lost|out of memory|out-of-memory|\boom\b/i.test(message)) return 'The graphics device could not keep the model in memory. Unload it, close other graphics-heavy tabs, and try again.';
   if (/fetch|network|cors|download|http.*(?:404|403|500|502)/i.test(message)) return 'The model could not be downloaded. Check your connection and try again; downloaded parts may be reused.';
+  if (/exceed context window/i.test(message)) return 'This conversation is too long for the local model. Start a new chat and try again.';
   if (/webgpu|gpu adapter|shader-f16|no adapter/i.test(message)) return 'The model could not start on this graphics device. Check hardware acceleration or try another browser.';
   return `Local AI could not finish: ${message.slice(0, 400)}`;
 }
@@ -34,7 +36,7 @@ async function handle(request: AIWorkerRequest) {
         await deleteCachedModels(obsolete);
       }
       engine = new MLCEngine({ logLevel: 'ERROR', initProgressCallback: progress => reply({ type: 'progress', id: request.id, progress: progress.progress, text: progress.text }) });
-      await engine.reload(request.modelId, { context_window_size: 4096 });
+      await engine.reload(request.modelId, { context_window_size: CONTEXT_WINDOW_TOKENS });
       loading = false;
       reply({ type: 'ready', id: request.id }); return;
     }
@@ -53,7 +55,7 @@ async function handle(request: AIWorkerRequest) {
       active = request.id; interrupted = false;
       try {
         const filter = createResponseFilter();
-        const stream = await engine.chat.completions.create({ messages: request.messages, stream: true, max_tokens: 256, temperature: 0.3, top_p: 0.9, extra_body: { enable_thinking: false, resumable: { enabled: false } } });
+        const stream = await engine.chat.completions.create({ messages: request.messages, stream: true, temperature: 0.7, top_p: 0.8, extra_body: { enable_thinking: false, resumable: { enabled: false } } });
         for await (const chunk of stream) {
           const text = chunk.choices[0]?.delta.content;
           if (text && !interrupted) { const content = filter.push(text); if (content) reply({ type: 'delta', id: request.id, text: content }); }

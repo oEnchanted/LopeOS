@@ -5,7 +5,7 @@ import type { AIWorkerReply, AIWorkerRequest } from '../../apps/web/src/shell/sp
 import { deleteCachedModels } from '../../apps/web/src/shell/spotlight-ai/cache.ts';
 import { createResponseFilter } from '../../apps/web/src/shell/spotlight-ai/response.ts';
 
-const legacyIds = ['SmolLM2-360M-Instruct-q4f16_1-MLC', 'SmolLM2-360M-Instruct-q4f32_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC'];
+const legacyIds = ['SmolLM2-360M-Instruct-q4f16_1-MLC', 'SmolLM2-360M-Instruct-q4f32_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC', 'Qwen3-1.7B-q4f16_1-MLC', 'Qwen3-1.7B-q4f32_1-MLC'];
 
 class FakeWorker implements WorkerPort {
   requests: AIWorkerRequest[] = [];
@@ -84,13 +84,17 @@ test('chat context is bounded, includes whole recent turns, and rejects oversize
   const history: ChatMessage[] = [];
   for (let index = 0; index < 20; index++) history.push({ id: `u${index}`, role: 'user', content: `question-${index}` }, { id: `a${index}`, role: 'assistant', content: `answer-${index}` });
   const context = buildContext(history, 'next question');
-  assert.equal(context[0].role, 'system'); assert.equal(context.length, 10);
-  assert.equal(context[1].content, 'question-16'); assert.equal(context.at(-1)?.content, 'next question');
+  assert.equal(context[0].role, 'system'); assert.equal(context.length, 42);
+  assert.equal(context[1].content, 'question-0');
+  const long = Array.from({ length: 10 }, (_, index) => [{ id: `lu${index}`, role: 'user' as const, content: `q${index} ` + 'x'.repeat(2000) }, { id: `la${index}`, role: 'assistant' as const, content: 'y'.repeat(2000) }]).flat();
+  const trimmed = buildContext(long, 'next');
+  assert.ok(trimmed.length < 22 && trimmed.length > 2, 'Oldest turns drop once the prompt budget is full');
+  assert.ok(trimmed[1].content.startsWith(`q${10 - (trimmed.length - 2) / 2} `), 'Newest whole turns are kept'); assert.equal(context.at(-1)?.content, 'next question');
   assert.throws(() => buildContext([], 'a'.repeat(MAX_MESSAGE_LENGTH + 1)), /too long/);
-  assert.throws(() => buildContext([], '字'.repeat(1000)), /too long/);
+  assert.throws(() => buildContext([], '字'.repeat(6000)), /too long/);
   assert.throws(() => buildContext([], '   '), /Type a message/);
   const { ai, load } = fixture(); const worker = await load(); const count = worker.requests.length;
-  await ai.send('字'.repeat(1000)); assert.equal(worker.requests.length, count); assert.equal(ai.getSnapshot().messages.length, 0); assert.match(ai.getSnapshot().error, /too long/); ai.reset();
+  await ai.send('字'.repeat(6000)); assert.equal(worker.requests.length, count); assert.equal(ai.getSnapshot().messages.length, 0); assert.match(ai.getSnapshot().error, /too long/); ai.reset();
 });
 
 test('new chat resets hidden context and account reset ignores late replies from a previous user', async () => {
@@ -113,11 +117,19 @@ test('new chat resets hidden context and account reset ignores late replies from
   nextWorker.emit({ type: 'done', id: next.id, stopped: true }); await nextReply; ai.reset();
 });
 
+test('load deadline measures stalls, so a long download that keeps reporting progress is not cut off', async () => {
+  const { ai, workers } = fixture({ timeouts: { load: 30 } });
+  const task = ai.initialize(); await tick(); const worker = workers[0], id = worker.latest().id;
+  for (let step = 1; step <= 4; step++) { await new Promise(resolve => setTimeout(resolve, 15)); worker.emit({ type: 'progress', id, progress: step / 5, text: 'Fetching' }); }
+  assert.equal(ai.getSnapshot().phase, 'loading'); assert.equal(worker.terminated, false);
+  worker.emit({ type: 'ready', id }); await task; assert.equal(ai.getSnapshot().modelLoaded, true);
+});
+
 test('load and stop deadlines terminate unresponsive workers and settle outstanding requests', async () => {
   const unsupported = fixture({ checkSupport: () => new Promise(() => {}), timeouts: { support: 5 } });
   await unsupported.ai.initialize(); assert.equal(unsupported.ai.getSnapshot().phase, 'unsupported'); assert.equal(unsupported.workers.length, 0);
   const timed = fixture({ timeouts: { load: 5 } }); await timed.ai.initialize();
-  assert.equal(timed.ai.getSnapshot().phase, 'error'); assert.equal(timed.workers[0].terminated, true); assert.match(timed.ai.getSnapshot().error, /too long/);
+  assert.equal(timed.ai.getSnapshot().phase, 'error'); assert.equal(timed.workers[0].terminated, true); assert.match(timed.ai.getSnapshot().error, /stalled/);
   const { ai, load } = fixture({ timeouts: { stop: 5 } }); const worker = await load();
   const reply = ai.send('A slow reply'); ai.stop(); await reply;
   assert.equal(ai.getSnapshot().modelLoaded, false); assert.equal(worker.terminated, true); assert.equal(ai.getSnapshot().phase, 'idle');
