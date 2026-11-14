@@ -319,10 +319,10 @@ export class BrowserEngine extends EventEmitter {
   async forgetFile(file) {
     this.openedFiles.delete(file.id);
     await rm(file.path, { force: true }).catch(() => {});
-    // The file's own origin may have kept site data in the persistent profile.
-    if (this.sessions.get(file.sessionId)?.mode === 'normal') {
-      await this.cdp?.send('Storage.clearDataForOrigin', { origin: new URL(file.url).origin, storageTypes: 'all' }).catch(() => {});
-    }
+    // The file's own origin may have kept site data in the persistent profile. Chromium
+    // clears it only through a page session in that profile, not the browser target.
+    const tab = this.sessions.get(file.sessionId)?.mode === 'normal' && this.normal.tabs.find(item => this.targets.has(item.id));
+    if (tab) await this.send(tab, 'Storage.clearDataForOrigin', { origin: new URL(file.url).origin, storageTypes: 'all' }).catch(() => {});
   }
   async interceptOpenedFiles(tab) {
     tab._openedFiles ??= this.send(tab, 'Fetch.enable', { patterns: [{ urlPattern: `*://*.${OPENED_FILE_DOMAIN}/*`, requestStage: 'Request' }] })

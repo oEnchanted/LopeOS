@@ -8,6 +8,7 @@ import { randomBytes } from 'node:crypto';
 import { BrowserEngine } from '../src/engine.mjs';
 import { createBrowserServer } from '../src/server.mjs';
 import { createFixture } from './fixture.mjs';
+import { openedFile } from '../../../packages/browser-client/src/navigation.ts';
 
 test('browser controls operate real tabs and expose unavailable streaming honestly', {
   skip: process.env.LOPE_TEST_CHROMIUM !== '1', timeout: 60000,
@@ -64,5 +65,18 @@ test('browser controls operate real tabs and expose unavailable streaming honest
   await page.locator('.lb-private-notice').waitFor(); assert.equal(engine.sessions.size, 2);
   await page.getByRole('button', { name: 'End session', exact: true }).click();
   await page.locator('.lb-private-notice').waitFor({ state: 'detached' }); assert.equal(engine.sessions.size, 1);
+  // Launched to open an HTML file: the app reads it from LopeDrive and shows it as a file, not a website.
+  await page.goto(origin + '/services/browser/tests/host.html?file');
+  await page.locator('.lb-tab.active').filter({ hasText: 'UI report' }).waitFor();
+  const opened = engine.normal.tabs.find(item => openedFile(item.url)?.name === 'report.html');
+  assert.ok(opened);
+  assert.equal(await engine.send(opened, 'Runtime.evaluate', { expression: "document.querySelector('#text').textContent", returnByValue: true }).then(r => r.result.value), 'Opened from LopeDrive');
+  assert.equal(await address.inputValue(), 'report.html');
+  assert.equal(await page.getByRole('button', { name: 'Bookmark page', exact: true }).isDisabled(), true);
+  await page.getByRole('button', { name: 'File from LopeDrive', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Browser menu', exact: true }).click();
+  await page.getByRole('button', { name: /^Open File…/ }).click();
+  await page.locator('.lb-tab.active').filter({ hasText: 'Second file' }).waitFor();
+  assert.equal(await address.inputValue(), 'second.htm');
   assert.deepEqual(failures, []);
 });

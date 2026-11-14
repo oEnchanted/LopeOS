@@ -185,4 +185,5 @@ test('real Chromium shows opened HTML files on their own origins, with nothing e
   const restarted = engine.normal.tabs[0];
   await engine.navigate(engine.normal, restarted, tab.url);
   await eventually(() => restarted.title === 'File not available' && !restarted.loading, 'closed file is unavailable');
+  assert.equal(await evaluate(engine, restarted, "localStorage.getItem('opened')"), null);
 });
