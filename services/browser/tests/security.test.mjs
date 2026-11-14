@@ -176,8 +176,8 @@ test('GPU detection parser and worker allocation arguments configure OpenGL', as
   assert.deepEqual(parseGpuReport('invalid-format'), { kind: 'none', reason: 'No usable GPU was found' });
   assert.deepEqual(gpuOptions({ kind: 'none' }), { args: [], env: [] });
 
-  assert.deepEqual(gpuArguments(undefined), ['--enable-unsafe-swiftshader']);
-  assert.deepEqual(gpuArguments('none'), ['--enable-unsafe-swiftshader']);
+  assert.deepEqual(gpuArguments(undefined), ['--enable-unsafe-swiftshader', '--disable-smooth-scrolling']);
+  assert.deepEqual(gpuArguments('none'), ['--enable-unsafe-swiftshader', '--disable-smooth-scrolling']);
   assert.deepEqual(gpuArguments('wsl'), ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--enable-accelerated-2d-canvas']);
   const driArgs = gpuArguments('dri');
   assert.ok(driArgs.includes('--ignore-gpu-blocklist'));

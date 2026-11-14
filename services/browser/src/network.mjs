@@ -13,8 +13,20 @@ export function publicAddress(ip) {
   return family === 4 ? !blocked.check(ip, 'ipv4') : family === 6 && globalV6.check(ip, 'ipv6') && !blocked.check(ip, 'ipv6');
 }
 
+// A page opens dozens of connections to the same few hosts, and each system lookup takes one
+// of libuv's few threads. Reuse answers briefly; every use is still checked as public below.
+const DNS_TTL_MS = 60000, DNS_CACHE_LIMIT = 2000, dnsCache = new Map();
+async function cachedLookup(host, options) {
+  const hit = dnsCache.get(host);
+  if (hit && hit.expires > Date.now()) return hit.addresses;
+  const addresses = await lookup(host, options);
+  if (dnsCache.size >= DNS_CACHE_LIMIT) dnsCache.delete(dnsCache.keys().next().value);
+  dnsCache.set(host, { addresses, expires: Date.now() + DNS_TTL_MS });
+  return addresses;
+}
+
 /** DNS is checked once and the outbound socket uses that exact numeric address. */
-export async function publicDestination(host, port, { resolve = lookup, testOrigins = [] } = {}) {
+export async function publicDestination(host, port, { resolve = cachedLookup, testOrigins = [] } = {}) {
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid port.');
   const addresses = await resolve(host.replace(/^\[|\]$/g, ''), { all: true, verbatim: true });
   const explicitTest = testOrigins.includes(`${host}:${port}`);

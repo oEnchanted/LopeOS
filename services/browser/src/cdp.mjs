@@ -7,7 +7,8 @@ import { spawn } from 'node:child_process';
  * sandbox stays on either way.
  */
 export function gpuArguments(gpu) {
-  if (gpu !== 'dri' && gpu !== 'wsl') return ['--enable-unsafe-swiftshader'];
+  // Without a GPU every animated scroll frame is drawn in software and then encoded; jump instead.
+  if (gpu !== 'dri' && gpu !== 'wsl') return ['--enable-unsafe-swiftshader', '--disable-smooth-scrolling'];
   // The host found a real GPU. Chromium's blocklist does not recognize Mesa's
   // D3D12 driver or a GPU with no PCI identity inside a container.
   const args = ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--enable-accelerated-2d-canvas'];
