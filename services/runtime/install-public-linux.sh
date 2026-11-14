@@ -4,7 +4,12 @@ set -euo pipefail
 [[ $(uname -s) = Linux && $EUID = 0 ]] || { echo 'Run this installer as root inside Ubuntu/WSL2.' >&2; exit 1; }
 site_origin=${1:?Pass the exact https:// website origin}
 source_dir=${2:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)}
-for command in node npm docker systemctl tar mountpoint mkfs.ext4; do command -v "$command" >/dev/null || { echo "Install the host prerequisite: $command" >&2; exit 1; }; done
+# npm builds node-pty from source on Linux; install its toolchain once.
+if ! command -v make >/dev/null || ! command -v g++ >/dev/null || ! command -v python3 >/dev/null; then
+  DEBIAN_FRONTEND=noninteractive apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends build-essential python3
+fi
+for command in node npm docker systemctl tar mountpoint mkfs.ext4 losetup findmnt; do command -v "$command" >/dev/null || { echo "Install the host prerequisite: $command" >&2; exit 1; }; done
 [[ $(node -p 'Number(process.versions.node.split(".")[0]) >= 24') = true ]] || { echo 'The host runtime requires Node 24+.' >&2; exit 1; }
 # Check exactly, without letting an operator-supplied origin enter shell code.
 node --input-type=module -e 'const u = new URL(process.argv[1]); if (u.protocol !== "https:" || u.origin !== process.argv[1]) process.exit(1)' "$site_origin"
@@ -50,6 +55,8 @@ cat > /etc/systemd/system/lope-visitor-runtime.service <<SERVICE
 Description=LopeOS automatic visitor Linux workspaces
 After=docker.service network-online.target
 Requires=docker.service
+# Never give up restarting; the public desktop depends on this service.
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
@@ -58,7 +65,7 @@ User=root
 WorkingDirectory=$install_dir
 EnvironmentFile=/etc/lopeos/visitors.env
 ExecStart=$(command -v node) $install_dir/public-server.js
-Restart=on-failure
+Restart=always
 RestartSec=3
 TimeoutStopSec=15
 MemoryMax=768M

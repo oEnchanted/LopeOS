@@ -1,0 +1,72 @@
+name: Deploy LopeOS workspace runtime
+
+# The visitor workspace runtime (Terminal, Files, workspace disk usage) runs as a
+# systemd service inside the host's WSL2 distribution, behind Caddy's /api/*
+# route. The site deploy does not touch it, so this workflow owns it: reinstall
+# when its code changes, and every 30 minutes verify the public workspace end to
+# end, reinstalling it if the check fails (for example after WSL was replaced).
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/deploy-runtime.yml
+      - services/runtime/**
+      - '!services/runtime/**/*.test.js'
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      reinstall:
+        description: Reinstall even if the workspace is healthy
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lope-runtime-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Install and verify the workspace runtime
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Windows, X64, lope-production]
+    environment: production
+    timeout-minutes: 45
+    env:
+      LOPE_SITE_ORIGIN: ${{ vars.LOPE_SITE_ORIGIN }}
+      LOPE_RUNTIME_DISTRO: Ubuntu-24.04
+      # A scheduled check reinstalls only when the workspace is unhealthy.
+      LOPE_FORCE_INSTALL: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.reinstall) }}
+    defaults:
+      run:
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: services/runtime
+      - name: Install if needed, then verify the public workspace
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          if ([string]::IsNullOrWhiteSpace($env:LOPE_SITE_ORIGIN)) { throw 'Set LOPE_SITE_ORIGIN in the production environment variables.' }
+          $scripts = Join-Path $env:GITHUB_WORKSPACE 'services/runtime/windows'
+          try {
+            $install = $env:LOPE_FORCE_INSTALL -eq 'true'
+            if (-not $install) {
+              try { & (Join-Path $scripts 'Test-LopeRuntime.ps1') -SiteOrigin $env:LOPE_SITE_ORIGIN; return }
+              catch {
+                Write-Output ("::warning title=Workspace runtime unhealthy, reinstalling::" + ($_.Exception.Message -replace '\r?\n', ' '))
+                $install = $true
+              }
+            }
+            & (Join-Path $scripts 'Install-LopeRuntime.ps1') -SiteOrigin $env:LOPE_SITE_ORIGIN -Distro $env:LOPE_RUNTIME_DISTRO -SourcePath $env:GITHUB_WORKSPACE
+            & (Join-Path $scripts 'Test-LopeRuntime.ps1') -SiteOrigin $env:LOPE_SITE_ORIGIN
+            Write-Output 'Workspace runtime deployed and verified.'
+          } catch {
+            Write-Output ("::error title=Workspace runtime deploy failed::" + ($_.Exception.Message -replace '\r?\n', ' '))
+            throw
+          }

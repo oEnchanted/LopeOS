@@ -77,6 +77,18 @@ not replace this host lifecycle handling. The task uses Windows S4U and never
 stores a password in this repository. Its registration and actual unattended
 startup must be verified on the target Windows machine.
 
+On the production host the runtime is managed by the **Deploy LopeOS workspace
+runtime** workflow (`.github/workflows/deploy-runtime.yml`), not by hand. It runs
+`services/runtime/windows/Install-LopeRuntime.ps1` in the shared `Ubuntu-24.04`
+distro whenever `services/runtime/**` changes, and every 30 minutes runs
+`Test-LopeRuntime.ps1`, which creates or resumes one smoke-test guest workspace
+through the public site and reads its disk usage. If that check fails (for
+example after WSL or the distro was replaced), the workflow reinstalls the
+runtime and its `LopeOS visitor runtime` keep-alive task. Before this existed, a
+lost `Ubuntu` distro left `/api/*` answering 502, and the desktop showed
+"Workspace disk usage unavailable" and "Your workspace is temporarily
+unavailable".
+
 The source Caddy template is `services/runtime/windows/Caddyfile`. It serves
 only the built `dist`, forwards `/api/*` to `127.0.0.1:4174`, preserves Origin
 and visitor cookies, and supports terminal WebSocket upgrades. **Do not inject
