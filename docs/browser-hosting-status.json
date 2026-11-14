@@ -3,25 +3,24 @@
   "site": "https://lopeos.online",
   "frontendBuild": "passed",
   "browserTypecheck": "passed",
-  "browserRegressionTests": { "passed": 18, "failed": 0, "skipped": 0 },
+  "browserRegressionTests": {
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0
+  },
   "production": {
     "siteHttpStatusAfterPreparation": 200,
-    "browserActivated": false,
-    "caddyChanged": false,
+    "browserActivated": true,
+    "caddyChanged": true,
     "windowsWslFeaturesEnabled": true,
     "windowsRestartRequired": false,
     "windowsRestartPerformed": true,
     "windowsRestartPerformedBy": "user",
     "runnerOnlineAfterRestart": true,
-    "runnerElevatedAfterRestart": false,
-    "ubuntuAndDockerInstalled": false,
-    "streamingVerified": false
-  },
-  "approvedActions": {
-    "readOnlyInspection": "https://github.com/oEnchanted/LopeOS/actions/runs/43523167899",
-    "noRebootWslPreparation": "https://github.com/oEnchanted/LopeOS/actions/runs/43523844957",
-    "postRestartAttempt": "https://github.com/oEnchanted/LopeOS/actions/runs/43529045006",
-    "ubuntuSetupBranch": "https://github.com/oEnchanted/LopeOS/tree/codex/browser-ubuntu-20261113"
+    "runnerElevatedAfterRestart": true,
+    "ubuntuAndDockerInstalled": true,
+    "streamingVerified": "video frames and keyboard input verified; automated button click check pending",
+    "hostDrive": "M:"
   },
   "encryptionBoundary": {
     "vaultKeysPassedToWorkers": false,
@@ -29,5 +28,5 @@
     "uploadPolicy": "only explicitly selected file bytes",
     "remoteWebsiteProfilesEndToEndEncrypted": false
   },
-  "nextStep": "Restart the GitHub runner as Administrator, then install the WSL package, Ubuntu/Docker and verify actual streaming before Caddy activation. The post-restart setup attempt stopped at the elevation check before installing anything."
+  "nextStep": "Fix right-click Save image as inside the remote Chromium and the automated Submit click check in smoke-stream.mjs."
 }

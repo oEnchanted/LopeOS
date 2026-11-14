@@ -219,7 +219,7 @@ test('account profile pictures can be uploaded, changed, and removed without los
 test('Settings uses account sync instead of portable system exports and imports', async ({ page }) => {
   await installContractRuntime(page);
   await page.goto('/');
-  await page.getByRole('button', { name: 'Open Settings', exact: true }).click();
+  await page.getByRole('button', { name: 'Open full settings', exact: true }).click();
   const settings = page.getByTestId('settings-app');
   const categories = settings.getByRole('navigation', { name: 'Settings categories' });
   await expect(categories.getByRole('button', { name: 'Backup & Restore', exact: true })).toHaveCount(0);
@@ -246,7 +246,7 @@ test('account setup and Settings remain usable at a narrow width', async ({ page
   await page.getByLabel('Your name', { exact: true }).fill('Alex Morgan');
   await skip.click();
   await page.getByRole('button', { name: 'Finish setup', exact: true }).click();
-  await page.getByRole('button', { name: 'Open Settings', exact: true }).click();
+  await page.getByRole('button', { name: 'Open full settings', exact: true }).click();
   const settings = page.getByTestId('settings-app');
   await settings.getByRole('combobox', { name: 'Settings category', exact: true }).selectOption('account');
   await settings.getByRole('button', { name: 'Sign in', exact: true }).click();
@@ -284,7 +284,7 @@ for (const width of [1440, 390]) test(`account and LopeDrive surfaces fit ${widt
     return json({ ok: true });
   });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Open Settings', exact: true }).click();
+  await page.getByRole('button', { name: 'Open full settings', exact: true }).click();
   const settings = page.getByTestId('settings-app');
   if (width === 390) await settings.getByRole('combobox', { name: 'Settings category', exact: true }).selectOption('account');
   else await settings.getByRole('navigation', { name: 'Settings categories' }).getByRole('button', { name: 'LopeOS Account', exact: true }).click();
@@ -301,7 +301,7 @@ for (const width of [1440, 390]) test(`account and LopeDrive surfaces fit ${widt
   await page.screenshot({ path: `docs/accounts/account-${width}.png`, animations: 'disabled' });
   if (width === 1440) {
     await page.reload();
-    await page.getByRole('button', { name: 'Open Settings', exact: true }).click();
+    await page.getByRole('button', { name: 'Open full settings', exact: true }).click();
     await settings.getByRole('navigation', { name: 'Settings categories' }).getByRole('button', { name: 'LopeOS Account', exact: true }).click();
     await expect(settings.locator('.account-status-heading')).toContainText('Unlock to resume sync');
     await expect(settings.getByRole('button', { name: 'Sync now', exact: true })).toBeDisabled();
