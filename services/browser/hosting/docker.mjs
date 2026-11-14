@@ -76,7 +76,23 @@ export class DockerBrowserAllocator {
     const stale = await this.docker(['ps', '-aq', '--filter', `label=lope.browser.gateway=${this.deploymentId}`]);
     for (const name of stale.split(/\s+/).filter(Boolean)) if (/^[a-f0-9]{12,64}$/.test(name)) await this.docker(['rm', '-f', name]);
   }
-  async create({ id, ownerKey, origin }) {
+  async create(assignment) {
+    try { return await this.launch(assignment, this.gpu); } catch (error) {
+      if (this.gpu?.kind === 'none' || error?.code !== 'STARTUP') throw error;
+      // A worker that cannot start with the host's GPU still works on the CPU. Stay there
+      // until the gateway restarts, so nobody waits through a failing GPU start again.
+      this.gpu = { kind: 'none', reason: 'A worker could not start with the GPU' };
+      return this.launch(assignment, this.gpu);
+    }
+  }
+  /** Redacted tail of a failed worker's output, for the operator smoke test. Never sent to browsers. */
+  async workerLog(name) {
+    if (!/^lope-browser-[a-f0-9-]{36}$/.test(name)) return '';
+    const log = await this.host('bash', ['-c', `docker inspect --format 'state={{.State.Status}} exit={{.State.ExitCode}} oom={{.State.OOMKilled}} error={{.State.Error}}' "$1" 2>&1; docker logs --tail 60 "$1" 2>&1`,
+      'lope-worker-log', name], { maxBytes: 262144 }).catch(error => String(error?.message ?? ''));
+    return String(log).replace(/[a-f0-9]{32,}/gi, '[hex]').replace(/(token|password|authorization|bearer|secret)\S*/gi, '$1 [redacted]').slice(-6000);
+  }
+  async launch({ id, ownerKey, origin }, gpuReport) {
     if (!/^[a-f0-9-]{36}$/.test(id) || !/^[a-f0-9]{64}$/.test(ownerKey) || new URL(origin).origin !== origin) throw new Error('Invalid worker assignment.');
     const profile = await this.host('bash', ['/opt/lope-browser/prepare-profile.sh', ownerKey]);
     if (profile !== `/var/lib/lope-browser/profiles/${ownerKey}/home`) throw new Error('The browser host returned an invalid profile boundary.');
@@ -84,7 +100,7 @@ export class DockerBrowserAllocator {
     const token = randomBytes(32).toString('hex'), password = randomBytes(32).toString('hex');
     const name = 'lope-browser-' + id;
     const envFile = join(this.directory, id + '.env');
-    const gpu = gpuOptions(this.gpu);
+    const gpu = gpuOptions(gpuReport);
     await writeFile(envFile, [
       `LOPE_BROWSER_TOKEN=${token}`, `SELKIES_BASIC_AUTH_PASSWORD=${password}`,
       `LOPE_BROWSER_ORIGINS=${origin}`, `SELKIES_ALLOWED_ORIGINS=${origin}`,
@@ -127,7 +143,9 @@ export class DockerBrowserAllocator {
         } catch { /* Wait for the display/audio/Chromium services; never disable sandboxing. */ }
         await new Promise(resolve => setTimeout(resolve, 500));
       }
-      throw new HostingError(503, 'STARTUP', 'Your isolated browser could not start. The host needs a working Chromium sandbox and streaming display.');
+      const failure = new HostingError(503, 'STARTUP', 'Your isolated browser could not start. The host needs a working Chromium sandbox and streaming display.');
+      failure.workerLog = await this.workerLog(name);
+      throw failure;
     } catch (error) { await this.docker(['rm', '-f', name]).catch(() => {}); throw error; }
     finally { await rm(envFile, { force: true }); }
   }

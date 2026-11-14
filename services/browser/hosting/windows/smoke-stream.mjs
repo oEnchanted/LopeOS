@@ -209,6 +209,10 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   // Error strings can contain command arguments, credentials, URLs or page content.
   // Report only the fixed stage and booleans; use a separate reviewed host check.
   result.passed = false;
+  // A worker that never started: its redacted output is the only way to see why.
+  if (typeof error?.workerLog === 'string') result.workerLog = error.workerLog;
+  if (error?.code) result.error = String(error.code).slice(0, 40);
+  result.gpu = allocator?.gpu?.kind ?? null;
   if (debugDirectory) {
     const redact = value => String(value).replace(/[a-f0-9]{32,}/gi, '[hex]').replace(/(token|password|authorization|bearer)\S*/gi, '$1 [redacted]').slice(0, 600);
     console.log('debug error:', redact(error?.message ?? error));

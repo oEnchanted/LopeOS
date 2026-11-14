@@ -7,13 +7,16 @@
 #   KIND=dri   a Linux DRM render node (Intel/AMD through Mesa, NVIDIA through its toolkit)
 #   KIND=none  no usable GPU; workers render and encode on the CPU
 set -euo pipefail
+shopt -s extglob
 
 # WSL2: Windows shares its GPU through /dev/dxg and maps the vendor's user-mode
 # driver into /usr/lib/wsl/drivers. With no vendor driver (a VM with only a
 # virtual display adapter), Windows has nothing but its WARP software renderer,
 # which is no faster than Chromium's own software path.
 if [[ -c /dev/dxg ]]; then
-  if [[ -e /usr/lib/wsl/lib/libd3d12.so ]] && compgen -G '/usr/lib/wsl/drivers/*' >/dev/null; then
+  # Only a vendor D3D12 user-mode driver (Intel, AMD, NVIDIA) means real hardware; any
+  # other shared driver folder (a VM's display adapter) still leaves only WARP.
+  if [[ -e /usr/lib/wsl/lib/libd3d12.so ]] && compgen -G '/usr/lib/wsl/drivers/*/@(igd12um*.dll|amdxc64.dll|nvwgf2umx.dll)' >/dev/null; then
     echo KIND=wsl
   else
     echo KIND=none
