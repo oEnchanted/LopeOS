@@ -88,6 +88,15 @@ or hyphens, beginning with a letter; system names are reserved. Display names ha
 | GET `/blobs/:hash` | Authenticated owner’s raw bytes |
 | PUT `/manifest` | `{baseRevision,entries}` → next revision and storage totals |
 | POST `/cleanup` | `{}` → deletes unreferenced staged uploads; never published data |
+| POST `/host` | `{presence}` → `{cpu:{percent,cores},memory:{usedBytes,totalBytes},online:{people,signedIn}}` for the desktop server widget |
+
+`/host` needs no session. `presence` is a random 16–64 character identifier the
+browser keeps in local storage, so tabs in one browser count once. The service keeps
+it only in memory and stops counting it 90 seconds after its last heartbeat. Signed-in
+people are counted once per account across devices. Each address can hold at most 24
+identifiers (5,000 overall), and requests are limited to 600 per minute per address,
+separately from sign-in limits. CPU load is measured between samples; memory is
+total minus available memory (free plus inactive pages on macOS).
 
 Each manifest entry is `{key,hash,size,modifiedAt}`, where `modifiedAt` is an ISO
 timestamp and key is an opaque, unique string (up to 16,384 characters for encrypted metadata, no control

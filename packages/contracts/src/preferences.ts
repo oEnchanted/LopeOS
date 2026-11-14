@@ -34,6 +34,7 @@ export const preferenceSchema = {
   pinned: list(['lope.welcome','lope.files','lope.browser','lope.weather','lope.writer','lope.image-editor','lope.lightroom']),
   showRecentApps: bool(true), minimizeDestination: choice('app', ['app','dock']),
   titlebarDoubleClick: choice('maximize', ['maximize','minimize','none']), desktopItems: bool(true),
+  hostWidget: bool(true),
   showDesktopBehavior: choice('toggle', ['toggle','minimize']),
   interfaceScale: number(100, 80, 150), textSize: number(100, 85, 150), density: choice('default', ['compact','default','comfortable']),
   effectsQuality: choice('high', ['high','balanced','low']),
