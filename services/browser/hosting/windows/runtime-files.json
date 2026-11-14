@@ -2,6 +2,7 @@
   "packages/browser-client/src/contracts.ts",
   "packages/browser-client/src/index.ts",
   "packages/browser-client/src/navigation.ts",
+  "packages/browser-client/src/suggestions.ts",
   "services/browser/hosting/caddy.mjs",
   "services/browser/hosting/docker.mjs",
   "services/browser/hosting/gateway.mjs",
@@ -23,6 +24,7 @@
   "services/browser/hosting/windows/smoke-stream.mjs",
   "services/browser/hosting/wsl-lifetime.mjs",
   "services/browser/infra/Dockerfile",
+  "services/browser/infra/chrome-policies.json",
   "services/browser/infra/entrypoint.sh",
   "services/browser/infra/openbox.run",
   "services/browser/infra/worker.example.yaml",
@@ -32,6 +34,7 @@
   "services/browser/src/files.mjs",
   "services/browser/src/main.mjs",
   "services/browser/src/network.mjs",
+  "services/browser/src/page-scripts.mjs",
   "services/browser/src/server.mjs",
   "services/runtime/browser-bridge.js",
   "services/runtime/config.js"

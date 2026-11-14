@@ -184,3 +184,14 @@ test('GPU detection parser and worker allocation arguments configure OpenGL', as
   assert.ok(driArgs.includes('--enable-gpu-rasterization'));
   assert.ok(driArgs.some(arg => arg.includes('AcceleratedVideoDecodeLinuxGL')));
 });
+
+test('the host install manifest ships every runtime file the gateway, image and worker load', async () => {
+  const root = fileURLToPath(new URL('../../../', import.meta.url));
+  const manifest = JSON.parse(await readFile(join(root, 'services/browser/hosting/windows/runtime-files.json'), 'utf8'));
+  const { stdout } = await promisify(execFile)('git', ['ls-files', 'packages/browser-client/src', 'services/browser/src', 'services/browser/infra', 'services/browser/hosting/linux', 'services/browser/hosting/*.mjs'], { cwd: root });
+  const required = stdout.split('\n').filter(Boolean);
+  assert.ok(required.length > 20);
+  // The deploy job downloads only listed files, so a missing entry breaks the image build or the worker.
+  assert.deepEqual(required.filter(file => !manifest.includes(file)), []);
+  for (const file of manifest) await readFile(join(root, file));
+});
