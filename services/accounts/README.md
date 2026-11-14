@@ -71,8 +71,8 @@ availability, TLS, service startup, and server backups remain host responsibilit
 All endpoints are below `/api/accounts`. Mutations require an Origin matching the
 configured website. Auth/manifest mutations use `application/json`. Sessions use
 random opaque 256-bit tokens in HttpOnly, SameSite=Lax cookies; production adds
-Secure and the `__Host-` prefix. Only SHA-256 token hashes are stored, with a 30-day
-expiry and at most 20 active sessions per account. Sign-in credentials use salted scrypt
+Secure and the `__Host-` prefix. Only SHA-256 token hashes are stored, with a sliding 90-day
+expiry (renewed at most daily by `/session`) and at most 20 active sessions per account. Sign-in credentials use salted scrypt
 (N=32768, r=8, p=1) and constant-time verification. The browser requires passwords of 12–1,024 characters and sends a separate derived credential for encrypted accounts. Account names use 1–32 lower-case ASCII letters, numbers, underscores,
 or hyphens, beginning with a letter; system names are reserved. Display names have
 1–64 characters. Registration and login are rate limited by account name and IP.
@@ -161,8 +161,11 @@ test fixtures; normal server startup rejects unencrypted new registrations.
 Encrypted manifests live in the account registry to make migration and credential
 changes crash-atomic. Back up the registry and blob directories together. Never
 restore an older server version for an encrypted account: older implementations do
-not understand the authoritative encrypted manifest. Browser keys remain in memory
-only; refresh locks cloud sync until the user unlocks it again. Losing both password
+not understand the authoritative encrypted manifest. After sign-in or unlock, the browser
+seals the master key with a non-extractable per-device key in IndexedDB, so reloads
+stay unlocked; sign-out, device reset, account changes and expired sessions wipe it.
+Anyone with access to that browser profile can therefore open the synced data, as
+they already can with its local copies. Losing both password
 and recovery key makes cloud data unrecoverable by administrators.
 
 See [the UI integration contract](../../docs/accounts/encryption-ui-contract.md).

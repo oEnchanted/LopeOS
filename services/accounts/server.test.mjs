@@ -52,6 +52,25 @@ test('account creation, hashed credentials, persistent session, sign-in and revo
   assert.equal((await f.call('/session', { cookie: login.cookie })).body.account.accountName, 'alice');
 });
 
+test('sessions last 90 days and slide forward when the device returns', async t => {
+  const f = await fixture(t), day = 24 * 60 * 60 * 1000;
+  const registration = await f.register(), cookie = registration.cookie, hash = hashOf(cookie.split('=')[1]);
+  assert.match(registration.setCookie, /Max-Age=7776000/);
+  assert.equal((await f.call('/session', { cookie })).setCookie, null, 'A fresh session is not rewritten on every request');
+  const registry = JSON.parse(await readFile(join(f.directory, 'registry.json'), 'utf8'));
+  registry.sessions[hash].expiresAt = Date.now() + 10 * day;
+  await writeFile(join(f.directory, 'registry.json'), JSON.stringify(registry)); await f.restart();
+  const renewed = await f.call('/session', { cookie });
+  assert.equal(renewed.body.account.accountName, 'alice'); assert.match(renewed.setCookie, /Max-Age=7776000/);
+  assert.equal(renewed.cookie, cookie, 'Renewal keeps the same token');
+  const after = JSON.parse(await readFile(join(f.directory, 'registry.json'), 'utf8')).sessions[hash].expiresAt;
+  assert.ok(after > Date.now() + 89 * day);
+  registry.sessions[hash].expiresAt = Date.now() - 1;
+  await writeFile(join(f.directory, 'registry.json'), JSON.stringify(registry)); await f.restart();
+  const expired = await f.call('/session', { cookie });
+  assert.equal(expired.body.account, null); assert.equal(expired.setCookie, null);
+});
+
 test('same-origin protection, password validation, duplicate creation and credential-independent logout', async t => {
   const f = await fixture(t);
   const data = { accountName: 'alice', displayName: 'Alice', password };

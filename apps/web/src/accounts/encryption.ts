@@ -72,6 +72,20 @@ export class EncryptedVault {
       return { envelope, password: auth.password, recoveryProof: recovery.proof, recoveryKey };
     } finally { auth.wrapping.fill(0); recovery.wrapping.fill(0); }
   }
+  /** Seal the master key for this device only; `deviceKey` is a non-extractable AES-GCM key. */
+  async sealForDevice(deviceKey: CryptoKey) {
+    if (this.master.every(n => n === 0)) throw new Error('Unlock your encrypted files first.');
+    const iv = random(12);
+    const cipher = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData: utf8.encode('LopeOS device v1:' + this.id) }, deviceKey, bytes(this.master)));
+    const result = new Uint8Array(iv.length + cipher.length); result.set(iv); result.set(cipher, iv.length); return result.buffer;
+  }
+  static async openFromDevice(deviceKey: CryptoKey, sealed: ArrayBuffer, id: string) {
+    const value = new Uint8Array(sealed);
+    if (value.length !== 60) throw new Error('The saved device key is invalid.');
+    const master = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes(value.slice(0, 12)), additionalData: utf8.encode('LopeOS device v1:' + id) }, deviceKey, bytes(value.slice(12))));
+    if (master.length !== 32) { master.fill(0); throw new Error('The saved device key is invalid.'); }
+    return new EncryptedVault(master, id);
+  }
   async encryptBlob(entry: SyncEntry, plain: Uint8Array) {
     if (plain.length !== entry.size || await checksum(plain) !== entry.hash) throw new Error('The file changed before encryption.');
     const key = await this.key('file content');

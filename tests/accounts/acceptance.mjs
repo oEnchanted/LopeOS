@@ -189,7 +189,7 @@ try {
   await b.evaluate(() => window.accountTest.cloudAccount.syncNow());
   assert.equal(await b.evaluate(async () => (await window.accountTest.drive.read('/LopeDrive/offline.txt')).content), 'offline survives');
   await a.reload(); await a.waitForFunction(() => !!window.accountTest);
-  await a.evaluate(async () => { await window.accountTest.cloudAccount.initialize(); if (window.accountTest.cloudAccount.getSnapshot().encryption !== 'locked') throw new Error('Reload must lock encryption'); await window.accountTest.cloudAccount.unlock('correct-horse-battery'); await window.accountTest.cloudAccount.syncNow(); });
+  await a.evaluate(async () => { await window.accountTest.cloudAccount.initialize(); if (window.accountTest.cloudAccount.getSnapshot().encryption !== 'unlocked') throw new Error('Reload must keep this device unlocked'); await window.accountTest.cloudAccount.syncNow(); });
   assert.equal(await a.evaluate(() => window.accountTest.cloudAccount.getSnapshot().account.accountName), 'cloudtester');
   await a.evaluate(() => window.accountTest.drive.write('/LopeDrive/automatic.txt', 'saved without pressing sync'));
   await a.waitForFunction(async () => {
@@ -198,11 +198,19 @@ try {
   }, undefined, { timeout: 15_000 });
   console.log('PASS file changes automatically upload without a manual sync');
   console.log('PASS offline changes and cookie session survive reconnect/reload');
+  // Without the saved device key (another device, cleared site data) the account asks for the password again.
+  await a.evaluate(() => new Promise((resolve, reject) => { const req = indexedDB.deleteDatabase('lope.cloud.device-key.v1'); req.onsuccess = resolve; req.onerror = () => reject(req.error); req.onblocked = resolve; }));
+  await a.reload(); await a.waitForFunction(() => !!window.accountTest);
+  await a.evaluate(async () => { await window.accountTest.cloudAccount.initialize(); if (window.accountTest.cloudAccount.getSnapshot().encryption !== 'locked') throw new Error('Missing device key must lock encryption'); await window.accountTest.cloudAccount.unlock('correct-horse-battery'); });
+  await a.reload(); await a.waitForFunction(() => !!window.accountTest);
+  await a.evaluate(async () => { await window.accountTest.cloudAccount.initialize(); if (window.accountTest.cloudAccount.getSnapshot().encryption !== 'unlocked') throw new Error('Unlocking must remember this device'); });
+  console.log('PASS reloads stay unlocked on a remembered device and ask again without its key');
 
   await a.evaluate(() => window.accountTest.cloudAccount.signOut());
   assert.equal(await a.evaluate(async () => (await fetch('/api/accounts/session')).json().then(value => value.account)), null);
   assert.equal(await a.evaluate(async () => (await window.accountTest.drive.read('/LopeDrive/offline.txt')).content), 'offline survives');
-  console.log('PASS signout revokes session and preserves local files');
+  assert.equal(await a.evaluate(() => new Promise((resolve, reject) => { const req = indexedDB.open('lope.cloud.device-key.v1', 1); req.onupgradeneeded = () => req.result.createObjectStore('keys', { keyPath: 'accountId' }); req.onerror = () => reject(req.error); req.onsuccess = () => { const count = req.result.transaction('keys').objectStore('keys').count(); count.onsuccess = () => { req.result.close(); resolve(count.result); }; }; })), 0, 'Sign-out wipes the saved device key');
+  console.log('PASS signout revokes session, preserves local files, and forgets the device key');
 
   await a.evaluate(() => window.accountTest.cloudAccount.signIn('cloudtester', 'correct-horse-battery'));
   await contextA.setOffline(true);

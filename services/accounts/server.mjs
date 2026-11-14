@@ -15,7 +15,9 @@ export const UNLOCKED_QUOTA_BYTES = 25_000_000_000;
 const STORAGE_UNLOCK = { salt: '0a9be21c4765937d9be07dd4561a1ed4', hash: '0b48bf2bc34eacf74e6ed2dea403d1980821811ea554e432e1d45ba29d07646d' };
 const gigabytes = bytes => `${Math.round(bytes / 1e9)} GB`;
 export const MAX_BLOB_BYTES = 1024 * 1024 * 1024 + 28;
-const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
+// Sessions slide: each visit renews the full window, so only 90 idle days sign a device out.
+const SESSION_MS = 90 * 24 * 60 * 60 * 1000;
+const SESSION_RENEW_MS = 24 * 60 * 60 * 1000;
 const STAGING_MS = 60 * 60 * 1000;
 const PRESENCE_MS = 90 * 1000;
 const presencePattern = /^[A-Za-z0-9_-]{16,64}$/;
@@ -240,9 +242,22 @@ export async function createAccountServer(options = {}) {
     const usedBytes = account ? await serial(account.id, async () => [...(await blobInventory(account)).values()].reduce((sum, info) => sum + info.size, 0)) : 0;
     return { account: account ? publicAccount(account) : null, vault: account?.vault ?? null, quotaBytes: quotaFor(account), usedBytes };
   }
+  const sessionToken = req => String(req.headers.cookie ?? '').split(';').map(value => value.trim()).find(value => value.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
+  /** Extend an active session at most once a day so restoring LopeOS keeps the device signed in. */
+  async function renew(req, res, account) {
+    const token = sessionToken(req), hash = token && /^[a-f0-9]{64}$/.test(token) ? digest(token) : null;
+    const current = hash ? registry.sessions[hash] : null;
+    if (!current || current.accountId !== account.id || current.expiresAt - Date.now() > SESSION_MS - SESSION_RENEW_MS) return;
+    let renewed = false;
+    await saveRegistry(next => {
+      const session = next.sessions[hash];
+      if (!session || session.accountId !== account.id || session.expiresAt <= Date.now()) return;
+      session.expiresAt = Date.now() + SESSION_MS; renewed = true;
+    });
+    if (renewed) res.setHeader('Set-Cookie', cookie(token));
+  }
   function identity(req, required = true) {
-    const cookies = String(req.headers.cookie ?? '').split(';').map(value => value.trim());
-    const token = cookies.find(value => value.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
+    const token = sessionToken(req);
     const session = token && /^[a-f0-9]{64}$/.test(token) ? registry.sessions[digest(token)] : null;
     const account = session && session.expiresAt > Date.now() ? registry.accounts.find(value => value.id === session.accountId) : null;
     if (!account && required) fail(401, 'SIGN_IN_REQUIRED', 'Sign in to your LopeOS account to sync.');
@@ -286,7 +301,7 @@ export async function createAccountServer(options = {}) {
       const origin = req.headers.origin;
       if ((origin && !origins.includes(origin)) || req.headers['sec-fetch-site'] === 'cross-site') fail(403, 'ORIGIN', 'This website is not allowed to use the account service.');
       if (!['GET', 'HEAD'].includes(req.method) && !origins.includes(origin)) fail(403, 'ORIGIN', 'An allowed website origin is required.');
-      if (req.method === 'GET' && url.pathname === '/api/accounts/session') return json(res, 200, await summary(identity(req, false)));
+      if (req.method === 'GET' && url.pathname === '/api/accounts/session') { const account = identity(req, false); if (account) await renew(req, res, account); return json(res, 200, await summary(account)); }
       if (req.method === 'POST' && url.pathname === '/api/accounts/host') {
         const address = clientAddress(req);
         rate(`host:${address}`, 600, 60_000, hostBuckets);

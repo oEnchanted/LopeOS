@@ -2,6 +2,7 @@ import { EncryptedVault, credentials, recoveryCredentials, type VaultEnvelope } 
 import { useSyncExternalStore } from 'react';
 import { preferences } from '../../../../packages/sdk/src/preferences';
 import { captureData, digest, applyRecord, conflictKey, validateLogicalKey, type LocalItem } from './data';
+import { DEVICE_KEY_MS, forgetDeviceKeys, newDeviceKey, readDeviceKey, writeDeviceKey } from './device-key';
 import { EMPTY_HASH, entryMap, manifestsEqual, mergeEntries, normalizeFileTopology, type SyncEntry } from './merge';
 
 export interface CloudUser { id: string; accountName: string; displayName: string; createdAt: string }
@@ -160,11 +161,12 @@ export class CloudAccountService {
     if (this.authBusy || this.resetting) return;
     const generation = this.generation;
     try {
-      if (localStorage.getItem(SIGNOUT_KEY)) { await this.api('/logout', { method: 'POST', body: '{}' }); localStorage.removeItem(SIGNOUT_KEY); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState }); return; }
+      if (localStorage.getItem(SIGNOUT_KEY)) { await this.api('/logout', { method: 'POST', body: '{}' }); localStorage.removeItem(SIGNOUT_KEY); await forgetDeviceKeys(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState }); return; }
       const session = validateSession(await this.api<Session>('/session'));
       if (this.resetting || this.authBusy || generation !== this.generation) return;
-      if (!session.account) { this.invalidate(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState }); return; }
+      if (!session.account) { this.invalidate(); await forgetDeviceKeys(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState }); return; }
       this.accept(session);
+      await this.restoreVault(session, generation);
       this.schedule(50);
     } catch (error) { if (generation === this.generation && !this.resetting) this.update({ status: this.state.account ? 'offline' : 'guest', error: errorMessage(error) }); }
   }
@@ -176,6 +178,26 @@ export class CloudAccountService {
     this.envelope = session.vault ?? null;
     if (!this.envelope || this.vault?.id !== this.envelope.id) { this.vault?.destroy(); this.vault = null; }
     this.update({ encryption: this.envelope ? this.vault ? 'unlocked' : 'locked' : 'none', account: session.account, status: 'idle', error: null, quotaBytes: session.quotaBytes, usedBytes: session.usedBytes, pendingChanges: true });
+  }
+  /** Reopen the vault sealed on this device, so a reload does not ask for the password again. */
+  private async restoreVault(session: Session, generation: number) {
+    const accountId = session.account?.id, envelope = this.envelope;
+    if (!accountId || !envelope || this.vault) return;
+    try {
+      const record = await readDeviceKey(accountId);
+      if (!record) return;
+      if (record.vaultId !== envelope.id) { await forgetDeviceKeys(); return; }
+      const vault = await EncryptedVault.openFromDevice(record.key, record.sealed, record.vaultId);
+      if (generation !== this.generation || this.vault || this.state.account?.id !== accountId || this.envelope?.id !== record.vaultId) { vault.destroy(); return; }
+      this.vault = vault; this.accept(session);
+      await writeDeviceKey({ ...record, expiresAt: Date.now() + DEVICE_KEY_MS });
+    } catch { await forgetDeviceKeys(); }
+  }
+  private async rememberVault(accountId: string) {
+    const vault = this.vault;
+    if (!vault) return;
+    try { const key = await newDeviceKey(); await writeDeviceKey({ accountId, vaultId: vault.id, key, sealed: await vault.sealForDevice(key), expiresAt: Date.now() + DEVICE_KEY_MS }); }
+    catch { /* Without IndexedDB the account still works; it just asks again after a reload. */ }
   }
   async register(input: { accountName: string; displayName: string; password: string }): Promise<string> {
     if (localStorage.getItem(OWNER_KEY)) throw new Error('This device already contains account data. Use a separate browser profile for another account.');
@@ -201,6 +223,7 @@ export class CloudAccountService {
           if (!session.vault) throw new Error('The server did not enable end-to-end encryption. Update the account service.');
           this.vault = vault ?? await EncryptedVault.unlock(session.vault, session.account!.accountName, password!);
           this.accept(session);
+          await this.rememberVault(session.account!.id);
         } catch (error) { this.vault?.destroy(); this.vault = null; await this.api('/logout', { method: 'POST', body: '{}' }).catch(() => {}); throw error; }
       });
       window.dispatchEvent(new Event('lope:cloud-signed-in'));
@@ -215,7 +238,7 @@ export class CloudAccountService {
     if (generation !== this.generation || session.account?.id !== accountId || !session.vault) throw new Error('Your session changed. Sign in again.');
     const vault = await EncryptedVault.unlock(session.vault, session.account.accountName, password);
     if (generation !== this.generation || this.state.account?.id !== accountId) { vault.destroy(); throw new Error('Your session changed. Sign in again.'); }
-    this.vault?.destroy(); this.vault = vault; this.accept(session); this.schedule(0);
+    this.vault?.destroy(); this.vault = vault; this.accept(session); await this.rememberVault(accountId); this.schedule(0);
   }
   async recover(accountName: string, recoveryKey: string, password: string) {
     if (password.length < 12) throw new Error('Use a password with at least 12 characters.');
@@ -269,7 +292,7 @@ export class CloudAccountService {
         const entries = await created.vault.encodeManifest(manifest.entries);
         await this.api('/upgrade', { method: 'POST', body: JSON.stringify({ accountName, password, newPassword: created.password, vault: created.envelope, recoveryProof: created.recoveryProof, baseRevision: manifest.revision, entries }) });
         const signedIn = validateSession(await this.api<Session>('/login', { method: 'POST', body: JSON.stringify({ accountName, password: created.password, credentialVersion: 1 }) }));
-        this.vault = created.vault; this.accept(signedIn);
+        this.vault = created.vault; this.accept(signedIn); await this.rememberVault(signedIn.account!.id);
         return { recoveryKey: created.recoveryKey };
       }));
     } catch (error) { created?.vault.destroy(); this.update({ error: errorMessage(error) }); throw error; }
@@ -280,6 +303,7 @@ export class CloudAccountService {
     if (this.authBusy) throw new Error('Wait for the current account request to finish.');
     this.vault?.destroy(); this.vault = null; this.envelope = null;
     localStorage.setItem(SIGNOUT_KEY, '1');
+    await forgetDeviceKeys();
     this.authBusy = true; this.invalidate();
     try {
       await lock('lope.account.authentication', () => this.api('/logout', { method: 'POST', body: '{}' }));
@@ -291,6 +315,7 @@ export class CloudAccountService {
   }
   async suspendForReset(): Promise<void> {
     this.vault?.destroy(); this.vault = null; this.envelope = null;
+    await forgetDeviceKeys();
     this.resetting = true; this.invalidate(); clearInterval(this.interval);
     if (this.state.account || localStorage.getItem(OWNER_KEY)) await this.api('/logout', { method: 'POST', body: '{}' });
     this.update({ ...initialState });
@@ -313,7 +338,7 @@ export class CloudAccountService {
       if (!navigator.onLine) throw new AccountError('You’re offline. Changes will sync when you reconnect.');
       this.update({ status: 'syncing', error: null, currentFile: null, totalBytes: 0, transferredBytes: 0, etaSeconds: null, message: 'Checking account data…' });
       const session = validateSession(await this.api<Session>('/session')); check();
-      if (session.account?.id !== id) { this.invalidate(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState, error: 'Your account session changed. Sign in again to resume syncing.' }); return; }
+      if (session.account?.id !== id) { this.invalidate(); void forgetDeviceKeys(); this.vault?.destroy(); this.vault = null; this.envelope = null; this.update({ ...initialState, error: 'Your account session changed. Sign in again to resume syncing.' }); return; }
       const saved = await readBaseline(id), base = entryMap(saved.entries);
       if (!this.vault || !session.vault || session.vault.id !== this.vault.id) throw new Error('Unlock your encrypted files before syncing.');
       const vault = this.vault;
