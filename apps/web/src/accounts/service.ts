@@ -20,6 +20,7 @@ interface Manifest { revision: number; entries: SyncEntry[]; quotaBytes: number;
 interface Baseline { id: string; entries: SyncEntry[]; lastSyncedAt: string | null }
 const OWNER_KEY = 'lope.cloud.owner.v1', SIGNOUT_KEY = 'lope.cloud.signout-pending.v1', BASE_DB = 'lope.cloud.sync.v1';
 const initialState: CloudAccountState = { encryption: 'none', account: null, status: 'guest', error: null, quotaBytes: 1_000_000_000, usedBytes: 0, totalBytes: 0, transferredBytes: 0, etaSeconds: null, lastSyncedAt: null, currentFile: null, message: null, conflicts: 0, workspaceAvailable: true, pendingChanges: false };
+const transferTimeout = (bytes: number) => Math.max(120_000, Math.ceil(bytes / 262_144) * 1000);
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : 'Account sync is temporarily unavailable.';
 class AccountError extends Error { constructor(message: string, public status = 0, public code = '') { super(message); } }
 async function baselineDB(): Promise<IDBDatabase> {
@@ -102,7 +103,7 @@ export class CloudAccountService {
     await new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest(); this.xhrs.add(xhr);
       const finish = (error?: Error) => { this.xhrs.delete(xhr); error ? reject(error) : resolve(); };
-      xhr.open('PUT', '/api/accounts/blobs/' + entry.hash); xhr.setRequestHeader('Content-Type', 'application/octet-stream'); if (this.envelope) xhr.setRequestHeader('X-Lope-Encryption', '1'); if (this.upgrading) xhr.setRequestHeader('X-Lope-Encryption-Upgrade', '1'); if (this.state.account) xhr.setRequestHeader('X-Lope-Account', this.state.account.id); xhr.timeout = 120_000;
+      xhr.open('PUT', '/api/accounts/blobs/' + entry.hash); xhr.setRequestHeader('Content-Type', 'application/octet-stream'); if (this.envelope) xhr.setRequestHeader('X-Lope-Encryption', '1'); if (this.upgrading) xhr.setRequestHeader('X-Lope-Encryption-Upgrade', '1'); if (this.state.account) xhr.setRequestHeader('X-Lope-Account', this.state.account.id); xhr.timeout = transferTimeout(entry.size);
       xhr.upload.onprogress = event => this.progress(Math.min(entry.size, event.loaded));
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) finish();
@@ -111,7 +112,7 @@ export class CloudAccountService {
       xhr.onerror = () => finish(new AccountError('Connection lost while uploading. Your local copy is safe.'));
       xhr.onabort = () => finish(new AccountError('Upload interrupted.', 0, 'CANCELLED'));
       xhr.ontimeout = () => finish(new AccountError('Upload timed out. Your local copy is safe and will retry.'));
-      xhr.send(bytes.slice().buffer);
+      xhr.send(new Blob([bytes as Uint8Array<ArrayBuffer>]));
     });
     this.completedBytes += plainSize; this.progress(0);
   }
@@ -120,7 +121,7 @@ export class CloudAccountService {
     const decryptingVault = this.vault;
     if (decryptingVault) entry = decryptingVault.remoteEntry(entry);
     const controller = new AbortController(); this.controllers.add(controller);
-    const timeout = setTimeout(() => controller.abort(), 120_000);
+    const timeout = setTimeout(() => controller.abort(), transferTimeout(entry.size));
     try {
       const response = await fetch('/api/accounts/blobs/' + entry.hash, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: { ...(this.state.account ? { 'X-Lope-Account': this.state.account.id } : {}), ...(this.envelope ? { 'X-Lope-Encryption': '1' } : {}) } });
       if (!response.ok) { const error = await response.json().catch(() => null); throw new AccountError(error?.error?.message || 'A cloud file could not be downloaded.', response.status, error?.error?.code); }

@@ -7,7 +7,7 @@ import type { FileService } from '../../../../packages/contracts/src';
 import type { SyncEntry } from './merge';
 
 const encoder = new TextEncoder(), decoder = new TextDecoder('utf-8', { fatal: true });
-export const MAX_SYNC_RECORD_BYTES = 64 * 1024 * 1024;
+export const MAX_SYNC_RECORD_BYTES = 1024 * 1024 * 1024;
 export interface LocalItem { entry: SyncEntry; read: () => Promise<Uint8Array> }
 /** Warnings mean local data could not sync. Notices explain skipped server-side data and do not fail a sync. */
 export interface Capture { items: Map<string, LocalItem>; unavailable: string[]; warnings: string[]; notices: string[] }
@@ -89,7 +89,7 @@ export async function captureData(progress: (message: string) => void, check: ()
   const items = new Map<string, LocalItem>(), unavailable: string[] = [], warnings: string[] = [], notices: string[] = [];
   const add = async (key: string, bytes: Uint8Array, read: () => Promise<Uint8Array>, version?: string, modifiedAt?: string) => {
     check();
-    if (bytes.byteLength > MAX_SYNC_RECORD_BYTES) { unavailable.push(key); warnings.push(`${key} exceeds the 64 MiB account transfer limit and has not synced.`); return; }
+    if (bytes.byteLength > MAX_SYNC_RECORD_BYTES) { unavailable.push(key); warnings.push(`${key} exceeds the 1 GB account transfer limit and has not synced.`); return; }
     items.set(key, { entry: { key, hash: await digest(bytes), size: bytes.byteLength, modifiedAt: modifiedAt && Number.isFinite(Date.parse(modifiedAt)) ? modifiedAt : new Date().toISOString() }, read });
     if (version) versionCache.set(key, { version, entry: items.get(key)!.entry });
   };
@@ -145,7 +145,7 @@ export async function captureData(progress: (message: string) => void, check: ()
           captured.add(key);
           if (child.type === 'directory') { folders.push(child.path); await add(key, new Uint8Array(), async () => new Uint8Array(), child.version, child.modified); }
           else {
-            if (child.size > (scope === 'workspace' ? 8 * 1024 * 1024 : MAX_SYNC_RECORD_BYTES)) { unavailable.push(key); warnings.push(`${child.path} exceeds the ${scope === 'workspace' ? '8' : '64'} MiB file transfer limit and has not synced.`); continue; }
+            if (child.size > (scope === 'workspace' ? 8 * 1024 * 1024 : MAX_SYNC_RECORD_BYTES)) { unavailable.push(key); warnings.push(`${child.path} exceeds the ${scope === 'workspace' ? '8 MiB' : '1 GB'} file transfer limit and has not synced.`); continue; }
             const read = async () => (await service.readBinary!(child.path)).data;
             const cached = versionCache.get(key);
             if (child.version && cached?.version === child.version) items.set(key, { entry: cached.entry, read });

@@ -91,7 +91,7 @@ or hyphens, beginning with a letter; system names are reserved. Display names ha
 
 Each manifest entry is `{key,hash,size,modifiedAt}`, where `modifiedAt` is an ISO
 timestamp and key is an opaque, unique string (up to 16,384 characters for encrypted metadata, no control
-characters). Keys never become filesystem paths. Each ciphertext blob is limited to 64 MiB + 28 bytes;
+characters). Keys never become filesystem paths. Each ciphertext blob is limited to 1 GiB + 28 bytes;
 larger user files must be chunked by the client. Manifest JSON is limited to 24 MiB
 and 100,000 entries. Multiple entries can reference the same blob without paying
 for duplicate bytes. Account data is isolated by server-owned UUID directories.

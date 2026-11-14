@@ -34,7 +34,7 @@ test('manifest validation rejects duplicates, traversal-like control keys, and o
   const file = e('file', 'a');
   assert.throws(() => entryMap([file, file]));
   assert.throws(() => entryMap([{ ...file, key: '\u0000' }]));
-  assert.throws(() => entryMap([{ ...file, size: 65 * 1024 * 1024 }]));
+  assert.throws(() => entryMap([{ ...file, size: 1024 * 1024 * 1024 + 29 }]));
 });
 
 test('a new child preserves a concurrently removed parent folder', async () => {

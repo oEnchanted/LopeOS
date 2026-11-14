@@ -2,7 +2,7 @@ import type { FileEntry, FileService, WriteOptions } from '../../contracts/src/i
 
 export const LOPE_DRIVE = '/LopeDrive';
 export const DRIVE_DATABASE = 'lope.drive.v1';
-export const MAX_DRIVE_FILE_BYTES = 64 * 1024 * 1024;
+export const MAX_DRIVE_FILE_BYTES = 1024 * 1024 * 1024;
 type RecordEntry = FileEntry & { data?: Blob; version: string };
 const failure = (code: string, message: string) => Object.assign(new Error(message), { code });
 const parent = (path: string) => path.slice(0, path.lastIndexOf('/'));
@@ -70,7 +70,7 @@ export function createLopeDriveService(databaseName = DRIVE_DATABASE) {
   async function writeBinary(path: string, data: Uint8Array, options: WriteOptions = {}) {
     options.assertCurrent?.();
     writable(path);
-    if (data.byteLength > MAX_DRIVE_FILE_BYTES) throw failure('LIMIT', 'LopeDrive currently supports files up to 64 MiB each.');
+    if (data.byteLength > MAX_DRIVE_FILE_BYTES) throw failure('LIMIT', 'LopeDrive supports files up to 1 GB each.');
     const entry = await transaction('readwrite', (entries, store) => {
       requireParent(entries, path);
       const existing = entries.get(path);

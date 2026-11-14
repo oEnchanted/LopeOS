@@ -32,7 +32,7 @@ export function validEntry(value: unknown): value is SyncEntry {
   if (!value || typeof value !== 'object') return false;
   const e = value as SyncEntry;
   return typeof e.key === 'string' && e.key.length > 0 && e.key.length <= 2048 && !/[\u0000-\u001f\u007f]/.test(e.key)
-    && /^[a-f0-9]{64}$/.test(e.hash) && Number.isSafeInteger(e.size) && e.size >= 0 && e.size <= 64 * 1024 * 1024
+    && /^[a-f0-9]{64}$/.test(e.hash) && Number.isSafeInteger(e.size) && e.size >= 0 && e.size <= 1024 * 1024 * 1024 + 28
     && typeof e.modifiedAt === 'string' && Number.isFinite(Date.parse(e.modifiedAt));
 }
 export function entryMap(entries: unknown): Map<string, SyncEntry> {

@@ -61,7 +61,7 @@ function AccountPrivacy() {
       <p>Files, filenames, and supported app data are encrypted in your browser before syncing to LopeDrive. The server can still see your account name, display name, storage use, item counts, and access times.</p>
       <p>Signing out stops sync but leaves local files on this device. Use a separate browser profile on shared computers. Clearing browser storage can erase unsynced files.</p>
       <p>This encryption protects cloud data, not local browser storage. An unlocked account can be accessed by a compromised device or modified application. The encryption implementation has not had an independent security review.</p>
-      <p>Storage is limited to 1 GB per account, including encryption overhead, and 64 MiB per synced item. Sync needs an internet connection; keep another copy of important files. Remote browser sessions, credentials, and downloaded AI models are managed separately.</p>
+      <p>Storage is limited to 1 GB per account, including encryption overhead, and 1 GB per synced item. Sync needs an internet connection; keep another copy of important files. Remote browser sessions, credentials, and downloaded AI models are managed separately.</p>
       <p>We do not collect an email for recovery. Keep your password and recovery key safe, outside LopeOS. If you lose both, even the server administrator cannot recover encrypted cloud data. Backups made before an older account was upgraded may still contain unencrypted data.</p>
     </div>
   </details>;

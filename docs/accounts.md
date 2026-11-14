@@ -41,8 +41,8 @@ create folder, read/write, rename, duplicate, copy/move between volumes, and
 recoverable Trash operations are available. Cloud storage and local browser
 capacity are separate; browser quota errors retain the server copy.
 
-Local files support up to 64 MiB per file. The existing runtime API supports up to
-8 MiB per file. Serialized application records have a 64 MiB transfer limit;
+Local files support up to 1 GB per file. The existing runtime API supports up to
+8 MiB per file. Serialized application records have a 1 GB transfer limit;
 binary serialization overhead counts toward that limit and the cloud quota.
 Oversized or unavailable workspace files are reported as pending, never described
 as backed up. Symbolic links and special runtime files remain in the workspace.

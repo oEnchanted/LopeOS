@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
 export const QUOTA_BYTES = 1_000_000_000;
-export const MAX_BLOB_BYTES = 64 * 1024 * 1024 + 28;
+export const MAX_BLOB_BYTES = 1024 * 1024 * 1024 + 28;
 const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 const STAGING_MS = 60 * 60 * 1000;
 const hashPattern = /^[a-f0-9]{64}$/;
@@ -202,7 +202,7 @@ export async function createAccountServer(options = {}) {
     await lock.close(); await unlink(lockPath);
     throw new Error('Encrypted account storage could not be opened; existing data was preserved.', { cause: error });
   }
-  const server = http.createServer({ requestTimeout: 120_000, headersTimeout: 15_000, maxHeaderSize: 16 * 1024 }, async (req, res) => {
+  const server = http.createServer({ requestTimeout: 3_600_000, headersTimeout: 15_000, maxHeaderSize: 16 * 1024 }, async (req, res) => {
     active++;
     try {
       if (closing || active > 32) fail(503, 'BUSY', 'The account service is busy. Try again shortly.');
@@ -365,13 +365,13 @@ export async function createAccountServer(options = {}) {
           const used = await collect(account), inventory = await blobInventory(account), present = inventory.has(hash);
           const uploadQuota = !account.vault && req.headers['x-lope-encryption-upgrade'] === '1' ? quotaBytes * 2 + 2_800_000 : quotaBytes;
           const available = present ? MAX_BLOB_BYTES : Math.min(MAX_BLOB_BYTES, uploadQuota - used);
-          if (Number(req.headers['content-length'] ?? 0) > available) fail(413, 'QUOTA_EXCEEDED', 'This upload exceeds the free space in your 1 GB LopeDrive or the 64 MiB item limit.');
+          if (Number(req.headers['content-length'] ?? 0) > available) fail(413, 'QUOTA_EXCEEDED', 'This upload exceeds the free space in your 1 GB LopeDrive or the 1 GB item limit.');
           const temporary = join(accountDir(account), 'blobs', `${randomUUID()}.upload`), handle = await open(temporary, 'wx', 0o600);
           const checksum = createHash('sha256'); let size = 0;
           try {
             for await (const chunk of req.iterator({ destroyOnReturn: false })) {
               size += chunk.length;
-              if (size > available) { req.resume(); fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full or this item exceeds 64 MiB.'); }
+              if (size > available) { req.resume(); fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full or this item exceeds 1 GB.'); }
               checksum.update(chunk); await handle.writeFile(chunk);
             }
             if (checksum.digest('hex') !== hash) fail(400, 'HASH_MISMATCH', 'The uploaded item did not match its checksum. Try again.');
