@@ -195,3 +195,14 @@ test('the host install manifest ships every runtime file the gateway, image and 
   assert.deepEqual(required.filter(file => !manifest.includes(file)), []);
   for (const file of manifest) await readFile(join(root, file));
 });
+
+test('the streaming smoke test opens its fixture with the browser the image installs', async () => {
+  const root = fileURLToPath(new URL('../../../', import.meta.url));
+  const dockerfile = await readFile(join(root, 'services/browser/infra/Dockerfile'), 'utf8');
+  const smoke = await readFile(join(root, 'services/browser/hosting/windows/smoke-stream.mjs'), 'utf8');
+  const executable = dockerfile.match(/CHROMIUM_EXECUTABLE=(\S+)/)?.[1];
+  assert.equal(executable, '/usr/local/bin/lope-chrome');
+  // On x86-64 the image ships Google Chrome only; Debian's /usr/bin/chromium is absent.
+  assert.match(smoke, new RegExp(`exec ${executable} --user-data-dir=`));
+  assert.doesNotMatch(smoke, /\/usr\/bin\/chromium/);
+});
