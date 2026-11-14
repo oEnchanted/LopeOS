@@ -38,8 +38,10 @@ export function StreamSurface({ url, visible, muted, onStatus, onShortcut, onAct
     const child = frame.current?.contentWindow;
     child?.postMessage({ type: 'statsOpen', open: true }, location.origin);
     const poll = setInterval(() => child?.postMessage({ type: 'getStats' }, location.origin), 1000);
-    return () => clearInterval(poll);
-  }, [loaded, playing]);
+    // Never hold a loaded stream behind the connecting state if stats are not reported.
+    const fallback = setTimeout(() => { setPlaying(true); setTimedOut(false); onStatus('Streaming'); }, 8000);
+    return () => { clearInterval(poll); clearTimeout(fallback); };
+  }, [loaded, playing, onStatus]);
   useEffect(() => {
     if (!loaded) return;
     const child = frame.current?.contentWindow;
