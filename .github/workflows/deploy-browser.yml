@@ -49,6 +49,11 @@ jobs:
           $env:TEMP = Join-Path $source 'temp'; $env:TMP = $env:TEMP
           New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
           try {
+            # Read-only host report, so stream tuning can match the real CPU, memory and display adapter.
+            $system = Get-CimInstance Win32_ComputerSystem
+            $adapters = (Get-CimInstance Win32_VideoController | ForEach-Object { $_.Name }) -join ', '
+            $linux = ((& wsl.exe --distribution 'Ubuntu-24.04' --user root --exec sh -c 'echo cpus=$(nproc) mem=$(free -m | awk "/Mem:/{print \$2}")MB; ls /usr/lib/wsl/drivers 2>/dev/null | head -5 | tr "\n" " "') -join ' ')
+            Write-Output ("::notice title=Browser host resources::Windows logical CPUs=" + $system.NumberOfLogicalProcessors + " RAM=" + [math]::Round($system.TotalPhysicalMemory / 1GB, 1) + "GB adapters=[" + $adapters + "] WSL " + $linux)
             # Fetch only the reviewed runtime files for this exact commit.
             $base = "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA"
             $manifest = Invoke-RestMethod -Uri "$base/services/browser/hosting/windows/runtime-files.json"
