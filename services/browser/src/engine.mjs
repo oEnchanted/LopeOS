@@ -44,6 +44,10 @@ export class BrowserEngine extends EventEmitter {
     this.cdp.on('disconnected', () => {
       for (const session of this.sessions.values()) { session.status = 'crashed'; this.changed(session); }
     });
+    // Chromium does not report document.title changes as Target.targetInfoChanged, so
+    // keep each session's active tab title current (unread counts, media titles).
+    this.titleTimer = setInterval(() => { this.syncActiveTitles().catch(() => {}); }, 2000);
+    this.titleTimer.unref?.();
     this.version = (await this.cdp.send('Browser.getVersion')).product;
     await this.configureContext(this.normal);
     await this.cdp.send('Target.setDiscoverTargets', { discover: true });
@@ -458,8 +462,21 @@ export class BrowserEngine extends EventEmitter {
     }
     this.changed(session); return this.snapshot(sessionId);
   }
+  async syncActiveTitles() {
+    if (this.stopping || this.titleSyncing || !this.cdp) return;
+    this.titleSyncing = true;
+    try {
+      for (const session of [...this.sessions.values()]) {
+        const tab = session.activeTabId ? this.targets.get(session.activeTabId) : null;
+        if (!tab || tab.loading) continue;
+        const { result } = await this.send(tab, 'Runtime.evaluate', { expression: 'document.title', returnByValue: true }).catch(() => ({}));
+        const title = typeof result?.value === 'string' ? result.value.slice(0, 500) : '';
+        if (title && title !== tab.title && this.targets.has(tab.id)) { tab.title = title; this.changed(session); }
+      }
+    } finally { this.titleSyncing = false; }
+  }
   async close() {
-    this.stopping = true; clearTimeout(this.saveTimer);
+    this.stopping = true; clearTimeout(this.saveTimer); clearInterval(this.titleTimer);
     if (this.normal) await this.persist();
     for (const session of [...this.sessions.values()]) if (session.mode === 'private') await this.destroy(session.id).catch(() => {});
     await this.cdp?.close();
