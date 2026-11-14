@@ -26,6 +26,7 @@ const palettes: Record<string, [string, string]> = {
   lightroom: ['#62d5ca', '#247e9b'],
   'movie-maker': ['#a68de4', '#6150ad'],
   'video-editor': ['#719bd4', '#36568e'],
+  'image-generator': ['#e59ad6', '#7d4fc0'],
   sheets: ['#55bd8d', '#18734e'],
 };
 
@@ -43,6 +44,12 @@ export function AppIcon({ name, size = 48 }: { name: string; size?: number }) {
 
   function artwork() {
     switch (key) {
+      case 'image-generator': return <g strokeLinejoin="round">
+        <rect x="10" y="15" width="40" height="36" rx="5" fill="var(--glass-icon-background)" stroke="var(--icon-light, #fbefff)" strokeWidth="2"/>
+        <path d="m13 47 11-12 8 8 6-5 10 9" fill="var(--icon-ink, #5b3596)" fillOpacity=".55" stroke="var(--icon-light, #fbefff)" strokeWidth="2" strokeLinecap="round"/>
+        <path d="m45 7 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" fill="var(--icon-light, #fff)"/>
+        <circle cx="22" cy="25" r="3" fill="var(--icon-accent, #ffd9f4)"/>
+      </g>;
       case 'video-editor': return <g strokeLinejoin="round">
         <rect x="9" y="11" width="46" height="31" rx="4" fill="#152b49" stroke="#d3e7ff" strokeWidth="2"/>
         <path d="m27 18 13 8-13 8V18Z" fill="#e7f2ff"/>
