@@ -5,6 +5,7 @@
 .lope-browser button{cursor:pointer;color:inherit}
 .lope-browser button:disabled{cursor:default;opacity:.35}
 .lope-browser :focus-visible{outline:2px solid var(--lb-accent);outline-offset:2px}
+.lope-browser:focus{outline:none}
 .lope-browser button{transition:background .15s ease,color .15s ease}
 .lope-browser button:hover:not(:disabled){background:var(--hover,var(--accent-soft))}
 .lope-browser .ui-toolbar{display:flex;gap:7px;align-items:center;min-height:49px;padding:7px 12px;border:0;border-bottom:1px solid var(--lb-line);background:var(--chrome-material,var(--chrome));flex:none}
@@ -245,3 +246,11 @@ to{transform:translateX(390%)}
 .lb-find-count{font-size:11px;color:var(--lb-muted);min-width:58px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .lb-context-menu hr{border:0;border-top:1px solid var(--lb-line);margin:4px 3px}
 .lb-context-menu button:disabled{opacity:.4}
+
+/* Navigation chrome uses the shared inset material; streamed pages remain opaque. */
+.lb-device-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:30px;padding:0 9px;border-radius:7px;white-space:nowrap;font-size:11px!important;flex:none}
+.lb-start-search .lb-start-device{background:transparent;border-left:1px solid var(--lb-line);border-radius:0;margin-left:2px;padding-left:9px;width:34px;color:var(--lb-muted)}
+.lb-content>.lb-loading-line{top:0}
+.lb-stream-loading p{font-size:12px}
+.lb-start-connection{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:850px){.lb-device-button{padding:0;width:30px}.lb-device-button>span{display:none}}

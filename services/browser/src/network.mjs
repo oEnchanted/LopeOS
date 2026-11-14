@@ -15,15 +15,24 @@ export function publicAddress(ip) {
 
 // A page opens dozens of connections to the same few hosts, and each system lookup takes one
 // of libuv's few threads. Reuse answers briefly; every use is still checked as public below.
-const DNS_TTL_MS = 60000, DNS_CACHE_LIMIT = 2000, dnsCache = new Map();
-async function cachedLookup(host, options) {
-  const hit = dnsCache.get(host);
-  if (hit && hit.expires > Date.now()) return hit.addresses;
-  const addresses = await lookup(host, options);
-  if (dnsCache.size >= DNS_CACHE_LIMIT) dnsCache.delete(dnsCache.keys().next().value);
-  dnsCache.set(host, { addresses, expires: Date.now() + DNS_TTL_MS });
-  return addresses;
+export function createCachedLookup({ resolve = lookup, now = Date.now, ttl = 60000, limit = 2000 } = {}) {
+  const cache = new Map(), pending = new Map();
+  return async (host, options) => {
+    const hit = cache.get(host);
+    if (hit && hit.expires > now()) return hit.addresses;
+    // A cold page often opens several connections before the first DNS answer.
+    // Share that lookup too, instead of filling libuv's pool with duplicates.
+    if (pending.has(host)) return pending.get(host);
+    const task = Promise.resolve().then(() => resolve(host, options)).then(addresses => {
+      if (cache.size >= limit) cache.delete(cache.keys().next().value);
+      cache.set(host, { addresses, expires: now() + ttl });
+      return addresses;
+    });
+    pending.set(host, task);
+    try { return await task; } finally { pending.delete(host); }
+  };
 }
+const cachedLookup = createCachedLookup();
 
 /** DNS is checked once and the outbound socket uses that exact numeric address. */
 export async function publicDestination(host, port, { resolve = cachedLookup, testOrigins = [] } = {}) {
@@ -59,6 +68,9 @@ export async function createEgressProxy(options = {}) {
       const url = new URL(`http://${req.url}`);
       const target = await publicDestination(url.hostname, Number(url.port || 443), options);
       const remote = connect({ host: target.address, family: target.family, port: target.port });
+      // Interactive HTTPS/WebSocket traffic must not wait for Nagle's packet
+      // coalescing on either half of this tunnel.
+      remote.setNoDelay(true); client.setNoDelay(true);
       const timeout = setTimeout(() => remote.destroy(), 10000);
       sockets.add(remote); remote.on('close', () => sockets.delete(remote));
       remote.on('connect', () => { clearTimeout(timeout); client.write('HTTP/1.1 200 Connection Established\r\n\r\n'); if (head.length) remote.write(head); remote.pipe(client).pipe(remote); });

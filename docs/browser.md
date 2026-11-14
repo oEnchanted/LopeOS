@@ -1,5 +1,44 @@
 # Lope Browser
 
+## Responsiveness revision — November 14, 2026
+
+Browsing stays inside LopeOS. **Open on this device** in the toolbar and start-page
+search opens a website or search directly in the device's browser, including while
+the remote runtime is connecting or unavailable. It is an explicit user action.
+
+The worker restores saved background tabs without fetching their websites until
+selected. The selected website starts loading without blocking worker readiness.
+Concurrent DNS requests to the same host share a lookup, and health probes reuse
+the startup graphics report rather than asking the GPU process on every probe.
+Navigation publishes its requested address immediately, while the UI queues
+addresses submitted during startup and shows progress without waiting for the
+website's first response.
+
+The trusted stream stays mounted across tab/start-page changes. Its loading cover
+ends on a presented video frame or positive frame statistics; an active pipeline
+flag or elapsed timer cannot declare a blank player ready. Input focus returns to
+the page after navigation without stealing an address edit during reconnection.
+LopeOS intercepts browser shortcuts before Selkies forwards them to Chromium, and
+handled shortcuts do not also reach the desktop shell. The event channel detects
+stalled connections and reconnects immediately when connectivity returns.
+
+Run `npm run test:browser` for contracts, security, transport, and UI interaction
+tests using a trusted stream fixture. Run the real sandboxed Chromium suites with
+`LOPE_TEST_CHROMIUM=1 node --test --test-concurrency=1 services/browser/tests/engine.test.mjs services/browser/tests/performance.test.mjs services/browser/tests/ui.test.mjs`.
+The restore test deliberately withholds a saved site's first response and verifies
+that the browser becomes ready anyway; the interaction test holds startup and
+navigation responses and exercises offline device handoff, first-frame readiness,
+focus, and shortcut ordering.
+
+The target host is **https://lopeos.online**. Its public gateway returned HTTP 200
+with `status: ready` during this revision. These source changes require both the
+frontend and browser-worker deployments. Check the **Deploy LopeOS to Windows** and
+**Deploy Lope Browser runtime** workflows for the pushed commit; gateway readiness
+alone does not establish which revision is serving. Live media latency still depends on the host's rendering/encoding
+capacity and the user's network. The setup notes below record earlier installation
+stages; see [browser-hosting-status.json](browser-hosting-status.json) for the later
+activation record.
+
 ## Hosted account integration — November 13, 2026
 
 The account-aware gateway and Windows/WSL host installers are now implemented in

@@ -82,7 +82,7 @@ export class BrowserEngine extends EventEmitter {
     this.titleTimer = setInterval(() => { this.syncActiveTitles().catch(() => {}); }, 2000);
     this.titleTimer.unref?.();
     this.version = (await this.cdp.send('Browser.getVersion')).product;
-    const graphics = await this.cdp.graphics().catch(() => null);
+    const graphics = this.graphics = await this.cdp.graphics().catch(() => null);
     if (graphics?.accelerated) this.gpuEnabled = true;
     // WebGL also runs without a GPU, in SwiftShader. Only Chromium's own "off" states mean none.
     this.webglEnabled = this.gpuEnabled || !/^(disabled|unavailable_off)/.test(graphics?.webgl ?? '');
@@ -95,11 +95,16 @@ export class BrowserEngine extends EventEmitter {
       const first = this.normal.tabs[0];
       const restored = saved.tabs.filter(tab => tab.url === 'about:blank' || safeHostUrl(tab.url)).slice(0, 60);
       for (const [index, tab] of restored.entries()) {
-        const target = index === 0 ? first : await this.createTab(this.normal);
+        const target = index === 0 ? first : await this.createTab(this.normal, 'about:blank', { activate: false });
         target.pinned = !!tab.pinned;
-        if (tab.url !== 'about:blank') await this.navigate(this.normal, target, tab.url);
+        // Restoring a session must not fetch every old website before the worker
+        // can accept a connection. Keep background tabs dormant until selected.
+        if (tab.url !== 'about:blank') {
+          target._pendingUrl = target.url = tab.url;
+          target.title = this.normal.history.find(item => item.url === tab.url)?.title || new URL(tab.url).hostname;
+        }
       }
-      const active = this.normal.tabs[Math.min(saved.activeIndex ?? 0, this.normal.tabs.length - 1)];
+      const active = this.normal.tabs[Math.max(0, Math.min(saved.activeIndex ?? 0, this.normal.tabs.length - 1))];
       await this.activate(this.normal, active);
     }
     this.normal.status = 'ready'; this.changed(this.normal);
@@ -156,10 +161,10 @@ export class BrowserEngine extends EventEmitter {
     await this.cdp.send('Browser.setDownloadBehavior', { behavior: 'allowAndName', downloadPath: dir,
       eventsEnabled: true, ...(session.contextId ? { browserContextId: session.contextId } : {}) });
     // Forwarding is not verified: never grant remote sites access to a local device.
-    for (const name of ['geolocation', 'notifications', 'camera', 'microphone', 'clipboard-read', 'clipboard-write']) {
-      await this.cdp.send('Browser.setPermission', { permission: { name }, setting: 'denied',
-        ...(session.contextId ? { browserContextId: session.contextId } : {}) });
-    }
+    await Promise.all(['geolocation', 'notifications', 'camera', 'microphone', 'clipboard-read', 'clipboard-write'].map(name =>
+      this.cdp.send('Browser.setPermission', { permission: { name }, setting: 'denied',
+        ...(session.contextId ? { browserContextId: session.contextId } : {}) })
+    ));
   }
   async createPrivate() {
     if ([...this.sessions.values()].filter(s => s.mode === 'private').length >= 3) throw new Error('Close a private session before opening another.');
@@ -223,13 +228,13 @@ export class BrowserEngine extends EventEmitter {
     if (exceptionDetails) throw new Error('The page could not run this action.');
     return result?.value;
   }
-  async createTab(session, url = 'about:blank') {
+  async createTab(session, url = 'about:blank', { activate = true } = {}) {
     if (session.tabs.length >= 60) throw new Error('This session has reached its 60-tab limit.');
-    const { targetId } = await this.cdp.send('Target.createTarget', { url: 'about:blank',
+    const { targetId } = await this.cdp.send('Target.createTarget', { url: 'about:blank', background: !activate,
       ...(session.contextId ? { browserContextId: session.contextId } : {}) });
     const { targetInfo } = await this.cdp.send('Target.getTargetInfo', { targetId });
     const tab = await this.attach(targetInfo);
-    await this.activate(session, tab);
+    if (activate) await this.activate(session, tab);
     if (url !== 'about:blank') await this.navigate(session, tab, url);
     return tab;
   }
@@ -237,6 +242,12 @@ export class BrowserEngine extends EventEmitter {
     if (!tab) return;
     await this.cdp.send('Target.activateTarget', { targetId: tab.id });
     session.activeTabId = tab.id; session.contextMenu = null; this.foreground = session.id; this.changed(session);
+    if (tab._pendingUrl) {
+      const url = tab._pendingUrl;
+      // Activation is immediate even if this site's first response takes seconds.
+      // Loading/errors still arrive through the normal engine state events.
+      void this.navigate(session, tab, url).catch(() => {});
+    }
   }
   async closeTab(tab) {
     // Page.close respects beforeunload; retry while navigation replaces the active
@@ -256,9 +267,13 @@ export class BrowserEngine extends EventEmitter {
     if (this.targets.has(tab.id)) throw new Error('This tab could not close. Finish any page dialog and try again.');
   }
   async refresh(tab) {
-    if (!this.targets.has(tab.id)) return;
+    if (!this.targets.has(tab.id) || tab._pendingUrl || tab._navigationUrl) return;
     const session = this.sessions.get(tab._session); if (!session) return;
+    const navigation = tab._navigation, document = tab._document;
+    const current = () => this.targets.has(tab.id) && !tab._pendingUrl && !tab._navigationUrl &&
+      tab._navigation === navigation && tab._document === document;
     const history = await this.send(tab, 'Page.getNavigationHistory').catch(() => null);
+    if (!current()) return;
     if (history) {
       tab.canGoBack = history.currentIndex > 0;
       tab.canGoForward = history.currentIndex < history.entries.length - 1;
@@ -266,14 +281,17 @@ export class BrowserEngine extends EventEmitter {
       if (current) { tab.url = current.url; tab.title = pageTitle(tab.url, current.title) || tab.title; }
     }
     const metrics = await this.send(tab, 'Page.getLayoutMetrics').catch(() => null);
+    if (!current()) return;
     if (metrics?.visualViewport) tab.zoom = metrics.visualViewport.scale;
     const { result } = await this.send(tab, 'Runtime.evaluate', { expression:
       `({title:document.title,icon:document.querySelector('link[rel~="icon"]')?.href})`, returnByValue: true }).catch(() => ({}));
+    if (!current()) return;
     if (result?.value) { tab.title = result.value.title || (internal(tab) ? 'New Tab' : pageTitle(tab.url, '') || tab.url);
       // Do not make the host browser fetch website favicons and leak its network identity.
       const icon = result.value.icon;
       if (icon && tab._frame) {
         const resource = await this.send(tab, 'Page.getResourceContent', { frameId: tab._frame, url: icon }).catch(() => null);
+        if (!current()) return;
         if (resource?.base64Encoded && resource.content.length < 128000 && /\.(?:png|ico|jpe?g|webp)(?:[?#]|$)/i.test(icon)) {
           tab.favicon = `data:image/${/\.ico(?:[?#]|$)/i.test(icon) ? 'x-icon' : /\.png(?:[?#]|$)/i.test(icon) ? 'png' : /\.webp(?:[?#]|$)/i.test(icon) ? 'webp' : 'jpeg'};base64,${resource.content}`;
         }
@@ -282,11 +300,30 @@ export class BrowserEngine extends EventEmitter {
   }
   async navigate(session, tab, input) {
     const url = destination(input, session.searchProvider);
+    delete tab._pendingUrl;
     // Only tabs that show an opened file pay for request interception.
     if (openedFile(url)) await this.interceptOpenedFiles(tab);
+    const navigation = tab._navigation = id();
+    tab._navigationUrl = tab.url = url;
     tab.error = undefined; tab.loading = true; this.changed(session);
-    const result = await this.send(tab, 'Page.navigate', { url });
+    let result;
+    try { result = await this.send(tab, 'Page.navigate', { url }); }
+    catch (error) {
+      if (tab._navigation === navigation && this.targets.has(tab.id) && !this.stopping) {
+        delete tab._navigationUrl; tab.loading = false;
+        tab.error = { kind: 'navigation', message: error.message }; this.changed(session);
+      }
+      throw error;
+    }
+    if (tab._navigation !== navigation || !this.targets.has(tab.id) || this.stopping) return;
+    if (result.errorText === 'net::ERR_ABORTED') {
+      delete tab._navigationUrl; tab.loading = false;
+      // The address before this request may itself have been provisional.
+      // Ask Chromium which page survived cancellation instead of restoring it.
+      await this.refresh(tab);
+    }
     if (result.errorText && result.errorText !== 'net::ERR_ABORTED') {
+      delete tab._navigationUrl;
       tab.error = { kind: /CERT|SSL/.test(result.errorText) ? 'certificate' : 'navigation', message: result.errorText };
       tab.loading = false; this.changed(session);
     }
@@ -404,7 +441,7 @@ export class BrowserEngine extends EventEmitter {
     if (method === 'Target.targetCreated') { await this.attach(params.targetInfo); return; }
     if (method === 'Target.targetInfoChanged') {
       const tab = this.targets.get(params.targetInfo.targetId);
-      if (tab) { tab.url = params.targetInfo.url; tab.title = pageTitle(tab.url, params.targetInfo.title) || tab.title;
+      if (tab && !tab._pendingUrl && !tab._navigationUrl) { tab.url = params.targetInfo.url; tab.title = pageTitle(tab.url, params.targetInfo.title) || tab.title;
         this.changed(this.get(tab._session)); }
       return;
     }
@@ -433,17 +470,22 @@ export class BrowserEngine extends EventEmitter {
     if (method === 'Page.frameNavigated') this.frames.set(params.frame.id, tab.id);
     if (method === 'Page.frameAttached') this.frames.set(params.frameId, tab.id);
     if (method === 'Page.frameDetached') this.frames.delete(params.frameId);
+    // The actual target behind a dormant restored tab is still about:blank.
+    // Its late lifecycle events must not replace the saved address/title.
+    if (tab._pendingUrl) return;
     if (method === 'Page.frameNavigated' && !params.frame.parentId) {
+      tab._document = (tab._document ?? 0) + 1;
+      delete tab._navigationUrl;
       tab._frame = params.frame.id; tab.url = params.frame.url; tab.find = undefined;
       if (session.contextMenu?.tabId === tab.id) session.contextMenu = null;
       if (!params.frame.unreachableUrl) tab.error = undefined;
       await this.refresh(tab);
     }
-    if (method === 'Page.navigatedWithinDocument') { tab.url = params.url; await this.refresh(tab); this.visit(session, tab); }
+    if (method === 'Page.navigatedWithinDocument' && !tab._navigationUrl) { tab.url = params.url; await this.refresh(tab); this.visit(session, tab); }
     if (method === 'Page.frameStartedLoading' && (!tab._frame || params.frameId === tab._frame)) {
       tab.loading = true; this.changed(session);
     }
-    if (method === 'Page.frameStoppedLoading' && (!tab._frame || params.frameId === tab._frame)) {
+    if (method === 'Page.frameStoppedLoading' && !tab._navigationUrl && (!tab._frame || params.frameId === tab._frame)) {
       tab.loading = false; await this.refresh(tab); this.visit(session, tab);
     }
     if (method === 'Page.fileChooserOpened') {
@@ -572,7 +614,16 @@ export class BrowserEngine extends EventEmitter {
         if (entry) await this.send(tab, 'Page.navigateToHistoryEntry', { entryId: entry.id }); break;
       }
       case 'reload': tab.error = undefined; await this.send(tab, 'Page.reload'); break;
-      case 'stop': await this.send(tab, 'Page.stopLoading'); tab.loading = false; break;
+      case 'stop': {
+        // Invalidate the outstanding navigate reply before Chromium acknowledges
+        // cancellation. A newer navigation may start while this command awaits.
+        const navigation = tab._navigation = id();
+        await this.send(tab, 'Page.stopLoading');
+        if (tab._navigation === navigation) {
+          delete tab._navigationUrl; tab.loading = false; await this.refresh(tab);
+        }
+        break;
+      }
       case 'zoom': {
         if (!Number.isFinite(command.value) || command.value < 0.25 || command.value > 3) throw new Error('Zoom must be between 25% and 300%.');
         // CDP page scaling preserves the site's DOM and styles. This is viewport zoom.
@@ -671,10 +722,11 @@ export class BrowserEngine extends EventEmitter {
     try {
       for (const session of [...this.sessions.values()]) {
         const tab = session.activeTabId ? this.targets.get(session.activeTabId) : null;
-        if (!tab || tab.loading) continue;
+        if (!tab || tab.loading || tab._pendingUrl || tab._navigationUrl) continue;
+        const navigation = tab._navigation;
         const { result } = await this.send(tab, 'Runtime.evaluate', { expression: 'document.title', returnByValue: true }).catch(() => ({}));
         const title = typeof result?.value === 'string' ? result.value.slice(0, 500) : '';
-        if (title && title !== tab.title && this.targets.has(tab.id)) { tab.title = title; this.changed(session); }
+        if (title && title !== tab.title && this.targets.has(tab.id) && tab._navigation === navigation && !tab._pendingUrl && !tab._navigationUrl) { tab.title = title; this.changed(session); }
       }
     } finally { this.titleSyncing = false; }
   }

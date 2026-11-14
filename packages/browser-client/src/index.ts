@@ -60,27 +60,84 @@ export class BrowserClient {
   }
   /** Reconnects to authoritative full snapshots. No page screenshots pass through this channel. */
   subscribe(id: string, onState: (state: BrowserSession) => void, onConnection: (connected: boolean) => void = () => {}, onExpired?: () => void) {
-    const controller = new AbortController();
-    let retry: ReturnType<typeof setTimeout> | undefined; let attempt = 0;
+    let closed = false;
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    let active: AbortController | undefined;
+    let attempt = 0;
+    let connected: boolean | undefined;
+    let lastReceived = 0;
+    let reconnectNow = false;
+    const reportConnection = (next: boolean) => {
+      if (!closed && connected !== next) { connected = next; onConnection(next); }
+    };
     const connect = async () => {
+      if (closed || active) return;
+      clearTimeout(retry); retry = undefined;
+      const controller = new AbortController(); active = controller;
+      let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+      // The worker sends a heartbeat every 15 seconds. A stalled connection must not
+      // leave the controls looking connected indefinitely after sleep/network loss.
+      let heartbeat: ReturnType<typeof setTimeout>;
+      const received = () => {
+        lastReceived = Date.now(); clearTimeout(heartbeat);
+        heartbeat = setTimeout(() => controller.abort(), 45000);
+      };
+      received();
       try {
-        const response = await this.request(`${this.base}/sessions/${id}/events`, { signal: controller.signal, credentials: 'same-origin' });
-        if ([401, 404, 410].includes(response.status) && onExpired && !controller.signal.aborted) { onConnection(false); onExpired(); return; }
+        const response = await this.request(`${this.base}/sessions/${encodeURIComponent(id)}/events`, {
+          signal: controller.signal, credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'text/event-stream' },
+        });
+        if (closed) { await response.body?.cancel().catch(() => {}); return; }
+        if (controller.signal.aborted) throw new Error('Disconnected');
+        if ([401, 404, 410].includes(response.status) && onExpired) {
+          reportConnection(false); closed = true; removeListeners(); onExpired(); return;
+        }
         if (!response.ok || !response.body) throw new Error('Disconnected');
-        const reader = response.body.getReader(); const decoder = new TextDecoder(); let buffer = '';
-        while (!controller.signal.aborted) {
-          const { value, done } = await reader.read(); if (done) break;
+        reader = response.body.getReader();
+        const cancelReader = () => { void reader?.cancel().catch(() => {}); };
+        controller.signal.addEventListener('abort', cancelReader, { once: true });
+        const decoder = new TextDecoder(); let buffer = '';
+        while (!closed && !controller.signal.aborted) {
+          const { value, done } = await reader.read(); if (done || closed || controller.signal.aborted) break;
+          received();
           buffer += decoder.decode(value, { stream: true });
           if (buffer.length > 4 * 1024 * 1024) throw new Error('Invalid browser event.');
-          let boundary;
-          while ((boundary = buffer.indexOf('\n\n')) >= 0) {
-            const message = buffer.slice(0, boundary); buffer = buffer.slice(boundary + 2);
-            if (message.startsWith('data: ')) { onState(JSON.parse(message.slice(6)) as BrowserSession); onConnection(true); attempt = 0; }
+          let boundary: RegExpExecArray | null;
+          // Intermediaries may use CRLF; SSE also permits comments, event fields,
+          // multiple data lines and no space after the colon.
+          while ((boundary = /\r?\n\r?\n/.exec(buffer))) {
+            const message = buffer.slice(0, boundary.index); buffer = buffer.slice(boundary.index + boundary[0].length);
+            const data = message.split(/\r?\n/).filter(line => line.startsWith('data:')).map(line => line.slice(5).replace(/^ /, '')).join('\n');
+            if (data && !closed && !controller.signal.aborted) {
+              onState(JSON.parse(data) as BrowserSession); reportConnection(true); attempt = 0;
+            }
           }
         }
       } catch { /* The visible connection state exposes failures. */ }
-      if (!controller.signal.aborted) { onConnection(false); retry = setTimeout(connect, Math.min(10000, 500 * 2 ** attempt++)); }
+      finally {
+        clearTimeout(heartbeat!);
+        if (reader) { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+        if (active === controller) active = undefined;
+      }
+      if (!closed) {
+        reportConnection(false);
+        const delay = reconnectNow ? 0 : Math.min(10000, 500 * 2 ** attempt++);
+        reconnectNow = false; retry = setTimeout(connect, delay);
+      }
     };
-    void connect(); return () => { controller.abort(); clearTimeout(retry); };
+    const resume = (event: Event) => {
+      if (closed || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) return;
+      if (!active) { attempt = 0; void connect(); }
+      else if (event.type === 'online' || Date.now() - lastReceived >= 45000) {
+        attempt = 0; reconnectNow = true; active.abort();
+      }
+    };
+    const removeListeners = () => {
+      if (typeof window !== 'undefined') window.removeEventListener('online', resume);
+      if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', resume);
+    };
+    if (typeof window !== 'undefined') window.addEventListener('online', resume);
+    if (typeof document !== 'undefined') document.addEventListener('visibilitychange', resume);
+    void connect(); return () => { closed = true; active?.abort(); clearTimeout(retry); removeListeners(); };
   }
 }

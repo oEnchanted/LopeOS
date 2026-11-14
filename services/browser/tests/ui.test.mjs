@@ -44,7 +44,7 @@ test('browser controls operate real tabs and expose unavailable streaming honest
   await page.locator('.lb-status').filter({ hasText: 'Engine connected' }).waitFor();
   await page.getByRole('button', { name: 'New tab', exact: true }).click();
   await page.waitForFunction(() => document.querySelectorAll('.lb-tab[draggable]').length === 2);
-  const address = page.getByRole('textbox', { name: 'Search or enter address', exact: true });
+  const address = page.getByRole('combobox', { name: 'Search or enter address', exact: true });
   await address.fill(fixture.origin); await address.press('Enter');
   await page.getByRole('heading', { name: 'Interactive browsing is unavailable', exact: true }).waitFor();
   await page.locator('.lb-tab.active').filter({ hasText: 'Lope Browser test application' }).waitFor();

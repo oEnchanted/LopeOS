@@ -4,6 +4,8 @@ Requires Node 24+ and a maintained installed Chromium/Chrome. `node services/bro
 
 With no Selkies service, only engine control works and the UI explicitly reports that the interactive surface is unavailable. Chrome's sandbox and website security stay enabled. There is no screenshot-polling renderer. Local development is not a multi-user deployment.
 
+Session restoration reconnects the worker before waiting for a saved website to respond. Only the selected restored tab loads; background tabs retain their saved address and load when selected. Website DNS lookups share in-flight work and a short cache, with the public-address policy checked on every connection. Readiness probes reuse the GPU report captured at startup.
+
 For the streamed browser, build and run the Linux worker using `infra/`. See `docs/browser.md` for dependencies, exact streaming settings, transport, ownership, storage, network policy, test results, integration and known limitations.
 
 `npm --prefix services/browser test` runs security/contract tests. To run real Chromium engine tests, set `LOPE_TEST_CHROMIUM=1`; on Linux set `CHROMIUM_EXECUTABLE` if needed. Tests never disable Chromium's sandbox. The Selkies media acceptance suite is separately opt-in and requires the Linux runtime.

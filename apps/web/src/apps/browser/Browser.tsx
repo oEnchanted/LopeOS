@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, RotateCw, X, Plus, Search, Globe2, Star, Downloa
   ChevronDown, SlidersHorizontal, FileUp, FileText, LockKeyhole, AlertCircle, Check, Copy, Layers, Cpu } from 'lucide-react';
 import type { AppContext, Command } from '../../../../../packages/contracts/src';
 import { Button, Dialog, Input, Toolbar, Popover } from '../../../../../packages/ui/src';
-import { addressSuggestions, displayAddress, SEARCH_PROVIDERS, safeHostUrl, openedFile, openableFileType, MAX_OPENED_FILE_BYTES, OPENABLE_FILE_EXTENSIONS } from '../../../../../packages/browser-client/src';
+import { addressSuggestions, destination, displayAddress, SEARCH_PROVIDERS, safeHostUrl, openedFile, openableFileType, MAX_OPENED_FILE_BYTES, OPENABLE_FILE_EXTENSIONS } from '../../../../../packages/browser-client/src';
 import type { BrowserCommand, BrowserSession, BrowserShellBridge, BrowserTab } from '../../../../../packages/browser-client/src';
 import { browserClient } from './service';
 import { cloudAccount, useCloudAccount } from '../../accounts/service';
@@ -45,10 +45,16 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   const [tabMenu, setTabMenu] = useState<string | null>(null);
   const [pasteDialog, setPasteDialog] = useState(false);
   const [highlighted, setHighlighted] = useState(0);
+  const [queuedNavigation, setQueuedNavigation] = useState<string | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<{ tabId: string; url: string; sequence: number } | null>(null);
+  const navigationSequence = useRef(0);
+  const [focusRequest, setFocusRequest] = useState(0);
   const addressRef = useRef<HTMLInputElement>(null);
   const surface = useRef<HTMLDivElement>(null);
   const state = useRef(session); state.current = session;
-  const tab = session?.tabs.find(item => item.id === session.activeTabId);
+  const engineTab = session?.tabs.find(item => item.id === session.activeTabId);
+  const tab = engineTab && pendingNavigation?.tabId === engineTab.id
+    ? { ...engineTab, url: pendingNavigation.url, loading: true, error: undefined } : engineTab;
   const onNewTab = !tab || tab.url === 'about:blank';
   const startTask = useRef<ReturnType<typeof browserClient.create> | null>(null);
   const lastLaunch = useRef<unknown>(null);
@@ -67,7 +73,10 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
 
   const accept = useCallback((next: BrowserSession) => {
     if (next.hosting && next.hosting.accountId !== (cloudAccount.getSnapshot().account?.id ?? null)) return;
-    if (mounted.current) setSession(current => current && current.id === next.id && current.generation === next.generation && (current.revision ?? 0) > (next.revision ?? 0) ? current : next);
+    if (!mounted.current) return;
+    const current = state.current;
+    if (current && current.id === next.id && current.generation === next.generation && (current.revision ?? 0) > (next.revision ?? 0)) return;
+    state.current = next; setSession(next);
   }, []);
   const connect = useCallback(async () => {
     const generation = accountGeneration.current;
@@ -81,6 +90,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
     previousAccount.current = accountId; accountGeneration.current++;
     state.current = null; setSession(null); setConnected(false); startTask.current = null;
     activePrivate.current = null; lastLaunch.current = null; imported.current.clear(); setLocalDownloads({});
+    setQueuedNavigation(null); setPendingNavigation(null); navigationSequence.current++;
     void connect();
   }, [accountId, connect]);
   useEffect(() => { mounted.current = true; void connect(); return () => { mounted.current = false; }; }, [connect]);
@@ -113,7 +123,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
         .catch(failure => { if (generation === accountGeneration.current) setLocalDownloads(current => ({ ...current, [item.id]: { error: failure instanceof Error ? failure.message : 'Could not save to LopeDrive.' } })); });
     }
   }, [session?.id, session?.downloads, context?.services.files, accountId]);
-  useEffect(() => { if (!addressFocused) setAddress(tab?.url === 'about:blank' ? '' : tab?.url ?? ''); }, [tab?.url, tab?.id, addressFocused]);
+  useEffect(() => { if (!addressFocused && queuedNavigation === null) setAddress(tab?.url === 'about:blank' ? '' : tab?.url ?? ''); }, [tab?.url, tab?.id, addressFocused, queuedNavigation]);
   useEffect(() => { context?.lifecycle.setTitle(`${tab?.title || 'New Tab'} — Lope Browser`); }, [tab?.title, context?.lifecycle]);
   useEffect(() => context?.lifecycle.onBeforeClose(async () => {
     if (activePrivate.current) { await browserClient.destroy(activePrivate.current); activePrivate.current = null; }
@@ -129,9 +139,27 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   }, [accept]);
   const navigate = useCallback((input: string) => {
     const current = state.current;
-    if (current?.activeTabId) { void run({ type: 'navigate', tabId: current.activeTabId, input }); setAddressFocused(false); addressRef.current?.blur(); }
-    else setError('Connect the browser runtime to open a website.');
-  }, [run]);
+    try {
+      const url = destination(input, current?.searchProvider);
+      setError(''); setAddress(url === 'about:blank' ? '' : url); setAddressFocused(false); addressRef.current?.blur();
+      surface.current?.focus({ preventScroll: true });
+      if (current?.activeTabId) {
+        const sequence = ++navigationSequence.current;
+        setPendingNavigation({ tabId: current.activeTabId, url, sequence });
+        setFocusRequest(value => value + 1);
+        void run({ type: 'navigate', tabId: current.activeTabId, input: url }).finally(() => {
+          setPendingNavigation(value => value?.sequence === sequence ? null : value);
+        });
+      } else {
+        setQueuedNavigation(input);
+        if (!connecting) { startTask.current = null; void connect(); }
+      }
+    } catch (failure) { setError(failure instanceof Error ? failure.message : 'Enter a website or search.'); }
+  }, [run, connecting, connect]);
+  useEffect(() => {
+    if (queuedNavigation === null || !session?.activeTabId) return;
+    setQueuedNavigation(null); navigate(queuedNavigation);
+  }, [queuedNavigation, session?.activeTabId, navigate]);
   const closeFind = useCallback(() => {
     setFindOpen(false);
     const current = state.current, selected = current?.tabs.find(item => item.id === current.activeTabId);
@@ -161,11 +189,18 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
     else if (typeof args.path === 'string') { lastLaunch.current = args; void openFile(args.path); }
   }, [context?.launchArgs, session?.activeTabId, navigate, openFile]);
   useEffect(() => shell?.onOpenUrl?.(url => navigate(url)), [shell, navigate]);
+  const openDevice = useCallback((input: string) => {
+    try {
+      const url = safeHostUrl(destination(input, state.current?.searchProvider));
+      if (!url) { setError('Enter a website or search to open on this device.'); return; }
+      if (shell) shell.openInHost(url); else window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (failure) { setError(failure instanceof Error ? failure.message : 'Enter a website or search.'); }
+  }, [shell]);
   const openHost = useCallback(() => {
-    const current = state.current; const url = safeHostUrl(current?.tabs.find(t => t.id === current.activeTabId)?.url ?? address);
-    if (!url) { setError('Open a website before using Open in host browser.'); return; }
-    if (shell) shell.openInHost(url); else window.open(url, '_blank', 'noopener,noreferrer');
-  }, [shell, address]);
+    const current = state.current;
+    const selected = current?.tabs.find(t => t.id === current.activeTabId);
+    openDevice(addressFocused || pendingNavigation || !selected || selected.url === 'about:blank' ? address : selected.url);
+  }, [openDevice, address, addressFocused, pendingNavigation]);
   const togglePrivate = useCallback(async () => {
     try {
       if (activePrivate.current) { await browserClient.destroy(activePrivate.current); activePrivate.current = null;
@@ -182,7 +217,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
       if (selected) void run({ type, tabId: selected.id });
     };
     switch (name) {
-      case 'new-tab': void run({ type: 'tab.create' }); break;
+      case 'new-tab': void run({ type: 'tab.create' }).then(() => { addressRef.current?.focus(); addressRef.current?.select(); }); break;
       case 'private': void togglePrivate(); break;
       case 'open-file': void chooseFile(); break;
       case 'duplicate': withTab('tab.duplicate'); break;
@@ -201,7 +236,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
       case 'next-tab': case 'previous-tab': if (current?.tabs.length) {
         const index = current.tabs.findIndex(item => item.id === current.activeTabId);
         const next = current.tabs[(index + (name === 'next-tab' ? 1 : -1) + current.tabs.length) % current.tabs.length];
-        void run({ type: 'tab.activate', tabId: next.id }); } break;
+        void run({ type: 'tab.activate', tabId: next.id }); setFocusRequest(value => value + 1); } break;
       case 'back': case 'forward': case 'reload': case 'stop': case 'home': case 'print': case 'devtools': withTab(name); break;
     }
   }, [run, togglePrivate, openHost, chooseFile]);
@@ -235,7 +270,19 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
 
   const shortcut = useCallback((event: KeyboardEvent | ReactKeyboardEvent) => {
     activity();
-    if (event.key === 'Escape') { setMenu(null); setTabMenu(null); setAddressFocused(false); closeFind(); return false; }
+    if (event.key === 'Escape') {
+      if (menu || tabMenu || findOpen || addressFocused) {
+        event.preventDefault(); setMenu(null); setTabMenu(null); setAddressFocused(false); closeFind(); addressRef.current?.blur(); return true;
+      }
+      const selected = state.current?.tabs.find(item => item.id === state.current?.activeTabId);
+      if (selected?.loading || pendingNavigation) { event.preventDefault(); setPendingNavigation(null); action('stop'); return true; }
+      return false;
+    }
+    if (event.altKey && !event.ctrlKey && !event.metaKey && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      event.preventDefault(); action(event.key === 'ArrowLeft' ? 'back' : 'forward'); return true;
+    }
+    if (event.key === 'F5') { event.preventDefault(); action('reload'); return true; }
+    if (event.ctrlKey && event.key === 'Tab') { event.preventDefault(); action(event.shiftKey ? 'previous-tab' : 'next-tab'); return true; }
     if (!(event.metaKey || event.ctrlKey) || event.altKey) return false;
     const key = event.key.toLowerCase();
     const mapping: Record<string, string> = { t: event.shiftKey ? 'reopen' : 'new-tab', o: 'open-file', w: 'close-tab', r: 'reload', f: 'find', p: 'print', d: 'bookmark', '+': 'zoom-in', '=': 'zoom-in', '-': 'zoom-out', '0': 'zoom-reset',
@@ -244,11 +291,11 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
     // ⌘1–8 select that tab and ⌘9 the last one, as in other browsers.
     if (/^[1-9]$/.test(event.key) && !event.shiftKey) {
       const tabs = state.current?.tabs ?? []; const target = event.key === '9' ? tabs.at(-1) : tabs[Number(event.key) - 1];
-      event.preventDefault(); if (target) void run({ type: 'tab.activate', tabId: target.id }); return true;
+      event.preventDefault(); if (target) { void run({ type: 'tab.activate', tabId: target.id }); setFocusRequest(value => value + 1); } return true;
     }
     if (mapping[key]) { event.preventDefault(); action(mapping[key]); return true; }
     return false;
-  }, [action, activity, run, closeFind]);
+  }, [action, activity, run, closeFind, menu, tabMenu, findOpen, addressFocused, pendingNavigation]);
   const suggestions = useMemo(() => !addressFocused || !session || address === (tab?.url ?? '') ? [] : addressSuggestions(address, {
     tabs: session.tabs, activeTabId: session.activeTabId, bookmarks: session.bookmarks, history: session.history, provider: session.searchProvider,
   }), [address, addressFocused, session, tab?.url]);
@@ -256,7 +303,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   const choose = (index: number) => {
     const item = suggestions[index];
     if (!item) { navigate(address); return; }
-    if (item.kind === 'tab' && item.tabId) { void run({ type: 'tab.activate', tabId: item.tabId }); setAddressFocused(false); addressRef.current?.blur(); }
+    if (item.kind === 'tab' && item.tabId) { void run({ type: 'tab.activate', tabId: item.tabId }); setFocusRequest(value => value + 1); setAddressFocused(false); addressRef.current?.blur(); }
     else navigate(item.url);
   };
   const upload = session?.uploads[0];
@@ -288,10 +335,13 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   const website = !!safeHostUrl(tab?.url ?? '');
   const siteTitle = website || showingFile ? titleFor(tab!.url) : 'Start page';
   const bookmarked = session?.bookmarks.some(item => item.url === tab?.url);
-  const selectedTab = (target: BrowserTab) => <><span className="lb-tab-icon">{target.loading ? <span className="lb-spinner"/> : target.favicon?.startsWith('data:image/') ? <img src={target.favicon} alt=""/> : target.pinned ? <Pin size={12}/> : openedFile(target.url) ? <FileText size={13}/> : <Globe2 size={13}/>}</span><span>{target.title || 'New Tab'}</span></>;
+  const selectedTab = (target: BrowserTab) => <><span className="lb-tab-icon">{target.loading || pendingNavigation?.tabId === target.id ? <span className="lb-spinner"/> : target.favicon?.startsWith('data:image/') ? <img src={target.favicon} alt=""/> : target.pinned ? <Pin size={12}/> : openedFile(target.url) ? <FileText size={13}/> : <Globe2 size={13}/>}</span><span>{target.title || 'New Tab'}</span></>;
 
-  return <div className={`lope-browser ${session?.mode === 'private' ? 'lb-private' : ''}`} data-browser-input="true" ref={surface}
-    onKeyDownCapture={shortcut} onPointerDownCapture={activity} onClick={() => { if (tabMenu) setTabMenu(null); }}>
+  return <div className={`lope-browser ${session?.mode === 'private' ? 'lb-private' : ''}`} data-browser-input="true" ref={surface} tabIndex={-1}
+    onKeyDownCapture={event => { if (shortcut(event)) event.stopPropagation(); }} onPointerDownCapture={event => {
+      activity();
+      if (event.target instanceof Element && !event.target.closest('button,input,textarea,select,a,[contenteditable="true"]')) surface.current?.focus({ preventScroll: true });
+    }} onClick={() => { if (tabMenu) setTabMenu(null); }}>
     <div className="lb-tabstrip"><div className="lb-tabs" role="tablist" aria-label="Browser tabs" onKeyDown={event => {
       if (!session || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
       event.preventDefault(); const index = session.tabs.findIndex(item => item.id === tab?.id);
@@ -304,7 +354,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
         onDrop={event => { event.preventDefault(); const tabId = event.dataTransfer.getData('text/lope-tab'); if (session.tabs.some(t => t.id === tabId)) void run({ type: 'tab.reorder', tabId, index }); }}
         onContextMenu={event => { event.preventDefault(); setTabMenu(target.id); }}
         onAuxClick={event => { if (event.button === 1 && !target.pinned) { event.preventDefault(); void run({ type: 'tab.close', tabId: target.id }); } }}>
-        <button role="tab" aria-selected={target.id === tab?.id} title={target.title} onClick={() => { void run({ type: 'tab.activate', tabId: target.id }); setTabMenu(null); }}>{selectedTab(target)}</button>
+        <button role="tab" tabIndex={target.id === tab?.id ? 0 : -1} aria-selected={target.id === tab?.id} title={target.title} onClick={() => { void run({ type: 'tab.activate', tabId: target.id }); setFocusRequest(value => value + 1); setTabMenu(null); }}>{selectedTab(target)}</button>
         {!target.pinned && <button className="lb-tab-close" aria-label={`Close ${target.title || 'tab'}`} onClick={() => void run({ type: 'tab.close', tabId: target.id })}><X size={12}/></button>}
       </div>)}
       {!session && <div className="lb-tab active lb-placeholder-tab"><Compass size={13}/><span>New Tab</span></div>}
@@ -337,6 +387,7 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
       <span><b>{item.kind === 'search' ? `${item.title} — Search with ${SEARCH_PROVIDERS[session?.searchProvider ?? 'duckduckgo'].name}` : item.title}</b>{item.kind !== 'search' && <small>{displayAddress(item.url)}</small>}</span>
       {item.kind === 'tab' ? <em>Switch to tab</em> : <ArrowRight size={14}/>}</div>)}</div>}</div>
       <IconButton label="Start page" icon={<Home size={16}/>} onClick={() => action('home')} disabled={!tab || !connected}/>
+      <button className="lb-device-button glass-inset" title="Open this address in your device’s browser" aria-label="Open on this device" disabled={showingFile || (!address.trim() && onNewTab)} onClick={openHost}><ExternalLink size={14}/><span>Open on this device</span></button>
       <IconButton label="Downloads" icon={<Download size={16}/>} onClick={() => { setPanel(panel === 'downloads' ? null : 'downloads'); setQuery(''); }} pressed={panel === 'downloads'}/>
       <IconButton label="Browser menu" icon={<MoreHorizontal size={19}/>} onClick={() => setMenu(menu ? null : 'More')} pressed={!!menu}/>
     </Toolbar>
@@ -345,7 +396,6 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
       {!session?.bookmarks.length && favorites.slice(0, 3).map(item => <button key={item.url} onClick={() => navigate(item.url)}>{item.name}</button>)}
       <button className="lb-history-toggle" onClick={() => { setPanel(panel === 'history' ? null : 'history'); setQuery(''); }}><History size={12}/>History</button>
     </div>
-    {tab?.loading && <div className="lb-loading-line" role="progressbar" aria-label="Page loading"/>}
     {session?.mode === 'private' && <div className="lb-private-notice"><LockKeyhole size={12}/>Private session · Site data is discarded when you end this session. Downloads you save remain.<button onClick={togglePrivate}>End session</button></div>}
     {error && <div className="lb-notice" role="alert"><AlertCircle size={14}/><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError('')}><X size={14}/></button></div>}
     {session && !connected && <div className="lb-notice" role="status"><AlertCircle size={14}/><span>Connection lost. Reconnecting to your browser…</span></div>}
@@ -354,8 +404,8 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
       catch (failure) { setError(failure instanceof Error ? failure.message : 'Could not restart the browser engine.'); }
     }}>Restart browser</Button></div>}
     <div className="lb-body">
-      <main className="lb-content" aria-label="Page content">
-        {session?.streamUrl && <StreamSurface url={session.streamUrl} visible={!onNewTab && !tab?.error} muted={muted} onStatus={setStreamStatus} onShortcut={shortcut} onActivity={activity}/>}
+      <main className="lb-content" aria-label="Page content" aria-busy={!!tab?.loading}>
+        {session?.streamUrl && <StreamSurface url={session.streamUrl} visible={!onNewTab && !tab?.error} muted={muted} focusRequest={focusRequest} onStatus={setStreamStatus} onShortcut={shortcut} onActivity={activity} onOpenHost={website ? openHost : undefined}/>}
         {(() => {
           // Remote Chromium runs in kiosk mode without its own context menu; the worker
           // reports right-clicks on links and images and LopeOS draws the menu here.
@@ -406,13 +456,15 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
         })()}
         {onNewTab ? <div className="lb-start"><div className="lb-start-top"><span><Compass size={13}/> Lope Browser</span><button onClick={() => setPanel('settings')} aria-label="Browser preferences"><SlidersHorizontal size={15}/></button></div>
           <div className="lb-start-center"><div className="lb-mark"><Compass size={35} strokeWidth={1.35}/></div><h1>New Tab</h1>
-            <form className="lb-start-search" onSubmit={event => { event.preventDefault(); navigate(String(new FormData(event.currentTarget).get('search') ?? '')); }}><Search size={19}/><input name="search" aria-label="Search the web" placeholder={`Search with ${SEARCH_PROVIDERS[session?.searchProvider ?? 'duckduckgo'].name} or enter a URL`} autoComplete="off"/><button title="Search" aria-label="Search"><ArrowRight size={18}/></button></form>
+            <form className="lb-start-search" onSubmit={event => { event.preventDefault(); navigate(String(new FormData(event.currentTarget).get('search') ?? '')); }}><Search size={19}/><input name="search" aria-label="Search the web" placeholder={`Search with ${SEARCH_PROVIDERS[session?.searchProvider ?? 'duckduckgo'].name} or enter a URL`} autoComplete="off"/><button title="Search in LopeOS" aria-label="Search"><ArrowRight size={18}/></button><button type="button" className="lb-start-device" title="Search or open in your device’s browser" aria-label="Search on this device" onClick={event => { const form = event.currentTarget.form; if (form) openDevice(String(new FormData(form).get('search') ?? '')); }}><ExternalLink size={16}/></button></form>
             <div className="lb-favorites">{(session?.bookmarks.length ? session.bookmarks.slice(0, 6).map((item, i) => ({ name: item.title, url: item.url, letter: titleFor(item.url)[0].toUpperCase(), color: favorites[i % 4].color })) : favorites).map(item => <button key={item.url} onClick={() => navigate(item.url)}><span className={`lb-favorite-icon ${item.color}`}>{item.letter}</span><span>{item.name}</span></button>)}</div>
-            <div className="lb-start-connection"><span className={connected ? 'lb-dot connected' : 'lb-dot'}/>{connecting ? 'Connecting…' : connected ? (session?.capabilities.stream ? (session?.capabilities.opengl ? 'Connected · OpenGL' : session?.capabilities.webgl ? 'Connected · WebGL' : 'Connected') : 'Connected · Page streaming unavailable') : 'Browser unavailable'}
+            <div className="lb-start-connection" role="status"><span className={connected ? 'lb-dot connected' : 'lb-dot'}/>{queuedNavigation !== null ? `Opening ${queuedNavigation} when connected…` : connecting ? 'Connecting…' : connected ? (session?.capabilities.stream ? 'Ready to browse' : 'Connected · Page streaming unavailable') : 'Browser unavailable'}
+              {queuedNavigation !== null && <Button variant="ghost" onClick={() => setQueuedNavigation(null)}>Cancel</Button>}
               {!connected && !connecting && <Button variant="ghost" onClick={() => { startTask.current = null; void connect(); }}>Reconnect</Button>}</div>
           </div><div className="lb-start-footer"><span>Search with {SEARCH_PROVIDERS[session?.searchProvider ?? 'duckduckgo'].name}</span><button onClick={() => setPanel('about')}>About Lope Browser <ArrowRight size={12}/></button></div>
         </div> : tab?.error ? <div className="lb-state"><AlertCircle size={35}/><h2>{tab.error.kind === 'certificate' ? 'This connection could not be verified' : tab.error.kind === 'crashed' ? 'This page stopped responding' : 'This page couldn’t be opened'}</h2><p>{tab.error.message}</p><div><Button onClick={() => action('reload')}>Try again</Button><Button variant="ghost" onClick={openHost}>Open in host browser <ExternalLink size={13}/></Button></div></div>
         : !session?.streamUrl ? <div className="lb-state"><Compass size={35}/><h2>Interactive browsing is unavailable</h2><p>Your website needs a connected browser streaming runtime. You can open this page in your host browser.</p><code>{displayAddress(tab?.url ?? '')}</code><div><Button onClick={openHost}>Open in host browser <ExternalLink size={13}/></Button><Button variant="ghost" onClick={() => action('home')}>Back to start</Button></div></div> : null}
+        {tab?.loading && <div className="lb-loading-line" role="progressbar" aria-label="Page loading"/>}
         {findOpen && <form className="lb-find" role="search" onSubmit={event => { event.preventDefault(); action('find-next'); }}>
           <Input autoFocus value={find} onChange={event => setFind(event.target.value)} placeholder="Find in page" aria-label="Find in page"
             onKeyDown={event => { if (event.key === 'Enter' && event.shiftKey) { event.preventDefault(); action('find-previous'); } }}/>

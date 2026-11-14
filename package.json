@@ -25,6 +25,7 @@
     "test:photos": "node --test tests/lightroom/engine.test.ts tests/lightroom/denoise.test.ts tests/lightroom/noise.test.ts",
     "test:photos:browser": "node tests/lightroom/browser.mjs && node tests/lightroom/codecs.mjs && node tests/lightroom/handoff.mjs",
     "dev:browser": "node scripts/browser-dev.mjs",
+    "test:browser": "node --test tests/apps/browser-client.test.ts tests/apps/browser-interaction.test.mjs services/browser/tests/*.test.mjs services/browser/tests/*.test.ts",
     "test:setup": "node --test tests/setup/*.test.ts && playwright test -c tests/setup/playwright.config.ts",
     "test:updates": "npm run build && node --test tests/updates/*.test.mjs tests/updates/*.test.ts && playwright test -c tests/updates/playwright.config.ts",
     "test:photos:denoise": "node tests/lightroom/denoise-probe.mjs && node tests/lightroom/denoise-browser.mjs",

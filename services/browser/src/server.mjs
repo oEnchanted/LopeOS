@@ -93,8 +93,7 @@ export function createBrowserServer(engine, options) {
       const path = new URL(request.url, 'http://worker').pathname;
       if (path.startsWith(`${PREFIX}/stream/`)) { proxy(request, response); return; }
       if (path === `${PREFIX}/health` && request.method === 'GET') {
-        const graphics = await engine.cdp?.graphics?.().catch(() => null) ?? null;
-        json(response, 200, { status: engine.normal.status, engine: engine.version, streaming: !!engine.streamUrl, graphics }); return;
+        json(response, 200, { status: engine.normal.status, engine: engine.version, streaming: !!engine.streamUrl, graphics: engine.graphics ?? null }); return;
       }
       if (path === `${PREFIX}/sessions` && request.method === 'POST') {
         const input = parse(await body(request));
