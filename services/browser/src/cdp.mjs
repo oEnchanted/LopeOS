@@ -9,7 +9,7 @@ export class ChromiumPipe extends EventEmitter {
   constructor(executable, { profile, headless = false, environment = process.env, proxyPort } = {}) {
     super();
     const args = [
-      `--user-data-dir=${profile}`, '--remote-debugging-pipe', '--no-first-run',
+      `--user-data-dir=${profile}`, '--remote-debugging-pipe', '--no-first-run', '--disable-blink-features=AutomationControlled',
       '--no-default-browser-check', '--disable-sync', '--window-size=1280,800',
       ...(proxyPort ? [`--proxy-server=http://127.0.0.1:${proxyPort}`, '--proxy-bypass-list=<-loopback>', '--force-webrtc-ip-handling-policy=disable_non_proxied_udp'] : []),
       ...(headless ? ['--headless=new'] : ['--kiosk']), 'about:blank',
