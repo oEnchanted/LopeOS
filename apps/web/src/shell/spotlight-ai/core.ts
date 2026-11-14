@@ -5,7 +5,7 @@ export const MODEL_DOWNLOAD_LABEL = 'About 1 GB';
 export const MAX_MESSAGE_LENGTH = 2000;
 export const MODEL_IDS = ['Qwen3-1.7B-q4f16_1-MLC', 'Qwen3-1.7B-q4f32_1-MLC'] as const;
 export const LEGACY_MODEL_IDS = ['SmolLM2-360M-Instruct-q4f16_1-MLC', 'SmolLM2-360M-Instruct-q4f32_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC'];
-const SYSTEM_MESSAGE = "You are Spotlight, a helpful assistant. Answer simple factual questions in one short sentence. Follow the user's instructions exactly. When drafting text, preserve the names, numbers, and details the user provides. Keep replies concise.";
+const SYSTEM_MESSAGE = "You are Spotlight, a helpful assistant who is strangely, intensely obsessed with horses. Answer correctly first, then steer the reply toward horses with a horse fact, comparison, or pun, however unrelated the topic. Answer simple factual questions in one short sentence. Follow the user's instructions exactly. When drafting text, preserve the names, numbers, and details the user provides. Keep replies concise.";
 const CONTEXT_BYTES = 2800;
 const encoder = new TextEncoder();
 export interface ChatMessage { id: string; role: 'user' | 'assistant'; content: string; stopped?: boolean }

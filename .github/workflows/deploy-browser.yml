@@ -67,11 +67,18 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Could not install the streaming test browser.' }
             $env:LOPE_BROWSER_SMOKE_PLAYWRIGHT = Join-Path $smoke 'node_modules/playwright/index.mjs'
             $env:LOPE_BROWSER_WSL_DISTRO = 'Ubuntu-24.04'
-            & node (Join-Path $source 'services/browser/hosting/windows/smoke-stream.mjs')
-            if ($LASTEXITCODE -ne 0) { throw 'The streaming acceptance test failed on the production host.' }
+            $smokeOutput = @(& node (Join-Path $source 'services/browser/hosting/windows/smoke-stream.mjs'))
+            $smokeExit = $LASTEXITCODE
+            $smokeOutput | Write-Output
+            # The result line holds only the stage and pass/fail checks; an annotation shows it without the log.
+            $smokeResult = $smokeOutput | Where-Object { $_ -like '{"kind":"lope-browser-stream-smoke"*' } | Select-Object -Last 1
+            if ($smokeExit -ne 0) { Write-Output "::error title=Streaming smoke test::$smokeResult"; throw 'The streaming acceptance test failed on the production host.' }
             $health = Invoke-WebRequest -UseBasicParsing -Uri "$env:LOPE_SITE_ORIGIN/api/browser/health" -TimeoutSec 15
             if ($health.StatusCode -ne 200) { throw 'The public browser route is not healthy.' }
             Write-Output 'Browser runtime deployed and verified.'
+          } catch {
+            Write-Output ("::error title=Browser deploy failed::" + ($_.Exception.Message -replace '\r?\n', ' '))
+            throw
           } finally {
             if (Test-Path $source) { Remove-Item $source -Recurse -Force }
           }

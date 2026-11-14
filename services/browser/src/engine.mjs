@@ -1,6 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { createReadStream } from 'node:fs';
+import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, writeFile, rename, rm, realpath, stat } from 'node:fs/promises';
 import { join, basename, resolve, sep } from 'node:path';
 import { ChromiumPipe } from './cdp.mjs';
@@ -8,16 +7,10 @@ import { createEgressProxy } from './network.mjs';
 import { PAGE_BINDING, PAGE_SCRIPT, PAGE_WORLD, findExpression } from './page-scripts.mjs';
 import { SEARCH_PROVIDERS, destination, safeHostUrl, openedFile, openedFileUrl, openableFileType, OPENED_FILE_DOMAIN, MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
 
-// HTML files opened from LopeDrive, each on its own reserved origin that never reaches the
-// network. Request interception gates every load. Files up to OPENED_INLINE_BYTES are answered
-// in one CDP message over https (a secure context). Chromium cannot take much larger messages,
-// so bigger files use http and the egress proxy streams them from disk, but only for a request
-// that carries a single-use pass the gate added.
-const OPENED_INLINE_BYTES = 16 * 1024 * 1024;
+// HTML files opened from LopeDrive. Each is answered by request interception on its own
+// reserved origin, so it never reaches the network and nothing else on that origin exists.
 const OPENED_FILES_PER_SESSION = 20;
-const OPENED_BYTES_TOTAL = 512 * 1024 * 1024; // All sessions share the 2 GB profile volume.
-const OPENED_PASS_HEADER = 'x-lope-opened-file-pass';
-const OPENED_HEADERS = { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff' };
+const OPENED_BYTES_PER_SESSION = 128 * 1024 * 1024;
 const MISSING_FILE_PAGE = Buffer.from(`<!doctype html><meta charset="utf-8"><meta name="color-scheme" content="light dark"><title>File not available</title>
 <body style="font:15px/1.5 system-ui,sans-serif;max-width:34em;margin:4em auto;padding:0 1em"><h1 style="font-size:20px">This file isn’t available</h1>
 <p>Lope Browser shows the HTML file you open from Files, but not other files it links to. Files also close when the browser restarts.</p>
@@ -75,8 +68,7 @@ export class BrowserEngine extends EventEmitter {
       this.normal.history = saved.history ?? []; this.normal.bookmarks = saved.bookmarks ?? [];
       this.normal.searchProvider = ['google', 'bing'].includes(saved.searchProvider) ? saved.searchProvider : 'duckduckgo';
     }
-    this.egress = await createEgressProxy({ testOrigins: this.options.testOrigins ?? [], reservedDomain: OPENED_FILE_DOMAIN,
-      serveReserved: (url, request, response) => this.streamOpenedFile(url, request, response) });
+    this.egress = await createEgressProxy({ testOrigins: this.options.testOrigins ?? [] });
     this.cdp = new ChromiumPipe(this.options.executable, {
       profile: join(this.profileRoot, 'chromium'), headless: this.options.headless,
       proxyPort: this.egress.port,
