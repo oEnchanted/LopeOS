@@ -1,154 +1,52 @@
-name: Deploy LopeOS to Windows
-
+# Temporary, read-only: why nothing answers on 127.0.0.1:4174 (visitor workspace runtime).
+name: Inspect visitor workspace runtime
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-
+    branches: [claude/workspace-runtime-20261114]
 permissions:
   contents: read
-
-concurrency:
-  group: lope-production
-  cancel-in-progress: false
-
 jobs:
-  build:
-    name: Test and build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-      - name: Install locked dependencies
-        run: npx --yes pnpm@10.32.1 install --frozen-lockfile
-      - name: Run all unit and transport tests
-        run: npm run test:unit
-      - name: Check runtime filesystem operations
-        run: python3 -m unittest services/runtime/fs_test.py
-      - name: Build the production desktop
-        env:
-          # Becomes the version's patch number, e.g. 0.1.57, so every published
-          # release reports a higher LopeOS version than the one before it.
-          LOPE_RELEASE_NUMBER: ${{ github.run_number }}
-        run: npm run build
-      - uses: actions/upload-artifact@v7
-        with:
-          name: lope-dist
-          path: dist/
-          if-no-files-found: error
-          include-hidden-files: true
-          compression-level: 0
-          retention-days: 7
-
-      - name: Package account service and deployment scripts
-        run: |
-          mkdir -p deployment/accounts/windows deployment/windows
-          cp services/accounts/server.mjs deployment/accounts/
-          cp services/accounts/windows/* deployment/accounts/windows/
-          cp services/runtime/windows/Deploy-LopeFrontend.ps1 services/runtime/windows/Caddyfile.deploy.template scripts/caddy-template.mjs deployment/windows/
-      - uses: actions/upload-artifact@v7
-        with:
-          name: lope-services
-          path: deployment/
-          if-no-files-found: error
-
-  windows-accounts:
-    name: Verify Windows account installation
-    runs-on: windows-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-      - name: Install, restart, and verify persistent accounts
-        shell: powershell
-        run: ./tests/accounts/windows-install.ps1
-      - name: Verify atomic Caddy configuration replacement
-        shell: powershell
-        run: ./tests/updates/windows-config.ps1
-
-  deploy:
-    name: Publish the tested desktop
-    needs: [build, windows-accounts]
-    if: github.ref == 'refs/heads/main'
+  inspect:
     runs-on: [self-hosted, Windows, X64, lope-production]
-    environment: production
     timeout-minutes: 15
-    env:
-      LOPE_SITE_ORIGIN: ${{ vars.LOPE_SITE_ORIGIN }}
-      LOPE_RELEASE_PATH: M:/LopeOS/releases/${{ github.run_id }}-${{ github.run_attempt }}
-    defaults:
-      run:
-        # Permit these reviewed workflow scripts for this process only; keep
-        # the Windows account and machine execution policies unchanged.
-        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
     steps:
-      - name: Check host deployment configuration
+      - name: Inspect runtime host
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
-          $ErrorActionPreference = 'Stop'
-          if ([string]::IsNullOrWhiteSpace($env:LOPE_SITE_ORIGIN)) {
-            throw 'Set LOPE_SITE_ORIGIN in the production environment variables.'
-          }
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-      - uses: actions/download-artifact@v8
-        with:
-          name: lope-services
-          path: ${{ runner.temp }}/lope-services
-          digest-mismatch: error
-      - name: Install or update the persistent account service
-        run: |
-          $ErrorActionPreference = 'Stop'
-          & "$env:RUNNER_TEMP/lope-services/accounts/windows/Install-LopeAccounts.ps1" `
-            -SourcePath "$env:RUNNER_TEMP/lope-services/accounts" `
-            -SiteOrigin $env:LOPE_SITE_ORIGIN -NodeExe (Get-Command node).Source
-      - name: Prepare deployment configuration
-        run: |
-          $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Force -Path M:/LopeOS/deploy, M:/LopeOS/releases, M:/LopeOS/shared/assets | Out-Null
-          Copy-Item "$env:RUNNER_TEMP/lope-services/windows/Deploy-LopeFrontend.ps1" M:/LopeOS/deploy/Deploy-LopeFrontend.ps1 -Force
-          $templatePath = 'M:/Caddy/Caddyfile.template'
-          if (-not (Test-Path $templatePath)) {
-            & node "$env:RUNNER_TEMP/lope-services/windows/caddy-template.mjs" M:/Caddy/Caddyfile "$env:RUNNER_TEMP/lope-services/windows/Caddyfile.deploy.template" $env:LOPE_SITE_ORIGIN $templatePath
-            if ($LASTEXITCODE -ne 0) { throw 'Could not prepare the LopeOS Caddy template.' }
-          }
-          $template = Get-Content -LiteralPath $templatePath -Raw
-          if ($template -notmatch '/api/accounts/') {
-            if ($template -notmatch '__LOPE_SITE_HOST__\s*\{') { throw 'Caddy template must identify the LopeOS site with __LOPE_SITE_HOST__.' }
-            $accountRoute = @'
-              handle /api/accounts/* {
-                  reverse_proxy 127.0.0.1:4176 {
-                      header_up X-Forwarded-For {remote_host}
-                  }
-              }
+          $ErrorActionPreference = 'Continue'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:WSL_UTF8 = '1'
+          $out = New-Object System.Collections.Generic.List[string]
+          function Add([string]$t) { $out.Add(($t -replace "`0", '')) }
+          Add "identity=$([Security.Principal.WindowsIdentity]::GetCurrent().Name) boot=$((Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToString('s'))"
+          Add "--- wsl -l -v"; Add ((& wsl.exe --list --verbose 2>&1) -join "`n")
+          Add "--- tasks"
+          Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -like '*Lope*' } | ForEach-Object { $i = $_ | Get-ScheduledTaskInfo; Add "$($_.TaskName) state=$($_.State) user=$($_.Principal.UserId) logon=$($_.Principal.LogonType) last=$($i.LastRunTime.ToString('s')) result=$($i.LastTaskResult) action=$($_.Actions.Execute) $($_.Actions.Arguments)" }
+          Add "--- listeners"
+          Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Where-Object { $_.LocalPort -in 443,4174,4176,4177 } | ForEach-Object { Add "$($_.LocalAddress):$($_.LocalPort) $((Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName)" }
+          Add "--- caddy api routes"; Add ((Select-String -Path 'M:\Caddy\Caddyfile' -Pattern 'handle|reverse_proxy' -ErrorAction SilentlyContinue | ForEach-Object { $_.Line.Trim() }) -join "`n")
+          $probe = @'
+          echo "distro=$WSL_DISTRO_NAME pid1=$(ps -p 1 -o comm=) systemd=$(systemctl is-system-running 2>&1)"
+          echo "node=$(node -v 2>&1) docker=$(docker version --format '{{.Server.Version}}' 2>&1)"
+          echo "runtimes=$(docker info --format '{{json .Runtimes}}' 2>&1 | head -c 600)"
+          echo "images: $(docker image ls --format '{{.Repository}}:{{.Tag}}' 2>&1 | tr '\n' ' ')"
+          echo "containers: $(docker ps -a --format '{{.Names}}={{.Status}}' 2>&1 | head -20 | tr '\n' ' ')"
+          ls -la /opt/lopeos-runtime 2>&1 | head -8
+          ls /etc/lopeos 2>&1; grep -v -i -E 'secret|token|key' /etc/lopeos/visitors.env 2>&1
+          echo "unit: $(systemctl is-enabled lope-visitor-runtime 2>&1) $(systemctl is-active lope-visitor-runtime 2>&1)"
+          journalctl -u lope-visitor-runtime --no-pager -n 40 -o cat 2>&1 | tail -40
+          df -h / /var/lib/lopeos 2>&1
+          ls /var/lib/lopeos 2>&1 | head; ls /var/lib/lopeos/images 2>&1 | wc -l
+          curl -s -m 5 -i http://127.0.0.1:4174/api/health 2>&1 | head -3
           '@
-            $template = ([regex]'(__LOPE_SITE_HOST__\s*\{)').Replace($template, ('$1' + "`n" + $accountRoute), 1)
-            [IO.File]::WriteAllText($templatePath, $template, [Text.UTF8Encoding]::new($false))
+          foreach ($d in @('Ubuntu', 'Ubuntu-24.04')) {
+            Add "=== distro $d"
+            $file = Join-Path $env:RUNNER_TEMP 'probe.sh'; [IO.File]::WriteAllText($file, $probe.Replace("`r", ''), (New-Object Text.UTF8Encoding($false)))
+            $lin = ((& wsl.exe --distribution $d --user root --exec wslpath -a $file) -join '').Trim()
+            Add ((& wsl.exe --distribution $d --user root --exec bash $lin 2>&1) -join "`n")
           }
-      - uses: actions/download-artifact@v8
-        with:
-          name: lope-dist
-          path: ${{ env.LOPE_RELEASE_PATH }}
-          digest-mismatch: error
-      - name: Activate the complete release
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $deployParameters = @{
-            ReleasePath = $env:LOPE_RELEASE_PATH
-            SiteOrigin = $env:LOPE_SITE_ORIGIN
-            CaddyExe = 'M:/Caddy/caddy.exe'
-            Caddyfile = 'M:/Caddy/Caddyfile'
-            CaddyTemplate = 'M:/Caddy/Caddyfile.template'
-            SharedAssetsPath = 'M:/LopeOS/shared/assets'
-          }
-          & 'M:/LopeOS/deploy/Deploy-LopeFrontend.ps1' @deployParameters
+          try { Add "win->4174: $((Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:4174/api/health' -TimeoutSec 5).StatusCode)" } catch { Add "win->4174: $($_.Exception.Message)" }
+          $text = ($out -join "`n")
+          Write-Output $text
+          $esc = $text.Replace('%', '%25').Replace("`r", '').Replace("`n", '%0A')
+          for ($i = 0; $i -lt $esc.Length -and $i -lt 36000; $i += 3800) { Write-Output "::warning title=diag $i::$($esc.Substring($i, [Math]::Min(3800, $esc.Length - $i)))" }
