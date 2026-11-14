@@ -165,6 +165,10 @@ setInterval(()=>frame.contentWindow.postMessage({type:'getStats'},location.origi
   const second = createHash('sha256').update(await page.screenshot({ clip })).digest('hex');
   if (first === second) throw new Error('Stream pixels did not change while the remote fixture animated.');
   result.checks.movingPixels = true;
+  // The player's own numbers (frame rate, latency, codec, size) while the fixture animates. Numbers and short labels only.
+  await delay(3000);
+  result.stats = await page.evaluate(() => Object.fromEntries(Object.entries(window.smokeStats ?? {})
+    .filter(([, value]) => typeof value === 'number' || typeof value === 'boolean' || (typeof value === 'string' && value.length <= 40)).slice(0, 60)));
   if (debugDirectory) await page.screenshot({ path: join(debugDirectory, 'before-input.png') }).catch(() => {});
   result.stage = 'remote-input';
   const remotePoint = (x, y) => ({ x: geometry.x + x * geometry.width / geometry.remoteWidth, y: geometry.y + y * geometry.height / geometry.remoteHeight });

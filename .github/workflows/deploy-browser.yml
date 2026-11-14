@@ -90,6 +90,7 @@ jobs:
             $smokeOutput | Write-Output
             # The result line holds only the stage and pass/fail checks; an annotation shows it without the log.
             $smokeResult = $smokeOutput | Where-Object { $_ -like '{"kind":"lope-browser-stream-smoke"*' } | Select-Object -Last 1
+            Write-Output "::notice title=Streaming smoke result::$smokeResult"
             if ($smokeExit -ne 0) { Write-Output "::error title=Streaming smoke test::$smokeResult"; throw 'The streaming acceptance test failed on the production host.' }
             $health = Invoke-WebRequest -UseBasicParsing -Uri "$env:LOPE_SITE_ORIGIN/api/browser/health" -TimeoutSec 15
             if ($health.StatusCode -ne 200) { throw 'The public browser route is not healthy.' }
