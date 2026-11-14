@@ -5,6 +5,7 @@ import { mkdir, rm, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
+import { MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
 
 const PREFIX = '/api/browser';
 function json(response, status, body) {
@@ -131,6 +132,12 @@ export function createBrowserServer(engine, options) {
             timeout.unref(); privateCleanup.set(sessionId, timeout);
           }
         }); return;
+      }
+      // An HTML file the user opened from LopeDrive, shown in a tab on its own origin.
+      if (action === 'opened-files' && request.method === 'POST') {
+        let name; try { name = decodeURIComponent(String(request.headers['x-file-name'] ?? '')); } catch { name = ''; }
+        if (Number(request.headers['content-length'] ?? 0) > MAX_OPENED_FILE_BYTES) throw new Error('Lope Browser can open HTML files up to 32 MB.');
+        json(response, 200, await engine.openFile(sessionId, { name, bytes: await body(request, MAX_OPENED_FILE_BYTES) })); return;
       }
       // Large uploads: each file streams to disk first, then one request hands them to the page.
       const staging = action.match(/^uploads\/([a-zA-Z\d-]+)\/files$/);

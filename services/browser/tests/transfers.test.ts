@@ -38,6 +38,21 @@ test('multiple uploads stream only the selected files, then commit exactly those
   assert.deepEqual(JSON.parse(String(commit.options?.body)), { staged: ['staged-0', 'staged-1'] });
 });
 
+test('opening an HTML file sends only that file, and refuses other types and oversized files locally', async () => {
+  const calls: { url: string; options?: RequestInit }[] = [];
+  const client = new BrowserClient(async (url, options) => { calls.push({ url: String(url), options }); return Response.json({ id: 'session' }); });
+  await client.openFile('session', new File(['<title>Ünïcode</title>'], 'My page.html'));
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].url, /\/sessions\/session\/opened-files$/);
+  assert.equal(calls[0].options?.method, 'POST');
+  assert.equal(decodeURIComponent(new Headers(calls[0].options?.headers).get('x-file-name') ?? ''), 'My page.html');
+  assert.equal(await (calls[0].options?.body as File).text(), '<title>Ünïcode</title>');
+  await assert.rejects(client.openFile('session', new File(['secret'], 'notes.txt')), /HTML files/);
+  const large = new File(['x'], 'large.html'); Object.defineProperty(large, 'size', { value: 32 * 1024 * 1024 + 1 });
+  await assert.rejects(client.openFile('session', large), /32 MB/);
+  assert.equal(calls.length, 1);
+});
+
 test('download bytes are not written after the account changes during blob conversion', async () => {
   const bytes = new Uint8Array([17, 29, 53]);
   let account = 'original';

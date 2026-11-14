@@ -1,6 +1,7 @@
 export * from './contracts.ts';
 export * from './navigation.ts';
 import type { BrowserCommand, BrowserMode, BrowserSession } from './contracts.ts';
+import { MAX_OPENED_FILE_BYTES, openableFileType } from './navigation.ts';
 
 export class BrowserClient {
   private readonly request: typeof fetch;
@@ -43,6 +44,13 @@ export class BrowserClient {
       staged.push(value.id);
     }
     return this.json<BrowserSession>(`/sessions/${id}/uploads/${requestId}`, { method: 'POST', body: JSON.stringify({ staged }) });
+  }
+  /** Sends one HTML file the user chose to open; the worker shows it in a tab on its own origin. */
+  async openFile(id: string, file: File) {
+    if (!openableFileType(file.name)) throw new Error('Lope Browser can open HTML files (.html, .htm or .xhtml).');
+    if (file.size > MAX_OPENED_FILE_BYTES) throw new Error('Lope Browser can open HTML files up to 32 MB.');
+    return this.json<BrowserSession>(`/sessions/${encodeURIComponent(id)}/opened-files`, { method: 'POST',
+      headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }, body: file });
   }
   async download(id: string, transferId: string): Promise<Blob> {
     const response = await this.request(`${this.base}/sessions/${id}/downloads/${transferId}/file`, { credentials: 'same-origin' });

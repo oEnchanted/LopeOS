@@ -1,10 +1,21 @@
 import { EventEmitter } from 'node:events';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, writeFile, rename, rm, realpath, stat } from 'node:fs/promises';
 import { join, basename, resolve, sep } from 'node:path';
 import { ChromiumPipe } from './cdp.mjs';
 import { createEgressProxy } from './network.mjs';
-import { destination, safeHostUrl } from '../../../packages/browser-client/src/navigation.ts';
+import { destination, safeHostUrl, openedFile, openedFileUrl, openableFileType, OPENED_FILE_DOMAIN, MAX_OPENED_FILE_BYTES } from '../../../packages/browser-client/src/navigation.ts';
+
+// HTML files opened from LopeDrive. Each is answered by request interception on its own
+// reserved origin, so it never reaches the network and nothing else on that origin exists.
+const OPENED_FILES_PER_SESSION = 20;
+const OPENED_BYTES_PER_SESSION = 128 * 1024 * 1024;
+const MISSING_FILE_PAGE = Buffer.from(`<!doctype html><meta charset="utf-8"><meta name="color-scheme" content="light dark"><title>File not available</title>
+<body style="font:15px/1.5 system-ui,sans-serif;max-width:34em;margin:4em auto;padding:0 1em"><h1 style="font-size:20px">This file isn’t available</h1>
+<p>Lope Browser shows the HTML file you open from Files, but not other files it links to. Files also close when the browser restarts.</p>
+<p>Open the file again from Files.</p>`);
+// Untitled opened files show their name, not the reserved address Chromium reports.
+const pageTitle = (url, title) => { const file = openedFile(url); return file && (!title || title.includes(OPENED_FILE_DOMAIN)) ? file.name : title; };
 
 // Kiosk Chromium never draws its own context menu, so LopeOS draws one. This runs in an
 // isolated world: page scripts cannot see or call the binding that reports right-clicks.
@@ -33,6 +44,11 @@ const id = () => randomUUID();
 const internal = tab => tab.url === 'about:blank';
 const cleanName = name => basename(name).replace(/[\x00-\x1f\x7f/\\]/g, '_').slice(0, 160) || 'download';
 const publicTab = tab => Object.fromEntries(Object.entries(tab).filter(([key]) => !key.startsWith('_')));
+// Opened files do not outlive the worker, so restarts restore website tabs only.
+const restorable = session => {
+  const tabs = session.tabs.filter(tab => !openedFile(tab.url));
+  return { tabs: tabs.map(t => ({ url: t.url, pinned: t.pinned })), activeIndex: tabs.findIndex(t => t.id === session.activeTabId) };
+};
 
 export class BrowserEngine extends EventEmitter {
   sessions = new Map();
@@ -42,6 +58,7 @@ export class BrowserEngine extends EventEmitter {
   downloads = new Map();
   uploadRequests = new Map();
   closedTabs = new Map();
+  openedFiles = new Map();
   constructor(options) {
     super(); this.options = options;
     this.profileRoot = resolve(options.dataRoot);
@@ -112,10 +129,7 @@ export class BrowserEngine extends EventEmitter {
   }
   changed(session) {
     session.revision++;
-    if (session.mode === 'normal' && session.tabs.length) this.restoreTabs = {
-      tabs: session.tabs.map(t => ({ url: t.url, pinned: t.pinned })),
-      activeIndex: session.tabs.findIndex(t => t.id === session.activeTabId),
-    };
+    if (session.mode === 'normal' && session.tabs.length) this.restoreTabs = restorable(session);
     this.emit('state', this.snapshot(session.id));
     if (session.mode === 'normal' && !this.stopping) {
       clearTimeout(this.saveTimer); this.saveTimer = setTimeout(() => this.persist().catch(() => {}), 250);
@@ -127,8 +141,7 @@ export class BrowserEngine extends EventEmitter {
       const s = this.normal;
       // Browser shutdown can destroy every target before pipe disconnect. Preserve the
       // last nonempty list so a restart restores tabs instead of persisting teardown.
-      const restored = s.tabs.length ? { tabs: s.tabs.map(t => ({ url: t.url, pinned: t.pinned })),
-        activeIndex: s.tabs.findIndex(t => t.id === s.activeTabId) } : this.restoreTabs ?? { tabs: [], activeIndex: 0 };
+      const restored = s.tabs.length ? restorable(s) : this.restoreTabs ?? { tabs: [], activeIndex: 0 };
       const data = { version: 1, ...restored, history: s.history,
         bookmarks: s.bookmarks, searchProvider: s.searchProvider };
       const path = join(this.profileRoot, 'session.json');
@@ -165,6 +178,7 @@ export class BrowserEngine extends EventEmitter {
     for (const tab of session.tabs) this.targets.delete(tab.id);
     for (const [key, item] of this.uploadRequests) if (item.sessionId === sessionId) this.uploadRequests.delete(key);
     for (const [key, item] of this.downloads) if (item.sessionId === sessionId) this.downloads.delete(key);
+    for (const [key, item] of this.openedFiles) if (item.sessionId === sessionId) this.openedFiles.delete(key);
     this.sessions.delete(sessionId); this.closedTabs.delete(sessionId);
     await rm(join(this.transferRoot, sessionId), { recursive: true, force: true });
     await this.activate(this.normal, this.normal.tabs[0]);
@@ -243,13 +257,13 @@ export class BrowserEngine extends EventEmitter {
       tab.canGoBack = history.currentIndex > 0;
       tab.canGoForward = history.currentIndex < history.entries.length - 1;
       const current = history.entries[history.currentIndex];
-      if (current) { tab.url = current.url; tab.title = current.title || tab.title; }
+      if (current) { tab.url = current.url; tab.title = pageTitle(tab.url, current.title) || tab.title; }
     }
     const metrics = await this.send(tab, 'Page.getLayoutMetrics').catch(() => null);
     if (metrics?.visualViewport) tab.zoom = metrics.visualViewport.scale;
     const { result } = await this.send(tab, 'Runtime.evaluate', { expression:
       `({title:document.title,icon:document.querySelector('link[rel~="icon"]')?.href})`, returnByValue: true }).catch(() => ({}));
-    if (result?.value) { tab.title = result.value.title || (internal(tab) ? 'New Tab' : tab.url);
+    if (result?.value) { tab.title = result.value.title || (internal(tab) ? 'New Tab' : pageTitle(tab.url, '') || tab.url);
       // Do not make the host browser fetch website favicons and leak its network identity.
       const icon = result.value.icon;
       if (icon && tab._frame) {
@@ -262,12 +276,72 @@ export class BrowserEngine extends EventEmitter {
   }
   async navigate(session, tab, input) {
     const url = destination(input, session.searchProvider);
+    // Only tabs that show an opened file pay for request interception.
+    if (openedFile(url)) await this.interceptOpenedFiles(tab);
     tab.error = undefined; tab.loading = true; this.changed(session);
     const result = await this.send(tab, 'Page.navigate', { url });
     if (result.errorText && result.errorText !== 'net::ERR_ABORTED') {
       tab.error = { kind: /CERT|SSL/.test(result.errorText) ? 'certificate' : 'navigation', message: result.errorText };
       tab.loading = false; this.changed(session);
     }
+  }
+  /** Shows an HTML file the user opened from LopeDrive. The client sends only that file's bytes. */
+  async openFile(sessionId, { name, bytes }) {
+    const session = this.get(sessionId);
+    const clean = cleanName(name || '');
+    const type = openableFileType(clean);
+    if (!type) throw new Error('Lope Browser can open HTML files (.html, .htm or .xhtml).');
+    if (bytes.length > MAX_OPENED_FILE_BYTES) throw new Error('Lope Browser can open HTML files up to 32 MB.');
+    const hash = createHash('sha256').update(bytes).digest('hex');
+    // Opening an unchanged file again, including when LopeOS restores its windows, shows the tab that has it.
+    const same = [...this.openedFiles.values()].find(file => file.sessionId === sessionId && file.name === clean && file.hash === hash);
+    const shown = same && session.tabs.find(tab => tab.url === same.url);
+    if (shown) { await this.activate(session, shown); return this.snapshot(sessionId); }
+    let charset = '';
+    try { new TextDecoder('utf-8', { fatal: true }).decode(bytes); charset = '; charset=utf-8'; } catch { /* Let the page or Chromium choose. */ }
+    const fileId = id(), directory = join(this.transferRoot, sessionId, 'opened');
+    const file = { id: fileId, sessionId, name: clean, hash, size: bytes.length, type: type + charset,
+      url: openedFileUrl(fileId, clean), path: join(directory, fileId) };
+    await mkdir(directory, { recursive: true, mode: 0o700 });
+    await writeFile(file.path, bytes, { flag: 'wx', mode: 0o600 });
+    this.openedFiles.set(fileId, file);
+    const mine = [...this.openedFiles.values()].filter(item => item.sessionId === sessionId);
+    let count = mine.length, total = mine.reduce((sum, item) => sum + item.size, 0);
+    for (const item of mine) {
+      if (item === file || (count <= OPENED_FILES_PER_SESSION && total <= OPENED_BYTES_PER_SESSION)) break;
+      await this.forgetFile(item); count--; total -= item.size;
+    }
+    const active = session.tabs.find(tab => tab.id === session.activeTabId);
+    if (active && internal(active) && !active.loading) await this.navigate(session, active, file.url);
+    else await this.createTab(session, file.url);
+    return this.snapshot(sessionId);
+  }
+  async forgetFile(file) {
+    this.openedFiles.delete(file.id);
+    await rm(file.path, { force: true }).catch(() => {});
+    // The file's own origin may have kept site data in the persistent profile.
+    if (this.sessions.get(file.sessionId)?.mode === 'normal') {
+      await this.cdp?.send('Storage.clearDataForOrigin', { origin: new URL(file.url).origin, storageTypes: 'all' }).catch(() => {});
+    }
+  }
+  async interceptOpenedFiles(tab) {
+    tab._openedFiles ??= this.send(tab, 'Fetch.enable', { patterns: [{ urlPattern: `*://*.${OPENED_FILE_DOMAIN}/*`, requestStage: 'Request' }] })
+      .catch(error => { tab._openedFiles = null; throw error; });
+    await tab._openedFiles;
+  }
+  async serveOpenedFile(tab, { requestId, request, frameId, resourceType }) {
+    const fulfill = (responseCode, type, body) => this.send(tab, 'Fetch.fulfillRequest', { requestId, responseCode, body: body.toString('base64'),
+      responseHeaders: [{ name: 'Content-Type', value: type }, { name: 'Cache-Control', value: 'no-store' },
+        { name: 'Referrer-Policy', value: 'no-referrer' }, { name: 'X-Content-Type-Options', value: 'nosniff' }] });
+    try {
+      const target = openedFile(request.url), file = target && this.openedFiles.get(target.id);
+      const page = resourceType === 'Document' && (frameId === tab._frame || frameId === tab.id);
+      // Serve only the opened file itself, as a top-level page of the session that opened it.
+      if (page && file && file.sessionId === tab._session && request.method === 'GET' && new URL(request.url).pathname === new URL(file.url).pathname) {
+        await fulfill(200, file.type, await readFile(file.path)); return;
+      }
+      await fulfill(404, page ? 'text/html; charset=utf-8' : 'text/plain; charset=utf-8', page ? MISSING_FILE_PAGE : Buffer.alloc(0));
+    } catch { await this.send(tab, 'Fetch.failRequest', { requestId, errorReason: 'Failed' }).catch(() => {}); }
   }
   openContextMenu(cdpSession, payload) {
     const tab = [...this.targets.values()].find(item => item._cdp === cdpSession); if (!tab) return;
@@ -323,7 +397,7 @@ export class BrowserEngine extends EventEmitter {
     if (method === 'Target.targetCreated') { await this.attach(params.targetInfo); return; }
     if (method === 'Target.targetInfoChanged') {
       const tab = this.targets.get(params.targetInfo.targetId);
-      if (tab) { tab.url = params.targetInfo.url; tab.title = params.targetInfo.title || tab.title;
+      if (tab) { tab.url = params.targetInfo.url; tab.title = pageTitle(tab.url, params.targetInfo.title) || tab.title;
         this.changed(this.get(tab._session)); }
       return;
     }
@@ -347,6 +421,7 @@ export class BrowserEngine extends EventEmitter {
     if (method === 'Browser.downloadWillBegin') { this.downloadStarted(params); return; }
     if (method === 'Browser.downloadProgress') { await this.downloadProgress(params); return; }
     const tab = [...this.targets.values()].find(t => t._cdp === sessionId); if (!tab) return;
+    if (method === 'Fetch.requestPaused') { await this.serveOpenedFile(tab, params); return; }
     const session = this.sessions.get(tab._session); if (!session) return;
     if (method === 'Page.frameNavigated') this.frames.set(params.frame.id, tab.id);
     if (method === 'Page.frameAttached') this.frames.set(params.frameId, tab.id);
@@ -443,7 +518,7 @@ export class BrowserEngine extends EventEmitter {
     await this.close();
     if (erase) { await rm(join(this.transferRoot, 'normal'), { recursive: true, force: true }); await rm(this.profileRoot, { recursive: true, force: true }); }
     this.sessions.clear(); this.targets.clear(); this.frames.clear(); this.attaching.clear();
-    this.downloads.clear(); this.uploadRequests.clear(); this.closedTabs.clear(); this.defaultContextId = null;
+    this.downloads.clear(); this.uploadRequests.clear(); this.closedTabs.clear(); this.openedFiles.clear(); this.defaultContextId = null;
     this.stopping = false; this.normal = null;
     await this.start(); this.normal.revision = Math.max(this.normal.revision, revision + 1); this.changed(this.normal);
     return this.snapshot('normal');
@@ -543,6 +618,7 @@ export class BrowserEngine extends EventEmitter {
         if (session.mode === 'private') {
           for (const [key, item] of this.downloads) if (item.sessionId === sessionId) { item.abort?.abort(); this.downloads.delete(key); }
           for (const [key, item] of this.uploadRequests) if (item.sessionId === sessionId) this.uploadRequests.delete(key);
+          for (const [key, item] of this.openedFiles) if (item.sessionId === sessionId) this.openedFiles.delete(key);
           for (const target of [...session.tabs]) this.targets.delete(target.id);
           await this.cdp.send('Target.disposeBrowserContext', { browserContextId: session.contextId });
           const { browserContextId } = await this.cdp.send('Target.createBrowserContext', { disposeOnDetach: true });
@@ -575,6 +651,8 @@ export class BrowserEngine extends EventEmitter {
     this.stopping = true; clearTimeout(this.saveTimer); clearInterval(this.titleTimer);
     if (this.normal) await this.persist();
     for (const session of [...this.sessions.values()]) if (session.mode === 'private') await this.destroy(session.id).catch(() => {});
+    // Opened files are gone after a restart; drop any site data their origins kept.
+    if (!this.cdp?.closed) for (const file of [...this.openedFiles.values()]) await this.forgetFile(file);
     await this.cdp?.close();
     await this.egress?.close();
   }

@@ -13,7 +13,7 @@ export const filesManifest: AppManifest = {
 export const editorManifest: AppManifest = {
   contractVersion: 1, id: 'lope.editor', name: 'Text Editor', description: 'Edit plain text files.', icon: 'editor',
   entry: () => import('./text-editor'), defaultSize: { width: 780, height: 610 }, minSize: { width: 340, height: 320 },
-  fileAssociations: ['.txt', '.md', '.markdown', '.json', '.csv', '.js', '.ts', '.tsx', '.jsx', '.css', '.py', '.sh', '.yaml', '.yml', '.toml', '.xml', '.log', 'text/plain'],
+  fileAssociations: ['.txt', '.md', '.markdown', '.json', '.csv', '.js', '.ts', '.tsx', '.jsx', '.css', '.py', '.sh', '.yaml', '.yml', '.toml', '.xml', '.log', '.html', '.htm', '.xhtml', 'text/plain'],
   menus: [
     { label: 'File', items: ['editor.new', 'editor.open', { separator: true }, 'editor.save', 'editor.save-as'] },
     { label: 'Edit', items: ['editor.undo', 'editor.redo', { separator: true }, 'editor.find', 'editor.replace'] },

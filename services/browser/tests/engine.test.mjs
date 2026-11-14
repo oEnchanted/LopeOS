@@ -7,6 +7,7 @@ import { BrowserEngine } from '../src/engine.mjs';
 import { createBrowserServer } from '../src/server.mjs';
 import { once } from 'node:events';
 import { createFixture } from './fixture.mjs';
+import { openedFile } from '../../../packages/browser-client/src/navigation.ts';
 
 const enabled = process.env.LOPE_TEST_CHROMIUM === '1';
 const executable = process.env.CHROMIUM_EXECUTABLE || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/chromium');
@@ -125,4 +126,63 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   assert.notEqual(engine.snapshot('normal').generation,stoppedGeneration);
   await eventually(()=>engine.normal.tabs[0].title==='Lope Browser test application','engine recovery');
   assert.equal(await evaluate(engine,engine.normal.tabs[0],"localStorage.getItem('after-crash')"),'kept');
+});
+
+test('real Chromium shows opened HTML files on their own origins, with nothing else served', { skip: !enabled, timeout: 60000 }, async t => {
+  const root = await mkdtemp(join(tmpdir(), 'lope-opened-'));
+  const options = { executable, dataRoot: join(root, 'profile'), transferRoot: join(root, 'transfers'), headless: true };
+  let engine = new BrowserEngine(options);
+  t.after(async () => { await engine.close().catch(() => {}); await rm(root, { recursive: true, force: true }); });
+  await engine.start();
+  const token = 'f'.repeat(64);
+  const control = createBrowserServer(engine, { token, origins: ['http://lope.test'] }); control.listen(0, '127.0.0.1'); await once(control, 'listening');
+  t.after(() => { control.closeAllConnections(); control.close(); });
+  const open = (name, html) => fetch(`http://127.0.0.1:${control.address().port}/api/browser/sessions/normal/opened-files`, {
+    method: 'POST', headers: { Authorization: 'Bearer ' + token, 'X-File-Name': encodeURIComponent(name) }, body: html });
+  // No charset declaration: valid UTF-8 must still render correctly.
+  const report = `<!doctype html><title>Quarterly report</title><link rel="stylesheet" href="style.css"><p id="text">Grüße 👋</p>
+<script>localStorage.setItem('opened', 'kept');</script>`;
+  const response = await open('Report.html', report);
+  assert.equal(response.status, 200);
+  assert.equal(engine.normal.tabs.length, 1); // The blank start tab shows the file.
+  const tab = engine.normal.tabs[0];
+  assert.equal((await response.json()).activeTabId, tab.id);
+  await eventually(() => tab.title === 'Quarterly report' && !tab.loading, 'opened file loads');
+  const file = openedFile(tab.url);
+  assert.equal(file?.name, 'Report.html');
+  assert.equal(tab.error, undefined);
+  assert.equal(await evaluate(engine, tab, "document.querySelector('#text').textContent"), 'Grüße 👋');
+  assert.equal(await evaluate(engine, tab, 'location.origin'), `https://${file.id}.file.lope.invalid`);
+  assert.equal(await evaluate(engine, tab, "localStorage.getItem('opened')"), 'kept');
+  // Nothing else exists on the file's origin, and the file is not served into frames.
+  assert.equal(await evaluate(engine, tab, "fetch('style.css').then(r => r.status)"), 404);
+  assert.equal(await evaluate(engine, tab, "new Promise(ok => { const f = document.createElement('iframe'); f.onload = () => ok(!!f.contentDocument.querySelector('#text')); f.src = location.href; document.body.append(f); })"), false);
+  await engine.command('normal', { type: 'reload', tabId: tab.id });
+  await eventually(async () => !tab.loading && await evaluate(engine, tab, "performance.getEntriesByType('navigation')[0]?.type").catch(() => null) === 'reload', 'reload');
+  assert.equal(await evaluate(engine, tab, "document.querySelector('#text').textContent"), 'Grüße 👋');
+  await (await open('Report.html', report)).json();
+  assert.equal(engine.normal.tabs.length, 1); // Reopening an unchanged file shows its tab.
+  await (await open('untitled.htm', '<p>No title</p>')).json();
+  const second = engine.normal.tabs.find(item => item.id !== tab.id);
+  assert.equal(engine.normal.activeTabId, second.id);
+  await eventually(() => !second.loading && second.title === 'untitled.htm', 'untitled file is named');
+  assert.equal(await evaluate(engine, second, "localStorage.getItem('opened')"), null); // Each file has its own origin.
+  await engine.command('normal', { type: 'bookmark.add', tabId: tab.id });
+  assert.equal(engine.normal.bookmarks.length, 0);
+  assert.equal(engine.normal.history.some(item => openedFile(item.url)), false);
+  assert.equal((await open('notes.txt', 'not html')).status, 400);
+  await assert.rejects(engine.openFile('normal', { name: 'huge.html', bytes: Buffer.alloc(32 * 1024 * 1024 + 1) }), /32 MB/);
+  const privateSession = engine.get((await engine.createPrivate()).id), privateTab = privateSession.tabs[0];
+  await engine.navigate(privateSession, privateTab, tab.url);
+  await eventually(() => privateTab.title === 'File not available' && !privateTab.loading, 'another session cannot load the file');
+  await engine.destroy(privateSession.id);
+  await access(join(root, 'transfers', 'normal', 'opened', file.id));
+  await engine.close(); engine = new BrowserEngine(options); await engine.start();
+  // Opened files close with the browser: no restored tabs, staged copies, saved names or site data.
+  assert.deepEqual(engine.normal.tabs.map(item => item.url), ['about:blank']);
+  await assert.rejects(access(join(root, 'transfers', 'normal', 'opened', file.id)));
+  assert.doesNotMatch(await readFile(join(root, 'profile', 'session.json'), 'utf8'), /file\.lope\.invalid|Report/);
+  const restarted = engine.normal.tabs[0];
+  await engine.navigate(engine.normal, restarted, tab.url);
+  await eventually(() => restarted.title === 'File not available' && !restarted.loading, 'closed file is unavailable');
 });

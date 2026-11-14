@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { publicAddress, publicDestination } from '../src/network.mjs';
 import { createBrowserServer } from '../src/server.mjs';
 import { createRuntimeFileBridge } from '../src/files.mjs';
-import { destination, displayAddress } from '../../../packages/browser-client/src/navigation.ts';
+import { destination, displayAddress, openedFile, openedFileUrl, openableFileType, safeHostUrl } from '../../../packages/browser-client/src/navigation.ts';
 
 test('worker seccomp permits the Chromium namespace jail with no outer capabilities and keeps host restrictions', async t => {
   const root = await mkdtemp(join(tmpdir(), 'lope-seccomp-'));
@@ -41,6 +41,20 @@ test('URL parsing rejects executable/file schemes and credentials, and encodes s
   for (const value of ['javascript:alert(1)', 'file:///etc/passwd', 'data:text/html,hi', 'https://user:password@example.com']) assert.throws(() => destination(value));
   assert.equal(displayAddress('https://example.com/'), 'example.com');
   assert.match(displayAddress('https://xn--pple-43d.com'), /xn--/);
+});
+
+test('opened HTML files have reserved per-file addresses that never count as websites', () => {
+  const id = '0f8fad5b-d9cb-469f-a165-70867728950e', url = openedFileUrl(id, 'Report #1 100%.html');
+  assert.equal(new URL(url).hostname, `${id}.file.lope.invalid`);
+  assert.deepEqual(openedFile(url), { id, name: 'Report #1 100%.html' });
+  assert.deepEqual(openedFile(url + '?view=1#top'), { id, name: 'Report #1 100%.html' });
+  assert.equal(displayAddress(url), 'Report #1 100%.html');
+  assert.equal(safeHostUrl(url), null); // Not bookmarked, kept in history, restored, or sent to the host browser.
+  assert.equal(destination(url), url);
+  for (const value of [`http://${id}.file.lope.invalid/a.html`, 'https://file.lope.invalid/a.html', 'https://not-an-id.file.lope.invalid/a.html',
+    `https://${id}.file.lope.invalid.example.com/a.html`, 'https://example.com/a.html']) assert.equal(openedFile(value), null, value);
+  assert.equal(openableFileType('Page.HTM'), 'text/html'); assert.equal(openableFileType('a.xhtml'), 'application/xhtml+xml');
+  for (const name of ['notes.txt', 'html', 'page.html.exe', 'folder.html/']) assert.equal(openableFileType(name), null, name);
 });
 
 test('egress rejects private, mapped IPv6, multicast, metadata, mixed DNS and non-web ports', async () => {
