@@ -1,41 +1,70 @@
 /// <reference lib="webworker" />
 import { GENERATOR_CACHE, generatorKey } from './catalog';
 import { ClipTokenizer } from './tokenizer';
+import type { EngineMessage, EngineRequest } from './protocol';
 
 // Minimal surface of onnxruntime-web used here; the runtime is loaded from the user's cached download.
 type Tensor = { data: ArrayLike<number | bigint>; dims: readonly number[]; type: string; dispose(): void };
-type Session = { inputNames: readonly string[]; outputNames: readonly string[]; inputMetadata?: readonly { name: string; type?: string }[]; run(feeds: Record<string, Tensor>): Promise<Record<string, Tensor>> };
-type Runtime = { env: { wasm: { numThreads: number; wasmPaths: unknown; proxy: boolean } }; Tensor: new (type: string, data: unknown, dims: number[]) => Tensor; InferenceSession: { create(model: Uint8Array, options: object): Promise<Session> } };
+type Session = { inputNames: readonly string[]; outputNames: readonly string[]; inputMetadata?: readonly { name: string; type?: string }[]; run(feeds: Record<string, Tensor>): Promise<Record<string, Tensor>>; release?(): Promise<void> };
+type Runtime = {
+  env: { logLevel: string; wasm: { numThreads: number; wasmPaths: unknown; proxy: boolean }; webgpu: { powerPreference?: string; device?: unknown; adapter?: unknown } };
+  Tensor: new (type: string, data: unknown, dims: number[]) => Tensor;
+  InferenceSession: { create(model: Uint8Array, options: object): Promise<Session> };
+};
+type Adapter = { features: { has(name: string): boolean }; info?: { vendor?: string; architecture?: string; description?: string } };
 
 const SIZE = 512, LATENT = SIZE / 8, VAE_SCALE = 0.18215;
-let runtime: Runtime | undefined, tokenizer: ClipTokenizer | undefined;
+const MODELS = [['text_encoder', 'Text encoder'], ['unet', 'Image model'], ['vae_decoder', 'Image decoder']] as const;
+let runtime: Runtime | undefined, tokenizer: ClipTokenizer | undefined, loading: Promise<void> | undefined;
 const sessions: Partial<Record<'text_encoder' | 'unet' | 'vae_decoder', Session>> = {};
-const post = (message: object) => self.postMessage(message);
+const post = (message: EngineMessage) => self.postMessage(message);
 
 async function cached(id: string) {
   const response = await (await caches.open(GENERATOR_CACHE)).match(generatorKey(id));
   if (!response) throw new Error('Download the image generator model before generating.');
   return response;
 }
-async function initialize() {
-  if (runtime && tokenizer && sessions.vae_decoder) return;
-  if (!('gpu' in navigator)) throw new Error('Image generation needs WebGPU. Use a current Chrome, Edge, or Safari with hardware acceleration on.');
-  post({ status: 'Starting the WebGPU engine…' });
-  runtime = await import(/* @vite-ignore */ URL.createObjectURL(await (await cached('runtime')).blob())) as Runtime;
-  runtime.env.wasm.numThreads = 1; runtime.env.wasm.proxy = false;
-  runtime.env.wasm.wasmPaths = { wasm: URL.createObjectURL(await (await cached('wasm')).blob()) };
-  tokenizer = new ClipTokenizer(await (await cached('vocab')).json(), await (await cached('merges')).text());
+function describe(adapter: Adapter) {
+  const info = adapter.info ?? {};
+  const name = [info.vendor, info.architecture].filter(Boolean).map(v => v!.charAt(0).toUpperCase() + v!.slice(1)).join(' ');
+  return info.description || (name ? `${name} GPU` : 'Graphics card');
+}
+
+async function load() {
+  if (sessions.text_encoder && sessions.unet && sessions.vae_decoder) return;
+  const gpu = (navigator as Navigator & { gpu?: { requestAdapter(options?: object): Promise<Adapter | null> } }).gpu;
+  if (!gpu) throw new Error('Image generation needs WebGPU. Use a current Chrome, Edge, or Safari with hardware acceleration turned on.');
+  const adapter = await gpu.requestAdapter({ powerPreference: 'high-performance' });
+  if (!adapter) throw new Error('No compatible graphics card is available. Turn on hardware acceleration in your browser, then reopen Image Generator.');
+  if (!adapter.features.has('shader-f16')) throw new Error('This graphics card does not support 16-bit shaders (shader-f16), which this model needs.');
+  const device = describe(adapter);
+  post({ type: 'engine', phase: 'loading', text: 'Starting the graphics engine…', progress: 0, device });
+  if (!runtime) {
+    const source = new Blob([await (await cached('runtime')).arrayBuffer()], { type: 'text/javascript' });
+    const module = await import(/* @vite-ignore */ URL.createObjectURL(source)) as Runtime;
+    module.env.logLevel = 'error';
+    module.env.wasm.numThreads = 1; module.env.wasm.proxy = false;
+    module.env.wasm.wasmPaths = { wasm: URL.createObjectURL(new Blob([await (await cached('wasm')).arrayBuffer()], { type: 'application/wasm' })) };
+    module.env.webgpu.powerPreference = 'high-performance';
+    runtime = module;
+  }
+  tokenizer ??= new ClipTokenizer(await (await cached('vocab')).json(), await (await cached('merges')).text());
   const options = {
     executionProviders: ['webgpu'], enableMemPattern: false, enableCpuMemArena: false, graphOptimizationLevel: 'all',
     freeDimensionOverrides: { batch_size: 1, num_channels: 4, height: LATENT, width: LATENT, sequence_length: 77 },
-    extra: { session: { disable_prepacking: '1', use_device_allocator_for_initializers: '1', use_ort_model_bytes_directly: '1', use_ort_model_bytes_for_initializers: '1' } },
+    extra: { session: { disable_prepacking: '1', use_device_allocator_for_initializers: '1' } },
   };
-  for (const [id, label] of [['text_encoder', 'text encoder'], ['unet', 'image model'], ['vae_decoder', 'image decoder']] as const) {
+  for (const [index, [id, label]] of MODELS.entries()) {
     if (sessions[id]) continue;
-    post({ status: `Loading the ${label} onto your GPU…` });
+    post({ type: 'engine', phase: 'loading', text: `Loading ${label.toLowerCase()} onto the GPU…`, progress: index / MODELS.length, device });
+    // Scope the model bytes so the 1.7 GB buffer can be collected as soon as the GPU has its weights.
     sessions[id] = await runtime.InferenceSession.create(new Uint8Array(await (await cached(id)).arrayBuffer()), options);
   }
+  const webgpu = runtime.env.webgpu.device as { lost?: Promise<{ message?: string }> } | undefined;
+  webgpu?.lost?.then(info => { for (const [id] of MODELS) delete sessions[id]; post({ type: 'engine', phase: 'error', text: `The graphics device was lost${info?.message ? `: ${info.message}` : ''}. It will reload on the next image.` }); });
+  post({ type: 'engine', phase: 'ready', text: 'Ready on the GPU', progress: 1, device });
 }
+const ensureLoaded = () => loading ??= load().catch(error => { post({ type: 'engine', phase: 'error', text: message(error) }); throw error; }).finally(() => { loading = undefined; });
 
 // float16 helpers: ORT accepts Uint16Array for float16 tensors.
 const f32 = new Float32Array(1), u32 = new Uint32Array(f32.buffer);
@@ -75,10 +104,11 @@ function noise(seed: number, length: number) {
   return out;
 }
 
-async function generate(prompt: string, steps: number, seed: number) {
-  await initialize();
+async function generate(id: number, prompt: string, steps: number, seed: number) {
+  await ensureLoaded();
   const started = performance.now(), { text_encoder: text, unet, vae_decoder: vae } = sessions as Required<typeof sessions>;
-  post({ status: 'Reading your prompt…' });
+  const total = steps + 2, progress = (done: number, label: string) => post({ type: 'progress', id, text: label, progress: done / total });
+  progress(0, 'Reading your prompt…');
   const ids = tokenizer!.encode(prompt), idsType = inputType(text, text.inputNames[0], 'int32');
   const idTensor = idsType === 'int64' ? new runtime!.Tensor('int64', BigInt64Array.from(ids, BigInt), [1, 77]) : new runtime!.Tensor('int32', Int32Array.from(ids), [1, 77]);
   const encoded = await text.run({ [text.inputNames[0]]: idTensor }); idTensor.dispose();
@@ -86,7 +116,7 @@ async function generate(prompt: string, steps: number, seed: number) {
   const schedule = sigmas(steps), dims = [1, 4, LATENT, LATENT];
   let latents = noise(seed, 4 * LATENT * LATENT).map(v => v * schedule.sigmas[0]);
   for (let step = 0; step < steps; step++) {
-    post({ status: steps > 1 ? `Generating — step ${step + 1} of ${steps}…` : 'Generating…' });
+    progress(1 + step, steps > 1 ? `Painting — step ${step + 1} of ${steps}…` : 'Painting…');
     const sigma = schedule.sigmas[step], scale = 1 / Math.sqrt(sigma * sigma + 1), tType = inputType(unet, 'timestep', 'int64'), t = schedule.timesteps[step];
     const sample = floatTensor(inputType(unet, 'sample', 'float32'), latents.map(v => v * scale), dims);
     const timestep = tType === 'int64' ? new runtime!.Tensor('int64', BigInt64Array.of(BigInt(t)), [1]) : floatTensor(tType, Float32Array.of(t), [1]);
@@ -96,7 +126,7 @@ async function generate(prompt: string, steps: number, seed: number) {
     latents = latents.map((v, i) => v + eps[i] * delta);
   }
   Object.values(encoded).forEach(r => r.dispose());
-  post({ status: 'Decoding the image…' });
+  progress(steps + 1, 'Developing the image…');
   const latentInput = floatTensor(inputType(vae, vae.inputNames[0], 'float32'), latents.map(v => v / VAE_SCALE), dims);
   const decoded = await vae.run({ [vae.inputNames[0]]: latentInput }); latentInput.dispose();
   const pixels = floats(decoded.sample ?? decoded[vae.outputNames[0]]); Object.values(decoded).forEach(r => r.dispose());
@@ -106,8 +136,12 @@ async function generate(prompt: string, steps: number, seed: number) {
   return { blob: await canvas.convertToBlob({ type: 'image/png' }), durationMs: performance.now() - started };
 }
 
+const message = (error: unknown) => error instanceof Error ? error.message : String(error || 'Image generation failed.');
 let queue = Promise.resolve();
-self.onmessage = ({ data }) => { queue = queue.then(async () => {
-  try { post({ id: data.id, result: await generate(String(data.prompt), Math.min(4, Math.max(1, data.steps | 0)), data.seed >>> 0) }); }
-  catch (error) { post({ id: data.id, error: error instanceof Error ? error.message : 'Image generation failed.' }); }
-}); };
+self.onmessage = ({ data }: MessageEvent<EngineRequest>) => {
+  if (data.type === 'load') { ensureLoaded().catch(() => {}); return; }
+  queue = queue.then(async () => {
+    try { post({ type: 'result', id: data.id, result: await generate(data.id, String(data.prompt), Math.min(4, Math.max(1, data.steps | 0)), data.seed >>> 0) }); }
+    catch (error) { post({ type: 'result', id: data.id, error: message(error) }); }
+  });
+};
