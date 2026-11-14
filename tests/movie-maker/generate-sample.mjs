@@ -10,6 +10,7 @@ try {
     const sources = await window.movieSample.generateSampleVideoSources();
     return Promise.all(sources.map(async source => ({ name: source.name, data: [...new Uint8Array(await source.blob.arrayBuffer())] })));
   });
-  await mkdir('public/movie-maker-sample', { recursive: true });
-  for (const output of outputs) { await writeFile(`public/movie-maker-sample/${output.name}`, Buffer.from(output.data)); console.log(`${output.name}: ${output.data.length} bytes`); }
+  const target = 'apps/web/src/apps/movie-maker/sample-media';
+  await mkdir(target, { recursive: true });
+  for (const output of outputs) { await writeFile(`${target}/${output.name}`, Buffer.from(output.data)); console.log(`${output.name}: ${output.data.length} bytes`); }
 } finally { await browser.close(); }

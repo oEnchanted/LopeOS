@@ -1,5 +1,9 @@
 import { createClip, createProject, defaultText, validateProject, type MovieProject } from '../../../../../packages/movie-maker/src/model';
 import { exportMovie, importMedia, MediaLibrary, type ImportedMedia } from '../../../../../packages/media-engine/src';
+// Bundled as content-hashed /assets files so every installed update worker accepts the release.
+import sampleSourceOne from './sample-media/source-1.webm?url';
+import sampleSourceTwo from './sample-media/source-2.webm?url';
+import sampleNarration from './sample-media/narration.wav?url';
 
 /** Deterministic, original illustrations and PCM audio; no external media or network service. */
 const palettes = [
@@ -65,7 +69,7 @@ export async function createSampleProject(onProgress?: (message: string) => void
   for (let i = 0; i < 10; i++) {
     onProgress?.(`Preparing scene ${i + 1} of 10…`);
     const isVideo = i === 2 || i === 6; let file: File;
-    if (isVideo) { const response = await fetch(`/movie-maker-sample/source-${i === 2 ? 1 : 2}.webm`); if (!response.ok) throw new Error('The bundled sample video is missing. Run the sample generator or import your own clips.'); file = new File([await response.blob()], i === 2 ? 'River in motion.webm' : 'Over the hills.webm', { type: 'video/webm' }); }
+    if (isVideo) { const response = await fetch(i === 2 ? sampleSourceOne : sampleSourceTwo); if (!response.ok) throw new Error('The bundled sample video is missing. Run the sample generator or import your own clips.'); file = new File([await response.blob()], i === 2 ? 'River in motion.webm' : 'Over the hills.webm', { type: 'video/webm' }); }
     else { const picture = i - (i > 2 ? 1 : 0) - (i > 6 ? 1 : 0); file = await landscape(picture, picture % 3 === 1 ? 'image/png' : picture % 3 === 2 ? 'image/webp' : 'image/jpeg'); }
     const asset = remember(await importMedia(file, project.fps), `sample-scene-${i + 1}`); const clip = createClip(asset, project.fps); clip.id = `sample-clip-${i + 1}`; clip.duration = 504; clip.sourceIn = isVideo ? i === 2 ? 45 : 75 : 0; clip.sourceOut = clip.sourceIn + 504; clip.panZoom = isVideo ? 'none' : i % 2 ? 'out' : 'in'; clip.effect = i === 4 ? 'warm' : i === 8 ? 'vintage' : 'none'; clip.transition = { kind: i % 3 === 0 ? 'dissolve' : 'fade', duration: i % 3 === 0 ? 24 : 12 }; clip.volume = .7; clip.fadeIn = isVideo ? 15 : 0; clip.fadeOut = isVideo ? 30 : 0; project.clips.push(clip);
     if ([0, 2, 5, 8].includes(i)) project.overlays.push({ ...defaultText(['A morning worth remembering', '', 'Follow the river', '', '', 'Take the scenic route', '', '', 'A little closer to home'][i]), id: `sample-caption-${i}`, clipId: clip.id, start: 60, duration: 150, size: 34, position: 'bottom', background: '#152537a0', outline: 1, animation: 'rise' });
@@ -73,7 +77,7 @@ export async function createSampleProject(onProgress?: (message: string) => void
   project.clips.push({ ...createClip(), id: 'sample-credits', name: 'Credits', duration: 180, sourceOut: 180, text: { ...defaultText('A little adventure\nMade with LopeOS Movie Maker\nOriginal sample illustrations & music'), size: 38, animation: 'scroll' } });
   onProgress?.('Preparing music and narration…');
   const music = remember(await importMedia(sampleMusic()), 'sample-music');
-  const response = await fetch('/movie-maker-sample/narration.wav'); if (!response.ok) throw new Error('The bundled sample narration is missing.');
+  const response = await fetch(sampleNarration); if (!response.ok) throw new Error('The bundled sample narration is missing.');
   const narration = remember(await importMedia(new File([await response.blob()], 'A little adventure - narration.wav', { type: 'audio/wav' })), 'sample-narration');
   project.audio = [{ id: 'sample-music-track', assetId: music.id, name: music.name, kind: 'music', start: 0, sourceIn: 0, sourceOut: 5400, volume: .7, fadeIn: 60, fadeOut: 120 }, { id: 'sample-narration-track', assetId: narration.id, name: narration.name, kind: 'narration', clipId: 'sample-clip-1', start: 45, sourceIn: 3, sourceOut: narration.durationFrames - 3, volume: 1, fadeIn: 3, fadeOut: 6 }];
   project.emphasis = 'narration'; return { project: validateProject(project), blobs, thumbnails, waveforms };

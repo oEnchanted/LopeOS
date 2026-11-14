@@ -2,7 +2,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'node:fs';
 import { releasePlugin } from './scripts/release-plugin.ts';
-const appVersion = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
+const packageVersion: string = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
+// Published releases replace the patch number with the deploy workflow's run
+// number, which increases on every run, so each update clients see is higher.
+const releaseNumber = process.env.LOPE_RELEASE_NUMBER;
+if (releaseNumber !== undefined && !/^[1-9]\d{0,8}$/.test(releaseNumber)) throw new Error('LOPE_RELEASE_NUMBER must be a positive whole number.');
+if (releaseNumber && !/^\d+\.\d+\.\d+$/.test(packageVersion)) throw new Error('package.json version must be major.minor.patch to number releases.');
+const appVersion = releaseNumber ? packageVersion.replace(/\d+$/, releaseNumber) : packageVersion;
 const buildId = new Date().toISOString();
 
 export default defineConfig({

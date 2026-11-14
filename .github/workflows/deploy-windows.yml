@@ -31,6 +31,10 @@ jobs:
       - name: Check runtime filesystem operations
         run: python3 -m unittest services/runtime/fs_test.py
       - name: Build the production desktop
+        env:
+          # Becomes the version's patch number, e.g. 0.1.57, so every published
+          # release reports a higher LopeOS version than the one before it.
+          LOPE_RELEASE_NUMBER: ${{ github.run_number }}
         run: npm run build
       - uses: actions/upload-artifact@v7
         with:

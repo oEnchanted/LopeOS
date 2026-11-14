@@ -3,6 +3,7 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import type { Plugin, ResolvedConfig } from 'vite';
 import { getModelReleases } from '../apps/web/src/updates/model-updates.ts';
+import { assertWorkerAccepts } from './release-validation.ts';
 
 /** Describe the exact published bytes, including Vite's copied public assets. */
 export function releasePlugin(version: string, build: string): Plugin {
@@ -37,7 +38,8 @@ export function releasePlugin(version: string, build: string): Plugin {
       assets.sort((a, b) => a.url.localeCompare(b.url));
       if (!assets.some(asset => asset.url === '/index.html')) throw new Error('The LopeOS release is missing index.html.');
       const models = await getModelReleases();
-      const release = { format: 1, version, build, releasedAt: build, totalBytes: assets.reduce((sum, asset) => sum + asset.size, 0), assets, models };
+      const release = { format: 1 as const, version, build, releasedAt: build, totalBytes: assets.reduce((sum, asset) => sum + asset.size, 0), assets, models };
+      assertWorkerAccepts(release, await readFile(join(output, 'lope-sw.js'), 'utf8'));
       await mkdir(join(output, '__lope'), { recursive: true });
       await writeFile(join(output, '__lope/version.json'), JSON.stringify(release));
     },
