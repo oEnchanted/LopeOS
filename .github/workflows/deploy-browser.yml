@@ -52,8 +52,21 @@ jobs:
             # Read-only host report, so stream tuning can match the real CPU, memory and display adapter.
             $system = Get-CimInstance Win32_ComputerSystem
             $adapters = (Get-CimInstance Win32_VideoController | ForEach-Object { $_.Name }) -join ', '
-            $linux = ((& wsl.exe --distribution 'Ubuntu-24.04' --user root --exec sh -c 'echo cpus=$(nproc) mem=$(free -m | awk "/Mem:/{print \$2}")MB; ls /usr/lib/wsl/drivers 2>/dev/null | head -5 | tr "\n" " "') -join ' ')
-            Write-Output ("::notice title=Browser host resources::Windows logical CPUs=" + $system.NumberOfLogicalProcessors + " RAM=" + [math]::Round($system.TotalPhysicalMemory / 1GB, 1) + "GB adapters=[" + $adapters + "] WSL " + $linux)
+            # Give WSL, where every browser draws and encodes on the CPU, 7 of the host's processors and
+            # all but 4 GB of memory. The host has no GPU, so this is the browser's whole budget.
+            $wslProcessors = [math]::Max(2, $system.NumberOfLogicalProcessors - 1)
+            $wslMemory = [math]::Max(6, [math]::Floor($system.TotalPhysicalMemory / 1GB) - 4)
+            $configPath = Join-Path $env:USERPROFILE '.wslconfig'
+            $lines = if (Test-Path $configPath) { @(Get-Content $configPath) } else { @() }
+            $kept = @($lines | Where-Object { $_ -notmatch '^\s*(processors|memory)\s*=' -and $_ -notmatch '^\s*\[wsl2\]\s*$' })
+            $wanted = @('[wsl2]', "processors=$wslProcessors", "memory=$($wslMemory)GB") + $kept
+            if ((($lines -join "`n").Trim()) -ne (($wanted -join "`n").Trim())) {
+              Set-Content -Path $configPath -Value $wanted -Encoding ascii
+              & wsl.exe --shutdown
+              Start-Sleep -Seconds 8
+            }
+            $linux = ((& wsl.exe --distribution 'Ubuntu-24.04' --user root --exec nproc) -join '').Trim()
+            Write-Output ("::notice title=Browser host resources::Windows logical CPUs=" + $system.NumberOfLogicalProcessors + " RAM=" + [math]::Round($system.TotalPhysicalMemory / 1GB, 1) + "GB adapters=[" + $adapters + "] WSL CPUs=" + $linux + " WSL memory limit=" + $wslMemory + "GB")
             # Fetch only the reviewed runtime files for this exact commit.
             $base = "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA"
             $manifest = Invoke-RestMethod -Uri "$base/services/browser/hosting/windows/runtime-files.json"
