@@ -9,7 +9,8 @@ import type { SyncEntry } from './merge';
 const encoder = new TextEncoder(), decoder = new TextDecoder('utf-8', { fatal: true });
 export const MAX_SYNC_RECORD_BYTES = 64 * 1024 * 1024;
 export interface LocalItem { entry: SyncEntry; read: () => Promise<Uint8Array> }
-export interface Capture { items: Map<string, LocalItem>; unavailable: string[]; warnings: string[] }
+/** Warnings mean local data could not sync. Notices explain skipped server-side data and do not fail a sync. */
+export interface Capture { items: Map<string, LocalItem>; unavailable: string[]; warnings: string[]; notices: string[] }
 const versionCache = new Map<string, { version: string; entry: SyncEntry }>();
 const dbs = localDatabaseDefinitions;
 const isSafeStorage = (key: string) => isBackupStorageKey(key) && key !== 'lope.accounts.v1' && !key.startsWith('lope.preferences.user.') && !key.startsWith('lope.setup.') && !key.startsWith('lope.migration.');
@@ -85,7 +86,7 @@ export async function readLogical(key: string): Promise<Uint8Array | null> {
   } catch (error) { if (missing(error)) return null; throw error; }
 }
 export async function captureData(progress: (message: string) => void, check: () => void, accountId?: string): Promise<Capture> {
-  const items = new Map<string, LocalItem>(), unavailable: string[] = [], warnings: string[] = [];
+  const items = new Map<string, LocalItem>(), unavailable: string[] = [], warnings: string[] = [], notices: string[] = [];
   const add = async (key: string, bytes: Uint8Array, read: () => Promise<Uint8Array>, version?: string, modifiedAt?: string) => {
     check();
     if (bytes.byteLength > MAX_SYNC_RECORD_BYTES) { unavailable.push(key); warnings.push(`${key} exceeds the 64 MiB account transfer limit and has not synced.`); return; }
@@ -165,14 +166,18 @@ export async function captureData(progress: (message: string) => void, check: ()
     const workspaceOwner = localStorage.getItem('lope.cloud.workspace-owner.v1');
     if (accountId && workspaceOwner && workspaceOwner !== accountId) {
       unavailable.push('workspace:'); warnings.push('This runtime workspace belongs to another account. Only this device’s LopeDrive, settings, and saved app data will sync. Use a separate browser profile for a different runtime workspace.');
-      return { items, unavailable, warnings };
+      return { items, unavailable, warnings, notices };
     }
     const health = await fetch('/api/health', { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(3000) });
     if (!health.ok) throw new Error('Workspace service unavailable.');
     check(); if (accountId && !workspaceOwner) localStorage.setItem('lope.cloud.workspace-owner.v1', accountId);
     await scan('workspace', runtimeFileService, '/');
-  } catch { unavailable.push('workspace:'); warnings.push('Workspace service files are waiting for the runtime connection. LopeDrive, settings, and saved app data can still sync.'); }
-  return { items, unavailable, warnings };
+  } catch {
+    // Workspace files already live on the server. Without a reachable runtime
+    // they are skipped (never treated as deleted) and the rest still syncs.
+    unavailable.push('workspace:'); notices.push('Workspace files will sync when the workspace service is available.');
+  }
+  return { items, unavailable, warnings, notices };
 }
 async function ensureParents(service: FileService, path: string, check: () => void) {
   const parts = path.split('/').slice(1, -1); let parent = '';

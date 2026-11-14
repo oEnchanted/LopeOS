@@ -118,7 +118,7 @@ function WindowApplication({ win, services, title, close, restore }: { win: Wind
 export function Shell() {
   const p = usePreferences(); const capture = useCapabilities();
   const restoringBackup = useRef(false);
-  const { account } = useCloudAccount();
+  const { account, encryption } = useCloudAccount();
   const [privacy, setPrivacy] = useState(false); const [menuReveal, setMenuReveal] = useState(false);
   const [history, setHistory] = useState(notificationHistory); const desktopRestore = useRef<WindowState[]>([]);
   const [windows, setWindows] = useState<WindowState[]>(initialWindows);
@@ -202,6 +202,15 @@ export function Shell() {
     window.addEventListener('lope:account-sync-applied', synced);
     return () => window.removeEventListener('lope:account-sync-applied', synced);
   }, []);
+  // Encrypted sync locks on every page load, including after a software update.
+  // Bring the unlock form forward once per account instead of pausing silently.
+  const syncUnlockPrompted = useRef<string | null>(null);
+  useEffect(() => {
+    if (!account || encryption !== 'locked' || syncUnlockPrompted.current === account.id) return;
+    syncUnlockPrompted.current = account.id;
+    callbacks.current.notify({ title: 'Sync is paused', message: 'Enter your account password in Settings to resume syncing. Your files on this device are still available.' });
+    callbacks.current.launch('lope.settings', { page: 'account' });
+  }, [account, encryption]);
   const close = async (id: string) => { if (restoringBackup.current) return false; for (const handler of beforeClose.get(id) ?? []) if (!await handler()) return false; setWindows(previous => previous.filter(w => w.id !== id)); beforeClose.delete(id); return true; };
   const quit = async (id: string) => { for (const win of windows.filter(w => w.appId === id)) if (!await close(win.id)) return; await appById(id)?.lifecycle?.onQuit?.(); setRunning(previous => new Set([...previous].filter(app => app !== id))); };
   const signOut = async () => {
