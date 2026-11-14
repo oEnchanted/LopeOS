@@ -8,10 +8,18 @@ bytes of server storage. The account server is a separate process; see its
 
 ## Included data
 
+Your profile picture can be added, replaced, or removed in Settings → LopeOS Account.
+Pictures are center-cropped to 256 × 256 pixels and stored as compact JPEG images.
+They sync as a separate encrypted profile record, including removals, and appear in
+the account dashboard, Settings sidebar, profile page, and setup review.
+
 - LopeDrive files and folders, including its recoverable Trash.
 - Readable regular files and folders in the connected runtime workspace.
 - Shared preferences, application preferences, wallpaper, pinned/startup apps,
   saved window layout, retained history, and editor session data.
+- Weather's saved cities and their order, selected city, temperature units, and
+  automatic refresh preference. Existing single-city preferences migrate into
+  the saved list. Forecast responses remain a temporary device cache.
 - Lightroom assets, original images, albums, and saved library records.
 - Writer recovery documents and Image Editor recovery, sessions, documents, assets.
 

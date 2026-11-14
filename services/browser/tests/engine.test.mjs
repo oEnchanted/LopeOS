@@ -4,6 +4,8 @@ import { mkdtemp, readFile, rm, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { BrowserEngine } from '../src/engine.mjs';
+import { createBrowserServer } from '../src/server.mjs';
+import { once } from 'node:events';
 import { createFixture } from './fixture.mjs';
 
 const enabled = process.env.LOPE_TEST_CHROMIUM === '1';
@@ -22,10 +24,12 @@ const evaluate = async (engine, tab, expression) => {
 test('real Chromium navigation, storage, files, popups, media, private isolation and restore', { skip: !enabled, timeout: 60000 }, async t => {
   const root = await mkdtemp(join(tmpdir(), 'lope-engine-'));
   const fixture = await createFixture();
-  const options = { executable, dataRoot: root, headless: true, testOrigins: [fixture.origin.replace('http://', '')] };
+  const options = { executable, dataRoot: join(root,'profile'), transferRoot:join(root,'transfers'), headless: true, testOrigins: [fixture.origin.replace('http://', '')] };
   let engine = new BrowserEngine(options);
   t.after(async () => { await engine.close().catch(() => {}); await fixture.close(); await rm(root, { recursive: true, force: true }); });
   await engine.start(); const tab = engine.normal.tabs[0];
+  const token='t'.repeat(64);const control=createBrowserServer(engine,{token,origins:[fixture.origin]});control.listen(0,'127.0.0.1');await once(control,'listening');
+  t.after(()=>{control.closeAllConnections();control.close();});
   await engine.command('normal', { type: 'navigate', tabId: tab.id, input: fixture.origin });
   await eventually(() => tab.title === 'Lope Browser test application' && !tab.loading, 'fixture loads');
   assert.deepEqual(await evaluate(engine, tab, "Promise.all(['geolocation','notifications','camera','microphone','clipboard-read','clipboard-write'].map(async name=>[name,(await navigator.permissions.query({name})).state]))"),
@@ -36,7 +40,7 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   await evaluate(engine, tab, "document.querySelector('#form').requestSubmit()");
   await eventually(() => tab.url.includes('/hello#form') && tab.title === 'Hello from JavaScript', 'same-document metadata');
   assert.equal(await evaluate(engine, tab, "document.querySelector('#greeting').textContent"), 'Hello, Lope 世界 👋');
-  assert.equal(tab.canGoBack, true);
+  await eventually(() => tab.canGoBack === true, 'engine history availability');
   const storage = await evaluate(engine, tab, 'storageTest()');
   assert.equal(storage.local, 'persistent'); assert.match(storage.cookie, /lope-test=cookie/); assert.equal(storage.worker, true);
   assert.equal(await evaluate(engine, tab, `new Promise((ok,no)=>{const socket=new WebSocket(${JSON.stringify(fixture.origin.replace('http:', 'ws:') + '/echo')});socket.onmessage=e=>{ok(e.data);socket.close()};socket.onerror=no;setTimeout(()=>no(new Error('socket timeout')),3000)})`), 'A real WebSocket message.');
@@ -45,7 +49,7 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   await eventually(() => tab.title === 'Next page', 'navigation');
   await engine.command('normal', { type: 'back', tabId: tab.id });
   await eventually(() => tab.url.includes('/hello#form'), 'back');
-  assert.equal(tab.canGoForward, true);
+  await eventually(() => tab.canGoForward === true, 'engine forward availability');
   await engine.command('normal', { type: 'navigate', tabId: tab.id, input: fixture.origin + '/redirect' });
   await eventually(() => tab.url.endsWith('/next'), 'redirect URL');
   await engine.command('normal', { type: 'navigate', tabId: tab.id, input: fixture.origin });
@@ -60,7 +64,9 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   await engine.command('normal', { type: 'tab.activate', tabId: tab.id });
   await evaluate(engine, tab, "document.querySelector('#upload').click()");
   await eventually(() => engine.normal.uploads.length === 1, 'upload chooser');
-  await engine.upload('normal', engine.normal.uploads[0].id, [{ name: 'chosen.txt', bytes: Buffer.from('only selected content') }]);
+  const selected=new FormData();selected.append('files',new File(['only selected content'],'chosen.txt'));
+  const sent=await fetch(`http://127.0.0.1:${control.address().port}/api/browser/sessions/normal/uploads/${engine.normal.uploads[0].id}`,{method:'POST',headers:{Authorization:'Bearer '+token,Origin:fixture.origin},body:selected});
+  assert.equal(sent.status,200);await sent.json();
   await eventually(async () => (await evaluate(engine, tab, "document.querySelector('#uploaded').textContent")) === 'only selected content', 'file upload');
   await evaluate(engine, tab, "document.querySelector('#download').click()");
   await eventually(() => engine.normal.downloads[0]?.state === 'completed', 'download completes');
@@ -90,6 +96,7 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   assert.equal(await evaluate(engine,tab,'getSelection().toString()'),'Real browser fixture');
   await engine.command('normal', { type: 'print', tabId: tab.id });
   assert.equal((await readFile(engine.downloads.get(engine.normal.downloads[0].id).path)).subarray(0, 4).toString(), '%PDF');
+  const staged=engine.downloads.get(engine.normal.downloads[0].id).path;
   const privateSession = await engine.createPrivate(); const privateTab = engine.get(privateSession.id).tabs[0];
   await engine.navigate(engine.get(privateSession.id), privateTab, fixture.origin);
   await eventually(() => privateTab.title === 'Lope Browser test application', 'private load');
@@ -105,6 +112,7 @@ test('real Chromium navigation, storage, files, popups, media, private isolation
   await eventually(() => engine.normal.tabs[0]?.url === fixture.origin + '/', 'restored tab');
   assert.equal(await evaluate(engine, engine.normal.tabs[0], "localStorage.getItem('lope-test')"), 'persistent');
   await engine.command('normal', { type: 'data.clear' });
+  await assert.rejects(access(staged));
   assert.equal(engine.normal.bookmarks.length, 0); assert.equal(engine.normal.history.length, 0);
   await engine.navigate(engine.normal, engine.normal.tabs[0], fixture.origin);
   await eventually(() => engine.normal.tabs[0].title === 'Lope Browser test application', 'post-clear load');

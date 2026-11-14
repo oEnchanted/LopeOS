@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-13",
+  "browser": "Playwright Chromium",
+  "passed": true,
+  "target": "http://127.0.0.1:5179",
+  "productionBundle": true,
+  "viewport": {
+    "width": 1280,
+    "height": 800,
+    "deviceScaleFactor": 1
+  },
+  "checks": [
+    "Sample loads 12 editable storyboard segments, real thumbnails and audio/text lanes",
+    "Visual effects change real preview pixels; Undo restores the original pixels and Redo reapplies the edit",
+    "Exact still duration, context-menu ordering and drag/drop reorder are functional and undoable",
+    "Split, caption text editing and music timing expose contextual tools and preserve undo history",
+    "Keyboard operates ribbon tabs, storyboard selection and preview divider",
+    "Save project writes through the Files service; reload restores decisions and original media",
+    "Beginner flow imports multiple images and a real video, trims the clip, adds an editable title/music and plays synchronized preview",
+    "Save movie custom settings render a playable WebM with audio; Download emits genuine WebM bytes",
+    "Compact and forced-colors/reduced-motion workspace screenshots captured",
+    "Production playback/export launches the emitted PCM worker asset; its hashed dynamic URL serves valid worker code"
+  ],
+  "errors": [],
+  "workers": [
+    "http://127.0.0.1:5179/assets/mix.worker-5hlIa6kR.js"
+  ],
+  "outputBytes": 109638,
+  "scope": "Automated browser workflow using a test SDK host; not a human novice usability study or full-shell deployment"
+}

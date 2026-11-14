@@ -1,0 +1,31 @@
+{
+  "inventoryRows": 546,
+  "counts": {
+    "UNVERIFIED": 455,
+    "FAILED": 47,
+    "PASSED": 44
+  },
+  "originalReferenceStateRows": 502,
+  "fixedDefectRows": 44,
+  "issues": {
+    "total": 104,
+    "fixedRetested": 44,
+    "open": 60,
+    "openBySeverity": {
+      "P1": 6,
+      "P2": 54
+    }
+  },
+  "mandatoryWorkflows": {
+    "PASSED": 4,
+    "FAILED": 3,
+    "UNVERIFIED": 2
+  },
+  "productionUI": {
+    "passed": 35,
+    "failed": 0,
+    "unverified": 1
+  },
+  "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "note": "PASSED inventory rows are repaired functional defect subsets. Required reference-state rows stay FAILED or UNVERIFIED; no full-scope parity claim."
+}

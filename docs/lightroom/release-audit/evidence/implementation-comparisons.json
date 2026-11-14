@@ -1,0 +1,184 @@
+{
+  "pairs": [
+    {
+      "id": "LR-FIX-001",
+      "before": "docs/lightroom/release-audit/evidence/LR-FIX-001-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-FIX-001-after.png",
+      "sizeDevicePx": [
+        1440,
+        900
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        313,
+        23,
+        1378,
+        869
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-001-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-001-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-001-difference.png"
+      ]
+    },
+    {
+      "id": "LR-FIX-002",
+      "before": "docs/lightroom/release-audit/evidence/LR-FIX-002-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-FIX-002-after.png",
+      "sizeDevicePx": [
+        1440,
+        900
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        18,
+        15,
+        1392,
+        900
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-002-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-002-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-002-difference.png"
+      ]
+    },
+    {
+      "id": "LR-FIX-003",
+      "before": "docs/lightroom/release-audit/evidence/LR-FIX-003-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-FIX-003-after.png",
+      "sizeDevicePx": [
+        1440,
+        900
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": null,
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-003-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-003-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-003-difference.png"
+      ]
+    },
+    {
+      "id": "LR-FIX-004",
+      "before": "docs/lightroom/release-audit/evidence/LR-FIX-004-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-FIX-004-after.png",
+      "sizeDevicePx": [
+        1440,
+        900
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        11,
+        407,
+        1384,
+        894
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-004-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-004-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-004-difference.png"
+      ]
+    },
+    {
+      "id": "LR-FIX-005",
+      "before": "docs/lightroom/release-audit/evidence/LR-FIX-005-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-FIX-005-after.png",
+      "sizeDevicePx": [
+        1440,
+        900
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        270,
+        138,
+        1390,
+        900
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-005-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-005-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-FIX-005-difference.png"
+      ]
+    },
+    {
+      "id": "LR-CTRL-001",
+      "before": "docs/lightroom/release-audit/evidence/LR-CTRL-001-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-CTRL-001-after.png",
+      "sizeDevicePx": [
+        1000,
+        800
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        22,
+        12,
+        268,
+        261
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-CTRL-001-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-CTRL-001-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-CTRL-001-difference.png"
+      ]
+    },
+    {
+      "id": "LR-CTRL-002",
+      "before": "docs/lightroom/release-audit/evidence/LR-CTRL-002-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-CTRL-002-after.png",
+      "sizeDevicePx": [
+        1000,
+        800
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        167,
+        20,
+        263,
+        49
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-CTRL-002-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-CTRL-002-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-CTRL-002-difference.png"
+      ]
+    },
+    {
+      "id": "LR-VIEW-001",
+      "before": "docs/lightroom/release-audit/evidence/LR-VIEW-001-before.png",
+      "after": "docs/lightroom/release-audit/evidence/LR-VIEW-001-after.png",
+      "sizeDevicePx": [
+        1000,
+        800
+      ],
+      "deviceScaleFactor": 1,
+      "normalization": "None. No resampling, excluded regions or masking.",
+      "comparison": "Implementation regression evidence only; not Adobe pixel identity",
+      "changedBoundingBox": [
+        330,
+        401,
+        790,
+        738
+      ],
+      "files": [
+        "docs/lightroom/release-audit/evidence/comparisons/LR-VIEW-001-side-by-side.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-VIEW-001-overlay-50.png",
+        "docs/lightroom/release-audit/evidence/comparisons/LR-VIEW-001-difference.png"
+      ]
+    }
+  ],
+  "limits": "Different postcondition states are retained where the defect changes behavior. Dynamic content is not hidden. No Adobe overlay/difference is valid with the unknown-scale cropped source captures; see reference-comparison-status.json."
+}

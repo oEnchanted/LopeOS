@@ -1,0 +1,257 @@
+ M .gitignore
+ M apps/web/src/accounts/AccountPanel.tsx
+ M apps/web/src/accounts/accounts.css
+ M apps/web/src/apps/browser/Browser.tsx
+ M apps/web/src/apps/browser/service.ts
+ M apps/web/src/apps/image-editor/CanvasView.tsx
+ M apps/web/src/apps/image-editor/ai/LocalAiDialog.tsx
+ M apps/web/src/apps/image-editor/index.tsx
+ M apps/web/src/apps/image-editor/manifest.ts
+ M apps/web/src/apps/image-editor/menus.tsx
+ M apps/web/src/apps/image-editor/panels.tsx
+ M apps/web/src/apps/image-editor/session.ts
+ M apps/web/src/apps/image-editor/tools.tsx
+ M apps/web/src/apps/lightroom/backup.ts
+ M apps/web/src/apps/lightroom/controls.tsx
+ M apps/web/src/apps/lightroom/grid-layout.ts
+ M apps/web/src/apps/lightroom/index.tsx
+ M apps/web/src/apps/lightroom/library.ts
+ M apps/web/src/apps/lightroom/lightroom.css
+ M apps/web/src/apps/lightroom/manifest.ts
+ M apps/web/src/apps/lightroom/viewport.tsx
+ M apps/web/src/apps/lightroom/worker-client.ts
+ M apps/web/src/apps/settings/catalog.ts
+ M apps/web/src/apps/settings/index.tsx
+ M apps/web/src/apps/settings/settings.css
+ M apps/web/src/apps/text-editor/index.tsx
+ M apps/web/src/apps/weather/ConditionIcon.tsx
+ M apps/web/src/apps/weather/index.tsx
+ M apps/web/src/apps/weather/weather.css
+ M apps/web/src/apps/writer/Backstage.tsx
+ M apps/web/src/apps/writer/PreferencesWindow.tsx
+ M apps/web/src/apps/writer/Ribbon.tsx
+ M apps/web/src/apps/writer/WriterDialog.tsx
+ M apps/web/src/apps/writer/index.tsx
+ M apps/web/src/apps/writer/manifest.ts
+ M apps/web/src/apps/writer/print.ts
+ M apps/web/src/backup/local-data.ts
+ M apps/web/src/setup/LocalModelsStep.tsx
+ M apps/web/src/setup/SetupAssistant.tsx
+ M apps/web/src/setup/local-models.ts
+ M apps/web/src/setup/photo.ts
+ M apps/web/src/setup/setup.css
+ M apps/web/src/shell/Icons.tsx
+ M apps/web/src/shell/Shell.tsx
+ M apps/web/src/shell/Welcome.tsx
+ M apps/web/src/shell/dock.css
+ M apps/web/src/shell/extensions.ts
+ M apps/web/src/shell/glass-surfaces.css
+ M apps/web/src/shell/materials.css
+ M apps/web/src/shell/wallpapers.ts
+ M apps/web/src/updates/UpdateUI.tsx
+ M apps/web/src/updates/service.ts
+ M docs/accounts.md
+ M docs/accounts/account-1440.png
+ M docs/accounts/account-390.png
+ M docs/accounts/account-signin-mobile.png
+ M docs/accounts/lopedrive-1440.png
+ M docs/accounts/lopedrive-390.png
+ M docs/agent-4-status.md
+ M docs/browser.md
+ M docs/lightroom/README.md
+ M docs/settings-revision/wallpaper-credits.md
+ M docs/software-updates.md
+ M docs/writer/README.md
+ M docs/writer/architecture-decision.md
+ M docs/writer/feature-inventory.md
+ M docs/writer/parity-report.md
+ M docs/writer/production-verification.json
+ M docs/writer/sample-output.pdf
+ M docs/writer/screenshots/lopeos-integration.png
+ M docs/writer/screenshots/production-preferences-dark.png
+ M docs/writer/screenshots/production-preferences-light.png
+ M docs/writer/screenshots/production.png
+ M docs/writer/verification.json
+ M docs/writer/word-feature-audit.md
+ M package.json
+ M packages/browser-client/src/contracts.ts
+ M packages/browser-client/src/index.ts
+ M packages/contracts/src/preferences.ts
+ M packages/document-engine/src/index.ts
+ M packages/image-engine/src/clipboard.ts
+ M packages/image-engine/src/model.ts
+ M packages/image-engine/src/native.ts
+ M packages/image-engine/src/operations.ts
+ M packages/image-engine/src/pixels.ts
+ M packages/image-engine/src/selection.ts
+ M packages/photo-engine/src/png.ts
+ M packages/photo-engine/src/tiff.ts
+ M packages/sdk/src/preferences.ts
+ M pnpm-lock.yaml
+ M scripts/release-plugin.ts
+ M services/browser/infra/Dockerfile
+ M services/browser/infra/entrypoint.sh
+ M services/browser/package.json
+ M services/browser/src/engine.mjs
+ M services/browser/src/main.mjs
+ M services/browser/src/network.mjs
+ M services/browser/src/server.mjs
+ M services/browser/tests/engine.test.mjs
+ M tests/accounts/acceptance.mjs
+ M tests/accounts/ui.spec.ts
+ M tests/integration/wallpaper.spec.ts
+ M tests/lightroom/browser.mjs
+ M tests/lightroom/denoise-browser.mjs
+ M tests/lightroom/handoff.tsx
+ M tests/lightroom/production.mjs
+ M tests/settings/settings.spec.ts
+ M tests/setup/setup.spec.ts
+ M tests/shell/windows.mjs
+ M tests/updates/server.mjs
+ M tests/updates/updates.spec.ts
+ M tests/writer/fixtures/review-roundtrip.docx
+ M tests/writer/fixtures/roundtrip.docx
+ M tests/writer/fixtures/structures-roundtrip.docx
+ M tests/writer/harness.tsx
+ M tests/writer/preferences-capture.mjs
+ M tests/writer/preferences.spec.ts
+ M tests/writer/production.mjs
+ M tests/writer/settings-audit.spec.ts
+ M tests/writer/shell.spec.ts
+ M vite.config.ts
+?? apps/web/src/accounts/AccountEncryption.tsx
+?? apps/web/src/accounts/ProfilePicture.tsx
+?? apps/web/src/apps/browser/transfers.ts
+?? apps/web/src/apps/image-editor/menus.css
+?? apps/web/src/apps/lightroom/mask-outline.ts
+?? apps/web/src/apps/movie-maker/
+?? apps/web/src/apps/spreadsheet/
+?? apps/web/src/apps/writer/PictureInteractions.tsx
+?? apps/web/src/apps/writer/pictures.css
+?? apps/web/src/apps/writer/pictures.ts
+?? apps/web/src/shell/FileDialog.tsx
+?? apps/web/src/shell/WallpaperPicker.tsx
+?? apps/web/src/shell/file-dialog.css
+?? apps/web/src/shell/wallpaper-picker.css
+?? apps/web/src/updates/model-updates.ts
+?? apps/web/src/updates/preflight.ts
+?? docs/accounts/account-landing.png
+?? docs/accounts/profile-picture.png
+?? docs/accounts/setup-landing-mobile.png
+?? docs/accounts/setup-landing.png
+?? docs/audits/
+?? docs/browser-hosting-status.json
+?? docs/image-editor/release-audit/
+?? docs/lightroom/release-audit/
+?? docs/movie-maker/
+?? docs/screenshots/system-icons-finishes.png
+?? docs/writer/image-interactions.md
+?? docs/writer/screenshots/picture-crop-preview.png
+?? docs/writer/screenshots/picture-cropped.png
+?? docs/writer/screenshots/picture-drag-preview.png
+?? docs/writer/screenshots/picture-layout-dark.png
+?? docs/writer/screenshots/picture-layout-options.png
+?? docs/writer/screenshots/picture-selected.png
+?? docs/writer/screenshots/production-images.png
+?? packages/contracts/src/profile.ts
+?? packages/document-engine/src/image-presentation.ts
+?? packages/media-engine/
+?? packages/media-service/
+?? packages/movie-maker/
+?? packages/spreadsheet-engine/
+?? packages/video-engine/
+?? public/movie-maker-sample/
+?? public/wallpapers/perfecthue-amber-tech-waves-dark.png
+?? public/wallpapers/perfecthue-amber-tech-waves-light.png
+?? public/wallpapers/perfecthue-circular-office-park-dark.png
+?? public/wallpapers/perfecthue-circular-office-park-light.png
+?? public/wallpapers/perfecthue-cobalt-tech-waves-dark.png
+?? public/wallpapers/perfecthue-cobalt-tech-waves-light.png
+?? public/wallpapers/perfecthue-eco-overpass-dark.png
+?? public/wallpapers/perfecthue-eco-overpass-light.png
+?? public/wallpapers/perfecthue-open-air-office-dark.png
+?? public/wallpapers/perfecthue-open-air-office-light.png
+?? public/wallpapers/perfecthue-purple-staircase-atrium-dark.png
+?? public/wallpapers/perfecthue-purple-staircase-atrium-light.png
+?? public/wallpapers/perfecthue-tropical-aqua-office-dark.png
+?? public/wallpapers/perfecthue-tropical-aqua-office-light.png
+?? public/wallpapers/perfecthue-tropical-office-dark.png
+?? public/wallpapers/perfecthue-tropical-office-light.png
+?? public/wallpapers/perfecthue-tropical-waterfalls-dark.png
+?? public/wallpapers/perfecthue-tropical-waterfalls-light.png
+?? public/wallpapers/perfecthue-waterfall-wave-walk-dark.png
+?? public/wallpapers/perfecthue-waterfall-wave-walk-light.png
+?? public/wallpapers/previews/perfecthue-amber-tech-waves-dark.jpg
+?? public/wallpapers/previews/perfecthue-amber-tech-waves-light.jpg
+?? public/wallpapers/previews/perfecthue-aurora-dark.jpg
+?? public/wallpapers/previews/perfecthue-aurora-light.jpg
+?? public/wallpapers/previews/perfecthue-circular-office-park-dark.jpg
+?? public/wallpapers/previews/perfecthue-circular-office-park-light.jpg
+?? public/wallpapers/previews/perfecthue-cobalt-tech-waves-dark.jpg
+?? public/wallpapers/previews/perfecthue-cobalt-tech-waves-light.jpg
+?? public/wallpapers/previews/perfecthue-eco-overpass-dark.jpg
+?? public/wallpapers/previews/perfecthue-eco-overpass-light.jpg
+?? public/wallpapers/previews/perfecthue-open-air-office-dark.jpg
+?? public/wallpapers/previews/perfecthue-open-air-office-light.jpg
+?? public/wallpapers/previews/perfecthue-purple-staircase-atrium-dark.jpg
+?? public/wallpapers/previews/perfecthue-purple-staircase-atrium-light.jpg
+?? public/wallpapers/previews/perfecthue-tropical-aqua-office-dark.jpg
+?? public/wallpapers/previews/perfecthue-tropical-aqua-office-light.jpg
+?? public/wallpapers/previews/perfecthue-tropical-office-dark.jpg
+?? public/wallpapers/previews/perfecthue-tropical-office-light.jpg
+?? public/wallpapers/previews/perfecthue-tropical-waterfalls-dark.jpg
+?? public/wallpapers/previews/perfecthue-tropical-waterfalls-light.jpg
+?? public/wallpapers/previews/perfecthue-waterfall-wave-walk-dark.jpg
+?? public/wallpapers/previews/perfecthue-waterfall-wave-walk-light.jpg
+?? services/browser/hosting/
+?? services/browser/tests/caddy.test.mjs
+?? services/browser/tests/hosting.test.mjs
+?? services/browser/tests/transfers.test.ts
+?? tests/accounts/profile-picture.html
+?? tests/accounts/profile-picture.tsx
+?? tests/apps/file-dialog-browser.mjs
+?? tests/image-editor/release-build.mjs
+?? tests/image-editor/release-engine.test.ts
+?? tests/image-editor/release-handoff.html
+?? tests/image-editor/release-handoff.tsx
+?? tests/image-editor/release-harness.tsx
+?? tests/image-editor/release-images.py
+?? tests/image-editor/release-inventory.mjs
+?? tests/image-editor/release-matrix.mjs
+?? tests/image-editor/release-regressions.mjs
+?? tests/image-editor/release-report.mjs
+?? tests/image-editor/release-session.mjs
+?? tests/image-editor/release-shell.mjs
+?? tests/image-editor/release-ui-color.mjs
+?? tests/image-editor/release-ui-context.mjs
+?? tests/image-editor/release-ui-handoff.mjs
+?? tests/image-editor/release-ui.mjs
+?? tests/image-editor/release-workflows.mjs
+?? tests/image-editor/release.html
+?? tests/lightroom/audit-probe.mjs
+?? tests/lightroom/controls-audit.mjs
+?? tests/lightroom/controls-harness.html
+?? tests/lightroom/controls-harness.tsx
+?? tests/lightroom/controls-integration.mjs
+?? tests/lightroom/release-codec-fixtures.ts
+?? tests/lightroom/release-codec-reader.py
+?? tests/lightroom/release-codec-worker.mjs
+?? tests/lightroom/release-codec.test.ts
+?? tests/lightroom/release-data.mjs
+?? tests/lightroom/release-details.mjs
+?? tests/lightroom/release-handoff-reader.py
+?? tests/lightroom/release-handoff.mjs
+?? tests/lightroom/release-regressions.mjs
+?? tests/lightroom/release-ui.mjs
+?? tests/lightroom/vite.audit.config.ts
+?? tests/movie-maker/
+?? tests/setup/wallpapers.spec.ts
+?? tests/spreadsheet/
+?? tests/updates/model-updates.test.ts
+?? tests/updates/preflight.test.ts
+?? tests/writer/image-actions.spec.ts
+?? tests/writer/image-adapter.spec.ts
+?? tests/writer/image-capture.mjs
+?? tests/writer/image-pointer.spec.ts
+?? tests/writer/image-presentation.spec.ts
+?? tests/writer/labels.ts

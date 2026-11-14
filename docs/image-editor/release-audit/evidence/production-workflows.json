@@ -1,0 +1,60 @@
+{
+  "result": "PASS",
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "base": "http://127.0.0.1:5189",
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "id": "PS-01",
+      "result": "PASS_LOCAL",
+      "assertions": [
+        "New → place PNG → selection → mask → paint mask → adjustment → Unicode type → native save → reopen byte-identical editable model",
+        "Source PNG checksum preserved"
+      ],
+      "sourceSha256": "a88982b60fa4522884788a027964bc7f960d3688a2e06f5c325e51010dd1c2da",
+      "nativeSha256": "02c09254845735a643c0383a1a15d4f9af06275ca7d3d460c450354def622f26"
+    },
+    {
+      "id": "PS-07",
+      "result": "PARTIAL",
+      "assertions": [
+        "Real native, PNG, PSD files saved for independent decoding"
+      ],
+      "blockers": [
+        "PSB unsupported",
+        "Native Adobe editing of exported structure unverified; compatibility conversions reported"
+      ]
+    },
+    {
+      "id": "PS-03",
+      "result": "PARTIAL",
+      "assertions": [
+        "Numeric transform cancel/commit/undo retains source",
+        "Crop cancel retains byte-identical source; commit dimensions 72×48; undo restores"
+      ],
+      "blockers": [
+        "Warp absent; Adobe bounds/pixel comparison unavailable"
+      ]
+    },
+    {
+      "id": "PS-08",
+      "result": "PASS_FAULT_INJECTION",
+      "assertions": [
+        "Missing/corrupt file leaves document unchanged",
+        "Injected quota exhaustion retains edits; save retry succeeds",
+        "Unavailable model service leaves document unchanged with zero image uploads",
+        "Reload recovers current editable document"
+      ],
+      "limits": [
+        "Real service generation, runtime permission loss and OS process kill not verified"
+      ]
+    }
+  ],
+  "errors": [],
+  "externalRequests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8188/object_info/CheckpointLoaderSimple"
+    }
+  ]
+}

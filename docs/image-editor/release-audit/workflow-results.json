@@ -1,0 +1,292 @@
+{
+  "verdict": "NOT READY",
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "commit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+  "scope": "Local production evidence is distinct from Adobe identity certification",
+  "fixtures": [
+    {
+      "id": "PS-01",
+      "result": "PASS_LOCAL",
+      "assertions": [
+        "New → place PNG → selection → mask → paint mask → adjustment → Unicode type → native save → reopen byte-identical editable model",
+        "Source PNG checksum preserved"
+      ],
+      "sourceSha256": "a88982b60fa4522884788a027964bc7f960d3688a2e06f5c325e51010dd1c2da",
+      "nativeSha256": "02c09254845735a643c0383a1a15d4f9af06275ca7d3d460c450354def622f26"
+    },
+    {
+      "id": "PS-07",
+      "result": "PARTIAL",
+      "assertions": [
+        "Real native, PNG, PSD files saved for independent decoding"
+      ],
+      "blockers": [
+        "PSB unsupported",
+        "Native Adobe editing of exported structure unverified; compatibility conversions reported"
+      ]
+    },
+    {
+      "id": "PS-03",
+      "result": "PARTIAL",
+      "assertions": [
+        "Numeric transform cancel/commit/undo retains source",
+        "Crop cancel retains byte-identical source; commit dimensions 72×48; undo restores"
+      ],
+      "blockers": [
+        "Warp absent; Adobe bounds/pixel comparison unavailable"
+      ]
+    },
+    {
+      "id": "PS-08",
+      "result": "PASS_FAULT_INJECTION",
+      "assertions": [
+        "Missing/corrupt file leaves document unchanged",
+        "Injected quota exhaustion retains edits; save retry succeeds",
+        "Unavailable model service leaves document unchanged with zero image uploads",
+        "Reload recovers current editable document"
+      ],
+      "limits": [
+        "Real service generation, runtime permission loss and OS process kill not verified"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "id": "PS-01",
+      "result": "PASS_LOCAL",
+      "evidence": "evidence/production-workflows.json",
+      "scope": "New/place/selection/mask/brush/adjustment/Unicode type/native layered save and exact editable reopen; original checksum preserved"
+    },
+    {
+      "id": "PS-02",
+      "result": "PARTIAL",
+      "evidence": "evidence/production-browser.log; evidence/production-cs6-browser.log; evidence/production-stability.log; evidence/engine-after.tap",
+      "scope": "Multi-layer/group/clipping/opacity/fill/effects/undo/reload operations covered in separate tests; exhaustive combined Adobe state not verified"
+    },
+    {
+      "id": "PS-03",
+      "result": "PARTIAL",
+      "evidence": "evidence/production-workflows.json",
+      "scope": "Transform/crop cancel, commit, bounds and undo verified; warp unavailable"
+    },
+    {
+      "id": "PS-04",
+      "result": "PARTIAL",
+      "evidence": "evidence/ui-after-results.json; evidence/production-browser.log; evidence/production-cs6-browser.log",
+      "scope": "Paint/selection/type/move/retouch transitions exercised; every tool/options/pressure state unverified"
+    },
+    {
+      "id": "PS-05",
+      "result": "PARTIAL",
+      "evidence": "evidence/production-browser.log; evidence/production-presets.log; evidence/ui-context-after-results.json",
+      "scope": "Saved workspace/restoration/reset and panel menus verified locally; exact baseline/docking targets unverified"
+    },
+    {
+      "id": "PS-06",
+      "result": "PASS_LOCAL",
+      "evidence": "evidence/production-stability.log; evidence/production-smart-filter-browser.log",
+      "scope": "Filter preview cancel preserves source/history; Smart Filter apply/disable/remove/undo and rendering verified"
+    },
+    {
+      "id": "PS-07",
+      "result": "PARTIAL",
+      "evidence": "evidence/production-workflows.json; evidence/independent-decode.json; ../format-compatibility.md",
+      "scope": "Native/PNG/PSD outputs real; independent reader records its scope; PSB absent and Adobe layered fidelity unverified"
+    },
+    {
+      "id": "PS-08",
+      "result": "PARTIAL",
+      "evidence": "evidence/production-workflows.json; evidence/production-browser.log; evidence/production-stability.log",
+      "scope": "Missing/corrupt file, injected save quota, version conflict, unavailable service, recovery verified; real model processing/runtime permission loss unverified"
+    },
+    {
+      "id": "PS-09",
+      "result": "PASS_LOCAL",
+      "evidence": "evidence/production-handoff.log; evidence/ui-independent-handoff.json",
+      "scope": "Same compiled candidate independently tested; original hash and recipe unchanged; derivative linked. Real runtime + external Agent 1 signoff unverified"
+    },
+    {
+      "id": "PS-10",
+      "result": "PARTIAL",
+      "evidence": "evidence/production-matrix.json; evidence/production-shell.json; evidence/session-menus-result.json; evidence/ui-after-results.json",
+      "scope": "Fresh production browser contexts and real shell; required CSS sizes and effective zoom viewports. Actual Windows/true 125/200 browser zoom and unavailable browser binaries unverified"
+    }
+  ],
+  "regressions": [
+    {
+      "name": "browser",
+      "source": "tests/image-editor/browser.mjs",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "stability",
+      "source": "tests/image-editor/stability.mjs",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "cs6-browser",
+      "source": "tests/image-editor/cs6-browser.mjs",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "presets",
+      "source": "tests/image-editor/presets.mjs",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "smart-filter-browser",
+      "source": "tests/image-editor/smart-filter-browser.mjs",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "blend-browser",
+      "source": "tests/image-editor/blend-browser.mjs",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "handoff",
+      "source": "tests/lightroom/handoff.mjs",
+      "result": "PASS",
+      "exit": 0
+    }
+  ],
+  "browsers": [
+    {
+      "browser": "chromium",
+      "version": "158.0.8127.18",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "result": "PASS",
+      "zoomQualification": "Matched CSS viewport, browser zoom 100%"
+    },
+    {
+      "browser": "chromium",
+      "version": "158.0.8127.18",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "result": "PASS",
+      "zoomQualification": "Matched CSS viewport, browser zoom 100%"
+    },
+    {
+      "browser": "chromium",
+      "version": "158.0.8127.18",
+      "viewport": {
+        "width": 740,
+        "height": 500
+      },
+      "result": "PASS",
+      "zoomQualification": "Matched CSS viewport, browser zoom 100%"
+    },
+    {
+      "browser": "chromium",
+      "version": "158.0.8127.18",
+      "viewport": {
+        "width": 1152,
+        "height": 720
+      },
+      "result": "PASS",
+      "zoomQualification": "Effective viewport of 1440x900 at 125%; browser zoom itself UNVERIFIED"
+    },
+    {
+      "browser": "chromium",
+      "version": "158.0.8127.18",
+      "viewport": {
+        "width": 720,
+        "height": 450
+      },
+      "result": "PASS",
+      "zoomQualification": "Effective viewport of 1440x900 at 200%; below supported app minimum; browser zoom itself UNVERIFIED"
+    },
+    {
+      "browser": "chrome",
+      "version": "157.0.8103.78",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "result": "PASS",
+      "zoomQualification": "Matched CSS viewport, browser zoom 100%"
+    },
+    {
+      "browser": "webkit",
+      "result": "UNVERIFIED",
+      "reason": "Error: browserType.launch: Executable doesn't exist at /Users/luke/Library/Caches/ms-playwright/webkit-2388/pw_run.sh\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║"
+    },
+    {
+      "browser": "firefox",
+      "result": "UNVERIFIED",
+      "reason": "Error: browserType.launch: Executable doesn't exist at /Users/luke/Library/Caches/ms-playwright/firefox-1572/firefox/Nightly.app/Contents/MacOS/firefox\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║"
+    }
+  ],
+  "independentHandoff": {
+    "date": "2026-11-13",
+    "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+    "scope": "Production application bundles with versioned SDK filesystem fixture; native runtime and shared menu focus are unverified",
+    "browser": "158.0.8127.18",
+    "interchange": "Lope Image native JSON v1, RGB/8; high-bit-depth interchange unavailable in Image Editor",
+    "checks": [
+      "A native layered project is written through the shared file service and opened by the real Image Editor",
+      "Saving Image Editor changes creates a separate returned derivative with its source relationship and immutable native-project snapshot",
+      "Original photo checksum and nondestructive recipe remain unchanged through the round trip"
+    ],
+    "returned": {
+      "source": {
+        "hash": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+        "actual": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+        "exposure": 0.5
+      },
+      "child": {
+        "name": "yosemite-edit.lopeimage",
+        "format": "lopeimage",
+        "parentId": "762393d9-5298-452f-ac57-2de4ed1b5cfb",
+        "depth": 8,
+        "hash": "57faccee795c011ca71f04eb7fc0d976f4cb3a9150d6da6453d9e886fd8eb948",
+        "actual": "57faccee795c011ca71f04eb7fc0d976f4cb3a9150d6da6453d9e886fd8eb948"
+      }
+    }
+  },
+  "sourceIsolation": {
+    "baseCommit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+    "includedConcurrentFiles": [
+      "apps/web/src/apps/weather/index.tsx",
+      "docs/writer/production-verification.json",
+      "docs/writer/sample-output.pdf",
+      "docs/writer/screenshots/lopeos-integration.png",
+      "docs/writer/screenshots/production-images.png",
+      "docs/writer/screenshots/production-preferences-dark.png",
+      "docs/writer/screenshots/production-preferences-light.png",
+      "docs/writer/screenshots/production.png",
+      "package.json",
+      "services/browser/hosting/README.md",
+      "services/browser/hosting/caddy.mjs",
+      "services/browser/hosting/gateway.mjs",
+      "services/browser/hosting/linux/NOTICE.md",
+      "services/browser/hosting/main.mjs",
+      "services/browser/hosting/windows/Enable-LopeBrowser.ps1",
+      "services/browser/infra/Dockerfile",
+      "services/browser/infra/entrypoint.sh",
+      "services/browser/package.json",
+      "services/browser/tests/caddy.test.mjs",
+      "tests/writer/fixtures/review-roundtrip.docx",
+      "tests/writer/fixtures/roundtrip.docx",
+      "tests/writer/fixtures/structures-roundtrip.docx",
+      "tests/writer/labels.ts",
+      "tests/writer/preferences-capture.mjs",
+      "tests/writer/preferences.spec.ts",
+      "tests/writer/production.mjs",
+      "tests/writer/settings-audit.spec.ts",
+      "tests/writer/shell.spec.ts"
+    ],
+    "boundary": "Latest shared working tree copied read-only; no external Agent 1 session identity or approval available."
+  }
+}

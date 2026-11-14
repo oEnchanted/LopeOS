@@ -1,0 +1,17 @@
+# Dispatch only after explicit approval to create this branch/workflow and log these diagnostics.
+# This workflow never deploys the site or changes host configuration.
+name: Inspect Lope Browser host
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: [self-hosted, Windows, X64, lope-production]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Inspect WSL/Docker availability and loopback service health
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: ./services/browser/hosting/windows/Inspect-LopeBrowserHost.ps1

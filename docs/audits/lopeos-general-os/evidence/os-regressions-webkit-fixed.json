@@ -1,0 +1,121 @@
+{
+  "engine": "webkit",
+  "base": "http://127.0.0.1:4191",
+  "ranAt": "2026-11-14T00:02:46.560Z",
+  "pass": 16,
+  "fail": 0,
+  "results": [
+    {
+      "id": "state-01",
+      "title": "Malformed restored window record does not blank the desktop",
+      "result": "PASS",
+      "ms": 1093,
+      "pageErrors": []
+    },
+    {
+      "id": "state-02",
+      "title": "Non-array recent-apps history does not crash the Dock or block launches",
+      "result": "PASS",
+      "ms": 582,
+      "pageErrors": []
+    },
+    {
+      "id": "state-03",
+      "title": "Malformed notification history entries do not crash the notification centre",
+      "result": "PASS",
+      "ms": 575,
+      "pageErrors": []
+    },
+    {
+      "id": "state-04",
+      "title": "Personal wallpaper data URL cannot inject extra CSS image layers",
+      "result": "PASS",
+      "ms": 1078,
+      "pageErrors": []
+    },
+    {
+      "id": "life-01",
+      "title": "Retrying an app whose code chunk failed to load actually reloads it",
+      "result": "PASS",
+      "ms": 673,
+      "pageErrors": []
+    },
+    {
+      "id": "life-02",
+      "title": "A failed desktop (Shell) chunk shows a recovery path instead of a blank page",
+      "result": "PASS",
+      "ms": 1033,
+      "pageErrors": []
+    },
+    {
+      "id": "app-01",
+      "title": "App cannot execute another window’s scoped commands or privileged shell commands",
+      "result": "PASS",
+      "ms": 557,
+      "pageErrors": []
+    },
+    {
+      "id": "app-02",
+      "title": "File access revoked in Settings is denied at operation time via the API",
+      "result": "PASS",
+      "ms": 477,
+      "pageErrors": []
+    },
+    {
+      "id": "app-03",
+      "title": "Notification storm from one app stays bounded and does not freeze the shell",
+      "result": "PASS",
+      "ms": 895,
+      "pageErrors": []
+    },
+    {
+      "id": "app-04",
+      "title": "Window-launch storm from one app is capped",
+      "result": "PASS",
+      "ms": 1918,
+      "pageErrors": []
+    },
+    {
+      "id": "app-05",
+      "title": "App notifications are attributed so an app cannot impersonate the OS",
+      "result": "PASS",
+      "ms": 555,
+      "pageErrors": []
+    },
+    {
+      "id": "app-06",
+      "title": "Closed window context cannot open OS file dialogs or register commands",
+      "result": "PASS",
+      "ms": 790,
+      "pageErrors": []
+    },
+    {
+      "id": "a11y-01",
+      "title": "Spotlight keeps Tab focus inside the dialog for 25 presses",
+      "result": "PASS",
+      "ms": 719,
+      "pageErrors": []
+    },
+    {
+      "id": "a11y-02",
+      "title": "OS file dialog keeps Tab focus inside and Escape cancels it",
+      "result": "PASS",
+      "ms": 619,
+      "pageErrors": []
+    },
+    {
+      "id": "kbd-01",
+      "title": "Global shortcuts still work after launching an app from the Dock",
+      "result": "PASS",
+      "ms": 640,
+      "pageErrors": []
+    },
+    {
+      "id": "ui-01",
+      "title": "PerfectHue credit is visible, unobstructed, and uses the manifest credit URL",
+      "result": "PASS",
+      "ms": 548,
+      "pageErrors": []
+    }
+  ]
+}

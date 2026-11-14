@@ -1,0 +1,6 @@
+{
+  "result": "FAIL",
+  "checks": [],
+  "errors": [],
+  "error": "Error: An untouched document must not inherit another tab’s selection\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: false\nReceived: true"
+}

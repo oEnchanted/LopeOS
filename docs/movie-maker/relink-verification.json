@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-11-13T23:36:32.074Z",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "relink changes decoded preview pixels; undo/redo restore original/replacement source pixels",
+    "removing missing clip restores playback and export; portable project includes only referenced originals"
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,97 @@
+{
+  "verificationDate": "2026-11-13",
+  "productionLibraries": [
+    {
+      "name": "exceljs",
+      "version": "4.4.0",
+      "license": "MIT",
+      "source": "https://github.com/exceljs/exceljs/tree/v4.4.0",
+      "purpose": "XLSX cells/styles/worksheet interchange; dynamically imported only for XLSX operations"
+    },
+    {
+      "name": "fflate",
+      "version": "0.8.2",
+      "license": "MIT",
+      "source": "https://github.com/101arrowz/fflate/tree/v0.8.2",
+      "purpose": "Bounded ZIP inspection, parser-copy normalization, sparse metadata serialization"
+    }
+  ],
+  "independentReader": {
+    "name": "openpyxl",
+    "version": "3.1.5",
+    "transitive": "et-xmlfile 2.0.0",
+    "productionDependency": false,
+    "excelInstalled": false
+  },
+  "fixtures": [
+    {
+      "path": "tests/spreadsheet/fixtures/independent-1904.xlsx",
+      "bytes": 4866,
+      "sha256": "805c03f1325ab522683f56f8873e15d23906f9394e067fcdab2854aaf42f1587"
+    },
+    {
+      "path": "tests/spreadsheet/fixtures/independent-boundaries.xlsx",
+      "bytes": 4847,
+      "sha256": "4d4ec08785c266fbd6d9d6d38603cb7077114ff38a372c22321b7468fd342d2d"
+    },
+    {
+      "path": "tests/spreadsheet/fixtures/independent-budget-chart.xlsx",
+      "bytes": 9620,
+      "sha256": "d72916c5687c99d2c7290f2ec7aa88f7acfb4106957c3071cea1125247578f46"
+    },
+    {
+      "path": "tests/spreadsheet/fixtures/independent-budget.xlsx",
+      "bytes": 8269,
+      "sha256": "b7527e4961be41a49f46b8e1314524e7cacca99e91deefa730913fa2c65f6767"
+    },
+    {
+      "path": "tests/spreadsheet/fixtures/roundtrip-budget.xlsx",
+      "bytes": 10839,
+      "sha256": "432308efc961bc23a6541171916cecf1f17b0c2785cb253e66299094cd3a1de2"
+    }
+  ],
+  "verification": {
+    "nodeInterchangeTests": {
+      "passed": 15,
+      "total": 15,
+      "command": "node --test tests/spreadsheet/io.test.ts"
+    },
+    "independentPackageChecks": {
+      "passed": 25,
+      "total": 25,
+      "report": "docs/spreadsheet/independent-xlsx-results.json"
+    },
+    "browserRecoveryAndWorkerTests": {
+      "passed": 4,
+      "total": 4,
+      "command": "npx playwright test -c tests/spreadsheet/playwright.config.ts recovery.spec.ts"
+    },
+    "shellIntegrationTests": {
+      "passed": 1,
+      "total": 1,
+      "command": "npx playwright test -c tests/spreadsheet/playwright.config.ts shell.spec.ts"
+    }
+  },
+  "artifacts": {
+    "benchmark": "docs/spreadsheet/io-benchmark.json",
+    "screenshot": "docs/spreadsheet/screenshots/shell-dark-reduced-transparency.png",
+    "screenshotConditions": {
+      "viewport": [
+        1440,
+        1000
+      ],
+      "deviceScaleFactor": 1,
+      "windowBounds": {
+        "x": 36,
+        "y": 42,
+        "width": 1366,
+        "height": 840
+      },
+      "appearance": "dark",
+      "reducedTransparency": true,
+      "sheetZoomPercent": 100,
+      "selectedCell": "B2",
+      "workbook": "Synthetic shell integration, saved; B1=100, C1=B1*2"
+    }
+  }
+}

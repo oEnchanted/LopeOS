@@ -1,5 +1,5 @@
-import { useRef, useState, type ReactNode } from 'react';
-import { ArrowDown, CalendarDays, ChevronLeft, ChevronRight, Clock3, Droplets, Eye, MapPin, RefreshCw, Search, Sun, Sunrise, Sunset, Thermometer, Wind } from 'lucide-react';
+import { useId, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { ArrowDown, CalendarDays, ChevronLeft, ChevronRight, Clock3, Droplets, Eye, MapPin, PanelLeft, RefreshCw, Search, Sun, Sunrise, Sunset, Thermometer, Wind } from 'lucide-react';
 import { Button, Dialog } from '../../../../../packages/ui/src';
 import type { AppContext } from '../../../../../packages/contracts/src';
 import { useAppCommands } from '../hooks';
@@ -8,19 +8,14 @@ import { ConditionIcon } from './ConditionIcon';
 import { WEATHER_ATTRIBUTION, weatherDescription, type WeatherData, type WeatherLocation } from './provider';
 import { weatherStore } from './store';
 import { useWeather } from './useWeather';
+import { CitySidebar } from './CitySidebar';
+import { WeatherAtmosphere, skyFor } from './WeatherAtmosphere';
+import { useWeatherMotion } from './useWeatherMotion';
+import { addWeatherLocation, getWeatherLocations, removeWeatherLocation, reorderWeatherLocations, selectWeatherLocation, weatherLocationKey } from './locations';
 import '../application.css';
 import './weather.css';
 
 export { WeatherStatusBridge } from './WeatherStatusBridge';
-
-function skyFor(data: WeatherData | null) {
-  if (!data) return 'day';
-  if (!data.isDay) return 'night';
-  if ((data.code >= 71 && data.code <= 77) || data.code === 85 || data.code === 86) return 'snow';
-  if (data.code >= 51) return 'rain';
-  if (data.code >= 3) return 'cloudy';
-  return 'day';
-}
 
 // Provider timestamps are wall-clock times at the forecast location, not the browser's timezone.
 function localTime(value: string, hourOnly = false) {
@@ -32,7 +27,7 @@ function localTime(value: string, hourOnly = false) {
 }
 
 function Metric({ title, icon, children, className = '' }: { title: string; icon: ReactNode; children: ReactNode; className?: string }) {
-  return <section className={'weather-glass weather-metric ' + className} aria-label={title}>
+  return <section className={'glass weather-glass weather-metric ' + className} aria-label={title}>
     <h2 className="weather-panel-heading">{icon}{title}</h2>{children}
   </section>;
 }
@@ -45,7 +40,7 @@ function Forecast({ data }: { data: WeatherData }) {
     const celsius = data.units === 'fahrenheit' ? (temperature - 32) * 5 / 9 : temperature;
     return 'hsl(' + Math.max(15, Math.min(220, 220 - (celsius + 5) * 5.5)) + ' 78% 69%)';
   };
-  return <section className="weather-glass weather-forecast" aria-label={data.forecast.length + '-day forecast'}>
+  return <section className="glass weather-glass weather-forecast" aria-label={data.forecast.length + '-day forecast'}>
     <h2 className="weather-panel-heading"><CalendarDays size={14}/>{data.forecast.length}-day forecast</h2>
     <ol>{data.forecast.map((day, index) => {
       const left = Math.min((day.low - low) / span * 100, 98);
@@ -67,47 +62,113 @@ function Forecast({ data }: { data: WeatherData }) {
 }
 
 export default function Weather({ context }: { context: AppContext }) {
-  const state = useWeather(context.services.settings);
+  const settings = context.services.settings;
+  const state = useWeather(settings);
+  const locations = useSyncExternalStore(settings.subscribe.bind(settings), () => getWeatherLocations(settings));
+  const autoRefresh = useSyncExternalStore(settings.subscribe.bind(settings), () => settings.get('weatherAutoRefresh', true));
   const [locationOpen, setLocationOpen] = useState(false);
+  const [cityError, setCityError] = useState('');
+  const [cityNotice, setCityNotice] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [compactListOpen, setCompactListOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const motion = useWeatherMotion(root, settings);
+  const citiesToggle = useRef<HTMLButtonElement>(null);
+  const citiesId = useId();
+  const citiesOpen = compact ? compactListOpen : sidebarOpen;
+  useLayoutEffect(() => {
+    const element = root.current;
+    if (!element) return;
+    const measure = () => {
+      const nextCompact = element.clientWidth < 700;
+      if (nextCompact && element.querySelector('.weather-city-sidebar')?.contains(document.activeElement)) setCompactListOpen(true);
+      setCompact(nextCompact);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  useLayoutEffect(() => {
+    if (compact && citiesOpen) root.current?.querySelector<HTMLButtonElement>('.weather-city-card[aria-current=location]')?.focus();
+  }, [compact, citiesOpen]);
   const hourly = useRef<HTMLDivElement>(null);
+  const scroll = useRef<HTMLDivElement>(null);
   const unit = state.units === 'celsius' ? 'C' : 'F';
   const data = state.data;
+  const sceneData = useRef(data);
+  if (data) sceneData.current = data;
+  const cityKey = weatherLocationKey(state.location);
+  useLayoutEffect(() => { if (scroll.current) scroll.current.scrollTop = 0; }, [cityKey]);
   const today = data?.forecast[0];
-  const changeUnits = (units: 'celsius' | 'fahrenheit') => context.services.settings.set('weather.units', units);
+  const changeUnits = (units: 'celsius' | 'fahrenheit') => settings.set('weather.units', units);
+  function openLocationPicker() { setCityError(''); setLocationOpen(true); }
+  function closeCities() { setCompactListOpen(false); requestAnimationFrame(() => citiesToggle.current?.focus()); }
+  function editCities(action: () => void, notice: string) {
+    try { action(); setCityError(''); setCityNotice(notice); }
+    catch (error) { setCityError(error instanceof Error ? error.message : 'Your cities could not be saved.'); }
+  }
   useAppCommands(context, [
-    { id: 'weather.location' as const, label: 'Change Location…', execute: () => setLocationOpen(true) },
+    { id: 'weather.location' as const, label: 'Add City…', execute: openLocationPicker },
     { id: 'weather.refresh' as const, label: 'Refresh Weather', shortcut: 'Mod+R', enabled: !state.refreshing, execute: () => weatherStore.refresh(true) },
     { id: 'weather.celsius' as const, label: 'Celsius', checked: state.units === 'celsius', execute: () => changeUnits('celsius') },
     { id: 'weather.fahrenheit' as const, label: 'Fahrenheit', checked: state.units === 'fahrenheit', execute: () => changeUnits('fahrenheit') },
   ]);
-  function chooseLocation(location: WeatherLocation) { context.services.settings.set('weather.location', location); setLocationOpen(false); }
+  function chooseLocation(location: WeatherLocation) {
+    editCities(() => { addWeatherLocation(settings, location); setLocationOpen(false); if (compact) closeCities(); }, location.name + ' is in your cities.');
+  }
+  function selectCity(location: WeatherLocation) {
+    editCities(() => { selectWeatherLocation(settings, location); if (compact) closeCities(); }, 'Showing ' + location.name + '.');
+  }
+  function moveCity(location: WeatherLocation, offset: number) {
+    const keys = locations.map(weatherLocationKey);
+    const index = keys.indexOf(weatherLocationKey(location));
+    const target = index + offset;
+    if (index < 0 || target < 0 || target >= keys.length) return;
+    [keys[index], keys[target]] = [keys[target], keys[index]];
+    editCities(() => reorderWeatherLocations(settings, keys), location.name + ' moved ' + (offset < 0 ? 'up.' : 'down.'));
+  }
+  function removeCity(location: WeatherLocation) {
+    const index = locations.findIndex(city => weatherLocationKey(city) === weatherLocationKey(location));
+    editCities(() => {
+      removeWeatherLocation(settings, weatherLocationKey(location));
+      requestAnimationFrame(() => {
+        const cards = root.current?.querySelectorAll<HTMLButtonElement>('.weather-city-card');
+        cards?.[Math.min(index, cards.length - 1)]?.focus();
+      });
+    }, location.name + ' removed.');
+  }
   const nextSunrise = Boolean(data?.sunrise && data.time < data.sunrise);
   const sunTime = nextSunrise ? data?.sunrise : data?.sunset;
   const direction = data?.windDirection === undefined ? '' : ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(data.windDirection / 45) % 8];
   const uv = data?.uvIndex === undefined ? undefined : Math.max(0, Math.round(data.uvIndex));
   const uvLevel = uv === undefined ? '' : uv < 3 ? 'Low' : uv < 6 ? 'Moderate' : uv < 8 ? 'High' : uv < 11 ? 'Very high' : 'Extreme';
 
-  return <div className="lope-app weather-view sky-weather" data-testid="weather-app" data-sky={skyFor(data)} data-glass-tone="dark">
-    <div className="weather-atmosphere" aria-hidden="true"><div className="weather-sun"/><div className="weather-cloud weather-cloud-one"/><div className="weather-cloud weather-cloud-two"/><div className="weather-stars"/></div>
+  return <div ref={root} className="lope-app weather-view sky-weather" data-testid="weather-app" data-sky={skyFor(sceneData.current)} data-night={sceneData.current?.isDay === false} data-motion={motion ? 'active' : 'off'} data-compact={compact} data-cities-open={citiesOpen}>
+    <WeatherAtmosphere data={data} motion={motion}/>
+    <div className="weather-workspace">
+    <CitySidebar id={citiesId} open={citiesOpen} motion={motion} locations={locations} selected={state.location} units={state.units} autoRefresh={autoRefresh} compact={compact} onSelect={selectCity} onAdd={openLocationPicker} onClose={closeCities} onRemove={removeCity} onMove={moveCity} onAccount={() => context.services.launch('lope.settings', { page: 'account' })}/>
+    <div className="weather-main" hidden={compact && citiesOpen}>
     <div className="weather-navigation" role="toolbar" aria-label="Weather controls">
-      <button className="weather-location-control" type="button" onClick={() => setLocationOpen(true)} title="Search for a location"><Search size={16}/><span className="weather-location-name">{state.location.name}</span></button>
+      <div className="weather-navigation-leading"><button ref={citiesToggle} className="weather-cities-toggle" type="button" aria-label={citiesOpen ? 'Hide cities' : 'Show cities'} aria-expanded={citiesOpen} aria-controls={citiesId} title={citiesOpen ? 'Hide cities' : 'Show cities'} onClick={() => compact ? setCompactListOpen(value => !value) : setSidebarOpen(value => !value)}><PanelLeft size={17}/></button><button className="weather-location-control" type="button" onClick={openLocationPicker} title="Add a city"><Search size={16}/><span className="weather-location-name">{state.location.name}</span></button></div>
       <div className="weather-navigation-actions">
-        <div className="weather-unit-control" role="group" aria-label="Temperature unit"><button type="button" aria-label="Use Celsius" aria-pressed={unit === 'C'} onClick={() => changeUnits('celsius')}>°C</button><button type="button" aria-label="Use Fahrenheit" aria-pressed={unit === 'F'} onClick={() => changeUnits('fahrenheit')}>°F</button></div>
-        <button className="weather-refresh" type="button" aria-label="Refresh weather" title="Refresh weather" disabled={state.refreshing} onClick={() => { void weatherStore.refresh(true); }}><RefreshCw size={15}/></button>
+        <div className="glass weather-unit-control" role="group" aria-label="Temperature unit"><button type="button" aria-label="Use Celsius" aria-pressed={unit === 'C'} onClick={() => changeUnits('celsius')}>°C</button><button type="button" aria-label="Use Fahrenheit" aria-pressed={unit === 'F'} onClick={() => changeUnits('fahrenheit')}>°F</button></div>
+        <button className="weather-refresh" type="button" aria-label="Refresh weather" title="Refresh weather" data-refreshing={state.refreshing} disabled={state.refreshing} onClick={() => { void weatherStore.refresh(true); }}><RefreshCw size={15}/></button>
       </div>
     </div>
-    <div className="weather-scroll">
-      <div className="weather-dashboard">
+    <div ref={scroll} className="weather-scroll">
+      <div key={cityKey} className="weather-dashboard">
         {(state.notice || state.refreshing) && <p className="weather-status-note" role="status">{state.refreshing ? 'Updating conditions…' : state.notice}</p>}
-        {state.error && <div className="weather-error" role="alert"><strong>{state.status === 'offline' ? 'You’re offline' : 'Weather is unavailable'}</strong><span>{state.error}</span>{data && <span>Showing cached conditions from {new Date(data.fetchedAt).toLocaleString()}.</span>}<Button disabled={state.refreshing || state.status === 'offline'} onClick={() => { void weatherStore.refresh(true); }}>Try again</Button></div>}
+        {state.error && <div className="glass weather-glass weather-error" role="alert"><strong>{state.status === 'offline' ? 'You’re offline' : 'Weather is unavailable'}</strong><span>{state.error}</span>{data && <span>Showing cached conditions from {new Date(data.fetchedAt).toLocaleString()}.</span>}<Button disabled={state.refreshing || state.status === 'offline'} onClick={() => { void weatherStore.refresh(true); }}>Try again</Button></div>}
         {data ? <>
           <header className="weather-hero">
             <p className="weather-place">{state.location.name}</p>
-            <h1 className="weather-temperature" aria-label={Math.round(data.temperature) + '°' + unit}>{Math.round(data.temperature)}<span>°</span></h1>
+            <h1 className="weather-temperature" aria-label={Math.round(data.temperature) + '°' + unit}><span key={Math.round(data.temperature) + unit} className="weather-temperature-value">{Math.round(data.temperature)}</span><span className="weather-degree">°</span></h1>
             <p className="weather-condition">{weatherDescription(data.code)}</p>
             {today && <p className="weather-extremes">H:{Math.round(today.high)}° <span>L:{Math.round(today.low)}°</span></p>}
           </header>
-          <section className="weather-glass weather-hourly" aria-label="Hourly forecast">
+          <section className="glass weather-glass weather-hourly" aria-label="Hourly forecast">
             <div className="weather-hourly-intro">
               <p>{today ? weatherDescription(today.code) + ' today. High ' + Math.round(today.high) + '°, low ' + Math.round(today.low) + '°.' : 'Current conditions and hourly forecast.'}</p>
               {!!data.hourly?.length && <div className="weather-hourly-controls"><button type="button" aria-label="Previous hours" onClick={() => hourly.current?.scrollBy({ left: -280 })}><ChevronLeft size={15}/></button><button type="button" aria-label="Next hours" onClick={() => hourly.current?.scrollBy({ left: 280 })}><ChevronRight size={15}/></button></div>}
@@ -141,6 +202,10 @@ export default function Weather({ context }: { context: AppContext }) {
         </footer>
       </div>
     </div>
-    {locationOpen && <Dialog title="Choose a location" onClose={() => setLocationOpen(false)}><LocationPicker onSelect={chooseLocation} openURL={context.services.openURL}/></Dialog>}
+    </div>
+    </div>
+    {cityError && !locationOpen && <div className="glass weather-city-message" role="alert">{cityError}<button type="button" onClick={() => setCityError('')}>Dismiss</button></div>}
+    <span className="weather-announcement" role="status">{cityNotice}</span>
+    {locationOpen && <Dialog title="Add a city" onClose={() => setLocationOpen(false)}><LocationPicker onSelect={chooseLocation} savedLocations={locations} openURL={context.services.openURL}/>{cityError && <p className="application-error" role="alert">{cityError}</p>}</Dialog>}
   </div>;
 }

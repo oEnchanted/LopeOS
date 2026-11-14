@@ -1,0 +1,54 @@
+import {chromium, expect} from '@playwright/test';
+import {mkdir, writeFile} from 'node:fs/promises';
+const phase=process.env.AUDIT_PHASE||'after',base=process.env.LOPE_PHOTO_BASE||'http://127.0.0.1:5191';
+const out='docs/lightroom/release-audit/evidence',results=[];
+await mkdir(out,{recursive:true});
+const browser=await chromium.launch({headless:true});
+async function test(id,description,fn,{samples=true}={}){
+ const context=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:1}),page=await context.newPage(),errors=[];page.setDefaultTimeout(15000);page.on('pageerror',e=>errors.push(e.message));
+ try {await page.goto(base+'/tests/lightroom/handoff.html');const app=page.getByTestId('photo-studio');await expect(app).toBeVisible();
+ if(samples){await app.getByRole('button',{name:'Add sample photos',exact:true}).click();await page.getByRole('button',{name:'Add 4 photos',exact:true}).click();await expect(app.getByTestId('photo-canvas')).toBeVisible();await expect(app.locator('.ps-render-status')).toBeHidden();}
+ const details=await fn(page,app);await page.screenshot({path:`${out}/${id}-${phase}.png`});expect(errors).toEqual([]);results.push({id,description,result:'PASS',details,errors});
+ }catch(error){await page.screenshot({path:`${out}/${id}-${phase}.png`}).catch(()=>{});results.push({id,description,result:'FAIL',error:error.message,errors});}
+ finally{console.log(id,results.at(-1)?.result);await context.close();}
+}
+async function records(page){return page.evaluate(async()=>{const {loadLibrary}=await import('/apps/web/src/apps/lightroom/library.ts');return (await loadLibrary()).assets;});}
+async function album(page,app,name,type='album',parent=''){
+ await app.getByRole('button',{name:'Create album or folder',exact:true}).click();const dialog=page.getByRole('dialog');await dialog.getByLabel('Album name').fill(name);await dialog.getByLabel(/^Type/).selectOption(type);await dialog.getByLabel(/^Parent folder/).selectOption({label:parent||'Top level'});await dialog.getByRole('button',{name:'Save',exact:true}).click();await expect(dialog).toBeHidden();
+}
+await test('LR-FIX-001','Delayed Auto never replaces the newly selected photo recipe',async(page,app)=>{
+ const before=await records(page),target=before.find(a=>a.name==='yosemite.jpg'),other=before.find(a=>a.name==='forest.jpg');
+ await page.evaluate(async()=>{const {PhotoWorker}=await import('/apps/web/src/apps/lightroom/worker-client.ts');const run=PhotoWorker.prototype.run;PhotoWorker.prototype.run=async function(type,...args){const result=await run.call(this,type,...args);if(type==='auto'){window.__autoReady=true;await new Promise(resolve=>window.__releaseAuto=resolve);}return result;};});
+ await page.evaluate(()=>{void window.__handoff.commands.execute('photo.auto');});await expect.poll(()=>page.evaluate(()=>!!window.__autoReady)).toBe(true);
+ await app.getByRole('button',{name:'Select forest.jpg',exact:true}).click();await page.evaluate(()=>window.__releaseAuto());await expect.poll(async()=>JSON.stringify((await records(page)).find(a=>a.id===target.id).recipe)!==JSON.stringify(target.recipe)||(await records(page)).find(a=>a.id===other.id).history.length>0).toBe(true);
+ const after=await records(page);expect(after.find(a=>a.id===other.id).recipe).toEqual(other.recipe);expect(after.find(a=>a.id===target.id).history.length).toBe(1);return {source:target.name,selected:other.name,selectedRecipeUnchanged:true};
+});
+await test('LR-FIX-002','Filtering a multi-selection removes hidden export targets',async(page,app)=>{
+ await app.getByRole('button',{name:'Select forest.jpg',exact:true}).click({modifiers:['Meta']});await app.getByLabel('Search photos').fill('forest');await expect(app.locator('.ps-filmstrip button')).toHaveCount(1);await app.getByRole('button',{name:'Export',exact:true}).click();await expect(page.getByRole('dialog').getByRole('button',{name:'Export 1 photo',exact:true})).toBeVisible();return {visible:1,exportTargets:1};
+});
+await test('LR-FIX-003','Smart album rule edits persist after reload',async(page,app)=>{
+ await album(page,app,'Review stars','smart');await app.getByRole('button',{name:'Album actions',exact:true}).click();const dialog=page.getByRole('dialog');await dialog.getByLabel('Minimum stars').fill('5');await dialog.getByLabel('Match text').fill('forest');await dialog.getByRole('button',{name:'Save',exact:true}).click();await expect(dialog).toBeHidden();await page.reload();const state=await page.evaluate(async()=>{const {loadLibrary}=await import('/apps/web/src/apps/lightroom/library.ts');return (await loadLibrary()).albums.find(a=>a.name==='Review stars');});expect(state.rules).toMatchObject({rating:5,text:'forest'});return state.rules;
+});
+await test('LR-FIX-004','Deeply nested albums remain reachable and names fit navigation',async(page,app)=>{
+ await album(page,app,'Parent','folder');await album(page,app,'Child','folder','Parent');await album(page,app,'Grandchild with a deliberately long album title that must remain inside the navigation','album','Child');const button=app.getByRole('navigation',{name:'Albums',exact:true}).getByRole('button',{name:/Grandchild/});await expect(button).toBeVisible();await button.click();await expect(app.locator('.ps-collection-bar')).toContainText('Grandchild');const bounds=await app.locator('.ps-albums').evaluate(e=>({width:e.clientWidth,scroll:e.scrollWidth}));expect(bounds.scroll).toBeLessThanOrEqual(bounds.width+1);return bounds;
+},{samples:false});
+await test('LR-FIX-005','Import review supports select-all and deselect-all without enabling failed decodes',async(page,app)=>{
+ await app.getByRole('button',{name:'Add sample photos',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog.getByRole('button',{name:'Add 4 photos',exact:true})).toBeEnabled();const all=dialog.getByRole('checkbox',{name:'Select all photos',exact:true});await expect(all).toBeChecked();await all.uncheck();await expect(dialog.getByRole('button',{name:'Add 0 photos',exact:true})).toBeDisabled();await all.check();await expect(dialog.getByRole('button',{name:'Add 4 photos',exact:true})).toBeEnabled();return {selected:4,deselectAll:true};
+},{samples:false});
+await test('LR-FUNC-003','Smart membership follows rating edits and persists through reload',async(page,app)=>{
+ await album(page,app,'Five stars','smart');await app.getByRole('button',{name:'Album actions',exact:true}).click();const dialog=page.getByRole('dialog');await dialog.getByLabel('Minimum stars').fill('5');await dialog.getByRole('button',{name:'Save',exact:true}).click();await expect(dialog).toBeHidden();
+ await app.getByRole('navigation',{name:'Photo library',exact:true}).getByRole('button',{name:/All photos/}).click();await app.getByRole('button',{name:'Select yosemite.jpg',exact:true}).click();await app.getByRole('button',{name:'Rate 5 stars',exact:true}).click();await expect(app.getByText('Saved locally',{exact:true})).toBeVisible();
+ await app.getByRole('navigation',{name:'Albums',exact:true}).getByRole('button',{name:'Five stars',exact:true}).click();await expect(app.locator('.ps-count')).toHaveText('1 photo');await page.reload();await expect(app).toBeVisible();await app.getByRole('navigation',{name:'Albums',exact:true}).getByRole('button',{name:'Five stars',exact:true}).click();await expect(app.locator('.ps-count')).toHaveText('1 photo');await app.getByRole('button',{name:'Rate 5 stars',exact:true}).click();await expect(app.locator('.ps-count')).toHaveText('0 photos');return {membership:[0,1,1,0],reloaded:true};
+});
+await test('LR-FUNC-002','Preset hover renders a temporary preview and reverts without committing',async(page,app)=>{
+ const pixels=()=>app.getByTestId('photo-canvas').evaluate(c=>{const bytes=c.getContext('2d').getImageData(0,0,c.width,c.height).data;return bytes.reduce((sum,n)=>sum+n,0);});
+ const before=await records(page),sum=await pixels();await app.locator('.ps-tool-rail').getByRole('button',{name:'Presets',exact:true}).click();const preset=app.getByRole('button',{name:'Natural',exact:true});await preset.hover();await expect.poll(pixels).not.toBe(sum);const hover=await records(page);expect(hover.map(a=>a.recipe)).toEqual(before.map(a=>a.recipe));await app.locator('.ps-collection-bar h2').hover();await expect.poll(pixels).toBe(sum);expect((await records(page)).map(a=>a.history.length)).toEqual(before.map(a=>a.history.length));return {temporaryPixelsChanged:true,recipeUnchanged:true,reverted:true};
+});
+await test('LR-FIX-006','Queued 100% inspection retains full-resolution request during a Fit render',async(page,app)=>{
+ await page.evaluate(async()=>{const {PhotoWorker}=await import('/apps/web/src/apps/lightroom/worker-client.ts');const run=PhotoWorker.prototype.run;window.__renderEdges=[];let hold=true;PhotoWorker.prototype.run=async function(type,payload){if(type==='render'){window.__renderEdges.push(payload.maxEdge);if(hold){hold=false;window.__renderHeld=true;await new Promise(resolve=>window.__releaseRender=resolve);}}return run.call(this,type,payload);};});
+ await app.getByLabel('Exposure value',{exact:true}).fill('0.5');await app.getByRole('heading',{name:'Edit',exact:true}).click();await expect.poll(()=>page.evaluate(()=>!!window.__renderHeld)).toBe(true);await app.getByLabel('Photo zoom').selectOption('1');await page.waitForTimeout(100);await page.evaluate(()=>window.__releaseRender());await expect.poll(()=>page.evaluate(()=>window.__renderEdges.at(-1))).toBe(65535);await expect(app.locator('.ps-render-status')).toBeHidden();return {requestedMaxEdges:await page.evaluate(()=>window.__renderEdges)};
+});
+await test('LR-FIX-007','Workspace export denial is recoverable without an uncaught promise',async(page,app)=>{
+ await page.evaluate(()=>{window.__handoff.dialogs.saveFile=async()=>{throw new Error('Audit permission denied');};});await app.getByRole('button',{name:'Export',exact:true}).click();const dialog=page.getByRole('dialog');await dialog.getByLabel('Export destination').selectOption('workspace');await dialog.getByRole('button',{name:'Export 1 photo',exact:true}).click();await expect(app.getByRole('alert')).toContainText('Audit permission denied');await dialog.getByLabel('Export destination').selectOption('download');const pending=page.waitForEvent('download');await dialog.getByRole('button',{name:'Export 1 photo',exact:true}).click();const download=await pending;await expect(dialog).toBeHidden();return {denialReported:true,retryDownload:download.suggestedFilename()};
+});
+await browser.close();await writeFile(`${out}/release-regressions-${phase}.json`,JSON.stringify({phase,date:'2026-11-13',browser:'Chromium',base,results},null,2));console.log(JSON.stringify(results.map(({id,result,error})=>({id,result,error})),null,2));if(phase!=='before'&&results.some(r=>r.result==='FAIL'))process.exitCode=1;

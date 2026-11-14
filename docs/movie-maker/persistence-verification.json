@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-13T23:28:59.378Z",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "atomic project and original-media save/load",
+    "reload recovery preserves edit decisions and source bytes",
+    "simulated quota error rolls back both decision and media writes; subsequent save recovers",
+    "concurrent saves finish in invocation order; read awaits queued saves; immutable snapshots resist caller mutation",
+    "portable reopen, missing-reference recovery list, and clearing project without deleting originals"
+  ],
+  "status": "PASS"
+}

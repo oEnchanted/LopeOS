@@ -2,7 +2,7 @@ import { History, uid, type BrushSettings, type ImageDocument, type Layer, type 
 import type { ToolId, ToolOptions } from './tool-model';
 import { database } from './recovery';
 
-export type EditorSession={history:History;path?:string;version?:string;external?:boolean;zoom:number;pan:Point;viewInitialized?:boolean};
+export type EditorSession={history:History;path?:string;version?:string;external?:boolean;zoom:number;pan:Point;viewInitialized?:boolean;lastSelection?:{width:number;height:number;coverage:Uint8Array}};
 export type PendingType={documentId:string;layerId?:string;point:Point;text:NonNullable<Layer['text']>};
 export type EditorState={sessions:EditorSession[];activeId:string;tool:ToolId;brush:BrushSettings;foreground:string;background:string;options:ToolOptions;typeDefaults:NonNullable<Layer['text']>;pendingType?:PendingType};
 type Asset={id:string;windowId:string;data:Uint8Array|Uint8ClampedArray};

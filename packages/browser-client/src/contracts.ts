@@ -21,6 +21,7 @@ export interface BrowserPermission {
 }
 export interface BrowserUpload { id: string; tabId: string; multiple: boolean }
 export interface BrowserSession {
+  hosting?: { remote: true; accountId: string | null; profile: 'server' };
   generation: string;
   revision: number;
   id: string; mode: BrowserMode; status: 'connecting' | 'ready' | 'crashed';

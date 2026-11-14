@@ -1,0 +1,43 @@
+{
+  "phase": "before",
+  "date": "2026-11-13",
+  "browser": "Chromium",
+  "base": "http://127.0.0.1:5191",
+  "results": [
+    {
+      "id": "LR-FIX-001",
+      "description": "Delayed Auto never replaces the newly selected photo recipe",
+      "result": "FAIL",
+      "error": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 3\n+ Received  + 3\n\n@@ -83,18 +83,18 @@\n      \"clarity\": 0,\n      \"colorNoise\": 0,\n      \"contrast\": 0,\n      \"dehaze\": 0,\n      \"distortion\": 0,\n-     \"exposure\": 0,\n+     \"exposure\": 1.43,\n      \"fringing\": 0,\n      \"grain\": 0,\n-     \"highlights\": 0,\n+     \"highlights\": -35,\n      \"horizontal\": 0,\n      \"noise\": 0,\n      \"saturation\": 0,\n-     \"shadows\": 0,\n+     \"shadows\": 25,\n      \"sharpening\": 0,\n      \"straighten\": 0,\n      \"temperature\": 0,\n      \"texture\": 0,\n      \"tint\": 0,",
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-002",
+      "description": "Filtering a multi-selection removes hidden export targets",
+      "result": "FAIL",
+      "error": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog').getByRole('button', { name: 'Export 1 photo', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('dialog').getByRole('button', { name: 'Export 1 photo', exact: true }) with timeout 5000ms\n  - waiting for getByRole('dialog').getByRole('button', { name: 'Export 1 photo', exact: true })\n",
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-003",
+      "description": "Smart album rule edits persist after reload",
+      "result": "FAIL",
+      "error": "expect(received).toMatchObject(expected)\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"rating\": 5,\n-   \"text\": \"forest\",\n+   \"rating\": 3,\n+   \"text\": \"\",\n  }",
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-004",
+      "description": "Deeply nested albums remain reachable and names fit navigation",
+      "result": "FAIL",
+      "error": "expect(locator).toBeVisible() failed\n\nLocator: getByTestId('photo-studio').getByRole('navigation', { name: 'Albums', exact: true }).getByRole('button', { name: /Grandchild/ })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByTestId('photo-studio').getByRole('navigation', { name: 'Albums', exact: true }).getByRole('button', { name: /Grandchild/ }) with timeout 5000ms\n  - waiting for getByTestId('photo-studio').getByRole('navigation', { name: 'Albums', exact: true }).getByRole('button', { name: /Grandchild/ })\n",
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-005",
+      "description": "Import review supports select-all and deselect-all without enabling failed decodes",
+      "result": "FAIL",
+      "error": "expect(locator).toBeChecked() failed\n\nLocator: getByRole('dialog').getByRole('checkbox', { name: 'Select all photos', exact: true })\nExpected: checked\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeChecked\" getByRole('dialog').getByRole('checkbox', { name: 'Select all photos', exact: true }) with timeout 5000ms\n  - waiting for getByRole('dialog').getByRole('checkbox', { name: 'Select all photos', exact: true })\n",
+      "errors": []
+    }
+  ]
+}

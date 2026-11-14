@@ -1,0 +1,108 @@
+{
+  "phase": "after",
+  "date": "2026-11-13",
+  "browser": "Chromium",
+  "base": "http://127.0.0.1:5191",
+  "results": [
+    {
+      "id": "LR-FIX-001",
+      "description": "Delayed Auto never replaces the newly selected photo recipe",
+      "result": "PASS",
+      "details": {
+        "source": "yosemite.jpg",
+        "selected": "forest.jpg",
+        "selectedRecipeUnchanged": true
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-002",
+      "description": "Filtering a multi-selection removes hidden export targets",
+      "result": "PASS",
+      "details": {
+        "visible": 1,
+        "exportTargets": 1
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-003",
+      "description": "Smart album rule edits persist after reload",
+      "result": "PASS",
+      "details": {
+        "rating": 5,
+        "flag": "",
+        "text": "forest"
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-004",
+      "description": "Deeply nested albums remain reachable and names fit navigation",
+      "result": "PASS",
+      "details": {
+        "width": 185,
+        "scroll": 185
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-005",
+      "description": "Import review supports select-all and deselect-all without enabling failed decodes",
+      "result": "PASS",
+      "details": {
+        "selected": 4,
+        "deselectAll": true
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FUNC-003",
+      "description": "Smart membership follows rating edits and persists through reload",
+      "result": "PASS",
+      "details": {
+        "membership": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "reloaded": true
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FUNC-002",
+      "description": "Preset hover renders a temporary preview and reverts without committing",
+      "result": "PASS",
+      "details": {
+        "temporaryPixelsChanged": true,
+        "recipeUnchanged": true,
+        "reverted": true
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-006",
+      "description": "Queued 100% inspection retains full-resolution request during a Fit render",
+      "result": "PASS",
+      "details": {
+        "requestedMaxEdges": [
+          1600,
+          65535
+        ]
+      },
+      "errors": []
+    },
+    {
+      "id": "LR-FIX-007",
+      "description": "Workspace export denial is recoverable without an uncaught promise",
+      "result": "PASS",
+      "details": {
+        "denialReported": true,
+        "retryDownload": "yosemite-edited.jpg"
+      },
+      "errors": []
+    }
+  ]
+}

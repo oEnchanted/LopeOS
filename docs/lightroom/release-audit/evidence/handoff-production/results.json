@@ -1,0 +1,1380 @@
+{
+  "date": "2026-11-13",
+  "base": "http://127.0.0.1:5193",
+  "phase": "production",
+  "browser": "158.0.8127.18",
+  "os": "darwin",
+  "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "setup": "Fresh guest context; only setup completion is seeded. No source-module imports, runtime mocks, injected app state or command execution. State inspections are read-only IndexedDB reads.",
+  "fixture": {
+    "name": "handoff-bayer.dng",
+    "sha256": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+    "bytes": 25190
+  },
+  "checks": [
+    {
+      "id": "LR-07-IMPORT",
+      "result": "PASSED",
+      "detail": "Sensor-only DNG imported through real production UI and edited to +0.5 EV; stored original hash matches fixture."
+    },
+    {
+      "id": "LR-07-HANDOFF",
+      "result": "PASSED",
+      "detail": "Shared file dialog saved a real native RGB/8 layered project into durable local LopeDrive and Prism opened it."
+    },
+    {
+      "id": "LR-07-EDIT-SAVE",
+      "result": "PASSED",
+      "detail": "Real Prism Layer > New Layer, Edit > Fill with Foreground, and File > Save changed LopeDrive native bytes and retained two layers."
+    },
+    {
+      "id": "LR-07-RETURN",
+      "result": "PASSED",
+      "detail": "Changed native project returned as a separate managed derivative with source parentId, exact saved-project hash and visible filled pixels; RAW source and +0.5 EV recipe unchanged.",
+      "returnedPixels": {
+        "width": 128,
+        "height": 96,
+        "unique": [
+          0,
+          255
+        ],
+        "first": [
+          0,
+          0,
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "LR-07-EXPORT",
+      "result": "PASSED",
+      "detail": "Returned composite exported through real Luma UI as a PNG16 at original dimensions. RGB/8 handoff precision is accurately retained as an explicit limit."
+    },
+    {
+      "id": "LR-07-RELOAD",
+      "result": "PASSED",
+      "detail": "Fresh page session reopens the durable library and LopeDrive with exact original and derivative hashes."
+    }
+  ],
+  "initial": {
+    "id": "a603c1c6-5019-44b5-8413-0f704eff2b3f",
+    "name": "handoff-bayer.dng",
+    "hash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+    "size": 25190,
+    "imported": "2026-11-13T23:19:21.425Z",
+    "metadata": {
+      "camera": "LopeOS Synthetic Bayer",
+      "lens": "",
+      "iso": 0,
+      "shutter": 0,
+      "aperture": 0,
+      "focalLength": 0,
+      "orientation": 1,
+      "width": 128,
+      "height": 96,
+      "bitDepth": 16,
+      "format": "dng",
+      "decoder": "LibRaw WASM 1.6.0; 16-bit linear sensor development",
+      "colorSpace": "linear sRGB",
+      "warnings": [
+        "RAW rendering uses LibRaw. Results may differ from other photo editors; support varies by camera and compression format."
+      ],
+      "raw": true
+    },
+    "analysis": {
+      "sharpness": 29.112429488304723,
+      "exposure": 60.58836556560602,
+      "score": 44.85039752695537,
+      "clipped": 0,
+      "method": "edge-energy-and-luminance-v1"
+    },
+    "recipe": {
+      "version": 1,
+      "engine": "lope-photo/1.0.0",
+      "profile": "color",
+      "values": {
+        "exposure": 0.5,
+        "contrast": 0,
+        "highlights": 0,
+        "shadows": 0,
+        "whites": 0,
+        "blacks": 0,
+        "temperature": 0,
+        "tint": 0,
+        "vibrance": 0,
+        "saturation": 0,
+        "texture": 0,
+        "clarity": 0,
+        "dehaze": 0,
+        "vignette": 0,
+        "grain": 0,
+        "sharpening": 0,
+        "noise": 0,
+        "colorNoise": 0,
+        "distortion": 0,
+        "fringing": 0,
+        "straighten": 0,
+        "vertical": 0,
+        "horizontal": 0
+      },
+      "curve": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "mixer": [
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        }
+      ],
+      "grading": {
+        "shadows": [
+          0,
+          0
+        ],
+        "midtones": [
+          0,
+          0
+        ],
+        "highlights": [
+          0,
+          0
+        ]
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1
+      },
+      "rotation": 0,
+      "flipX": false,
+      "flipY": false,
+      "masks": [],
+      "retouch": []
+    },
+    "history": [
+      {
+        "label": "Adjust photo",
+        "recipe": {
+          "version": 1,
+          "engine": "lope-photo/1.0.0",
+          "profile": "color",
+          "values": {
+            "exposure": 0,
+            "contrast": 0,
+            "highlights": 0,
+            "shadows": 0,
+            "whites": 0,
+            "blacks": 0,
+            "temperature": 0,
+            "tint": 0,
+            "vibrance": 0,
+            "saturation": 0,
+            "texture": 0,
+            "clarity": 0,
+            "dehaze": 0,
+            "vignette": 0,
+            "grain": 0,
+            "sharpening": 0,
+            "noise": 0,
+            "colorNoise": 0,
+            "distortion": 0,
+            "fringing": 0,
+            "straighten": 0,
+            "vertical": 0,
+            "horizontal": 0
+          },
+          "curve": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 1,
+              "y": 1
+            }
+          ],
+          "mixer": [
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            }
+          ],
+          "grading": {
+            "shadows": [
+              0,
+              0
+            ],
+            "midtones": [
+              0,
+              0
+            ],
+            "highlights": [
+              0,
+              0
+            ]
+          },
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 1
+          },
+          "rotation": 0,
+          "flipX": false,
+          "flipY": false,
+          "masks": [],
+          "retouch": []
+        },
+        "at": "2026-11-13T23:19:21.770Z"
+      }
+    ],
+    "future": [],
+    "rating": 0,
+    "flag": "none",
+    "label": "",
+    "keywords": [],
+    "albumIds": [],
+    "order": 0,
+    "versions": [],
+    "storage": "managed",
+    "originalHash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5"
+  },
+  "returned": [
+    {
+      "id": "0c0d414d-1dcc-4738-8a61-1685f6f26f0d",
+      "name": "handoff-return.lopeimage",
+      "hash": "0c07a2f4fda0716804cdfaec883c9754a5c35ed33dce9698ae4c551ff40f4f3b",
+      "size": 175835,
+      "imported": "2026-11-13T23:19:26.272Z",
+      "metadata": {
+        "orientation": 1,
+        "width": 128,
+        "height": 96,
+        "bitDepth": 8,
+        "format": "lopeimage",
+        "decoder": "Shared Lope Image Editor native composite",
+        "colorSpace": "linear sRGB",
+        "warnings": [
+          "RGB/8 layered project handoff. Layers are retained in original bytes; Lightroom develops the composite."
+        ],
+        "raw": false
+      },
+      "analysis": {
+        "sharpness": 0,
+        "exposure": 0,
+        "score": 0,
+        "clipped": 1,
+        "method": "edge-energy-and-luminance-v1"
+      },
+      "recipe": {
+        "version": 1,
+        "engine": "lope-photo/1.0.0",
+        "profile": "color",
+        "values": {
+          "exposure": 0,
+          "contrast": 0,
+          "highlights": 0,
+          "shadows": 0,
+          "whites": 0,
+          "blacks": 0,
+          "temperature": 0,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "vignette": 0,
+          "grain": 0,
+          "sharpening": 0,
+          "noise": 0,
+          "colorNoise": 0,
+          "distortion": 0,
+          "fringing": 0,
+          "straighten": 0,
+          "vertical": 0,
+          "horizontal": 0
+        },
+        "curve": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "mixer": [
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          }
+        ],
+        "grading": {
+          "shadows": [
+            0,
+            0
+          ],
+          "midtones": [
+            0,
+            0
+          ],
+          "highlights": [
+            0,
+            0
+          ]
+        },
+        "crop": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false,
+        "masks": [],
+        "retouch": []
+      },
+      "history": [],
+      "future": [],
+      "versions": [],
+      "rating": 0,
+      "flag": "none",
+      "label": "",
+      "keywords": [],
+      "albumIds": [],
+      "order": 1,
+      "storage": "managed",
+      "parentId": "a603c1c6-5019-44b5-8413-0f704eff2b3f",
+      "originalHash": "0c07a2f4fda0716804cdfaec883c9754a5c35ed33dce9698ae4c551ff40f4f3b"
+    },
+    {
+      "id": "a603c1c6-5019-44b5-8413-0f704eff2b3f",
+      "name": "handoff-bayer.dng",
+      "hash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+      "size": 25190,
+      "imported": "2026-11-13T23:19:21.425Z",
+      "metadata": {
+        "camera": "LopeOS Synthetic Bayer",
+        "lens": "",
+        "iso": 0,
+        "shutter": 0,
+        "aperture": 0,
+        "focalLength": 0,
+        "orientation": 1,
+        "width": 128,
+        "height": 96,
+        "bitDepth": 16,
+        "format": "dng",
+        "decoder": "LibRaw WASM 1.6.0; 16-bit linear sensor development",
+        "colorSpace": "linear sRGB",
+        "warnings": [
+          "RAW rendering uses LibRaw. Results may differ from other photo editors; support varies by camera and compression format."
+        ],
+        "raw": true
+      },
+      "analysis": {
+        "sharpness": 29.112429488304723,
+        "exposure": 60.58836556560602,
+        "score": 44.85039752695537,
+        "clipped": 0,
+        "method": "edge-energy-and-luminance-v1"
+      },
+      "recipe": {
+        "version": 1,
+        "engine": "lope-photo/1.0.0",
+        "profile": "color",
+        "values": {
+          "exposure": 0.5,
+          "contrast": 0,
+          "highlights": 0,
+          "shadows": 0,
+          "whites": 0,
+          "blacks": 0,
+          "temperature": 0,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "vignette": 0,
+          "grain": 0,
+          "sharpening": 0,
+          "noise": 0,
+          "colorNoise": 0,
+          "distortion": 0,
+          "fringing": 0,
+          "straighten": 0,
+          "vertical": 0,
+          "horizontal": 0
+        },
+        "curve": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "mixer": [
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0,
+            "luminance": 0
+          }
+        ],
+        "grading": {
+          "shadows": [
+            0,
+            0
+          ],
+          "midtones": [
+            0,
+            0
+          ],
+          "highlights": [
+            0,
+            0
+          ]
+        },
+        "crop": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false,
+        "masks": [],
+        "retouch": []
+      },
+      "history": [
+        {
+          "label": "Adjust photo",
+          "recipe": {
+            "version": 1,
+            "engine": "lope-photo/1.0.0",
+            "profile": "color",
+            "values": {
+              "exposure": 0,
+              "contrast": 0,
+              "highlights": 0,
+              "shadows": 0,
+              "whites": 0,
+              "blacks": 0,
+              "temperature": 0,
+              "tint": 0,
+              "vibrance": 0,
+              "saturation": 0,
+              "texture": 0,
+              "clarity": 0,
+              "dehaze": 0,
+              "vignette": 0,
+              "grain": 0,
+              "sharpening": 0,
+              "noise": 0,
+              "colorNoise": 0,
+              "distortion": 0,
+              "fringing": 0,
+              "straighten": 0,
+              "vertical": 0,
+              "horizontal": 0
+            },
+            "curve": [
+              {
+                "x": 0,
+                "y": 0
+              },
+              {
+                "x": 1,
+                "y": 1
+              }
+            ],
+            "mixer": [
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              },
+              {
+                "hue": 0,
+                "saturation": 0,
+                "luminance": 0
+              }
+            ],
+            "grading": {
+              "shadows": [
+                0,
+                0
+              ],
+              "midtones": [
+                0,
+                0
+              ],
+              "highlights": [
+                0,
+                0
+              ]
+            },
+            "crop": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 1
+            },
+            "rotation": 0,
+            "flipX": false,
+            "flipY": false,
+            "masks": [],
+            "retouch": []
+          },
+          "at": "2026-11-13T23:19:21.770Z"
+        }
+      ],
+      "future": [],
+      "rating": 0,
+      "flag": "none",
+      "label": "",
+      "keywords": [],
+      "albumIds": [],
+      "order": 0,
+      "versions": [],
+      "storage": "managed",
+      "originalHash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5"
+    }
+  ],
+  "driveBefore": {
+    "path": "/LopeDrive/handoff-return.lopeimage",
+    "hash": "0a79aa7c1f2282ea6547841a1bc427aadb5723c5144f46c4df2c8f2cd5fe2a0b",
+    "size": 88117,
+    "version": "75e9a5e9-c7d3-442f-9d8e-214052d373e4",
+    "format": "lope-image",
+    "formatVersion": 1,
+    "document": {
+      "width": 128,
+      "height": 96,
+      "mode": "RGB",
+      "depth": 8,
+      "layers": [
+        {
+          "id": "c755af21-0f42-4ba8-9651-48dee092719c",
+          "name": "Developed photo",
+          "kind": "raster",
+          "base": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "tiles": 1
+        }
+      ]
+    }
+  },
+  "driveAfter": {
+    "path": "/LopeDrive/handoff-return.lopeimage",
+    "hash": "0c07a2f4fda0716804cdfaec883c9754a5c35ed33dce9698ae4c551ff40f4f3b",
+    "size": 175835,
+    "version": "b4158a14-9490-4bdf-9289-745d1ad45149",
+    "format": "lope-image",
+    "formatVersion": 1,
+    "document": {
+      "width": 128,
+      "height": 96,
+      "mode": "RGB",
+      "depth": 8,
+      "layers": [
+        {
+          "id": "c755af21-0f42-4ba8-9651-48dee092719c",
+          "name": "Developed photo",
+          "kind": "raster",
+          "base": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "tiles": 1
+        },
+        {
+          "id": "1a9d7c69-0271-43d6-94d5-a42b14cd98de",
+          "name": "Layer 1",
+          "kind": "raster",
+          "base": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "tiles": 1
+        }
+      ]
+    }
+  },
+  "exported": {
+    "path": "docs/lightroom/release-audit/evidence/handoff-production/returned-derivative.png",
+    "bytes": 402,
+    "sha256": "4d1b5cd513cc6d76f48ba03a4387959f3b6afc0bc9d7a6e610266f9defc56061",
+    "width": 128,
+    "height": 96,
+    "depth": 16
+  },
+  "errors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "failedResponses": [
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/visitor",
+      "status": 403
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/visitor",
+      "status": 403
+    }
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:5193/",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/index-C554t8dd.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/react-Dk7jysz-.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/index-BNYRiNsz.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/accounts/session",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/Shell-sCoqKeZ-.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/settings-yhTakbRA.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/manifest-492yKIni.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/store-OP0ffN2L.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/Shell-DqTFbzvR.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/wallpapers/perfecthue-aurora-light.png",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/wallpapers/perfecthue-aurora-dark.png",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/Welcome-m-sY9FL1.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/palette-D2Qpe_GN.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/info-W-Xr16Uu.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/__lope/version.json",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7392&longitude=-104.9903&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cweather_code%2Cis_day%2Cwind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m%2Cvisibility%2Cuv_index&hourly=temperature_2m%2Cweather_code%2Cis_day%2Cprecipitation_probability&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_probability_max%2Csunrise%2Csunset&forecast_days=10&forecast_hours=24&timezone=auto&temperature_unit=celsius&wind_speed_unit=kmh",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/visitor",
+      "method": "POST",
+      "bodyBytes": 2
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/lightroom-COun5Bxu.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/chevron-down-n82M9YaC.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/wand-sparkles-QUvqmUf6.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/columns-2-BZD6RrM_.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/crop-CSCjAzeh.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/ellipsis-heM2GBNq.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/undo-2-Bgi20aUb.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/grid-2x2-Bl95Pbcq.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/image-BmJ5g9wo.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/star-DqoLioSo.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/settings-2-ICO3rgiD.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/hooks-DzVjRDU9.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/denoise-cache-DnOFLWbe.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/lightroom-pPgk4NgW.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-DfZuGjjL.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-BZtgTZAf.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/libraw-CKnqEbQ6.wasm",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:5193/dbfa3e68-c1a9-4490-b360-913462d5a9da",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:5193/4744ab2a-f8df-49c8-899e-bf46fcebdfd8",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-DfZuGjjL.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-BZtgTZAf.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/libraw-CKnqEbQ6.wasm",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-DfZuGjjL.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-BZtgTZAf.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/libraw-CKnqEbQ6.wasm",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/image-editor-CtFmcENN.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/type-CMpd4JHl.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/rotate-ccw-clock-Q7XfjwWI.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/lock-keyhole-CRxNxFo2.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/image-editor-gAkIYgvD.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-B_2WWifo.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-DfZuGjjL.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:5193/18ea20ec-baac-401f-aeba-4d59ae5be4e4",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-DfZuGjjL.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/index-C554t8dd.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/react-Dk7jysz-.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/index-BNYRiNsz.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/accounts/session",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/Shell-sCoqKeZ-.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/settings-yhTakbRA.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/manifest-492yKIni.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/store-OP0ffN2L.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/Shell-DqTFbzvR.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/Welcome-m-sY9FL1.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/palette-D2Qpe_GN.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/info-W-Xr16Uu.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/__lope/version.json",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/lightroom-COun5Bxu.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/chevron-down-n82M9YaC.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/wand-sparkles-QUvqmUf6.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/columns-2-BZD6RrM_.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/crop-CSCjAzeh.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/ellipsis-heM2GBNq.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/undo-2-Bgi20aUb.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/grid-2x2-Bl95Pbcq.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/image-BmJ5g9wo.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/star-DqoLioSo.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/settings-2-ICO3rgiD.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/hooks-DzVjRDU9.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/denoise-cache-DnOFLWbe.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/lightroom-pPgk4NgW.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/image-editor-CtFmcENN.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/type-CMpd4JHl.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/rotate-ccw-clock-Q7XfjwWI.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/lock-keyhole-CRxNxFo2.js",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/image-editor-gAkIYgvD.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/wallpapers/perfecthue-aurora-light.png",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/wallpapers/perfecthue-aurora-dark.png",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7392&longitude=-104.9903&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cweather_code%2Cis_day%2Cwind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m%2Cvisibility%2Cuv_index&hourly=temperature_2m%2Cweather_code%2Cis_day%2Cprecipitation_probability&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_probability_max%2Csunrise%2Csunset&forecast_days=10&forecast_hours=24&timezone=auto&temperature_unit=celsius&wind_speed_unit=kmh",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/visitor",
+      "method": "POST",
+      "bodyBytes": 2
+    },
+    {
+      "url": "blob:http://127.0.0.1:5193/54892f71-d821-46eb-a334-67d31123919f",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:5193/ce36deae-59d7-440f-bde8-f377590e8190",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5193/assets/worker-DfZuGjjL.js",
+      "method": "GET",
+      "bodyBytes": 0
+    }
+  ],
+  "limits": [
+    "LopeOS Prism is the shipped Photoshop-style app; the interchange is native .lopeimage RGB/8, not Photoshop PSD16 or full Adobe interoperability.",
+    "Handoff renderer uses browser sRGB; the native JSON does not provide arbitrary ICC color management.",
+    "LopeDrive is local durable IndexedDB in this guest session. Remote authenticated runtime and cloud sync are not exercised.",
+    "Adobe reference captures and licensed application comparison are unavailable."
+  ]
+}

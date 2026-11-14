@@ -1,0 +1,2 @@
+apps/web/src/apps/movie-maker/index.tsx(123,1): error TS1005: '}' expected.
+apps/web/src/apps/spreadsheet/index.tsx(73,1): error TS1005: '}' expected.

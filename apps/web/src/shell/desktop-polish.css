@@ -155,6 +155,10 @@
 .toast { border-radius: 16px; }
 .toast > button { display: grid; place-items: center; min-width: 22px; min-height: 22px; border-radius: 6px; }
 .toast > button:hover { background: var(--hover); }
+.app-loading > p { max-width: 34ch; margin: 0; text-align: center; line-height: 1.5; }
+.app-loading-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+/* Sender attribution: apps cannot present a notification as LopeOS itself. */
+.toast-source { display: block; margin-bottom: 2px; font-size: 10px; font-weight: 650; letter-spacing: .02em; color: var(--muted); }
 
 .spotlight { width: 620px; border-radius: 20px; }
 .spotlight-input { padding: 20px 22px; gap: 13px; }

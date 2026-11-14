@@ -1,0 +1,1187 @@
+{
+  "baseline": "CS6 Standard Windows",
+  "source": "docs/image-editor/cs6-inventory.json",
+  "classification": "Known implementation gaps retained from source matrix and remaining-gaps.md; not current Adobe comparison results",
+  "families": [
+    {
+      "id": "PS-FEATURE-workspace-dark-editing-workspace",
+      "category": "Workspace",
+      "feature": "Dark editing workspace",
+      "status": "partial",
+      "implementation": "Compact menus, options, tools, tabs and panels are present. Exact Windows CS6 screenshot equivalence has not been established; LopeOS supplies outer window chrome.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-workspace-panel-docking-and-floating",
+      "category": "Workspace",
+      "feature": "Panel docking and floating",
+      "status": "partial",
+      "implementation": "Panel groups can be rearranged, floated, hidden and collapsed. Photoshop docking targets and document arrangements are incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-workspace-rulers-and-guides",
+      "category": "Workspace",
+      "feature": "Rulers and guides",
+      "status": "partial",
+      "implementation": "Rulers and editable guides are available; full units, grids, snapping preferences and ruler measurement are incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-workspace-custom-keyboard-shortcuts",
+      "category": "Workspace",
+      "feature": "Custom keyboard shortcuts",
+      "status": "missing",
+      "implementation": "Fixed commands and tool shortcuts are available; user remapping is unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-workspace-multiple-arranged-document-views",
+      "category": "Workspace",
+      "feature": "Multiple arranged document views",
+      "status": "missing",
+      "implementation": "There is one active canvas; tiled, floating and synchronized views are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-workspace-info-and-navigator-panels",
+      "category": "Workspace",
+      "feature": "Info and Navigator panels",
+      "status": "missing",
+      "implementation": "The status strip reports image dimensions and zoom; dedicated Info/Navigator panels are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-workspace-preset-manager-and-custom-swatches",
+      "category": "Workspace",
+      "feature": "Preset manager and custom swatches",
+      "status": "partial",
+      "implementation": "Common brush controls and a fixed swatch palette are present; preset import/export and management are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=41",
+      "evidence": [
+        "apps/web/src/apps/image-editor/index.tsx",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/image-editor.css",
+        "tests/image-editor/browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-history-and-files-layered-psd-import-and-export",
+      "category": "History and files",
+      "feature": "Layered PSD import and export",
+      "status": "partial",
+      "implementation": "RGB/8 supported descriptors round trip. Smart Objects, vectors, effects, alpha channels and specialist data have documented conversion limits.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=72",
+      "evidence": [
+        "apps/web/src/apps/image-editor/session.ts",
+        "packages/image-engine/src/history.ts",
+        "packages/image-engine/src/native.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-history-and-files-gif-and-bmp-import",
+      "category": "History and files",
+      "feature": "GIF and BMP import",
+      "status": "partial",
+      "implementation": "Browser raster decoders handle supported files; animation timelines are not imported.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=72",
+      "evidence": [
+        "apps/web/src/apps/image-editor/session.ts",
+        "packages/image-engine/src/history.ts",
+        "packages/image-engine/src/native.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-history-and-files-tiff--psb--pdf-and-eps-workflows",
+      "category": "History and files",
+      "feature": "TIFF, PSB, PDF and EPS workflows",
+      "status": "missing",
+      "implementation": "These professional interchange pipelines are unavailable in this editor.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=72",
+      "evidence": [
+        "apps/web/src/apps/image-editor/session.ts",
+        "packages/image-engine/src/history.ts",
+        "packages/image-engine/src/native.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-history-and-files-camera-scanner-acquisition-and-bridge",
+      "category": "History and files",
+      "feature": "Camera/scanner acquisition and Bridge",
+      "status": "missing",
+      "implementation": "Direct camera/scanner acquisition and Adobe Bridge integration are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=72",
+      "evidence": [
+        "apps/web/src/apps/image-editor/session.ts",
+        "packages/image-engine/src/history.ts",
+        "packages/image-engine/src/native.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-history-and-files-file-information-and-metadata-editing",
+      "category": "History and files",
+      "feature": "File information and metadata editing",
+      "status": "partial",
+      "implementation": "Resolution and profile/depth metadata are retained where supported; full IPTC/EXIF management is absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=72",
+      "evidence": [
+        "apps/web/src/apps/image-editor/session.ts",
+        "packages/image-engine/src/history.ts",
+        "packages/image-engine/src/native.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-history-and-files-background-saving",
+      "category": "History and files",
+      "feature": "Background saving",
+      "status": "partial",
+      "implementation": "Serialization runs in a worker; the current operation guard still disables editing during save.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=72",
+      "evidence": [
+        "apps/web/src/apps/image-editor/session.ts",
+        "packages/image-engine/src/history.ts",
+        "packages/image-engine/src/native.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-layer-visibility-and-lock",
+      "category": "Layers",
+      "feature": "Layer visibility and lock",
+      "status": "partial",
+      "implementation": "Visibility and a whole-layer lock are supported. Separate pixel, position, transparency and lock-all modes are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-vector-masks",
+      "category": "Layers",
+      "feature": "Vector masks",
+      "status": "missing",
+      "implementation": "Editable vector masks separate from shape content are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-blend-modes",
+      "category": "Layers",
+      "feature": "Blend modes",
+      "status": "partial",
+      "implementation": "Twenty-six deterministic RGB/8 layer and brush blend modes have scalar, Canvas fallback and WebGL implementations, with native/PSD name round trips. Dissolve is absent. Photoshop-specific Fill behavior for special blend modes is not reproduced; browser alpha round trips can differ by several channel levels.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts",
+        "packages/image-engine/src/composite.ts",
+        "packages/image-engine/src/gpu.ts",
+        "packages/image-engine/src/render.ts",
+        "packages/image-engine/src/pixels.ts",
+        "tests/image-editor/blend-modes.test.ts",
+        "tests/image-editor/blend-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-pass-through-and-isolated-groups",
+      "category": "Layers",
+      "feature": "Pass-through and isolated groups",
+      "status": "partial",
+      "implementation": "Basic compositing is implemented; complex clipping, effects and knockout behavior need further work.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-layer-effects",
+      "category": "Layers",
+      "feature": "Layer effects",
+      "status": "partial",
+      "implementation": "Editable stroke, drop shadow and color overlay exist. Glow, bevel, satin, pattern and gradient effect families are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-smart-objects",
+      "category": "Layers",
+      "feature": "Smart Objects",
+      "status": "partial",
+      "implementation": "Embedded pixels/source files survive transforms and reset. Linked objects and nested source-document editing are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-smart-filters",
+      "category": "Layers",
+      "feature": "Smart Filters",
+      "status": "partial",
+      "implementation": "Editable filter stacks preserve source pixels. Each selected filter captures independent soft coverage, follows later object transforms, persists in native files and uses incremental worker transport. Independent filter-mask painting, per-filter blending and Photoshop Smart Filter descriptors remain incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts",
+        "packages/image-engine/src/filters.ts",
+        "packages/image-engine/src/preview.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/smart-filter-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-layer-comps-and-linking",
+      "category": "Layers",
+      "feature": "Layer comps and linking",
+      "status": "missing",
+      "implementation": "Layer-comp variants and persistent multi-layer linking are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-layers-auto-align-and-auto-blend",
+      "category": "Layers",
+      "feature": "Auto-Align and Auto-Blend",
+      "status": "missing",
+      "implementation": "Automatic registration, panoramas and focus/exposure stack fusion are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=163",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "tests/image-editor/engine.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-magnetic-lasso",
+      "category": "Selections",
+      "feature": "Magnetic lasso",
+      "status": "missing",
+      "implementation": "Edge-following magnetic selection is unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-quick-selection-brush",
+      "category": "Selections",
+      "feature": "Quick Selection brush",
+      "status": "missing",
+      "implementation": "The Photoshop edge-guided selection brush is unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-color-range",
+      "category": "Selections",
+      "feature": "Color Range",
+      "status": "partial",
+      "implementation": "Sampled RGB color and fuzziness create soft global coverage; Photoshop color-space presets and localized clusters are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-feather--expand-and-contract",
+      "category": "Selections",
+      "feature": "Feather, expand and contract",
+      "status": "partial",
+      "implementation": "Box-based feather and separable morphology are implemented; exact Photoshop kernels are not claimed.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-border-and-smooth",
+      "category": "Selections",
+      "feature": "Border and Smooth",
+      "status": "partial",
+      "implementation": "Morphological border and thresholded smoothing are functional; Photoshop-specific refinement differs.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-rgb-channel-editing-and-calculations",
+      "category": "Selections",
+      "feature": "RGB channel editing and calculations",
+      "status": "missing",
+      "implementation": "RGB channel previews exist; independent channel painting, Apply Image and Calculations are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-refine-edge",
+      "category": "Selections",
+      "feature": "Refine Edge",
+      "status": "missing",
+      "implementation": "Hair-edge refinement, edge decontamination and its dedicated workspace are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-selections-transform-selection-boundary",
+      "category": "Selections",
+      "feature": "Transform selection boundary",
+      "status": "missing",
+      "implementation": "Layer transforms work; a separate selection-only transform operation is absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=216",
+      "evidence": [
+        "packages/image-engine/src/selection.ts",
+        "packages/image-engine/src/selection-brush.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-crop-and-straighten",
+      "category": "Geometry",
+      "feature": "Crop and straighten",
+      "status": "partial",
+      "implementation": "Non-destructive crop geometry and straightening exist; full CS6 crop presets, overlays and handle interaction are incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-free-transform",
+      "category": "Geometry",
+      "feature": "Free Transform",
+      "status": "partial",
+      "implementation": "Interactive move, scale, rotate and flips plus numeric controls work, including groups and affine shear preservation. Perspective/distort handles are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-perspective-crop",
+      "category": "Geometry",
+      "feature": "Perspective Crop",
+      "status": "missing",
+      "implementation": "Four-corner projective crop is unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-warp-and-puppet-warp",
+      "category": "Geometry",
+      "feature": "Warp and Puppet Warp",
+      "status": "missing",
+      "implementation": "Deformation meshes and articulated warp pins are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-content-aware-scale",
+      "category": "Geometry",
+      "feature": "Content-Aware Scale",
+      "status": "missing",
+      "implementation": "Seam carving and protected-content scaling are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-liquify-and-vanishing-point",
+      "category": "Geometry",
+      "feature": "Liquify and Vanishing Point",
+      "status": "missing",
+      "implementation": "Liquify meshes and perspective-plane painting are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-geometry-photomerge",
+      "category": "Geometry",
+      "feature": "Photomerge",
+      "status": "missing",
+      "implementation": "Automatic panorama alignment and stitching are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=356",
+      "evidence": [
+        "packages/image-engine/src/matrix.ts",
+        "packages/image-engine/src/operations.ts",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/reliability.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-brush-blending",
+      "category": "Painting and retouching",
+      "feature": "Brush blending",
+      "status": "partial",
+      "implementation": "The supported document blend modes are exposed for brush painting; the complete CS6 painting-mode set is absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-brush-presets-and-dynamics",
+      "category": "Painting and retouching",
+      "feature": "Brush presets and dynamics",
+      "status": "partial",
+      "implementation": "Basic circular brushes and pressure work; custom tips, scattering, texture, tilt and extensive dynamics/preset formats are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-background-and-magic-eraser",
+      "category": "Painting and retouching",
+      "feature": "Background and Magic Eraser",
+      "status": "missing",
+      "implementation": "Color-targeted and tolerance eraser tools are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-healing-brush",
+      "category": "Painting and retouching",
+      "feature": "Healing Brush",
+      "status": "partial",
+      "implementation": "Sample correction with local color matching is implemented; Photoshop texture/lighting behavior is not reproduced exactly.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-spot-healing--patch-and-content-aware-move",
+      "category": "Painting and retouching",
+      "feature": "Spot Healing, Patch and Content-Aware Move",
+      "status": "missing",
+      "implementation": "Automatic content synthesis and patch relocation tools are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-content-aware-fill",
+      "category": "Painting and retouching",
+      "feature": "Content-Aware Fill",
+      "status": "missing",
+      "implementation": "CS6-style texture synthesis is unavailable; model-generated content is a separate newer workflow.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-blur-and-sharpen-brushes",
+      "category": "Painting and retouching",
+      "feature": "Blur and Sharpen brushes",
+      "status": "partial",
+      "implementation": "Local pixel kernels respect alpha, selection and opacity; Photoshop brush kernels differ.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-smudge",
+      "category": "Painting and retouching",
+      "feature": "Smudge",
+      "status": "partial",
+      "implementation": "A sampled-color reservoir produces real smearing; Photoshop pickup/finger-painting behavior is incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-dodge--burn-and-sponge",
+      "category": "Painting and retouching",
+      "feature": "Dodge, Burn and Sponge",
+      "status": "partial",
+      "implementation": "Tonal-range exposure and saturation painting are real and reversible; Adobe protect-tones behavior is not matched.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-gradients",
+      "category": "Painting and retouching",
+      "feature": "Gradients",
+      "status": "partial",
+      "implementation": "Foreground-to-background linear gradients work; multi-stop, radial, angle, reflected, diamond and preset editing are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-pattern-stamp--mixer-brush-and-art-history-brush",
+      "category": "Painting and retouching",
+      "feature": "Pattern Stamp, Mixer Brush and Art History Brush",
+      "status": "missing",
+      "implementation": "These painting engines are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-painting-and-retouching-eyedropper",
+      "category": "Painting and retouching",
+      "feature": "Eyedropper",
+      "status": "partial",
+      "implementation": "Native-coordinate composite point sampling works; averaging, sampler points and Info readings are incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=408",
+      "evidence": [
+        "packages/image-engine/src/pixels.ts",
+        "apps/web/src/apps/image-editor/tools.tsx",
+        "apps/web/src/apps/image-editor/CanvasView.tsx",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-brightness--levels-and-curves",
+      "category": "Adjustments",
+      "feature": "Brightness, Levels and Curves",
+      "status": "partial",
+      "implementation": "Editable RGB layers exist; curves currently use three points and Photoshop channel/auto/preset behavior is incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-hue-saturation-and-color-balance",
+      "category": "Adjustments",
+      "feature": "Hue/Saturation and Color Balance",
+      "status": "partial",
+      "implementation": "Editable local RGB algorithms exist; tonal ranges and Adobe color math differ.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-exposure-and-vibrance",
+      "category": "Adjustments",
+      "feature": "Exposure and Vibrance",
+      "status": "partial",
+      "implementation": "Editable exposure/gamma and adaptive saturation controls exist with independent algorithms.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-black---white-and-photo-filter",
+      "category": "Adjustments",
+      "feature": "Black & White and Photo Filter",
+      "status": "partial",
+      "implementation": "Color-band monochrome conversion and tint-density controls exist; Photoshop tint/luminosity behavior is incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-channel-mixer-and-gradient-map",
+      "category": "Adjustments",
+      "feature": "Channel Mixer and Gradient Map",
+      "status": "partial",
+      "implementation": "A 3×4 RGB mixing matrix and two-endpoint gradient map are editable; monochrome mixing and arbitrary gradient stops are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-color-lookup-and-selective-color",
+      "category": "Adjustments",
+      "feature": "Color Lookup and Selective Color",
+      "status": "missing",
+      "implementation": "LUT import and CMYK-relative selective color adjustments are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-shadows-highlights-and-hdr-toning",
+      "category": "Adjustments",
+      "feature": "Shadows/Highlights and HDR Toning",
+      "status": "missing",
+      "implementation": "Dedicated local tone mapping and HDR pipelines are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-auto-tone--auto-contrast-and-auto-color",
+      "category": "Adjustments",
+      "feature": "Auto Tone, Auto Contrast and Auto Color",
+      "status": "missing",
+      "implementation": "Automatic tonal analysis commands are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-match-color--replace-color-and-equalize",
+      "category": "Adjustments",
+      "feature": "Match Color, Replace Color and Equalize",
+      "status": "missing",
+      "implementation": "Dedicated matching and histogram equalization commands are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-adjustments-camera-raw-7",
+      "category": "Adjustments",
+      "feature": "Camera Raw 7",
+      "status": "missing",
+      "implementation": "This editor has no Camera Raw processing workspace; other LopeOS applications are separate capabilities.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=250",
+      "evidence": [
+        "packages/image-engine/src/composite.ts",
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "packages/image-engine/src/psd.ts",
+        "tests/image-editor/cs6.test.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-gaussian--box-and-motion-blur",
+      "category": "Filters",
+      "feature": "Gaussian, Box and Motion Blur",
+      "status": "partial",
+      "implementation": "Premultiplied-alpha blur operations and previews work; Gaussian is approximated with box passes, motion uses bounded samples.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-sharpen--unsharp-mask-and-high-pass",
+      "category": "Filters",
+      "feature": "Sharpen, Unsharp Mask and High Pass",
+      "status": "partial",
+      "implementation": "Real kernels and radius/amount/threshold controls exist; Adobe kernels are not reproduced exactly.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-add-noise",
+      "category": "Filters",
+      "feature": "Add Noise",
+      "status": "partial",
+      "implementation": "Deterministic monochromatic or color uniform noise exists; Gaussian distribution is absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-emboss--find-edges-and-solarize",
+      "category": "Filters",
+      "feature": "Emboss, Find Edges and Solarize",
+      "status": "partial",
+      "implementation": "Independent pixel kernels exist; the complete CS6 options and exact rendering differ.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-field--iris-and-tilt-shift-blur-gallery",
+      "category": "Filters",
+      "feature": "Field, Iris and Tilt-Shift Blur Gallery",
+      "status": "missing",
+      "implementation": "CS6 on-canvas blur controls, masks and bokeh simulation are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-adaptive-wide-angle-and-lens-correction",
+      "category": "Filters",
+      "feature": "Adaptive Wide Angle and Lens Correction",
+      "status": "missing",
+      "implementation": "Lens-profile and perspective constraint engines are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-oil-paint-and-lighting-effects",
+      "category": "Filters",
+      "feature": "Oil Paint and Lighting Effects",
+      "status": "missing",
+      "implementation": "These dedicated filter engines are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-filter-gallery",
+      "category": "Filters",
+      "feature": "Filter Gallery",
+      "status": "missing",
+      "implementation": "The artistic, brush stroke, sketch and texture filter galleries are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-filters-remaining-blur-noise-distort-pixelate-render-filters",
+      "category": "Filters",
+      "feature": "Remaining blur/noise/distort/pixelate/render filters",
+      "status": "missing",
+      "implementation": "Lens/Surface/Radial Blur, Reduce Noise, Median, Displace, Wave, Clouds and other unlisted families are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=542",
+      "evidence": [
+        "packages/image-engine/src/filters.ts",
+        "apps/web/src/apps/image-editor/dialogs.tsx",
+        "tests/image-editor/cs6.test.ts",
+        "tests/image-editor/cs6-browser.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-type-and-paths-character-and-paragraph-formatting",
+      "category": "Type and paths",
+      "feature": "Character and paragraph formatting",
+      "status": "partial",
+      "implementation": "One style per layer supports font, size, bold, italic, alignment, leading and tracking; mixed runs and paragraph boxes are incomplete.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=436",
+      "evidence": [
+        "apps/web/src/apps/image-editor/InlineType.tsx",
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-type-and-paths-vertical-type--type-on-path-and-warp-text",
+      "category": "Type and paths",
+      "feature": "Vertical type, type on path and warp text",
+      "status": "missing",
+      "implementation": "These type layouts are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=436",
+      "evidence": [
+        "apps/web/src/apps/image-editor/InlineType.tsx",
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-type-and-paths-opentype--complex-text-and-styles",
+      "category": "Type and paths",
+      "feature": "OpenType, complex text and styles",
+      "status": "partial",
+      "implementation": "Browser font shaping is used; character/paragraph style libraries and CS6 typography controls are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=436",
+      "evidence": [
+        "apps/web/src/apps/image-editor/InlineType.tsx",
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-type-and-paths-rectangles--ellipses-and-shape-appearance",
+      "category": "Type and paths",
+      "feature": "Rectangles, ellipses and shape appearance",
+      "status": "partial",
+      "implementation": "Editable primitive shapes and fill/stroke exist; the full CS6 shape library and dash/boolean controls are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=436",
+      "evidence": [
+        "apps/web/src/apps/image-editor/InlineType.tsx",
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-type-and-paths-pen-paths-and-anchors",
+      "category": "Type and paths",
+      "feature": "Pen paths and anchors",
+      "status": "partial",
+      "implementation": "Polygonal paths, editable anchors and path-to-selection exist. Bézier handles and curve operations are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=436",
+      "evidence": [
+        "apps/web/src/apps/image-editor/InlineType.tsx",
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-type-and-paths-vector-path-operations",
+      "category": "Type and paths",
+      "feature": "Vector path operations",
+      "status": "missing",
+      "implementation": "Path boolean operations, curve conversion, stroke/fill-path options and text outlines are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=436",
+      "evidence": [
+        "apps/web/src/apps/image-editor/InlineType.tsx",
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/render.ts",
+        "tests/image-editor/stability.mjs"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-color-and-production-icc-conversion-and-soft-proofing",
+      "category": "Color and production",
+      "feature": "ICC conversion and soft proofing",
+      "status": "missing",
+      "implementation": "Profile bytes/labels may be retained; calibrated conversion, proof views and gamut warnings are absent.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=736",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/psd.ts",
+        "docs/image-editor/format-compatibility.md"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-color-and-production-cmyk--lab--bitmap--indexed-and-duotone-modes",
+      "category": "Color and production",
+      "feature": "CMYK, Lab, Bitmap, Indexed and Duotone modes",
+      "status": "missing",
+      "implementation": "These editing/conversion pipelines are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=736",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/psd.ts",
+        "docs/image-editor/format-compatibility.md"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-color-and-production-16-32-bit-and-hdr-editing",
+      "category": "Color and production",
+      "feature": "16/32-bit and HDR editing",
+      "status": "missing",
+      "implementation": "High-depth processing and HDR merge/toning are unavailable; unsupported imports are explicitly rejected.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=736",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/psd.ts",
+        "docs/image-editor/format-compatibility.md"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-color-and-production-color-managed-printing-and-separations",
+      "category": "Color and production",
+      "feature": "Color-managed printing and separations",
+      "status": "missing",
+      "implementation": "Printing, spot inks, press separations and proof workflows are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=736",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/psd.ts",
+        "docs/image-editor/format-compatibility.md"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-color-and-production-contact-sheets-and-pdf-presentations",
+      "category": "Color and production",
+      "feature": "Contact sheets and PDF presentations",
+      "status": "missing",
+      "implementation": "These automated output layouts are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=736",
+      "evidence": [
+        "packages/image-engine/src/model.ts",
+        "packages/image-engine/src/psd.ts",
+        "docs/image-editor/format-compatibility.md"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-automation-and-media-actions-and-batch-processing",
+      "category": "Automation and media",
+      "feature": "Actions and batch processing",
+      "status": "missing",
+      "implementation": "Recordable command sequences, droplets and batch processing are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=631",
+      "evidence": [
+        "apps/web/src/apps/image-editor/menus.tsx",
+        "packages/image-engine/src/model.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-automation-and-media-scripting-and-data-driven-graphics",
+      "category": "Automation and media",
+      "feature": "Scripting and data-driven graphics",
+      "status": "missing",
+      "implementation": "Photoshop-compatible scripts, variables and dataset substitution are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=631",
+      "evidence": [
+        "apps/web/src/apps/image-editor/menus.tsx",
+        "packages/image-engine/src/model.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-automation-and-media-video-editing-and-frame-animation",
+      "category": "Automation and media",
+      "feature": "Video editing and frame animation",
+      "status": "missing",
+      "implementation": "The CS6 video/timeline and animation workspace is unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=631",
+      "evidence": [
+        "apps/web/src/apps/image-editor/menus.tsx",
+        "packages/image-engine/src/model.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-automation-and-media-slices-and-save-for-web-optimization",
+      "category": "Automation and media",
+      "feature": "Slices and Save for Web optimization",
+      "status": "missing",
+      "implementation": "Slice layouts, HTML output and indexed palette optimization are unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=631",
+      "evidence": [
+        "apps/web/src/apps/image-editor/menus.tsx",
+        "packages/image-engine/src/model.ts"
+      ]
+    },
+    {
+      "id": "PS-FEATURE-automation-and-media-photoshop-plug-ins",
+      "category": "Automation and media",
+      "feature": "Photoshop plug-ins",
+      "status": "missing",
+      "implementation": "A Photoshop-compatible native/plugin scripting runtime is unavailable.",
+      "source": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf#page=631",
+      "evidence": [
+        "apps/web/src/apps/image-editor/menus.tsx",
+        "packages/image-engine/src/model.ts"
+      ]
+    }
+  ]
+}

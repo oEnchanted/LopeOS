@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import type { SettingsService } from '../../contracts/src';
-import { preferenceDefaults, preferenceSchema, validPreference, validatePreferenceImport, SETTINGS_VERSION, type PreferenceKey, type Preferences } from '../../contracts/src/preferences.ts';
+import { preferenceDefaults, preferenceSchema, validPreference, validatePreferenceImport, SETTINGS_VERSION, MAX_WEATHER_LOCATIONS, weatherLocationKey, type PreferenceKey, type Preferences } from '../../contracts/src/preferences.ts';
+import { PROFILE_PICTURE_KEY, PROFILE_STORAGE_KEY, isProfilePicture } from '../../contracts/src/profile.ts';
 export { preferenceSchema, preferenceDefaults, validatePreferenceImport, SETTINGS_VERSION };
 export type { PreferenceKey, Preferences };
 const PREFS = 'lope.preferences.v2', APPS = 'lope.preferences.apps.v1', HISTORY = 'lope.history.apps.v1', DOCUMENTS = 'lope.session.documents.v1', ASSETS = 'lope.assets.wallpapers.v1';
@@ -29,6 +30,8 @@ export class PreferenceStore implements SettingsService {
           let value; try { value = JSON.parse(raw); } catch { value = raw; }
           if (spec.valid(value)) (this.values as Record<string, unknown>)[key] = value;
         }
+        if (!backend?.getItem('lope.weather.locations')) this.values = { ...this.values, 'weather.locations': [this.values['weather.location']] };
+        else if (!this.values['weather.locations'].some(location => weatherLocationKey(location) === weatherLocationKey(this.values['weather.location']))) this.values = { ...this.values, 'weather.location': this.values['weather.locations'][0] };
       }
       // Restore the temporary original-art fallback once bundling was authorized.
       // Keep uploads and later, deliberate gallery choices unchanged.
@@ -54,6 +57,23 @@ export class PreferenceStore implements SettingsService {
   private savePreferences() {
     if (!this.activeUser) this.systemValues = this.values;
     this.persist(this.preferenceKey(), { version: SETTINGS_VERSION, preferences: this.values });
+  }
+  private updatedPreferences(patch: Partial<Preferences>): Preferences {
+    const next = { ...this.values, ...patch };
+    if (Object.hasOwn(patch, 'weather.location')) {
+      const selected = next['weather.location'];
+      const locations = next['weather.locations'];
+      const key = weatherLocationKey(selected);
+      if (locations.some(location => weatherLocationKey(location) === key)) next['weather.locations'] = locations.map(location => weatherLocationKey(location) === key ? selected : location);
+      else {
+        if (Object.hasOwn(patch, 'weather.locations')) throw new Error('The active weather location must be in the saved locations.');
+        if (locations.length >= MAX_WEATHER_LOCATIONS) throw new Error(`You can save up to ${MAX_WEATHER_LOCATIONS} locations. Remove a city first.`);
+        next['weather.locations'] = [...locations, selected];
+      }
+    } else if (Object.hasOwn(patch, 'weather.locations')) {
+      next['weather.location'] = next['weather.locations'].find(location => weatherLocationKey(location) === weatherLocationKey(next['weather.location'])) || next['weather.locations'][0];
+    }
+    return next;
   }
   /** Switches the shared settings service between setup defaults and a local account. */
   activateUser(id: string | null) {
@@ -91,7 +111,7 @@ export class PreferenceStore implements SettingsService {
     try { if (!this.backend) throw new Error(); this.backend.setItem(key, JSON.stringify(value)); this.status = { persistent: true, message: '' }; }
     catch { this.status = { persistent: false, message: 'Changes are active for this session, but could not be saved in this browser. Free some browser storage and retry before closing LopeOS.' }; }
   }
-  private namespace(key: string) { return key === 'personalWallpaper' ? ASSETS : /(^|\.)(history|recent)$/.test(key) ? HISTORY : /\.document\./.test(key) ? DOCUMENTS : APPS; }
+  private namespace(key: string) { return key === PROFILE_PICTURE_KEY ? PROFILE_STORAGE_KEY : key === 'personalWallpaper' ? ASSETS : /(^|\.)(history|recent)$/.test(key) ? HISTORY : /\.document\./.test(key) ? DOCUMENTS : APPS; }
   private readNamespace(name: string) {
     if (!this.namespaces.has(name)) { let data = {}; try { const raw = this.backend?.getItem(name); if (raw) { const parsed = JSON.parse(raw); if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) data = parsed; } } catch {} this.namespaces.set(name, data); }
     return this.namespaces.get(name)!;
@@ -107,9 +127,10 @@ export class PreferenceStore implements SettingsService {
   }
   set<T>(rawKey: string, value: T) {
     const key = alias(rawKey);
+    if (key === PROFILE_PICTURE_KEY && value !== null && !isProfilePicture(value)) throw new Error('Choose a valid profile picture.');
     if (Object.hasOwn(preferenceSchema, key)) {
       if (!validPreference(key, value)) throw new Error('Invalid preference: ' + key);
-      this.values = { ...this.values, [key]: value }; this.savePreferences();
+      this.values = this.updatedPreferences({ [key]: value }); this.savePreferences();
     } else {
       if (!/^[a-z0-9][a-z0-9._-]{0,160}$/i.test(key) || secret.test(key) || ['__proto__','constructor','prototype'].includes(key)) throw new Error('This key cannot be stored in preferences.');
       const namespace = this.namespace(key); const data = { ...this.readNamespace(namespace), [key]: value }; this.namespaces.set(namespace, data); this.persist(namespace, data);
@@ -118,7 +139,7 @@ export class PreferenceStore implements SettingsService {
   }
   apply(values: Partial<Preferences>) {
     for (const [key, value] of Object.entries(values)) if (!validPreference(key, value)) throw new Error('Invalid preference: ' + key);
-    this.values = { ...this.values, ...values }; this.savePreferences(); this.emit();
+    this.values = this.updatedPreferences(values); this.savePreferences(); this.emit();
   }
   reset() { this.values = { ...preferenceDefaults }; this.savePreferences(); this.emit(); }
   /** Forget the erased account and cached app data without writing old values back. */

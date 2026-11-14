@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-13",
+  "browser": "Playwright Chromium",
+  "passed": true,
+  "elapsedSeconds": 55.313,
+  "checks": [
+    "Exactly 180 seconds at 30 fps: 8 pictures, 2 real video sources with sound, title, 4 timed captions, credits, music and spoken narration",
+    "Portable bundle roundtrip preserves all decisions and integrity-checked original media",
+    "Reload recovers project and all media from IndexedDB",
+    "Corrupt media rejection, missing-asset reporting, injected storage exhaustion rollback and mid-render cancellation recover without losing the project",
+    "Full 3-minute offline export independently reopens as 1280 × 720, 30 fps, VP8 video and Opus audio",
+    "Eight decoded output checkpoints match the preview compositor within lossy VP8 tolerance, including title, captions, video, effect and credits",
+    "Independent browser audio decoder reads the whole soundtrack with nonzero RMS"
+  ],
+  "failureCases": {
+    "corrupt": "“broken.png” cannot be decoded as a photo. Convert it to JPEG, PNG, or WebP.",
+    "quota": "Local storage is full. Your current edits remain open. Download a portable bundle, then free browser storage and try again.",
+    "nameAfterFailedSave": "A little adventure",
+    "missing": [
+      "missing-test"
+    ],
+    "cancelled": "AbortError",
+    "cancelUnchanged": true
+  },
+  "export": {
+    "duration": 180.013,
+    "width": 1280,
+    "height": 720,
+    "videoCodec": "vp8",
+    "audioCodec": "opus",
+    "frameCount": 5400,
+    "framesPerSecond": 30,
+    "audioPeak": 0.811083197593689,
+    "bytes": 35697740
+  },
+  "checkpoints": {
+    "frames": [
+      {
+        "frame": 90,
+        "seconds": 3,
+        "meanAbsoluteChannelError": 1.3327922453703704
+      },
+      {
+        "frame": 400,
+        "seconds": 13.333333333333334,
+        "meanAbsoluteChannelError": 0.9229528356481481
+      },
+      {
+        "frame": 740,
+        "seconds": 24.666666666666668,
+        "meanAbsoluteChannelError": 0.7238932291666667
+      },
+      {
+        "frame": 1260,
+        "seconds": 42,
+        "meanAbsoluteChannelError": 0.8960807291666667
+      },
+      {
+        "frame": 1500,
+        "seconds": 50,
+        "meanAbsoluteChannelError": 0.8871122685185185
+      },
+      {
+        "frame": 2220,
+        "seconds": 74,
+        "meanAbsoluteChannelError": 0.9081177662037037
+      },
+      {
+        "frame": 3330,
+        "seconds": 111,
+        "meanAbsoluteChannelError": 0.7392476851851851
+      },
+      {
+        "frame": 5330,
+        "seconds": 177.66666666666666,
+        "meanAbsoluteChannelError": 5.036168981481482
+      }
+    ],
+    "audioDuration": 180.013,
+    "channels": 2,
+    "rms": 0.06421902287499348
+  },
+  "errors": []
+}

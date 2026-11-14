@@ -1,0 +1,36 @@
+
+> lopeos@0.1.0 test:photos
+> node --test tests/lightroom/engine.test.ts tests/lightroom/denoise.test.ts tests/lightroom/noise.test.ts
+
+✔ inference receives normalized planar sRGB and normalized noise level; originals stay unchanged (6.201583ms)
+✔ global tile origins, halo and valid cores reproduce a region from a full render without seams (96.757542ms)
+✔ zero amount is an exact copy and does not run a model (0.16225ms)
+✔ amount blends in linear precision and preserves alpha (3.140875ms)
+✔ preview regions clamp to original dimensions without rescaling (0.207334ms)
+✔ HDR, transparency, invalid parameters and invalid model results fail explicitly (6.450833ms)
+✔ progress counts only finished image cores and model errors do not report completion (10.352209ms)
+✔ linear development preserves immutable source and highlight headroom (2.917875ms)
+✔ one edit transaction, undo and redo preserve exact recipe state (1.726417ms)
+✔ source-relative masks survive crop, rotation, flip, perspective and straightening (3.20075ms)
+✔ clone and heal produce distinct, reversible source-preserving pixels (2.328333ms)
+✔ TIFF 8-bit has valid tags, dimensions, profile and bounded round-trip error (2.42675ms)
+✔ TIFF 16-bit has valid tags, dimensions, profile and bounded round-trip error (1.475417ms)
+✔ TIFF 32-bit has valid tags, dimensions, profile and bounded round-trip error (1.564958ms)
+✔ 16-bit PNG retains >8-bit precision, real signature and source pixels (52.256417ms)
+✔ original comparison comes from source, not progressively rendered pixels (1.444084ms)
+✔ histogram and auto changes respond to real image luminance (1.384792ms)
+✔ recipe validation rejects nonfinite controls and malformed masks (0.216584ms)
+✔ album removal is distinct from originals, smart filters combine with search and stacks (0.389375ms)
+✔ sRGB transfer functions are inverse for known midtones and headroom (0.047208ms)
+✔ standard luminance reduction lowers measured noise while preserving a sharp edge (15.276792ms)
+✔ standard color reduction lowers chroma noise independently of luminance (18.076041ms)
+✔ zero settings are exact; alpha and HDR headroom remain intact without transparent color bleed (13.386083ms)
+✔ standard sliders feed the regular development and export rendering graph (17.9855ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 471.989834

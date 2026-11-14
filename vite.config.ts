@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [react(), releasePlugin(appVersion, buildId)],
   server: {
     host: '127.0.0.1', port: 5173, strictPort: true,
-    fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/.runtime/**', '**/.accounts-data/**', '**/.browser-data/**', '**/services/browser/.data/**'] },
+    fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/.runtime/**', '**/.accounts-data/**', '**/.browser-data/**', '**/.browser-host/**', '**/services/browser/.data/**'] },
     proxy: {
       '/api/accounts': { target: 'http://127.0.0.1:4176' },
       '/api/browser': {

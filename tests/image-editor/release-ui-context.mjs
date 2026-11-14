@@ -1,0 +1,19 @@
+import {chromium,expect} from '@playwright/test';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+const base=process.env.IMAGE_EDITOR_TEST_URL||'http://127.0.0.1:5189',entry=process.env.IMAGE_EDITOR_TEST_ENTRY||'/tests/image-editor/release.html',observe=process.env.AUDIT_OBSERVE==='1',output='docs/image-editor/release-audit/evidence';
+await mkdir(output,{recursive:true});const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});const app=page.getByTestId('image-editor-app'),checks=[],errors=[];page.on('pageerror',e=>errors.push(e.message));
+const check=(id,expected,actual)=>{checks.push({id,expected,actual,status:JSON.stringify(expected)===JSON.stringify(actual)?'PASS':'FAIL'});if(!observe)expect(actual,id).toEqual(expected);};
+const command=async id=>{await page.evaluate(id=>window.__imageTest.commands.execute(id),id);await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));};
+try{
+ await page.goto(base+entry);await expect(app).toHaveAttribute('data-session-ready','true',{timeout:30000});await command('image.new-layer');await app.getByRole('button',{name:'Lock selected layer',exact:true}).click();
+ const row=app.locator('.ie-layer-row[aria-selected=true]').first();await row.click({button:'right'});let menu=app.getByRole('menu',{name:'Layer context menu',exact:true});await expect(menu).toBeVisible();
+ check('PS-UI-09-context-command-disabled',true,await menu.getByRole('menuitem',{name:'Delete Layer',exact:true}).isDisabled());
+ check('PS-UI-10-context-initial-focus',true,await menu.getByRole('menuitem',{name:'Duplicate Layer…',exact:true}).evaluate(el=>document.activeElement===el));
+ await menu.screenshot({path:`${output}/ui-layer-context-${observe?'before':'after'}.png`});await page.keyboard.press('Escape');await check('PS-UI-10-context-escape-dismisses',0,await menu.count());
+ if(!observe){check('PS-UI-10-context-focus-return',true,await row.evaluate(el=>document.activeElement===el));await row.press('Shift+F10');await expect(menu).toBeVisible();await page.keyboard.press('End');check('PS-UI-10-arrow-skips-disabled','Group from Layers',await page.evaluate(()=>document.activeElement.textContent));await page.keyboard.press('Home');await page.keyboard.press('Escape');
+   const trigger=app.getByRole('button',{name:'Layers panel menu',exact:true});await trigger.click();const panelMenu=app.getByRole('menu',{name:'Layers panel menu',exact:true});await expect(panelMenu).toBeVisible();await page.keyboard.press('Escape');await expect(panelMenu).toHaveCount(0);await expect(trigger).toBeFocused();checks.push({id:'PS-UI-11-panel-context-focus',status:'PASS'});
+   await page.setViewportSize({width:740,height:500});await row.click({button:'right'});const bounds=await menu.boundingBox();check('PS-UI-12-compact-popup-contained',true,bounds.x>=0&&bounds.y>=0&&bounds.x+bounds.width<=741&&bounds.y+bounds.height<=501);await page.keyboard.press('Escape');
+   await app.evaluate(el=>{el.style.transform='scale(.8)';el.style.transformOrigin='0 0';});await row.click({button:'right'});const scaled=await menu.boundingBox(),host=await app.boundingBox();check('PS-UI-12-scaled-popup-contained',true,scaled.x>=host.x&&scaled.y>=host.y&&scaled.x+scaled.width<=host.x+host.width+1&&scaled.y+scaled.height<=host.y+host.height+1);await page.keyboard.press('Escape');
+ }
+ check('PS-UI-context-no-page-errors',[],errors);
+}finally{const build=JSON.parse(await readFile('docs/image-editor/release-audit/build-manifest.json','utf8'));await writeFile(`${output}/ui-context-${observe?'before':'after'}-results.json`,JSON.stringify({buildId:build.buildId,base,entry,browser:browser.version(),checks,errors},null,2)+'\n');console.log(JSON.stringify(checks,null,2));await browser.close();}

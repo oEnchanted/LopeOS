@@ -51,8 +51,10 @@ Test keys: **E1** page-boundary/style/TOC round trip; **E2** comments/replies/re
 | Merge / split | Table Layout > Merge | Valid cell range or current cell | — | Exposed |
 | Width / shading / borders / repeat header | Table Properties / Table Design | Native table/cell operations and first-row repeat | — | Repeated header preserved E3; authoring variants exposed |
 | Table resizing | Document contextual overlay | Engine drag handles | — | Provided by engine; manual drag not separately verified |
-| Picture insertion | Insert > Pictures | PNG/JPEG/WebP/GIF up to 8 MiB; native media relationship | — | E4; UI captured |
-| Picture size / crop / wrap / anchor | Picture Format | Choose document picture; inline, square or top/bottom; anchor lock | — | Resize/crop/wrap E4; picture switching and dimension preservation R; anchor lock exposed |
+| Picture insertion / file drop | Insert > Pictures; document drop | PNG/JPEG/WebP/GIF up to 8 MiB; natural proportions; native media part; canonical inserted ID | — | Image action/pointer suites; saved XML and undo |
+| Picture selection / resizing | Document; Picture Format | Clicked canonical picture; native eight handles; proportional corner resize at document zoom | — | Inline/floating pointer tests at 100/150%; DOCX dimensions and undo |
+| Picture movement / layout | Document; nearby Layout Options; Picture Format | Inline text caret/reanchor; floating drag, edge scroll, cross-page placement; five wrap/layer choices; precise page position | Arrows nudge; Shift coarse / axis; Esc cancels | Image action/pointer suites; physical geometry, saved positions and history |
+| Picture crop / alt text | Picture Format; Properties | Per-edge/corner crop; correct percentages; reset; preserved untouched properties; native alt description | Enter applies / Esc cancels crop | Image suites; pixel checks, XML, undo, print clone; anchor lock remains exposed |
 | Hyperlink | Insert > Link; global Insert | Native relationship; http/https/mailto validation | Mod+K | E6 |
 | Symbol | Insert > Symbols | Native literal text insertion/replacement with caret continuation and history | — | A, UI continuation and native Editing/Reviewing insertion/replacement |
 | Headers / footers | Insert > Header & Footer | Append text in first section, retain existing content | — | E6; append dialog exposed |

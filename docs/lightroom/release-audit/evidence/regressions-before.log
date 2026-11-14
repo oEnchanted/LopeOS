@@ -1,0 +1,32 @@
+LR-FIX-001 FAIL
+LR-FIX-002 FAIL
+LR-FIX-003 FAIL
+LR-FIX-004 FAIL
+LR-FIX-005 FAIL
+[
+  {
+    "id": "LR-FIX-001",
+    "result": "FAIL",
+    "error": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 3\n+ Received  + 3\n\n@@ -83,18 +83,18 @@\n      \"clarity\": 0,\n      \"colorNoise\": 0,\n      \"contrast\": 0,\n      \"dehaze\": 0,\n      \"distortion\": 0,\n-     \"exposure\": 0,\n+     \"exposure\": 1.43,\n      \"fringing\": 0,\n      \"grain\": 0,\n-     \"highlights\": 0,\n+     \"highlights\": -35,\n      \"horizontal\": 0,\n      \"noise\": 0,\n      \"saturation\": 0,\n-     \"shadows\": 0,\n+     \"shadows\": 25,\n      \"sharpening\": 0,\n      \"straighten\": 0,\n      \"temperature\": 0,\n      \"texture\": 0,\n      \"tint\": 0,"
+  },
+  {
+    "id": "LR-FIX-002",
+    "result": "FAIL",
+    "error": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog').getByRole('button', { name: 'Export 1 photo', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('dialog').getByRole('button', { name: 'Export 1 photo', exact: true }) with timeout 5000ms\n  - waiting for getByRole('dialog').getByRole('button', { name: 'Export 1 photo', exact: true })\n"
+  },
+  {
+    "id": "LR-FIX-003",
+    "result": "FAIL",
+    "error": "expect(received).toMatchObject(expected)\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"rating\": 5,\n-   \"text\": \"forest\",\n+   \"rating\": 3,\n+   \"text\": \"\",\n  }"
+  },
+  {
+    "id": "LR-FIX-004",
+    "result": "FAIL",
+    "error": "expect(locator).toBeVisible() failed\n\nLocator: getByTestId('photo-studio').getByRole('navigation', { name: 'Albums', exact: true }).getByRole('button', { name: /Grandchild/ })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByTestId('photo-studio').getByRole('navigation', { name: 'Albums', exact: true }).getByRole('button', { name: /Grandchild/ }) with timeout 5000ms\n  - waiting for getByTestId('photo-studio').getByRole('navigation', { name: 'Albums', exact: true }).getByRole('button', { name: /Grandchild/ })\n"
+  },
+  {
+    "id": "LR-FIX-005",
+    "result": "FAIL",
+    "error": "expect(locator).toBeChecked() failed\n\nLocator: getByRole('dialog').getByRole('checkbox', { name: 'Select all photos', exact: true })\nExpected: checked\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeChecked\" getByRole('dialog').getByRole('checkbox', { name: 'Select all photos', exact: true }) with timeout 5000ms\n  - waiting for getByRole('dialog').getByRole('checkbox', { name: 'Select all photos', exact: true })\n"
+  }
+]

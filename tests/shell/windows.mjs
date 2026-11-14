@@ -103,6 +103,51 @@ async function expectDockAboveWindow(page) {
 
 try {
   {
+    const { page, win, dock } = await desktop({ reduceMotion: false, windowAnimation: 'gentle' });
+    const material = () => win.evaluate(el => {
+      const style = getComputedStyle(el);
+      return { background: style.background, filter: style.backdropFilter };
+    });
+    const before = await material();
+    expect(before.filter).not.toBe('none');
+    const titlebar = await win.locator('.window-titlebar').boundingBox();
+    await page.mouse.move(titlebar.x + titlebar.width / 2, titlebar.y + titlebar.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(titlebar.x + titlebar.width / 2 + 60, titlebar.y + titlebar.height / 2 + 60);
+    await expect(win).toHaveClass(/is-moving/);
+    expect(await material()).toEqual(before);
+    await page.mouse.up();
+    expect(await material()).toEqual(before);
+
+    // Inspect the finish boundary itself: polling after hiding misses a one-frame flash.
+    await win.evaluate(el => {
+      const animate = el.animate.bind(el);
+      el.animate = (...args) => {
+        const animation = animate(...args);
+        animation.addEventListener('finish', () => {
+          window.minimizeFinishOpacity = getComputedStyle(el).opacity;
+        });
+        const cancel = animation.cancel.bind(animation);
+        animation.cancel = () => {
+          window.minimizeHiddenBeforeCancel = el.getClientRects().length === 0;
+          cancel();
+        };
+        return animation;
+      };
+    });
+    await win.getByRole('button', { name: 'Minimize Welcome', exact: true }).click();
+    await expect(win).toBeHidden();
+    expect(await page.evaluate(() => window.minimizeFinishOpacity)).toBe('0');
+    expect(await page.evaluate(() => window.minimizeHiddenBeforeCancel)).toBe(true);
+    await dock.getByRole('button', { name: 'Open Welcome', exact: true }).click();
+    await expect(win).toBeVisible();
+    await expect(win).toHaveCSS('opacity', '1');
+    expect(await material()).toEqual(before);
+    checks.push('Dragging preserves glass; minimize holds its transparent frame until hidden and restores at full opacity');
+    await page.close();
+  }
+
+  {
     const { page, win, dock } = await desktop();
     const behindDock = await gesture(page, win, 0, 220);
     expectBounds(behindDock, { ...initialBounds, y: 360 });

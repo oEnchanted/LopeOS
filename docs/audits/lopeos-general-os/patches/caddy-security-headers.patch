@@ -1,0 +1,19 @@
+--- a/services/runtime/windows/Caddyfile.deploy.template
++++ b/services/runtime/windows/Caddyfile.deploy.template
+@@ -39,7 +39,14 @@
+         file_server
+     }
+     header {
+-        X-Content-Type-Options nosniff
+-        Referrer-Policy strict-origin-when-cross-origin
++        Content-Security-Policy "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'"
++        Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: 'sha256-Q9+GC+QrYAgHbKBjFBCYFlowohFToGIb6hW/pg3U/dg='; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.open-meteo.com https://geocoding-api.open-meteo.com https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com https://cdn.jsdelivr.net; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
++        X-Frame-Options "SAMEORIGIN"
++        Strict-Transport-Security "max-age=31536000"
++        Permissions-Policy "camera=(self), microphone=(self), geolocation=(self), display-capture=(self), fullscreen=(self), clipboard-read=(self), clipboard-write=(self), autoplay=(self), payment=(), usb=(), serial=(), hid=(), bluetooth=(), midi=(), xr-spatial-tracking=(), browsing-topics=()"
++        Cross-Origin-Opener-Policy "same-origin"
++        Cross-Origin-Resource-Policy "same-origin"
++        X-Content-Type-Options "nosniff"
++        Referrer-Policy "strict-origin-when-cross-origin"
+     }
+ }

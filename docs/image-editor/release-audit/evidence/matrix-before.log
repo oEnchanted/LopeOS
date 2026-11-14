@@ -1,0 +1,6 @@
+{"browser":"chromium","width":1440,"height":900,"result":"PASS"}
+{"browser":"chromium","width":1920,"height":1080,"result":"PASS"}
+{"browser":"chromium","width":740,"height":500,"result":"FAIL","failure":"Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('image-editor-app').locator('.ie-audit-dropdown')\nExpected: 2\nReceived: 1\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('image-editor-app').locator('.ie-audit-dropdown') with timeout 5000ms\n  - waiting for getByTestId('image-editor-app').locator('.ie-audit-dropdown')\n    13 × locator resolved to 1 element\n       - unexpected value \"1\"\n"}
+{"browser":"chromium","width":1152,"height":720,"result":"PASS"}
+{"browser":"chromium","width":720,"height":450,"result":"PASS"}
+{"browser":"chrome","width":1440,"height":900,"result":"PASS"}

@@ -1,0 +1,118 @@
+{
+  "date": "2026-11-13",
+  "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+  "workflows": [
+    {
+      "id": "LR-01",
+      "result": "PASSED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Real RAW review/select-all/album; rate/flag/filter; Detail exposure pixels; gradient mask; committed square crop; named version; PNG16 export/reopen/reimport; original checksum preserved.",
+      "evidence": "evidence/ui-production-final/results.json; evidence/production-verification.json",
+      "limits": "Synthetic DNG only; not general camera-model coverage. Adobe pixel equivalence not established."
+    },
+    {
+      "id": "LR-02",
+      "result": "FAILED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Preset hover changes pixels temporarily and reverts without recipe/history mutation; apply/undo and batch shared undo passed.",
+      "evidence": "evidence/release-regressions-after.json; evidence/browser-final.log; evidence/ui-production-final/results.json",
+      "limits": "Full selective copy/paste dialog and adaptive masks are absent; mandatory full workflow not passed."
+    },
+    {
+      "id": "LR-03",
+      "result": "PASSED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Create/edit smart rule; rating moves membership0\u21921; reload preserves1; removing rating returns0. Rule edits persist.",
+      "evidence": "evidence/release-regressions-after.json: LR-FUNC-003, LR-FIX-003",
+      "limits": "Only implemented rating/text rule set tested; complete Adobe rule UI remains unverified."
+    },
+    {
+      "id": "LR-04",
+      "result": "UNVERIFIED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Manual gradient/crop/export tested; source-relative radial/brush geometry and pointer/zoom tested in components and source renderer tests.",
+      "evidence": "controls-findings.json; evidence/photo-tests-final.log; evidence/ui-production-final/results.json",
+      "limits": "Complete rotate+crop+zoom+export alignment on matched photographic fixtures was not independently closed; no full mask-overlay parity claim."
+    },
+    {
+      "id": "LR-05",
+      "result": "FAILED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "HDR/panorama merge cannot run because both engines are absent.",
+      "evidence": "docs/lightroom/feature-matrix.json; issues.csv",
+      "limits": "Missing engines and cleared bracket/panorama fixture coverage."
+    },
+    {
+      "id": "LR-06",
+      "result": "UNVERIFIED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Import/save/restore quota rollback and AI download/inference cancellation/retry/offline behavior passed; originals preserved. Workspace export denial recovers.",
+      "evidence": "evidence/data-storage-after.json; evidence/denoise-verification.json; evidence/release-regressions-after.json",
+      "limits": "Interrupting ordinary import/export at every required stage was not fully exercised; AI cancellation is not a replacement for that workflow."
+    },
+    {
+      "id": "LR-07",
+      "result": "PASSED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Actual shell FileDialog\u2192LopeDrive\u2192Prism; add layer/fill/save; linked derivative dimensions/profile/project hash; PNG16 export/reopen; original checksum and durable reload.",
+      "evidence": "evidence/handoff-production/results.json; evidence/handoff-production/independent-reader.json",
+      "limits": "RGB/8 native interchange only; no independent full Photoshop audit of the same build supplied."
+    },
+    {
+      "id": "LR-08",
+      "result": "FAILED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "G/D/E/C,Z/U/X,ratings,/ and backslash,Shift+E; keyboard crop/resizer; exact client sizes and minimum window; Chromium/WebKit codecs pass.",
+      "evidence": "evidence/ui-production-final/results.json; evidence/controls-integration-production/results.json; evidence/codec-verification.json",
+      "limits": "Default/Classic-style presets absent; browser125/200 zoom and Firefox unavailable; complete all-keyboard/native-fallback scope not passed."
+    },
+    {
+      "id": "LR-09",
+      "result": "PASSED",
+      "browser": "Chromium158.0.8127.18",
+      "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "artifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+      "fixture": "Permission-cleared bundled photographs / procedural sensor-only Bayer DNG; details and SHA256 in evidence",
+      "stepsAndAssertions": "Fresh guest browser context imports RAW through real UI, edits/exports; reload preserves recipe/mask/version/rating; independent fresh profile verifies real cross-app handoff.",
+      "evidence": "evidence/ui-production-final/results.json; evidence/handoff-production/results.json; evidence/production-verification.json",
+      "limits": "Only guest setup flag seeded; no hidden media/test providers. Workspace401/403 errors remain a separate release gate failure."
+    }
+  ],
+  "counts": {
+    "PASSED": 4,
+    "FAILED": 3,
+    "UNVERIFIED": 2
+  },
+  "referenceParity": "UNVERIFIED",
+  "outputFileChecks": [
+    "evidence/independent-production-final.log",
+    "evidence/handoff-production/independent-reader.json",
+    "data-findings.json"
+  ],
+  "integratedBrowserEvidence": "evidence/ui-production-final/results.json"
+}

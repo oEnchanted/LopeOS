@@ -1,0 +1,4317 @@
+{
+  "date": "2026-11-13",
+  "phase": "development-retest",
+  "base": "http://127.0.0.1:5191",
+  "browser": "158.0.8127.18",
+  "os": "darwin",
+  "commit": "a3c817f81d6528885ea04120ae4b702a9f2b19ee",
+  "sourceState": "M apps/web/src/apps/lightroom/backup.ts\n M apps/web/src/apps/lightroom/controls.tsx\n M apps/web/src/apps/lightroom/grid-layout.ts\n M apps/web/src/apps/lightroom/index.tsx\n M apps/web/src/apps/lightroom/library.ts\n M apps/web/src/apps/lightroom/lightroom.css\n M apps/web/src/apps/lightroom/viewport.tsx\n M apps/web/src/apps/weather/index.tsx\n M apps/web/src/apps/writer/WriterDialog.tsx\n M apps/web/src/shell/Shell.tsx\n M apps/web/src/shell/Welcome.tsx\n M docs/lightroom/codec-verification.json\n M docs/lightroom/handoff-verification.json\n M docs/lightroom/screenshots/detail.png\n M docs/lightroom/screenshots/empty.png\n M docs/lightroom/screenshots/grid.png\n M docs/lightroom/screenshots/import-review.png\n M docs/lightroom/screenshots/large-grid.png\n M docs/lightroom/screenshots/lopeos-integration.png\n M docs/lightroom/screenshots/masking.png\n M docs/lightroom/screenshots/narrow.png\n M docs/lightroom/screenshots/returned-derivative.png\n M docs/lightroom/verification.json\n M docs/writer/README.md\n M docs/writer/feature-inventory.md\n M docs/writer/parity-report.md\n M docs/writer/production-verification.json\n M docs/writer/sample-output.pdf\n M docs/writer/screenshots/lopeos-integration.png\n M docs/writer/screenshots/production-preferences-dark.png\n M docs/writer/screenshots/production-preferences-light.png\n M docs/writer/screenshots/production.png\n M docs/writer/word-feature-audit.md\n M package.json\n M packages/photo-engine/src/png.ts\n M packages/photo-engine/src/tiff.ts\n M services/browser/hosting/gateway.mjs\n M services/browser/hosting/main.mjs\n M services/browser/infra/Dockerfile\n M services/browser/infra/entrypoint.sh\n M services/browser/package.json\n M services/browser/tests/engine.test.mjs\n M tests/lightroom/browser.mjs\n M tests/lightroom/denoise-browser.mjs\n M tests/lightroom/production.mjs\n M tests/writer/fixtures/review-roundtrip.docx\n M tests/writer/fixtures/roundtrip.docx\n M tests/writer/fixtures/structures-roundtrip.docx\n M tests/writer/preferences-capture.mjs\n M tests/writer/preferences.spec.ts\n M tests/writer/production.mjs\n M tests/writer/settings-audit.spec.ts\n M tests/writer/shell.spec.ts\n?? apps/web/node_modules\n?? apps/web/src/apps/lightroom/mask-outline.ts\n?? docs/lightroom/release-audit/\n?? docs/writer/image-interactions.md\n?? docs/writer/screenshots/production-images.png\n?? packages/document-engine/node_modules\n?? packages/image-engine/node_modules\n?? packages/photo-engine/node_modules\n?? services/browser/hosting/README.md\n?? services/browser/hosting/caddy.mjs\n?? services/browser/hosting/linux/NOTICE.md\n?? services/browser/hosting/windows/Enable-LopeBrowser.ps1\n?? services/browser/hosting/windows/prepare-workflow.yml\n?? services/browser/tests/caddy.test.mjs\n?? services/runtime/node_modules\n?? tests/lightroom/audit-probe.mjs\n?? tests/lightroom/controls-audit.mjs\n?? tests/lightroom/controls-harness.html\n?? tests/lightroom/controls-harness.tsx\n?? tests/lightroom/controls-integration.mjs\n?? tests/lightroom/release-codec-fixtures.ts\n?? tests/lightroom/release-codec-reader.py\n?? tests/lightroom/release-codec-worker.mjs\n?? tests/lightroom/release-codec.test.ts\n?? tests/lightroom/release-data.mjs\n?? tests/lightroom/release-regressions.mjs\n?? tests/lightroom/release-ui.mjs\n?? tests/lightroom/vite.audit.config.ts\n?? tests/writer/labels.ts",
+  "setup": "Fresh context; only guest setup completion seeded; all media imported via UI; no runtime mocks or source-module imports.",
+  "fixture": {
+    "file": "docs/lightroom/fixtures/synthetic-bayer.dng",
+    "sha256": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5"
+  },
+  "checks": [
+    {
+      "id": "UI-EMPTY",
+      "label": "Clean guest session launches real empty library",
+      "result": "PASSED",
+      "ms": 341,
+      "detail": {
+        "capture": "docs/lightroom/release-audit/evidence/ui-development-retest/empty-library.png"
+      }
+    },
+    {
+      "id": "UI-MENUS",
+      "label": "Application menus keep Adobe-oriented order and keyboard dismissal",
+      "result": "PASSED",
+      "ms": 4461,
+      "detail": {
+        "names": [
+          "LopeOS",
+          "Luma",
+          "File",
+          "Edit",
+          "Photo",
+          "View",
+          "Window",
+          "Help"
+        ],
+        "menus": [
+          {
+            "name": "File",
+            "items": [
+              {
+                "text": "Add photos from device…\nMod+Shift+i",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Add a folder from device…",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Open from LopeOS workspace…",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Export photos…\nShift+e",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Download original",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "LopeOS Account…",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "New window\n⌘ N",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Close window\n⌘ W",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              }
+            ]
+          },
+          {
+            "name": "Edit",
+            "items": [
+              {
+                "text": "Undo\nMod+z",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Redo\nMod+Shift+z",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Copy develop settings\nMod+Shift+c",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Paste develop settings\nMod+Shift+v",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Select all photos\nMod+a",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              }
+            ]
+          },
+          {
+            "name": "Photo",
+            "items": [
+              {
+                "text": "Auto light\nShift+a",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "AI Denoise…",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Reset to original",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Rotate left",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Rotate right",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Create named version…",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Stack selected photos",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Edit a copy in Prism…",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Move to Deleted",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Restore selected photos",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              }
+            ]
+          },
+          {
+            "name": "View",
+            "items": [
+              {
+                "text": "Photo grid\ng",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "false"
+              },
+              {
+                "text": "Square grid",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "false"
+              },
+              {
+                "text": "Detail\nd",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "true"
+              },
+              {
+                "text": "Compare selected",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Survey selected",
+                "disabled": true,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Show filmstrip\n/",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "true"
+              },
+              {
+                "text": "Show original\n\\",
+                "disabled": true,
+                "role": "menuitemcheckbox",
+                "checked": "false"
+              },
+              {
+                "text": "Show photo navigation",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "true"
+              },
+              {
+                "text": "Show histogram",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "true"
+              },
+              {
+                "text": "Dark appearance",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "false"
+              },
+              {
+                "text": "Reduce transparency",
+                "disabled": false,
+                "role": "menuitemcheckbox",
+                "checked": "false"
+              },
+              {
+                "text": "Spotlight Search…\n⌘ K",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Show desktop",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              }
+            ]
+          },
+          {
+            "name": "Window",
+            "items": [
+              {
+                "text": "Minimize",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Maximize",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Enter full screen",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Tile window to left",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Tile window to right",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Center window",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Bring all to front",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              }
+            ]
+          },
+          {
+            "name": "Help",
+            "items": [
+              {
+                "text": "Luma help & shortcuts",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Format & feature support",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "About LopeOS",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              },
+              {
+                "text": "Keyboard shortcuts",
+                "disabled": false,
+                "role": "menuitem",
+                "checked": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "UI-APP-FOCUS",
+      "label": "Luma–Prism–Luma switches menu ownership",
+      "result": "PASSED",
+      "ms": 2523,
+      "detail": {
+        "prismMenus": [
+          "LopeOS",
+          "Prism",
+          "File",
+          "Edit",
+          "Image",
+          "Layer",
+          "Type",
+          "Select",
+          "Filter",
+          "View",
+          "Window",
+          "Help"
+        ],
+        "capture": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-focus-return.png"
+      }
+    },
+    {
+      "id": "UI-ALBUM",
+      "label": "Create real import destination album",
+      "result": "PASSED",
+      "ms": 1434
+    },
+    {
+      "id": "LR-01-IMPORT",
+      "label": "RAW review, select-all, album assignment and real decode",
+      "result": "FAILED",
+      "ms": 13469,
+      "error": "locator.selectOption: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: 'Add photos', exact: true }).getByLabel('Add to album', { exact: true })\u001b[22m\n\n    at /private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-ui.mjs:39:657\n    at async check (/private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-ui.mjs:25:75)\n    at async file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-ui.mjs:39:2",
+      "screenshot": "docs/lightroom/release-audit/evidence/ui-development-retest/failure-lr-01-import.png"
+    },
+    {
+      "id": "RUN-ABORT",
+      "result": "FAILED",
+      "error": "Error: RAW import prerequisite failed; dependent workflow not run. Diagnostics: {\"errors\":[],\"consoleErrors\":[\"Failed to load resource: the server responded with a status of 502 (Bad Gateway)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 403 (Forbidden)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 401 (Unauthorized)\",\"Failed to load resource: the server responded with a status of 403 (Forbidden)\"],\"failedRequests\":[{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/health\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/health\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"blob:http://127.0.0.1:5191/f2999c63-f4a8-46ff-8aea-6c3278e05094\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"}],\"responses\":[{\"url\":\"http://127.0.0.1:5191/api/accounts/session\",\"status\":502},{\"url\":\"http://127.0.0.1:5191/api/health\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/health\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/visitor\",\"status\":403},{\"url\":\"http://127.0.0.1:5191/api/health\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/health\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/fs/list?path=%2F.Trash\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/identity\",\"status\":401},{\"url\":\"http://127.0.0.1:5191/api/visitor\",\"status\":403}]}\n    at file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-ui.mjs:40:43"
+    }
+  ],
+  "captures": [
+    {
+      "name": "empty-library",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/empty-library.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-File",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-file.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-Edit",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-edit.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-Photo",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-photo.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-View",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-view.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-Window",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-window.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-Help",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-help.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "menu-focus-return",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/menu-focus-return.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "album-create",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/album-create.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    },
+    {
+      "name": "failure-LR-01-IMPORT",
+      "file": "docs/lightroom/release-audit/evidence/ui-development-retest/failure-lr-01-import.png",
+      "conditions": {
+        "phase": "development-retest",
+        "interfaceLanguage": "English",
+        "theme": "app dark",
+        "density": "photo-studio compact",
+        "browserZoom": "100% unless separately measured",
+        "pairedAdobeReference": false
+      },
+      "geometry": {
+        "client": {
+          "width": 1358,
+          "height": 819,
+          "scrollWidth": 1358,
+          "scrollHeight": 819
+        },
+        "viewport": {
+          "innerWidth": 1700,
+          "innerHeight": 1100,
+          "devicePixelRatio": 1,
+          "visualScale": 1
+        },
+        "anchors": {
+          ".ps-topbar": {
+            "x": 0,
+            "y": 0,
+            "width": 1358,
+            "height": 60,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(38, 38, 38)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1358,
+            "clientWidth": 1358,
+            "scrollHeight": 59,
+            "clientHeight": 59
+          },
+          ".ps-sidebar": {
+            "x": 0,
+            "y": 60,
+            "width": 208,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(37, 37, 37)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 207,
+            "clientWidth": 207,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-collection-bar": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 43,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 42,
+            "clientHeight": 42
+          },
+          ".ps-main": {
+            "x": 208,
+            "y": 60,
+            "width": 1107,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-viewbar": {
+            "x": 208,
+            "y": 666,
+            "width": 1107,
+            "height": 39,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 38,
+            "clientHeight": 38
+          },
+          ".ps-filmstrip": {
+            "x": 208,
+            "y": 705,
+            "width": 1107,
+            "height": 91,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(35, 35, 35)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 90,
+            "clientHeight": 90
+          },
+          ".ps-statusbar": {
+            "x": 208,
+            "y": 796,
+            "width": 1107,
+            "height": 23,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "8px",
+            "fontWeight": "400",
+            "lineHeight": "10.8px",
+            "color": "rgb(120, 120, 120)",
+            "background": "rgb(32, 32, 32)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 22,
+            "clientHeight": 22
+          },
+          ".ps-edit-panel": null,
+          ".ps-tool-rail": {
+            "x": 1315,
+            "y": 60,
+            "width": 43,
+            "height": 759,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(36, 36, 36)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 42,
+            "clientWidth": 42,
+            "scrollHeight": 759,
+            "clientHeight": 759
+          },
+          ".ps-histogram": null,
+          ".ps-panel-heading": null,
+          ".ps-panel-scroll": null,
+          ".ps-grid": null,
+          ".ps-viewport": {
+            "x": 208,
+            "y": 103,
+            "width": 1107,
+            "height": 563,
+            "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "16.2px",
+            "color": "rgb(222, 222, 222)",
+            "background": "rgb(29, 29, 29)",
+            "borderRadius": "0px",
+            "display": "flex",
+            "scrollWidth": 1107,
+            "clientWidth": 1107,
+            "scrollHeight": 563,
+            "clientHeight": 563
+          },
+          "[data-testid=\"photo-canvas\"]": null
+        }
+      }
+    }
+  ],
+  "zoomAttempts": [],
+  "errors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "blob:http://127.0.0.1:5191/f2999c63-f4a8-46ff-8aea-6c3278e05094",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "failedHttpResponses": [
+    {
+      "url": "http://127.0.0.1:5191/api/accounts/session",
+      "status": 502
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "status": 403
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "status": 403
+    }
+  ],
+  "networkRequests": [
+    {
+      "url": "http://127.0.0.1:5191/",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@vite/client",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/main.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@react-refresh",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom_client.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/FirstRun.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/styles.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/shell.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/materials.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/desktop-polish.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/control-center.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/glass-surfaces.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-BnddDCXU.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/rolldown-runtime-C-UrYobY.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/accounts.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/preferences.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Icons.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/appearance.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/background.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/wallpapers.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/settings/wallpaper-policy.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/ResetScreen.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/reset.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/setup.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom-BwyQgGtu.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/contracts/src/preferences.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/reset.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/background.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/model-updates.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/preflight.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/encryption.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/data.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/merge.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-ai/core.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/denoise-manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/ai/catalog.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/index.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/lope-drive.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/backup/local-data.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/mounted-files.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/wallpapers/perfecthue-aurora-light.png",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/wallpapers/perfecthue-aurora-dark.png",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/accounts/session",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Shell.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/backup/lifecycle.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/UpdateUI.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/lucide-react.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/browser/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/registry.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/commands.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/WindowFrame.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/useWindowFullscreen.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/window-geometry.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SystemControls.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SearchPanel.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/DesktopExtras.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Dock.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/filePolicy.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/system.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/WeatherStatusBridge.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/FileDialog.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/index.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/settings.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/updates.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/manifests.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/browser/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/extensions.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SpotlightChat.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-ai/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-engine.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/trash.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/dock.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/provider.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/useWeather.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/clipboard-store.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/files/operations.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/file-dialog.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/contracts.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/navigation.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/app-template/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/writer/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/calculator/engine.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/store.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Welcome.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7392&longitude=-104.9903&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cweather_code%2Cis_day%2Cwind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m%2Cvisibility%2Cuv_index&hourly=temperature_2m%2Cweather_code%2Cis_day%2Cprecipitation_probability&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_probability_max%2Csunrise%2Csunset&forecast_days=10&forecast_hours=24&timezone=auto&temperature_unit=celsius&wind_speed_unit=kmh",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "method": "POST",
+      "hasBody": true
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/hooks.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/library.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/grid-layout.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/presets.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/xmp.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/controls.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/viewport.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/worker-client.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/DenoiseDialog.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/lightroom.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/mask-outline.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/denoise-cache.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/denoise-client.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/index.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/psd.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/CanvasView.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/dialogs.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/menus.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/panels.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/panel-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/filter-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/tools.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/tool-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/fixture.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/worker-client.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/recovery.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/session.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/image-editor.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/ag-psd.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/selection-outline.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/InlineType.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/history.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/operations.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/preview.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/clipboard.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/filters.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection-brush.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/menu-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/gpu.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/psd.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/preview.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/clipboard.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/filters.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/operations.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/ag-psd.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/gpu.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/rolldown-runtime-C-UrYobY.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/decode.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/jpeg.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/png.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/libraw-wasm.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/worker.js?worker_file&type=module",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/libraw.wasm",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/index.tsx?t=1794611715330",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@vite/client",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/main.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@react-refresh",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom_client.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/FirstRun.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/styles.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/shell.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/materials.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/desktop-polish.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/control-center.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/glass-surfaces.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-BnddDCXU.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/rolldown-runtime-C-UrYobY.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom-BwyQgGtu.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/accounts.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/preferences.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Icons.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/appearance.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/background.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/wallpapers.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/settings/wallpaper-policy.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/ResetScreen.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/reset.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/setup.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/contracts/src/preferences.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/background.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/reset.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/model-updates.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/preflight.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/encryption.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/data.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/merge.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-ai/core.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/denoise-manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/ai/catalog.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/index.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/lope-drive.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/backup/local-data.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/mounted-files.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/wallpapers/perfecthue-aurora-light.png",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/wallpapers/perfecthue-aurora-dark.png",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/accounts/session",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Shell.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/backup/lifecycle.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/UpdateUI.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/lucide-react.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/browser/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/registry.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/commands.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/WindowFrame.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/useWindowFullscreen.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/window-geometry.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SystemControls.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SearchPanel.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/DesktopExtras.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Dock.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/filePolicy.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/system.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/WeatherStatusBridge.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/FileDialog.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/settings.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/updates.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/manifests.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/browser/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/extensions.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/index.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SpotlightChat.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-ai/service.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-engine.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/trash.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/dock.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/clipboard-store.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/provider.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/useWeather.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/files/operations.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/file-dialog.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/app-template/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/writer/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/manifest.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/contracts.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/navigation.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/calculator/engine.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/store.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Welcome.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/index.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/hooks.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/library.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/grid-layout.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/presets.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/xmp.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/controls.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/viewport.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/worker-client.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/DenoiseDialog.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/lightroom.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/index.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/psd.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/CanvasView.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/dialogs.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/menus.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/panels.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/panel-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/filter-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/tools.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/tool-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/fixture.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/worker-client.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/recovery.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/session.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/image-editor.css",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/denoise-cache.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/denoise-client.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/mask-outline.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/history.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/operations.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/preview.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/clipboard.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/filters.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection-brush.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/ag-psd.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/selection-outline.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/InlineType.tsx",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/menu-model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/gpu.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7392&longitude=-104.9903&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cweather_code%2Cis_day%2Cwind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m%2Cvisibility%2Cuv_index&hourly=temperature_2m%2Cweather_code%2Cis_day%2Cprecipitation_probability&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_probability_max%2Csunrise%2Csunset&forecast_days=10&forecast_hours=24&timezone=auto&temperature_unit=celsius&wind_speed_unit=kmh",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "method": "POST",
+      "hasBody": true
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/psd.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/render.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/preview.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/clipboard.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/filters.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/operations.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/ag-psd.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/gpu.ts",
+      "method": "GET",
+      "hasBody": false
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/rolldown-runtime-C-UrYobY.js?v=0a239a00",
+      "method": "GET",
+      "hasBody": false
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2
+  },
+  "limits": [
+    "Missing Adobe matched captures: measured app geometry is not pixel-parity evidence.",
+    "Native 125%/200% browser zoom remains unverified unless measured explicitly.",
+    "Fullscreen image F mode, complete reference menu/control states and absent advanced features remain in source inventory.",
+    "Reload is a clean loaded app state using persistent real data; not a newly empty library.",
+    "Firefox/WebKit and native hardware/codecs not covered by this Chromium run."
+  ]
+}

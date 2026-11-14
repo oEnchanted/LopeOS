@@ -1,0 +1,25 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+ExpectError: expect(received).toBe(expected) // Object.is equality
+
+Expected: "move"
+Received: "brush"
+    at captureRawStack (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright-core@1.65.0/node_modules/playwright-core/lib/coreBundle.js:9551:17)
+    at callMatcherAsStep (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13342:57)
+    at Object.toBe (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13334:23)
+    at /private/tmp/lopeos-photoshop-audit/tests/image-editor/release-session.mjs:43:135 {
+  matcherResult: {
+    actual: 'brush',
+    expected: 'move',
+    message: 'expect(received).toBe(expected) // Object.is equality\n' +
+      '\n' +
+      'Expected: "move"\n' +
+      'Received: "brush"',
+    name: 'toBe',
+    pass: false
+  }
+}
+
+Node.js v26.12.1

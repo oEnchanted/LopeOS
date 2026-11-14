@@ -20,6 +20,8 @@ COPY --chown=0:0 services/browser/infra/openbox.run /opt/lope-services/openbox/r
 # s6 and its supervision files live in ephemeral writable storage.
 RUN cp -a /etc/service/. /opt/lope-services/ \
     && sed -i 's|/etc/service|/tmp/lope-services|g' /etc/container-entrypoint.sh \
+    && grep -q 'exec selkies --public ' /etc/selkies-entrypoint.sh \
+    && sed -i 's/exec selkies --public /exec selkies /' /etc/selkies-entrypoint.sh \
     && chmod -R a-w /opt/lope /opt/lope-services \
     && chmod a+rx /opt/lope/entrypoint.sh /opt/lope-services/browser/run /opt/lope-services/openbox/run
 USER 1000:1000
@@ -27,9 +29,9 @@ ENV SELKIES_WAYLAND=false SELKIES_ENABLE_HTTPS=false SELKIES_ADDR=127.0.0.1 SELK
     SELKIES_SUBFOLDER=/api/browser/stream SELKIES_PORT=8080 SELKIES_MODE=websockets \
     SELKIES_ENABLE_BASIC_AUTH=true SELKIES_BASIC_AUTH_USER=lope SELKIES_COMMAND_ENABLED=false \
     SELKIES_FILE_TRANSFERS=none SELKIES_PRINTING_ENABLED=false SELKIES_ENABLE_SHARING=false \
-    SELKIES_WEBCAM_ENABLED=false SELKIES_MICROPHONE_ENABLED=false \
+    SELKIES_WEBCAM_ENABLED="false|locked" SELKIES_MICROPHONE_ENABLED="false|locked" SELKIES_GAMEPAD_ENABLED="false|locked" \
     SELKIES_ENABLE_CLIPBOARD=true SELKIES_CLIPBOARD_SEAMLESS="false|locked" \
-    SELKIES_UI_SHOW_SIDEBAR=false SELKIES_ENABLE_INTERNAL_TURN=false \
+    SELKIES_UI_SHOW_SIDEBAR=false SELKIES_ENABLE_INTERNAL_TURN=false SELKIES_ENABLE_DUAL_MODE=false \
     LOPE_BROWSER_BIND=0.0.0.0 LOPE_BROWSER_HOSTS=browser-worker,127.0.0.1,localhost \
     LOPE_BROWSER_DATA=/profiles/normal CHROMIUM_EXECUTABLE=/usr/bin/chromium \
     SELKIES_URL=http://127.0.0.1:8080

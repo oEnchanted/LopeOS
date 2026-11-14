@@ -1,0 +1,145 @@
+{
+  "measuredAt": "2026-11-13T23:32:47.271Z",
+  "runtime": "v26.12.1",
+  "platform": "darwin",
+  "release": "27.2.0",
+  "arch": "arm64",
+  "cpu": "Apple M1 Pro",
+  "logicalCores": 8,
+  "systemMemoryBytes": 17179869184,
+  "fixture": {
+    "rows": 100000,
+    "columns": 7,
+    "sourceCells": 700007,
+    "printHTMLBytes": 8702
+  },
+  "scope": "Synchronous Node engine operations. Timings include allocations and natural GC. Memory values are snapshots, not measured process peak memory. This does not measure browser scroll/edit latency, worker transfer, XLSX IO or an independent Excel installation.",
+  "timings": [
+    {
+      "name": "Generate 100,000-row workbook, 700,007 source cells",
+      "elapsedMs": 727.99,
+      "heapUsedBeforeBytes": 9058592,
+      "heapUsedAfterBytes": 158168904,
+      "rssAfterBytes": 283037328
+    },
+    {
+      "name": "Read 100,000 typed records from the sparse worksheet",
+      "elapsedMs": 368.863,
+      "heapUsedBeforeBytes": 158172232,
+      "heapUsedAfterBytes": 180357192,
+      "rssAfterBytes": 323445336
+    },
+    {
+      "name": "Stable Region/Revenue sort 1",
+      "elapsedMs": 114.217,
+      "heapUsedBeforeBytes": 180358472,
+      "heapUsedAfterBytes": 171961400,
+      "rssAfterBytes": 332703208
+    },
+    {
+      "name": "Revenue >= 500 filter 1",
+      "elapsedMs": 6.599,
+      "heapUsedBeforeBytes": 171961928,
+      "heapUsedAfterBytes": 195823096,
+      "rssAfterBytes": 333309488
+    },
+    {
+      "name": "4 x 5 pivot with sum/count 1",
+      "elapsedMs": 74.921,
+      "heapUsedBeforeBytes": 195823672,
+      "heapUsedAfterBytes": 197695216,
+      "rssAfterBytes": 336734200
+    },
+    {
+      "name": "Query filter/group/sort 1",
+      "elapsedMs": 45.1,
+      "heapUsedBeforeBytes": 197695664,
+      "heapUsedAfterBytes": 183165320,
+      "rssAfterBytes": 339306680
+    },
+    {
+      "name": "Chart from aggregated pivot 1",
+      "elapsedMs": 0.205,
+      "heapUsedBeforeBytes": 183165864,
+      "heapUsedAfterBytes": 183172888,
+      "rssAfterBytes": 339306680
+    },
+    {
+      "name": "Stable Region/Revenue sort 2",
+      "elapsedMs": 98.457,
+      "heapUsedBeforeBytes": 183174160,
+      "heapUsedAfterBytes": 192709008,
+      "rssAfterBytes": 342518160
+    },
+    {
+      "name": "Revenue >= 500 filter 2",
+      "elapsedMs": 4.738,
+      "heapUsedBeforeBytes": 192709552,
+      "heapUsedAfterBytes": 177272360,
+      "rssAfterBytes": 343075312
+    },
+    {
+      "name": "4 x 5 pivot with sum/count 2",
+      "elapsedMs": 70.968,
+      "heapUsedBeforeBytes": 177273344,
+      "heapUsedAfterBytes": 176240216,
+      "rssAfterBytes": 343140848
+    },
+    {
+      "name": "Query filter/group/sort 2",
+      "elapsedMs": 33.934,
+      "heapUsedBeforeBytes": 176241432,
+      "heapUsedAfterBytes": 186419416,
+      "rssAfterBytes": 344353360
+    },
+    {
+      "name": "Chart from aggregated pivot 2",
+      "elapsedMs": 0.013,
+      "heapUsedBeforeBytes": 186420152,
+      "heapUsedAfterBytes": 186422504,
+      "rssAfterBytes": 344353360
+    },
+    {
+      "name": "Stable Region/Revenue sort 3",
+      "elapsedMs": 95.252,
+      "heapUsedBeforeBytes": 186423104,
+      "heapUsedAfterBytes": 194707640,
+      "rssAfterBytes": 347499256
+    },
+    {
+      "name": "Revenue >= 500 filter 3",
+      "elapsedMs": 5.66,
+      "heapUsedBeforeBytes": 194708200,
+      "heapUsedAfterBytes": 179360936,
+      "rssAfterBytes": 348040000
+    },
+    {
+      "name": "4 x 5 pivot with sum/count 3",
+      "elapsedMs": 76.632,
+      "heapUsedBeforeBytes": 179361496,
+      "heapUsedAfterBytes": 208026616,
+      "rssAfterBytes": 348056384
+    },
+    {
+      "name": "Query filter/group/sort 3",
+      "elapsedMs": 40.439,
+      "heapUsedBeforeBytes": 208027176,
+      "heapUsedAfterBytes": 186105992,
+      "rssAfterBytes": 349367272
+    },
+    {
+      "name": "Chart from aggregated pivot 3",
+      "elapsedMs": 0.019,
+      "heapUsedBeforeBytes": 186106552,
+      "heapUsedAfterBytes": 186109224,
+      "rssAfterBytes": 349367272
+    },
+    {
+      "name": "Paginate and generate budget print preview",
+      "elapsedMs": 37.071,
+      "heapUsedBeforeBytes": 186272544,
+      "heapUsedAfterBytes": 186592408,
+      "rssAfterBytes": 350317592
+    }
+  ]
+}

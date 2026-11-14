@@ -35,6 +35,7 @@ By default, the browser tests expect the existing Vite server at `http://127.0.0
 - [Architecture and licensing](architecture-decision.md)
 - [Command inventory and coverage](feature-inventory.md)
 - [Microsoft Word feature audit and gaps](word-feature-audit.md)
+- [Picture dragging, layout and crop review](image-interactions.md)
 - [Verification and remaining limitations](parity-report.md)
 - [Side-by-side and overlay comparison](visual-comparison.html)
 - [Sample three-page PDF](sample-output.pdf)

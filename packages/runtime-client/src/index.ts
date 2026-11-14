@@ -1,9 +1,9 @@
-import type { FileEntry, FileService, FileStorageInfo, TerminalEvent, TerminalService } from '../../contracts/src';
+import type { FileEntry, FileService, FileStorageInfo, TerminalEvent, TerminalService, WriteOptions } from '../../contracts/src';
 import { mountLopeDrive } from './mounted-files.ts';
 
 export interface RuntimeOptions { baseUrl?: string; getToken?: () => string | Promise<string>; onWorkspaceStatus?: (state: string) => void }
 export interface SessionRecord { id: string; cwd: string; cols: number; rows: number; state: 'running' | 'exited'; createdAt: number; exitCode?: number }
-export interface WriteOptions { version?: string; createOnly?: boolean }
+export type { WriteOptions } from '../../contracts/src';
 export class RuntimeError extends Error {
   code: string; status: number;
   constructor(code: string, message: string, status = 0) { super(message); this.code = code; this.status = status; }
@@ -50,11 +50,12 @@ export class RuntimeClient {
     this.visitorBoot = boot();
     try { await this.visitorBoot; } finally { this.visitorBoot = null; }
   }
-  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  async request<T>(endpoint: string, options: RequestInit = {}, assertCurrent?: () => void): Promise<T> {
     const headers = new Headers(options.headers), token = await this.options.getToken?.();
     if (token) headers.set('Authorization', `Bearer ${token}`);
     if (options.body) headers.set('Content-Type', 'application/json');
     const send = async () => {
+      assertCurrent?.();
       try { return await fetch(`${this.options.baseUrl || ''}/api${endpoint}`, { ...options, headers, credentials: 'same-origin', cache: 'no-store', signal: options.signal ?? AbortSignal.timeout(20000) }); }
       catch { throw new RuntimeError('UNAVAILABLE', 'Your workspace is temporarily unavailable. Please try again shortly.'); }
     };
@@ -183,7 +184,9 @@ export function createFileService(client: RuntimeClient) {
     return { data: decode(r.data), version: r.version };
   };
   const writeBinary = async (path: string, data: Uint8Array, options: WriteOptions = {}) => {
-    const r = await client.request<RemoteEntry>('/fs/write', { method: 'PUT', body: JSON.stringify({ path, data: encode(data), ...options }) });
+    const { assertCurrent, ...wireOptions } = options;
+    assertCurrent?.();
+    const r = await client.request<RemoteEntry>('/fs/write', { method: 'PUT', body: JSON.stringify({ path, data: encode(data), ...wireOptions }) }, assertCurrent);
     return { ...entry(r), version: r.version! };
   };
   return {

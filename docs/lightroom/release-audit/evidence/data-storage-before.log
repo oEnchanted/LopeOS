@@ -1,0 +1,303 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5191",
+  "phase": "before",
+  "fixture": "Disposable procedural storage-only blobs; no codec assertion uses these files",
+  "results": [
+    {
+      "id": "LR-DATA-001",
+      "passed": false,
+      "rejection": "Error: Invalid Exposure value.",
+      "ratings": [
+        {
+          "id": "batch-a",
+          "rating": 5
+        },
+        {
+          "id": "batch-b",
+          "rating": 0
+        }
+      ]
+    },
+    {
+      "id": "LR-DATA-002",
+      "passed": false,
+      "rejection": "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': ()=>{} could not be cloned.",
+      "ratings": [
+        {
+          "id": "clone-a",
+          "rating": 4
+        },
+        {
+          "id": "clone-b",
+          "rating": 0
+        }
+      ]
+    },
+    {
+      "id": "LR-DATA-003",
+      "passed": false,
+      "storedChild": {
+        "id": "child",
+        "name": "Nested album",
+        "type": "album",
+        "parentId": "folder"
+      },
+      "sourceHash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2"
+    },
+    {
+      "id": "LR-DATA-004",
+      "passed": false,
+      "rejection": "Error: Photo library write failed.",
+      "assetCount": 1,
+      "albumCount": 1
+    },
+    {
+      "id": "LR-DATA-005",
+      "passed": false,
+      "rejection": "QuotaExceededError: Injected storage quota failure",
+      "assetCount": 1,
+      "albumCount": 1
+    },
+    {
+      "id": "LR-DATA-006",
+      "passed": true,
+      "restoredCounts": [
+        1,
+        0
+      ],
+      "ratings": [
+        {
+          "id": "restore-a",
+          "rating": 5
+        },
+        {
+          "id": "restore-b",
+          "rating": 0
+        }
+      ],
+      "hashes": [
+        {
+          "id": "restore-a",
+          "hash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2"
+        },
+        {
+          "id": "restore-b",
+          "hash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2"
+        }
+      ],
+      "progress": [
+        {
+          "done": 1,
+          "total": 2
+        },
+        {
+          "done": 2,
+          "total": 2
+        }
+      ]
+    },
+    {
+      "id": "LR-DATA-007",
+      "passed": false,
+      "depth": 50,
+      "visibleIds": []
+    }
+  ],
+  "errors": []
+}
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+ExpectError: expect(received).toEqual(expected) // deep equality
+
+- Expected  -  1
++ Received  + 63
+
+- Array []
++ Array [
++   Object {
++     "id": "LR-DATA-001",
++     "passed": false,
++     "ratings": Array [
++       Object {
++         "id": "batch-a",
++         "rating": 5,
++       },
++       Object {
++         "id": "batch-b",
++         "rating": 0,
++       },
++     ],
++     "rejection": "Error: Invalid Exposure value.",
++   },
++   Object {
++     "id": "LR-DATA-002",
++     "passed": false,
++     "ratings": Array [
++       Object {
++         "id": "clone-a",
++         "rating": 4,
++       },
++       Object {
++         "id": "clone-b",
++         "rating": 0,
++       },
++     ],
++     "rejection": "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': ()=>{} could not be cloned.",
++   },
++   Object {
++     "id": "LR-DATA-003",
++     "passed": false,
++     "sourceHash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2",
++     "storedChild": Object {
++       "id": "child",
++       "name": "Nested album",
++       "parentId": "folder",
++       "type": "album",
++     },
++   },
++   Object {
++     "albumCount": 1,
++     "assetCount": 1,
++     "id": "LR-DATA-004",
++     "passed": false,
++     "rejection": "Error: Photo library write failed.",
++   },
++   Object {
++     "albumCount": 1,
++     "assetCount": 1,
++     "id": "LR-DATA-005",
++     "passed": false,
++     "rejection": "QuotaExceededError: Injected storage quota failure",
++   },
++   Object {
++     "depth": 50,
++     "id": "LR-DATA-007",
++     "passed": false,
++     "visibleIds": Array [],
++   },
++ ]
+    at captureRawStack (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright-core@1.65.0/node_modules/playwright-core/lib/coreBundle.js:9551:17)
+    at callMatcherAsStep (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13342:57)
+    at Object.toEqual (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13334:23)
+    at /private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-data.mjs:83:40 {
+  matcherResult: {
+    actual: [
+      {
+        id: 'LR-DATA-001',
+        passed: false,
+        rejection: 'Error: Invalid Exposure value.',
+        ratings: [ { id: 'batch-a', rating: 5 }, { id: 'batch-b', rating: 0 } ]
+      },
+      {
+        id: 'LR-DATA-002',
+        passed: false,
+        rejection: "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': ()=>{} could not be cloned.",
+        ratings: [ { id: 'clone-a', rating: 4 }, { id: 'clone-b', rating: 0 } ]
+      },
+      {
+        id: 'LR-DATA-003',
+        passed: false,
+        storedChild: {
+          id: 'child',
+          name: 'Nested album',
+          type: 'album',
+          parentId: 'folder'
+        },
+        sourceHash: 'ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2'
+      },
+      {
+        id: 'LR-DATA-004',
+        passed: false,
+        rejection: 'Error: Photo library write failed.',
+        assetCount: 1,
+        albumCount: 1
+      },
+      {
+        id: 'LR-DATA-005',
+        passed: false,
+        rejection: 'QuotaExceededError: Injected storage quota failure',
+        assetCount: 1,
+        albumCount: 1
+      },
+      { id: 'LR-DATA-007', passed: false, depth: 50, visibleIds: [] }
+    ],
+    expected: [],
+    message: 'expect(received).toEqual(expected) // deep equality\n' +
+      '\n' +
+      '- Expected  -  1\n' +
+      '+ Received  + 63\n' +
+      '\n' +
+      '- Array []\n' +
+      '+ Array [\n' +
+      '+   Object {\n' +
+      '+     "id": "LR-DATA-001",\n' +
+      '+     "passed": false,\n' +
+      '+     "ratings": Array [\n' +
+      '+       Object {\n' +
+      '+         "id": "batch-a",\n' +
+      '+         "rating": 5,\n' +
+      '+       },\n' +
+      '+       Object {\n' +
+      '+         "id": "batch-b",\n' +
+      '+         "rating": 0,\n' +
+      '+       },\n' +
+      '+     ],\n' +
+      '+     "rejection": "Error: Invalid Exposure value.",\n' +
+      '+   },\n' +
+      '+   Object {\n' +
+      '+     "id": "LR-DATA-002",\n' +
+      '+     "passed": false,\n' +
+      '+     "ratings": Array [\n' +
+      '+       Object {\n' +
+      '+         "id": "clone-a",\n' +
+      '+         "rating": 4,\n' +
+      '+       },\n' +
+      '+       Object {\n' +
+      '+         "id": "clone-b",\n' +
+      '+         "rating": 0,\n' +
+      '+       },\n' +
+      '+     ],\n' +
+      `+     "rejection": "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': ()=>{} could not be cloned.",\n` +
+      '+   },\n' +
+      '+   Object {\n' +
+      '+     "id": "LR-DATA-003",\n' +
+      '+     "passed": false,\n' +
+      '+     "sourceHash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2",\n' +
+      '+     "storedChild": Object {\n' +
+      '+       "id": "child",\n' +
+      '+       "name": "Nested album",\n' +
+      '+       "parentId": "folder",\n' +
+      '+       "type": "album",\n' +
+      '+     },\n' +
+      '+   },\n' +
+      '+   Object {\n' +
+      '+     "albumCount": 1,\n' +
+      '+     "assetCount": 1,\n' +
+      '+     "id": "LR-DATA-004",\n' +
+      '+     "passed": false,\n' +
+      '+     "rejection": "Error: Photo library write failed.",\n' +
+      '+   },\n' +
+      '+   Object {\n' +
+      '+     "albumCount": 1,\n' +
+      '+     "assetCount": 1,\n' +
+      '+     "id": "LR-DATA-005",\n' +
+      '+     "passed": false,\n' +
+      '+     "rejection": "QuotaExceededError: Injected storage quota failure",\n' +
+      '+   },\n' +
+      '+   Object {\n' +
+      '+     "depth": 50,\n' +
+      '+     "id": "LR-DATA-007",\n' +
+      '+     "passed": false,\n' +
+      '+     "visibleIds": Array [],\n' +
+      '+   },\n' +
+      '+ ]',
+    name: 'toEqual',
+    pass: false
+  }
+}
+
+Node.js v26.12.1

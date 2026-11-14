@@ -1,0 +1,518 @@
+{
+  "schemaVersion": 2,
+  "auditDate": "2026-11-13",
+  "auditKind": "final identity release audit; incomplete reference access",
+  "target": {
+    "product": "Adobe Lightroom desktop",
+    "version": "10.0",
+    "release": "November 2026",
+    "exactBuild": null,
+    "buildStatus": "UNVERIFIED \u2014 installer/About capture required",
+    "platform": "macOS target (previous manifest did not pin another observed platform)",
+    "osVersion": null,
+    "workspace": "Advanced",
+    "theme": "Dark",
+    "density": "Compact",
+    "interfaceLanguage": "English",
+    "uiScaling": null,
+    "windowClientCssPixels": null,
+    "devicePixelRatio": null,
+    "documentZoom": "Fit base state; 1:1 and other states must be captured separately",
+    "preferences": {
+      "shortcutScheme": "Lightroom desktop default",
+      "histogram": null,
+      "filmstrip": null,
+      "panelVisibilityExpansion": null,
+      "colorManagement": null,
+      "displayProfile": null
+    },
+    "settingsStatus": "Target selections are pinned; actual installed reference state not observed."
+  },
+  "implementation": {
+    "baseRepositoryCommit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+    "isolatedWorkspaceSnapshot": "a3c817f81d6528885ea04120ae4b702a9f2b19ee",
+    "finalCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+    "finalBuild": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+    "hostOS": "ProductName:\t\tmacOS\nProductVersion:\t\t27.2\nBuildVersion:\t\t26B118",
+    "browserRuns": "workflow-results.json and evidence run manifests record actual versions; no stable-browser compatibility inferred from bundled automation browser",
+    "appId": "lope.lightroom",
+    "displayNameAtSnapshot": "Luma",
+    "interchangeApp": "lope.image-editor / Prism",
+    "sourceDefaults": {
+      "density": "compact",
+      "view": "detail",
+      "panelWidth": 286,
+      "sidebar": true,
+      "filmstrip": true,
+      "histogram": true
+    },
+    "sourceDefaultsStatus": "Implementation values only; not measured Adobe values.",
+    "archive": {
+      "file": "release-candidate.tar.gz",
+      "sha256": "81c76406f2eaf4e9faf339d19e0b6c82d8647911bf4292b9932e7338b3835dc0",
+      "bytes": 110318237
+    },
+    "browserVersions": {
+      "Chromium": "158.0.8127.18",
+      "WebKit": "27.2",
+      "Firefox": "UNAVAILABLE: profile launch failure"
+    },
+    "minimumWindowOuterCssPixels": {
+      "width": 680,
+      "height": 460
+    },
+    "minimumMeasuredClientCssPixels": {
+      "width": 678,
+      "height": 419
+    },
+    "testedClientCssPixels": [
+      [
+        1440,
+        900
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        680,
+        460
+      ]
+    ],
+    "measuredAnchorEvidence": "evidence/ui-production-final/measured-anchors.json"
+  },
+  "comparisonBoundary": {
+    "include": [
+      "Application client area including dialogs/popovers",
+      "Application commands exposed through LopeOS menu service"
+    ],
+    "exclude": [
+      "LopeOS outer window frame",
+      "LopeOS branding / original application names and marks"
+    ],
+    "exceptionScope": "Boundary exclusions from assignment only; no new visual, processing, browser or feature deviations are waived.",
+    "newApprovedExceptions": []
+  },
+  "sources": [
+    {
+      "id": "L1",
+      "url": "https://helpx.adobe.com/lightroom/desktop/introduction/whats-new.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Confirms November 2026 desktop version 10.0. Advanced features remain in the contract; Open Eyes retains Early Access status."
+    },
+    {
+      "id": "L2",
+      "url": "https://helpx.adobe.com/lightroom/desktop/introduction/customize-lightroom-workspace.html",
+      "pageUpdated": null,
+      "fetchStatus": "FETCH_FAILED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Repeated direct and linked fetches timed out. Earlier repository research is retained but not promoted to fresh verification."
+    },
+    {
+      "id": "L3",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/edit-photos.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Edit controls appear in Detail; histogram accompanies current rendering; Cloud and direct Local access are distinct. Controls have no independently measured CSS geometry."
+    },
+    {
+      "id": "L4",
+      "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/organize-photos.html",
+      "pageUpdated": "2026-04-16",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Photo Grid omits borders and badges; Square Grid includes metadata badges. F opens photo fullscreen with F/Escape restoring layout. Albums and smart albums are distinct."
+    },
+    {
+      "id": "L5",
+      "url": "https://helpx.adobe.com/lightroom-classic/desktop/kb/lightroom-feature-comparison.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Mixed-product comparison only. Desktop Lightroom and Classic differ in catalog, Local access, import, keyboard and UI. No Classic-only behavior is used as the target."
+    },
+    {
+      "id": "L6",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/crop-rotate-geometry.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Crop includes aspect orientation/lock, guides, straighten and flips; Geometry includes Upright and Projection. Fit/100% transform alignment must be observed."
+    },
+    {
+      "id": "L7",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/masking.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Manual and computed selections coexist; source-relative editable components and additive/subtractive refinements require actual processing."
+    },
+    {
+      "id": "L8",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/remove-tool.html",
+      "pageUpdated": "2025-10-27",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Clone, blended Heal and generative replacement are separate; spot visualization, object detection and result alternatives are described. Older article does not establish newer provider eligibility."
+    },
+    {
+      "id": "L9",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/presets.html",
+      "pageUpdated": "2026-04-16",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Categories, favorites, list/thumbnail modes and group behavior are documented. Existing original Lope presets do not establish Adobe preset parity."
+    },
+    {
+      "id": "L10",
+      "url": "https://helpx.adobe.com/lightroom/desktop/using/keyboard-shortcuts.html",
+      "pageUpdated": "2025-06-17",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Desktop keys establish G/D/E/C, rating/flag and export behavior. Modifier combinations, text entry and platform distinctions require runtime checks."
+    },
+    {
+      "id": "L11",
+      "url": "https://helpx.adobe.com/lightroom/desktop/add-import-and-capture-photos/add-photos.html",
+      "pageUpdated": "2025-04-24",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Review distinguishes importing managed copies from directly accessing local photos. Select All and per-photo inclusion controls are documented."
+    },
+    {
+      "id": "L12",
+      "url": "https://helpx.adobe.com/lightroom/desktop/save-share-and-export/save-share-photos.html",
+      "pageUpdated": "2025-04-24",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Custom export and previous-settings export differ. Published numeric limits are JPEG 10\u2013100 percent and maximum dimension 65000; exact 10.0 controls still need captures. Overview and detailed format lists are not identical."
+    },
+    {
+      "id": "L13",
+      "url": "https://helpx.adobe.com/lightroom-classic/desktop/introduction-to-lightroom-classic/supported-file-formats.html",
+      "pageUpdated": "2026-04-16",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Shared format article includes Classic-specific language; use only explicitly common format claims. A tested camera/compression fixture is needed for each claimed decoder path."
+    },
+    {
+      "id": "L14",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/hdr-panorama.html",
+      "pageUpdated": null,
+      "fetchStatus": "FETCH_FAILED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Direct and linked fetches timed out. Merge pipeline requirements are retained from assignment and prior feature matrix."
+    },
+    {
+      "id": "L15",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/hdr-output.html",
+      "pageUpdated": null,
+      "fetchStatus": "FETCH_FAILED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Direct and linked fetches timed out. HDR display/output remains independently unverified; float TIFF headroom alone is insufficient."
+    },
+    {
+      "id": "L16",
+      "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/assisted-culling.html",
+      "pageUpdated": null,
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Retrieved official page; exact eligibility and thresholds require installed-app observation. Existing edge/luminance heuristic cannot establish eye-state equivalence."
+    },
+    {
+      "id": "L17",
+      "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/compare-photos.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Two-up, before/after and Survey have separate controls. Survey supports up to 100 photos; linked zoom applies to at most 25. Independent active editing, layout orientation and reorder remain to verify."
+    },
+    {
+      "id": "L18",
+      "url": "https://helpx.adobe.com/lightroom/desktop/add-import-and-capture-photos/capture-photos-in-lightroom-with-tethered-capture.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Real compatible-camera sessions have capture settings, Live View and camera-dependent controls. Webcam access is not equivalent."
+    },
+    {
+      "id": "L19",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/check-color-accuracy-with-vectorscope.html",
+      "pageUpdated": null,
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Official linked vectorscope page retrieved; required UI/processing remain unavailable in existing feature matrix."
+    }
+  ],
+  "originalReferenceImages": [
+    {
+      "file": "reference/adobe-edit-histogram.jpg",
+      "sourcePage": "https://helpx.adobe.com/lightroom/desktop/edit-photos/edit-photos.html",
+      "sourceAsset": "https://helpx-prod.scene7.com/is/image/HelpxProdLoc/lrd-histogram-tone-adjustment?%24png%24=&jpegSize=300&wid=1920",
+      "actualMime": "image/jpeg",
+      "width": 1920,
+      "height": 1241,
+      "workspace": "Unverified; documentation crop of desktop editing UI",
+      "platform": "Unverified",
+      "scale": "Unverified",
+      "observedImagePixels": {
+        "topToolbarHeight": 66,
+        "editingPanelLeft": 1499,
+        "visibleEditingPanelWidth": 421,
+        "photoRight": 1253
+      },
+      "cssMeasurements": "Not derivable without verified scale and uncropped workspace",
+      "use": "Private documentation comparison only; Adobe retains rights",
+      "path": "docs/lightroom/reference/adobe-edit-histogram.jpg",
+      "sha256": "b510463cae5ca51a128fda60326de939b55c2a430a2337d60557fe0a625af023",
+      "immutable": true,
+      "inspectedThisAudit": true,
+      "matchedComparisonEligible": false
+    },
+    {
+      "file": "reference/adobe-customizable-workspace.jpg",
+      "sourcePage": "https://helpx.adobe.com/lightroom/desktop/introduction/whats-new.html",
+      "sourceAsset": "https://helpx-prod.scene7.com/is/image/HelpxProdLoc/whats-new-lrd-customizable-ui?%24pjpeg%24=&jpegSize=200&wid=1200",
+      "actualMime": "image/jpeg",
+      "width": 1200,
+      "height": 675,
+      "workspace": "Stylized workspace feature illustration, not a full Advanced capture",
+      "platform": "Not applicable",
+      "scale": "Not applicable",
+      "use": "Private documentation comparison only; Adobe retains rights",
+      "path": "docs/lightroom/reference/adobe-customizable-workspace.jpg",
+      "sha256": "7a37322a67ff951291304be2995edb749e50cac8a2dfede83a234eb391e85d2f",
+      "immutable": true,
+      "inspectedThisAudit": true,
+      "matchedComparisonEligible": false
+    }
+  ],
+  "fixtureHashes": [
+    {
+      "path": "public/photos/big-sur.jpg",
+      "sha256": "f52f11ed87b30b162dfae94e33f0b5ab074263e360cd3facfa789637431de1cd",
+      "bytes": 828102,
+      "role": "permission-cleared public-domain sample original",
+      "permission": "public/photos/credits.json"
+    },
+    {
+      "path": "public/photos/forest.jpg",
+      "sha256": "cc927626dd8bbd74bceb022ae1d33ffc66bf64873c2fae939a3f9407e81daab6",
+      "bytes": 802570,
+      "role": "permission-cleared public-domain sample original",
+      "permission": "public/photos/credits.json"
+    },
+    {
+      "path": "public/photos/painted-desert.jpg",
+      "sha256": "ee785205bd185104749c28ba2667654dc670d8280c2cd7f63d6c4bae9076613f",
+      "bytes": 58025,
+      "role": "permission-cleared public-domain sample original",
+      "permission": "public/photos/credits.json"
+    },
+    {
+      "path": "public/photos/yosemite.jpg",
+      "sha256": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+      "bytes": 185566,
+      "role": "permission-cleared public-domain sample original",
+      "permission": "public/photos/credits.json"
+    },
+    {
+      "path": "docs/lightroom/fixtures/ai-denoise-export.tif",
+      "sha256": "7fcf027e26549a420bf623d0efdfa3481f375bf4588711b8dabae1b2322b9c6f",
+      "bytes": 664324,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/ai-denoise-production-export.tif",
+      "sha256": "fdc9160958429e45571a61a315616ee052998f94cda067411232144f72407917",
+      "bytes": 74500,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/chromium-export.jpg",
+      "sha256": "60be6b64e381250a7da85df6aa0d9896cbdb0078e68adfcfc372963db82b9d67",
+      "bytes": 1395,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/chromium-export.png",
+      "sha256": "74fe8c76f75ca016aafab93f74a87aefeb111528b66545afa9923a1440f01896",
+      "bytes": 4961,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/chromium-export.tif",
+      "sha256": "3775a492df0ddb1cdb12bd2c1d57b004b20c60e7792226ba21f2247f0170cee2",
+      "bytes": 19204,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/production-export.tif",
+      "sha256": "c6a366c90448c434b3e5552710ec0b682ea422eed07050069f1a2cd98604448e",
+      "bytes": 74500,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/synthetic-bayer.dng",
+      "sha256": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+      "bytes": 25190,
+      "role": "procedural sensor-only DNG",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/webkit-export.jpg",
+      "sha256": "7c24dcfb564d52dde7e4ed7835422fc2c45b8f734a01efc4b6bab9c863b2c65e",
+      "bytes": 2183,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/webkit-export.png",
+      "sha256": "ca5cd59bf2e142dee5cd84d405864599627d0ba51159bb1eec4c7bac67d31b36",
+      "bytes": 5044,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    },
+    {
+      "path": "docs/lightroom/fixtures/webkit-export.tif",
+      "sha256": "3775a492df0ddb1cdb12bd2c1d57b004b20c60e7792226ba21f2247f0170cee2",
+      "bytes": 19204,
+      "role": "existing generated test derivative; not source-format family coverage",
+      "permission": "Project test generation"
+    }
+  ],
+  "fixtureCoverage": [
+    {
+      "required": "neutral color/gray ramp",
+      "status": "procedural tests available; exact final run fixture must be recorded"
+    },
+    {
+      "required": "portrait",
+      "status": "MISSING permission-cleared real portrait fixture"
+    },
+    {
+      "required": "landscape/sky",
+      "status": "public/photos/yosemite.jpg and big-sur.jpg available"
+    },
+    {
+      "required": "high-ISO real-camera RAW",
+      "status": "MISSING; synthetic sensor-only DNG is not a substitute"
+    },
+    {
+      "required": "strongly rotated image",
+      "status": "procedural transform test available; real EXIF rotation fixture unverified"
+    },
+    {
+      "required": "high-bit-depth image",
+      "status": "generated TIFF/PNG test files available"
+    },
+    {
+      "required": "wide-gamut image",
+      "status": "MISSING verified wide-gamut fixture; arbitrary ICC processing unsupported"
+    },
+    {
+      "required": "bracketed HDR exposures",
+      "status": "MISSING verified series and merge pipeline"
+    },
+    {
+      "required": "panorama sequence",
+      "status": "MISSING verified sequence and stitch pipeline"
+    },
+    {
+      "required": "layered PSD with compatibility composite",
+      "status": "test generation path must be exercised and output retained"
+    },
+    {
+      "required": "video",
+      "status": "MISSING verified media+audio fixture and editor path"
+    },
+    {
+      "required": "corrupt/unsupported files",
+      "status": "disposable procedural fixture creation available"
+    },
+    {
+      "required": "long names / stacks / thousands of metadata records",
+      "status": "procedural library checks available; not equivalent to complete production-library evaluation"
+    },
+    {
+      "required": "each conditional camera/codec path",
+      "status": "MISSING complete set: CR2/CR3/NEF/NRW/ARW/RAF/RW2/ORF/PEF/SRW and real HEIF/AVIF/JXL/PSB variants"
+    }
+  ],
+  "contractProvenance": {
+    "currentAssignment": "User-attached Agent 1 Lightroom final audit, prepared November 13 2026",
+    "originalImplementationPrompt": "NOT FOUND in tracked/untracked nonignored docs/source; prior feature matrix and reference-inventory retain its backlog but are not a substitute for complete original text",
+    "retainedMatrix": "docs/lightroom/feature-matrix.json",
+    "previousReferenceManifest": "docs/lightroom/reference-manifest.json"
+  },
+  "captureProtocol": {
+    "requiredClientSizes": [
+      [
+        1440,
+        900
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        680,
+        460
+      ]
+    ],
+    "requiredBrowserZoomPercent": [
+      100,
+      125,
+      200
+    ],
+    "normalization": "Match fixture, active photo/tool, panel expansion/scroll, fonts settled, exact client area, DPR and effective CSS viewport. No image stretching or fabricated CSS-pixel reference measurements.",
+    "comparisons": [
+      "side-by-side",
+      "50 percent overlay",
+      "absolute difference image"
+    ],
+    "geometryToleranceCssPixels": 1,
+    "referenceComparisonStatus": "UNVERIFIED \u2014 no eligible paired reference",
+    "excludedDynamicRegions": [],
+    "exclusionRule": "Only explicitly recorded truly dynamic regions; no faulty UI controls may be masked.",
+    "browserZoomRule": "CSS zoom and deviceScaleFactor are not certified substitutes for native browser zoom."
+  },
+  "missingReferenceAccess": [
+    "Licensed desktop 10.0 About/build and macOS/display scaling capture",
+    "Full Advanced/Dark/Compact/English application client captures at known CSS-to-device scale with same cleared fixtures",
+    "Expanded menus/submenus, each panel, dialogs/popovers and default/hover/focus/pressed/selected/disabled/loading/failure states",
+    "Native crop/mask/retouch/compare/preset interactions and all numeric ranges/defaults",
+    "Default and Classic-style desktop preset values and screenshots if those contract features are implemented",
+    "Reference import/export, genuine supported camera/codec fixtures and external-editor handoff conditions"
+  ],
+  "verdictConstraint": "Cannot issue READY or pixel identity with unknown required scope or missing matched reference states. Continue functional repairs and preserve failed/unverified denominator.",
+  "userDirection": "Continue with official documentation and supplied screenshots; no new reference request. Missing states/measurements remain unverified; no pixel-identical claim."
+}

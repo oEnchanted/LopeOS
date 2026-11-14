@@ -1,0 +1,505 @@
+{
+  "format": "lope-video",
+  "version": 2,
+  "id": "project-928ffe6d-2865-4c5c-9c0a-12d65dba2843",
+  "name": "Acceptance",
+  "created": "2026-11-14T00:01:00.261Z",
+  "modified": "2026-11-14T00:01:00.262Z",
+  "assets": [
+    {
+      "kind": "video",
+      "duration": 2116800000,
+      "startTime": 0,
+      "width": 320,
+      "height": 180,
+      "rotation": 0,
+      "fps": 30,
+      "videoCodec": "vp8",
+      "audioCodec": "opus",
+      "channels": 2,
+      "sampleRate": 48000,
+      "color": {
+        "primaries": "bt709",
+        "transfer": "iec61966-2-1",
+        "matrix": "bt709",
+        "range": "full",
+        "bitDepth": null,
+        "policy": "sdr"
+      },
+      "id": "id-86a06164-3d3a-4372-81a5-c3ddc2f6cfc6",
+      "name": "Timecode.webm",
+      "blobKey": "fixture",
+      "bytes": 79414,
+      "mime": "video/webm",
+      "hash": "98299a0c7967c2f67188e02166837d773122336ea8d3b421e7db2f5034f7066d",
+      "frameRate": {
+        "num": 30,
+        "den": 1
+      },
+      "binId": null,
+      "label": "#8899aa"
+    }
+  ],
+  "bins": [],
+  "sequences": [
+    {
+      "id": "sequence-bfae5341-0d0d-4fa6-8635-b5496a78d3b7",
+      "name": "Sequence 01",
+      "width": 320,
+      "height": 180,
+      "fps": {
+        "num": 30,
+        "den": 1
+      },
+      "dropFrame": false,
+      "sampleRate": 48000,
+      "tracks": [
+        {
+          "id": "track-c9b4eb9f-29c5-49c1-aa1d-dad32f17c2ef",
+          "name": "V1",
+          "kind": "video",
+          "locked": false,
+          "visible": true,
+          "muted": false,
+          "solo": false,
+          "syncLock": true,
+          "volume": 0,
+          "pan": 0,
+          "height": 54,
+          "channels": [
+            0,
+            1
+          ],
+          "eq": {
+            "low": 0,
+            "mid": 0,
+            "high": 0
+          },
+          "compressor": {
+            "enabled": false,
+            "threshold": -18,
+            "ratio": 4
+          },
+          "limiter": true
+        },
+        {
+          "id": "track-197ea04d-6f85-4f4a-a788-c7978b61fa83",
+          "name": "V2",
+          "kind": "video",
+          "locked": false,
+          "visible": true,
+          "muted": false,
+          "solo": false,
+          "syncLock": true,
+          "volume": 0,
+          "pan": 0,
+          "height": 54,
+          "channels": [
+            0,
+            1
+          ],
+          "eq": {
+            "low": 0,
+            "mid": 0,
+            "high": 0
+          },
+          "compressor": {
+            "enabled": false,
+            "threshold": -18,
+            "ratio": 4
+          },
+          "limiter": true
+        },
+        {
+          "id": "track-5a6b9ffe-433b-48da-96c9-8ee4fb18087b",
+          "name": "V3",
+          "kind": "video",
+          "locked": false,
+          "visible": true,
+          "muted": false,
+          "solo": false,
+          "syncLock": true,
+          "volume": 0,
+          "pan": 0,
+          "height": 54,
+          "channels": [
+            0,
+            1
+          ],
+          "eq": {
+            "low": 0,
+            "mid": 0,
+            "high": 0
+          },
+          "compressor": {
+            "enabled": false,
+            "threshold": -18,
+            "ratio": 4
+          },
+          "limiter": true
+        },
+        {
+          "id": "track-1ff6eb7e-1eba-4da5-b43b-7d3422999a5d",
+          "name": "A1",
+          "kind": "audio",
+          "locked": false,
+          "visible": true,
+          "muted": false,
+          "solo": false,
+          "syncLock": true,
+          "volume": 0,
+          "pan": 0,
+          "height": 48,
+          "channels": [
+            0,
+            1
+          ],
+          "eq": {
+            "low": 0,
+            "mid": 0,
+            "high": 0
+          },
+          "compressor": {
+            "enabled": false,
+            "threshold": -18,
+            "ratio": 4
+          },
+          "limiter": true
+        },
+        {
+          "id": "track-81389000-a9f0-4ed8-9402-8ed57cda2e09",
+          "name": "A2",
+          "kind": "audio",
+          "locked": false,
+          "visible": true,
+          "muted": false,
+          "solo": false,
+          "syncLock": true,
+          "volume": 0,
+          "pan": 0,
+          "height": 48,
+          "channels": [
+            0,
+            1
+          ],
+          "eq": {
+            "low": 0,
+            "mid": 0,
+            "high": 0
+          },
+          "compressor": {
+            "enabled": false,
+            "threshold": -18,
+            "ratio": 4
+          },
+          "limiter": true
+        },
+        {
+          "id": "track-d6834be3-75b2-4a8b-bb8e-814cc83d6e3d",
+          "name": "A3",
+          "kind": "audio",
+          "locked": false,
+          "visible": true,
+          "muted": false,
+          "solo": false,
+          "syncLock": true,
+          "volume": 0,
+          "pan": 0,
+          "height": 48,
+          "channels": [
+            0,
+            1
+          ],
+          "eq": {
+            "low": 0,
+            "mid": 0,
+            "high": 0
+          },
+          "compressor": {
+            "enabled": false,
+            "threshold": -18,
+            "ratio": 4
+          },
+          "limiter": true
+        }
+      ],
+      "clips": [
+        {
+          "id": "clip-9043e84f-32d9-49fd-9290-520ba8bad0bb",
+          "name": "Timecode.webm",
+          "trackId": "track-c9b4eb9f-29c5-49c1-aa1d-dad32f17c2ef",
+          "assetId": "id-86a06164-3d3a-4372-81a5-c3ddc2f6cfc6",
+          "kind": "media",
+          "start": 0,
+          "duration": 55,
+          "sourceIn": 352800000,
+          "speed": {
+            "num": 1,
+            "den": 1
+          },
+          "remap": [],
+          "label": "#8899aa",
+          "effects": [
+            {
+              "id": "fx-4f50a81d-fa6c-40d3-99cb-07d553475572",
+              "type": "transform",
+              "enabled": true,
+              "params": {
+                "x": {
+                  "value": 0,
+                  "keys": [
+                    {
+                      "frame": 0,
+                      "value": 0,
+                      "interpolation": "linear"
+                    },
+                    {
+                      "frame": 54,
+                      "value": 20,
+                      "interpolation": "linear"
+                    }
+                  ]
+                },
+                "y": {
+                  "value": 0,
+                  "keys": []
+                },
+                "scale": {
+                  "value": 100,
+                  "keys": []
+                },
+                "rotation": {
+                  "value": 0,
+                  "keys": []
+                },
+                "anchorX": {
+                  "value": 50,
+                  "keys": []
+                },
+                "anchorY": {
+                  "value": 50,
+                  "keys": []
+                }
+              }
+            },
+            {
+              "id": "fx-bc47e9fb-28d1-4587-aa37-02b66f5e30f9",
+              "type": "opacity",
+              "enabled": true,
+              "params": {
+                "opacity": {
+                  "value": 100,
+                  "keys": []
+                }
+              }
+            },
+            {
+              "id": "id-0d2455c0-6408-44a4-8e8c-974b3d02cf0a",
+              "type": "color",
+              "enabled": true,
+              "params": {
+                "exposure": {
+                  "value": 0.3,
+                  "keys": []
+                },
+                "saturation": {
+                  "value": -25,
+                  "keys": []
+                }
+              }
+            }
+          ],
+          "gain": {
+            "value": 0,
+            "keys": []
+          },
+          "pan": {
+            "value": 0,
+            "keys": []
+          },
+          "fadeIn": 0,
+          "fadeOut": 0,
+          "enabled": true,
+          "blend": "source-over",
+          "linkId": "link-8c364e7f-5ea8-4b6f-8fc4-997f1264df76"
+        },
+        {
+          "id": "clip-f9bef3fe-d949-49f3-ba87-75f61f87d05f",
+          "name": "Timecode.webm",
+          "trackId": "track-1ff6eb7e-1eba-4da5-b43b-7d3422999a5d",
+          "assetId": "id-86a06164-3d3a-4372-81a5-c3ddc2f6cfc6",
+          "kind": "media",
+          "start": 0,
+          "duration": 60,
+          "sourceIn": 352800000,
+          "speed": {
+            "num": 1,
+            "den": 1
+          },
+          "remap": [],
+          "label": "#5a9475",
+          "effects": [
+            {
+              "id": "fx-e5fc8c75-c8af-429e-8faa-a55da6af0cd9",
+              "type": "transform",
+              "enabled": true,
+              "params": {
+                "x": {
+                  "value": 0,
+                  "keys": []
+                },
+                "y": {
+                  "value": 0,
+                  "keys": []
+                },
+                "scale": {
+                  "value": 100,
+                  "keys": []
+                },
+                "rotation": {
+                  "value": 0,
+                  "keys": []
+                },
+                "anchorX": {
+                  "value": 50,
+                  "keys": []
+                },
+                "anchorY": {
+                  "value": 50,
+                  "keys": []
+                }
+              }
+            },
+            {
+              "id": "fx-cb29bc23-e62a-4a07-b33b-69b271955a7b",
+              "type": "opacity",
+              "enabled": true,
+              "params": {
+                "opacity": {
+                  "value": 100,
+                  "keys": []
+                }
+              }
+            }
+          ],
+          "gain": {
+            "value": 0,
+            "keys": []
+          },
+          "pan": {
+            "value": 0,
+            "keys": []
+          },
+          "fadeIn": 5,
+          "fadeOut": 5,
+          "enabled": true,
+          "blend": "source-over",
+          "linkId": "link-8c364e7f-5ea8-4b6f-8fc4-997f1264df76"
+        },
+        {
+          "id": "clip-f2658e32-6537-4b3b-98d4-17364c592ff8",
+          "name": "Graphic",
+          "trackId": "track-197ea04d-6f85-4f4a-a788-c7978b61fa83",
+          "kind": "title",
+          "start": 8,
+          "duration": 28,
+          "sourceIn": 0,
+          "speed": {
+            "num": 1,
+            "den": 1
+          },
+          "remap": [],
+          "label": "#8b7bb8",
+          "effects": [
+            {
+              "id": "fx-38d66fcf-0fac-43db-bbdd-585222b3b07d",
+              "type": "transform",
+              "enabled": true,
+              "params": {
+                "x": {
+                  "value": 0,
+                  "keys": []
+                },
+                "y": {
+                  "value": 0,
+                  "keys": []
+                },
+                "scale": {
+                  "value": 100,
+                  "keys": []
+                },
+                "rotation": {
+                  "value": 0,
+                  "keys": []
+                },
+                "anchorX": {
+                  "value": 50,
+                  "keys": []
+                },
+                "anchorY": {
+                  "value": 50,
+                  "keys": []
+                }
+              }
+            },
+            {
+              "id": "fx-4a9226ed-b2ab-4367-9ed8-aeca8cf6c1f8",
+              "type": "opacity",
+              "enabled": true,
+              "params": {
+                "opacity": {
+                  "value": 100,
+                  "keys": []
+                }
+              }
+            }
+          ],
+          "gain": {
+            "value": 0,
+            "keys": []
+          },
+          "pan": {
+            "value": 0,
+            "keys": []
+          },
+          "fadeIn": 0,
+          "fadeOut": 0,
+          "enabled": true,
+          "blend": "source-over",
+          "graphic": {
+            "type": "text",
+            "text": "EDITED",
+            "font": "Arial",
+            "size": 24,
+            "weight": 600,
+            "color": "#ffffff",
+            "background": "#132337",
+            "align": "center",
+            "x": 30,
+            "y": 110,
+            "width": 260,
+            "height": 35
+          }
+        }
+      ],
+      "transitions": [],
+      "markers": [],
+      "captions": [
+        {
+          "id": "id-132844a5-3be1-404c-8589-0266fb816984",
+          "start": 36,
+          "end": 55,
+          "text": "Caption test"
+        }
+      ],
+      "inPoint": 0,
+      "outPoint": null,
+      "background": "#000000"
+    }
+  ],
+  "activeSequence": "sequence-bfae5341-0d0d-4fa6-8635-b5496a78d3b7",
+  "settings": {
+    "colorPolicy": "SDR-sRGB",
+    "autosave": true
+  }
+}

@@ -38,7 +38,7 @@ async function installFixture(page: Page) {
 async function readLazy(page: Page) { return page.evaluate(async () => (await fetch('/assets/lazy.txt')).text()); }
 
 // A real service worker and two separate releases exercise deployment/cache semantics.
-test.beforeEach(async ({ request }) => { await configure(request, { mode: 'fixture', release: 'a', corrupt: false, delay: 0 }); });
+test.beforeEach(async ({ request }) => { await configure(request, { mode: 'fixture', release: 'a', corrupt: false, delay: 0, modelUpdates: false }); });
 
 test('a deployment keeps the installed release across reloads and offline startup', async ({ page, context, request }) => {
   const a = await installFixture(page);
@@ -128,20 +128,90 @@ test('production update shows the black progress screen and restarts into the ve
   });
   const { build: nextBuild } = await configure(request, { release: 'b', delay: 2000 }); expect(nextBuild).not.toBe(build);
   await updates.getByRole('button', { name: 'Check for updates', exact: true }).click();
+  // Record the visible phases across the reload, including very fast cached downloads.
+  await page.evaluate(() => {
+    const phases: { name: string; time: number; progress: number }[] = [];
+    new MutationObserver(() => {
+      const boot = document.querySelector('.software-update-boot');
+      const name = boot?.querySelector('h1')?.textContent;
+      if (!name || phases.at(-1)?.name === name) return;
+      phases.push({ name, time: performance.now(), progress: Number(boot?.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')) });
+      sessionStorage.setItem('lope.update-test.phases', JSON.stringify(phases));
+    }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  });
   await page.getByRole('dialog', { name: 'A LopeOS update is available', exact: true }).getByRole('button', { name: 'Download & install', exact: true }).click();
   const boot = page.getByRole('dialog', { name: 'Updating LopeOS', exact: true });
   await expect(boot).toBeVisible();
   await expect(boot).toHaveCSS('background-color', 'rgb(0, 0, 0)');
-  await expect(boot.getByRole('progressbar')).toBeVisible(); await expect(boot).toContainText('downloaded'); await expect(boot).toContainText('files');
+  await expect(boot.getByRole('progressbar')).toBeVisible();
+  await expect(boot.getByRole('status')).toHaveText('Downloading update…');
+  await expect(boot).toContainText('downloaded'); await expect(boot).toContainText('files');
   await page.screenshot({ path: testInfo.outputPath('software-update-progress.png') });
   await expect(boot).toHaveCount(0, { timeout: 60000 });
   await expect(page.locator('.desktop')).toBeVisible();
+  const phases = await page.evaluate(() => JSON.parse(sessionStorage.getItem('lope.update-test.phases') || '[]') as { name: string; time: number; progress: number }[]);
+  expect(phases.map(phase => phase.name)).toEqual([
+    'Checking update availability…', 'Checking browser storage…', 'Checking for model updates…',
+    'Downloading update…', 'Verifying update…', 'Installing update…', 'Restarting LopeOS…',
+  ]);
+  expect(phases.slice(0, -1).every(phase => phase.progress < 100)).toBe(true);
+  expect(phases.at(-1)?.progress).toBe(100);
+  for (const index of [0, 1, 2, 4, 5]) expect(phases[index + 1].time - phases[index].time).toBeGreaterThanOrEqual(900);
   const after = await openUpdates(page);
   await expect(after.getByText('This release is saved in your browser', { exact: true })).toBeVisible();
   await after.getByRole('button', { name: 'Check for updates', exact: true }).click();
   await expect(after.getByText('You’re using the latest published release.', { exact: true })).toBeVisible();
   expect((await command(page, { type: 'LOPE_STATUS' })).release?.build).toBe(nextBuild);
   expect(await page.evaluate(() => ({ accounts: localStorage.getItem('lope.accounts.v1'), session: sessionStorage.getItem('lope.account.session.v1'), draft: localStorage.getItem('lope.update-test.draft') }))).toEqual({ ...before, draft: 'My unsaved recovery draft' });
+});
+
+test('storage preflight stops before downloading and preserves the installed release', async ({ page, request }) => {
+  const { updates, build } = await productionWorkspace(page, request);
+  await configure(request, { release: 'b' });
+  await page.evaluate(() => { navigator.storage.estimate = async () => ({ quota: 1024, usage: 1024 }); });
+  await updates.getByRole('button', { name: 'Check for updates', exact: true }).click();
+  await page.getByRole('dialog', { name: 'A LopeOS update is available', exact: true }).getByRole('button', { name: 'Download & install', exact: true }).click();
+  const boot = page.getByRole('dialog', { name: 'Updating LopeOS', exact: true });
+  await expect(boot.getByRole('button', { name: 'Try again', exact: true })).toBeVisible();
+  await expect(boot.getByRole('alert')).toContainText(/storage/i);
+  expect((await command(page, { type: 'LOPE_STATUS' })).release?.build).toBe(build);
+  expect(await page.evaluate(async () => {
+    const metadata = await caches.open('lope.os.metadata.v1');
+    const installed = await (await metadata.match('/__lope/cache/installed'))!.json();
+    return (await caches.keys()).filter(name => name.startsWith('lope.os.release.v1:') && name !== 'lope.os.release.v1:' + encodeURIComponent(installed.build));
+  })).toEqual([]);
+  await boot.getByRole('button', { name: 'Back to desktop', exact: true }).click();
+  await expect(page.locator('.desktop')).toBeVisible();
+});
+
+test('storage preflight allows reclaiming obsolete release caches before installing', async ({ page, request }) => {
+  const { updates } = await productionWorkspace(page, request);
+  const { build: nextBuild } = await configure(request, { release: 'b' });
+  await page.evaluate(async () => {
+    await caches.open('lope.os.release.v1:obsolete-test-release');
+    navigator.storage.estimate = async () => ({ quota: 1024, usage: 1024 });
+  });
+  await updates.getByRole('button', { name: 'Check for updates', exact: true }).click();
+  await page.getByRole('dialog', { name: 'A LopeOS update is available', exact: true }).getByRole('button', { name: 'Download & install', exact: true }).click();
+  const boot = page.getByRole('dialog', { name: 'Updating LopeOS', exact: true });
+  await expect(boot).toBeVisible();
+  await expect(boot).toHaveCount(0, { timeout: 60000 });
+  await expect(page.locator('.desktop')).toBeVisible();
+  expect((await command(page, { type: 'LOPE_STATUS' })).release?.build).toBe(nextBuild);
+  expect(await page.evaluate(() => caches.has('lope.os.release.v1:obsolete-test-release'))).toBe(false);
+});
+
+test('model preflight reports changed model packages before downloading the OS', async ({ page, request }) => {
+  const { updates } = await productionWorkspace(page, request);
+  await configure(request, { release: 'b', modelUpdates: true, delay: 2000 });
+  await updates.getByRole('button', { name: 'Check for updates', exact: true }).click();
+  await page.getByRole('dialog', { name: 'A LopeOS update is available', exact: true }).getByRole('button', { name: 'Download & install', exact: true }).click();
+  const boot = page.getByRole('dialog', { name: 'Updating LopeOS', exact: true });
+  await expect(boot.getByRole('status')).toHaveText('Checking for model updates…');
+  await expect(boot).toContainText('Model updates found');
+  await expect(boot.getByRole('status')).toHaveText('Downloading update…');
+  await expect(boot).toHaveCount(0, { timeout: 60000 });
+  await expect(page.locator('.desktop')).toBeVisible();
 });
 
 test('production failed update offers recovery and keeps the installed release', async ({ page, request }) => {

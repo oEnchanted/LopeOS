@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { ArrowLeft, ArrowRight, RotateCw, X, Plus, Search, Globe2, Star, Download, MoreHorizontal,
   Home, ExternalLink, ShieldCheck, Pin, History, BookOpen, Compass, Volume2, VolumeX,
@@ -8,6 +8,8 @@ import { Button, Dialog, Input, Toolbar, Popover } from '../../../../../packages
 import { displayAddress, SEARCH_PROVIDERS, safeHostUrl } from '../../../../../packages/browser-client/src';
 import type { BrowserCommand, BrowserSession, BrowserShellBridge, BrowserTab } from '../../../../../packages/browser-client/src';
 import { browserClient } from './service';
+import { cloudAccount, useCloudAccount } from '../../accounts/service';
+import { saveBrowserDownload } from './transfers';
 import { browserMenus } from './manifest';
 import { copyClipboardText } from '../../shell/system';
 import { StreamSurface } from './StreamSurface';
@@ -24,6 +26,8 @@ const bytes = (value: number) => value >= 1024 * 1024 ? `${(value / 1024 / 1024)
 const titleFor = (url: string) => { try { return new URL(url).hostname; } catch { return url; } };
 
 export default function Browser({ context, shell }: { context?: AppContext; shell?: BrowserShellBridge }) {
+  const account = useCloudAccount();
+  const accountId = account.account?.id ?? null;
   const [session, setSession] = useState<BrowserSession | null>(null);
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(true);
@@ -49,6 +53,10 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   const lastLaunch = useRef<unknown>(null);
   const mounted = useRef(true);
   const activePrivate = useRef<string | null>(null);
+  const accountGeneration = useRef(0);
+  const previousAccount = useRef(accountId);
+  const imported = useRef(new Set<string>());
+  const [localDownloads, setLocalDownloads] = useState<Record<string, { path?: string; error?: string }>>({});
   const lastActivity = useRef(0);
   const activity = useCallback(() => {
     if (state.current && Date.now() - lastActivity.current > 15000) {
@@ -57,14 +65,23 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   }, []);
 
   const accept = useCallback((next: BrowserSession) => {
+    if (next.hosting && next.hosting.accountId !== (cloudAccount.getSnapshot().account?.id ?? null)) return;
     if (mounted.current) setSession(current => current && current.id === next.id && current.generation === next.generation && (current.revision ?? 0) > (next.revision ?? 0) ? current : next);
   }, []);
   const connect = useCallback(async () => {
+    const generation = accountGeneration.current;
     setConnecting(true); setError('');
-    try { startTask.current ??= browserClient.create(); const next = await startTask.current; accept(next); setConnected(true); }
-    catch (failure) { startTask.current = null; setError(failure instanceof Error ? failure.message : 'The browser runtime is unavailable.'); }
-    finally { if (mounted.current) setConnecting(false); }
+    try { startTask.current ??= browserClient.create(); const next = await startTask.current; if (generation === accountGeneration.current) { accept(next); setConnected(true); } }
+    catch (failure) { if (generation === accountGeneration.current) { startTask.current = null; setError(failure instanceof Error ? failure.message : 'The browser runtime is unavailable.'); } }
+    finally { if (mounted.current && generation === accountGeneration.current) setConnecting(false); }
   }, [accept]);
+  useLayoutEffect(() => {
+    if (previousAccount.current === accountId) return;
+    previousAccount.current = accountId; accountGeneration.current++;
+    state.current = null; setSession(null); setConnected(false); startTask.current = null;
+    activePrivate.current = null; lastLaunch.current = null; imported.current.clear(); setLocalDownloads({});
+    void connect();
+  }, [accountId, connect]);
   useEffect(() => { mounted.current = true; void connect(); return () => { mounted.current = false; }; }, [connect]);
   useEffect(() => {
     const endPrivate = () => { if (activePrivate.current) void fetch(`/api/browser/sessions/${activePrivate.current}`, { method: 'DELETE', keepalive: true, credentials: 'same-origin' }).catch(() => {}); };
@@ -72,8 +89,29 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
   }, []);
   useEffect(() => {
     if (!session?.id) return;
-    return browserClient.subscribe(session.id, accept, setConnected);
-  }, [session?.id, accept]);
+    const id = session.id;
+    return browserClient.subscribe(id, accept, setConnected, () => {
+      if (state.current?.id !== id) return;
+      state.current = null; setSession(null); startTask.current = null; activePrivate.current = null;
+      void connect();
+    });
+  }, [session?.id, accept, connect]);
+  useEffect(() => {
+    if (!context?.services.files.writeBinary || !session) return;
+    const generation = accountGeneration.current;
+    for (const item of session.downloads) {
+      const key = session.id + ':' + item.id;
+      if (item.state !== 'completed' || item.fileId || item.totalBytes > 64 * 1024 * 1024 || imported.current.has(key)) continue;
+      imported.current.add(key);
+      void browserClient.download(session.id, item.id).then(blob => {
+        const assertCurrent = () => {
+          if (!mounted.current || generation !== accountGeneration.current || accountId !== (cloudAccount.getSnapshot().account?.id ?? null)) throw new Error('Your account changed before the download could be saved.');
+        };
+        return saveBrowserDownload(context.services.files, blob, item.name, assertCurrent);
+      }).then(path => { if (generation === accountGeneration.current) setLocalDownloads(current => ({ ...current, [item.id]: { path } })); })
+        .catch(failure => { if (generation === accountGeneration.current) setLocalDownloads(current => ({ ...current, [item.id]: { error: failure instanceof Error ? failure.message : 'Could not save to LopeDrive.' } })); });
+    }
+  }, [session?.id, session?.downloads, context?.services.files, accountId]);
   useEffect(() => { if (!addressFocused) setAddress(tab?.url === 'about:blank' ? '' : tab?.url ?? ''); }, [tab?.url, tab?.id, addressFocused]);
   useEffect(() => { context?.lifecycle.setTitle(`${tab?.title || 'New Tab'} — Lope Browser`); }, [tab?.title, context?.lifecycle]);
   useEffect(() => context?.lifecycle.onBeforeClose(async () => {
@@ -180,14 +218,22 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
     }).slice(0, 6);
   }, [address, addressFocused, session]);
   const upload = session?.uploads[0];
-  const handleUpload = async (file?: File, workspace = false) => {
+  const handleUpload = async (files?: File[], workspace = false) => {
     if (!session || !upload) return;
+    const generation = accountGeneration.current;
     try {
       if (workspace) {
         const paths = shell?.chooseWorkspaceFile ? await shell.chooseWorkspaceFile({ multiple: upload.multiple })
           : [await context?.services.dialogs.openFile()].filter((path): path is string => !!path);
-        if (paths.length) accept(await browserClient.uploadWorkspace(session.id, upload.id, paths));
-      } else if (file) accept(await browserClient.uploadDevice(session.id, upload.id, file));
+        if (paths.length && context?.services.files.readBinary) {
+          const selected = await Promise.all(paths.map(async path => {
+            const value = await context.services.files.readBinary!(path);
+            return new File([new Uint8Array(value.data)], path.split('/').at(-1) || 'selected-file');
+          }));
+          if (generation !== accountGeneration.current) throw new Error('Your account changed. Choose the file again.');
+          accept(await browserClient.uploadFiles(session.id, upload.id, selected));
+        } else if (paths.length) accept(await browserClient.uploadWorkspace(session.id, upload.id, paths));
+      } else if (files?.length) accept(await browserClient.uploadFiles(session.id, upload.id, files));
     } catch (failure) { setError(failure instanceof Error ? failure.message : 'The file upload failed.'); }
   };
   const saveDownload = async (transferId: string, name: string) => {
@@ -269,18 +315,18 @@ export default function Browser({ context, shell }: { context?: AppContext; shel
         {(panel === 'history' || panel === 'bookmarks') && <Input className="lb-panel-search" placeholder={`Search ${panel}`} aria-label={`Search ${panel}`} value={query} onChange={event => setQuery(event.target.value)}/>}
         {panel === 'history' && <div className="lb-panel-list">{session?.history.filter(item => (item.title + item.url).toLowerCase().includes(query.toLowerCase())).map(item => <button className="lb-visit" key={item.id} onClick={() => navigate(item.url)}><History size={14}/><span><b>{item.title}</b><small>{displayAddress(item.url)}</small><time>{new Date(item.visitedAt).toLocaleString()}</time></span></button>)}{!session?.history.length && <Empty icon={<History size={25}/>} text="The places you visit will appear here."/>}</div>}
         {panel === 'bookmarks' && <div className="lb-panel-list">{session?.bookmarks.filter(item => (item.title + item.url).toLowerCase().includes(query.toLowerCase())).map(item => <div className="lb-bookmark-row" key={item.id}><button className="lb-visit" onClick={() => navigate(item.url)}><Star size={14}/><span><b>{item.title}</b><small>{displayAddress(item.url)}</small></span></button><IconButton label={`Remove ${item.title}`} icon={<X size={13}/>} onClick={() => void run({ type: 'bookmark.remove', id: item.id })}/></div>)}{!session?.bookmarks.length && <Empty icon={<Star size={25}/>} text="No bookmarks. Select the star in the address bar to add one."/>}</div>}
-        {panel === 'downloads' && <div className="lb-panel-list">{session?.downloads.map(item => <div className="lb-download" key={item.id}><div><Download size={17}/><b>{item.name}</b>{item.state === 'completed' && <Check size={14}/>}</div><small>{item.error || (item.state === 'progress' ? `${bytes(item.receivedBytes)}${item.totalBytes ? ` of ${bytes(item.totalBytes)}` : ''}` : item.state)}</small>{item.state === 'progress' && <progress value={item.totalBytes ? item.receivedBytes : undefined} max={item.totalBytes || undefined}/>}
+        {panel === 'downloads' && <div className="lb-panel-list">{session?.downloads.map(item => { const local = localDownloads[item.id]; const fileId = item.fileId ?? local?.path; return <div className="lb-download" key={item.id}><div><Download size={17}/><b>{item.name}</b>{item.state === 'completed' && <Check size={14}/>}</div><small>{local?.error || item.error || (local?.path ? 'Saved to LopeDrive' : item.state === 'progress' ? `${bytes(item.receivedBytes)}${item.totalBytes ? ` of ${bytes(item.totalBytes)}` : ''}` : item.state)}</small>{item.state === 'progress' && <progress value={item.totalBytes ? item.receivedBytes : undefined} max={item.totalBytes || undefined}/>}
           {(item.state === 'progress' || item.state === 'importing') && <Button variant="ghost" onClick={() => void run({ type: 'download.cancel', id: item.id })}>Cancel</Button>}
-          {['completed', 'failed'].includes(item.state) && (item.fileId ? <Button variant="ghost" onClick={() => shell ? shell.showInFiles(item.fileId!) : context?.services.launch('lope.files', { path: '/Downloads', select: item.fileId })}>Show in Files</Button> : <Button variant="ghost" onClick={() => void saveDownload(item.id, item.name)}>Save to device</Button>)}
-        </div>)}{!session?.downloads.length && <Empty icon={<Download size={25}/>} text="Your downloads will appear here."/>}{!session?.capabilities.workspaceFiles && <p className="lb-panel-note">Workspace Downloads is not connected. Completed files can be saved to your device.</p>}</div>}
+          {['completed', 'failed'].includes(item.state) && (fileId ? <Button variant="ghost" onClick={() => shell ? shell.showInFiles(fileId) : context?.services.launch('lope.files', { path: fileId.slice(0, fileId.lastIndexOf('/')), select: fileId })}>Show in Files</Button> : <Button variant="ghost" onClick={() => void saveDownload(item.id, item.name)}>Save to device</Button>)}
+        </div>; })}{!session?.downloads.length && <Empty icon={<Download size={25}/>} text="Your downloads will appear here."/>}<p className="lb-panel-note">{context?.services.files.writeBinary ? 'Completed downloads up to 64 MiB are saved in LopeDrive/Downloads. Account sync encrypts them on this device.' : 'Completed files can be saved to your device.'}</p></div>}
         {panel === 'settings' && <div className="lb-panel-prose"><h3>Search engine</h3><select aria-label="Search engine" value={session?.searchProvider ?? 'duckduckgo'} disabled={!connected} onChange={event => void run({ type: 'settings', searchProvider: event.target.value as BrowserSession['searchProvider'] })}>{Object.entries(SEARCH_PROVIDERS).map(([key, provider]) => <option key={key} value={key}>{provider.name}</option>)}</select><h3>Site permissions</h3><p className="lb-site-origin"><Globe2 size={14}/>{siteTitle}</p><p>Camera, microphone, location, notifications, and website clipboard access are blocked. Device forwarding is unavailable in this build.</p><Button variant="ghost" onClick={openHost}>Open in host browser <ExternalLink size={13}/></Button><h3>Browsing data</h3><p>Normal sessions keep website sign-ins and tabs in a separate browser profile. Private sessions discard site data when ended.</p><Button onClick={() => setClearDialog(true)} disabled={!connected}>Clear browsing data…</Button></div>}
-        {panel === 'about' && <div className="lb-panel-prose"><div className="lb-about-mark"><Compass size={31}/></div><h3>Lope Browser</h3><p>Websites run in a remote Chromium session.</p><dl><dt>Engine</dt><dd>{session?.engineVersion || 'Not connected'}</dd><dt>Surface</dt><dd>{session?.streamUrl ? 'Selkies 2.2.1 · WebSocket media' : 'Not connected'}</dd></dl><h3>Compatibility</h3><p>Some sign-in providers, DRM video, passkeys, security keys, and hardware APIs may need your host browser.</p><h3>Accessibility</h3><p>Browser controls support keyboard navigation and screen readers. The remote webpage does not expose its accessibility tree to local assistive technology. Open the page in your host browser to use a local screen reader.</p><Button onClick={openHost}>Open in host browser <ExternalLink size={13}/></Button></div>}
+        {panel === 'about' && <div className="lb-panel-prose"><div className="lb-about-mark"><Compass size={31}/></div><h3>Lope Browser</h3><p>Websites run in a remote Chromium session.</p><dl><dt>Engine</dt><dd>{session?.engineVersion || 'Not connected'}</dd><dt>Surface</dt><dd>{session?.streamUrl ? 'Selkies 2.2.1 · WebSocket media' : 'Not connected'}</dd></dl><h3>Your browser profile</h3><p>Websites run in an isolated browser on the LopeOS server. Website content and sign-in cookies are processed there, separately from your end-to-end encrypted LopeDrive. Your password and vault keys stay on this device.</p><h3>Compatibility</h3><p>Some sign-in providers, DRM video, passkeys, security keys, and hardware APIs may need your host browser.</p><h3>Accessibility</h3><p>Browser controls support keyboard navigation and screen readers. The remote webpage does not expose its accessibility tree to local assistive technology. Open the page in your host browser to use a local screen reader.</p><Button onClick={openHost}>Open in host browser <ExternalLink size={13}/></Button></div>}
       </aside>}
     </div>
     <footer className="lb-status"><span><span className={connected ? 'lb-dot connected' : 'lb-dot'}/>{connected ? (session?.streamUrl ? streamStatus : 'Engine connected · Stream unavailable') : connecting ? 'Connecting' : 'Disconnected'}</span><span className="lb-status-center">{onNewTab ? 'Lope Browser' : siteTitle}</span><div><IconButton label={muted ? 'Enable audio' : 'Mute audio'} icon={muted ? <VolumeX size={13}/> : <Volume2 size={13}/>} disabled={!session?.streamUrl} onClick={() => setMuted(value => !value)}/><IconButton label="Open in host browser" icon={<ExternalLink size={13}/>} disabled={onNewTab} onClick={openHost}/></div></footer>
     {menu && <div className="lb-menu-layer" onMouseDown={() => setMenu(null)}><div className="lb-menu" onMouseDown={event => event.stopPropagation()}><Popover label="Browser menu"><div className="lb-menu-categories">{browserMenus.map(group => <button className={menu === group.label ? 'selected' : ''} key={group.label} onClick={() => setMenu(group.label)}>{group.label}<ChevronDown size={10}/></button>)}</div>{browserMenus.find(group => group.label === (menu === 'More' ? 'File' : menu))?.items.map((item, index) => typeof item === 'string' ? (() => { const name = item.replace('browser.', ''); const [, label, keys] = actions.find(entry => entry[0] === name) ?? [name, name, '']; return <button className="lb-menu-action" key={item} disabled={!connected && !['about', 'open-host'].includes(name)} onClick={() => action(name)}>{label}<kbd>{keys}</kbd></button>; })() : <hr key={index}/>)}<hr/><button className="lb-menu-action" onClick={() => { setMenu(null); setPanel('settings'); }}><SlidersHorizontal size={13}/>Browser preferences</button></Popover></div></div>}
     {tabMenu && <div className="lb-tab-menu"><Popover label="Tab actions">{[['Duplicate tab', 'duplicate'], ['Reopen closed tab', 'reopen']].map(([label, name]) => <button key={name} onClick={() => { if (name === 'duplicate') void run({ type: 'tab.duplicate', tabId: tabMenu }); else action(name); setTabMenu(null); }}>{label}</button>)}<button onClick={() => { const target = session?.tabs.find(t => t.id === tabMenu); if (target) void run({ type: 'tab.pin', tabId: tabMenu, pinned: !target.pinned }); setTabMenu(null); }}>{session?.tabs.find(t => t.id === tabMenu)?.pinned ? 'Unpin tab' : 'Pin tab'}</button><button onClick={() => { const index = session?.tabs.findIndex(t => t.id === tabMenu) ?? 0; void run({ type: 'tab.reorder', tabId: tabMenu, index: Math.max(0, index - 1) }); setTabMenu(null); }}>Move tab left</button><button onClick={() => { const index = session?.tabs.findIndex(t => t.id === tabMenu) ?? 0; void run({ type: 'tab.reorder', tabId: tabMenu, index: index + 1 }); setTabMenu(null); }}>Move tab right</button><button onClick={() => { void run({ type: 'tab.close', tabId: tabMenu }); setTabMenu(null); }}>Close tab</button></Popover></div>}
-    {upload && <Dialog title="Choose a file for this website" onClose={() => void run({ type: 'upload.cancel', id: upload.id })}><div className="lb-dialog"><FileUp size={28}/><p>{titleFor(session?.tabs.find(t => t.id === upload.tabId)?.url ?? '')}</p><p>Only the file you select will be sent to this website.</p><div>{session?.capabilities.workspaceFiles && <Button onClick={() => void handleUpload(undefined, true)}>Choose from Files</Button>}<label className="lb-file-choice">Choose from device<input type="file" aria-label="Choose from device" onChange={event => void handleUpload(event.target.files?.[0])}/></label></div><Button variant="ghost" onClick={() => void run({ type: 'upload.cancel', id: upload.id })}>Cancel</Button></div></Dialog>}
+    {upload && <Dialog title="Choose a file for this website" onClose={() => void run({ type: 'upload.cancel', id: upload.id })}><div className="lb-dialog"><FileUp size={28}/><p>{titleFor(session?.tabs.find(t => t.id === upload.tabId)?.url ?? '')}</p><p>Only selected files will be sent to this website as readable content. Your vault key is never sent.</p><div>{(context?.services.files.readBinary || session?.capabilities.workspaceFiles) && <Button onClick={() => void handleUpload(undefined, true)}>Choose from Files</Button>}<label className="lb-file-choice">Choose from device<input type="file" multiple={upload.multiple} aria-label="Choose from device" onChange={event => void handleUpload(Array.from(event.target.files ?? []))}/></label></div><Button variant="ghost" onClick={() => void run({ type: 'upload.cancel', id: upload.id })}>Cancel</Button></div></Dialog>}
     {clearDialog && <Dialog title="Clear browsing data?" onClose={() => setClearDialog(false)}><div className="lb-dialog"><History size={28}/><p>All tabs, history, bookmarks, cookies, website storage, and staged downloads in this session will be deleted. You will be signed out of websites. Saved workspace files remain.</p><div><Button onClick={async () => { setClearDialog(false); await run({ type: 'data.clear' }); }}>Clear data</Button><Button variant="ghost" onClick={() => setClearDialog(false)}>Cancel</Button></div></div></Dialog>}
     {pasteDialog && <Dialog title="Paste into website" onClose={() => setPasteDialog(false)}><form className="lb-dialog" onSubmit={event => { event.preventDefault(); const text = String(new FormData(event.currentTarget).get('text') ?? ''); if (tab) void run({ type: 'paste', tabId: tab.id, text }); setPasteDialog(false); }}><Copy size={26}/><p>Paste text here to send it to the website’s focused input.</p><textarea name="text" aria-label="Text to paste" required/><div><Button type="submit">Paste text</Button><Button variant="ghost" type="button" onClick={() => setPasteDialog(false)}>Cancel</Button></div></form></Dialog>}
   </div>;

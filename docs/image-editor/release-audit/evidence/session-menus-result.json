@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "base": "http://127.0.0.1:5189",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "PS-R01: Reselect remains unavailable in a different, untouched document",
+    "PS-R01: Each tab restores its own selection with valid dimensions",
+    "PS-R01: Per-document Reselect survives session recovery",
+    "PS-R02: Escape returns internal menu focus to its trigger",
+    "PS-R02: Arrow navigation, End and nested Escape keep focus in the correct menu"
+  ],
+  "errors": []
+}

@@ -1,5 +1,28 @@
 # Lope Browser
 
+## Hosted account integration — November 13, 2026
+
+The account-aware gateway and Windows/WSL host installers are now implemented in
+[`services/browser/hosting`](../services/browser/hosting/README.md). Public worker
+leases are bound to the verified Lope Account and device identity; passwords and
+vault keys are never sent to the browser worker. Hosted downloads enter LopeDrive
+through the client FileService, where the account's existing encryption/sync flow
+handles them. Only explicitly selected upload bytes leave the client. Remote
+website content/cookies are processed by Chromium on the server and are separate
+from end-to-end encrypted LopeDrive.
+
+The production runner confirmed that WSL/Docker were missing. With explicit user
+approval, [WSL2 prerequisites were enabled](https://github.com/oEnchanted/LopeOS/actions/runs/43523844957)
+with automatic rebooting disabled. The user has now restarted Windows. The runner
+returned online without administrator privileges, so the
+[post-restart setup attempt](https://github.com/oEnchanted/LopeOS/actions/runs/43529045006)
+stopped before installation. It needs to be started from Administrator PowerShell
+before WSL package/Ubuntu/Docker setup can continue. Caddy's existing HTTP 503
+browser route has not been changed. Real Selkies media verification and public
+activation remain pending. The earlier engine/transport
+reference below records the implementation history; it does not mean the public
+browser is operational yet.
+
 Lope Browser has a Chromium control worker, a React application integrated into the LopeOS shell, and a Selkies 2.2.1 streaming adapter. **The Linux streaming vertical slice has not been run in this environment. This is not a verified production browser release.** The development host is macOS, has Chrome 157.0.8103.78, and has no Docker, Linux display server or Selkies installation. The UI reports a missing interactive stream explicitly; it never substitutes screenshot polling or embeds destination websites in iframes.
 
 ## Running the local engine and UI

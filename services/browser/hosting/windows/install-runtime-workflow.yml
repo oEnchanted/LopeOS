@@ -1,0 +1,41 @@
+# Installs a private runtime and runs a disposable loopback stream test.
+# Public Caddy activation is deliberately a separate, reviewed operation.
+name: Install and verify Lope Browser runtime
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  runtime:
+    runs-on: [self-hosted, Windows, X64, lope-production]
+    timeout-minutes: 60
+    steps:
+      - name: Install private browser runtime and verify actual streamed input
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $source = Join-Path 'M:/LopeOS/browser-setup' ('runtime-' + [Guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Force -Path $source | Out-Null
+          try {
+            $base = "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA"
+            $manifest = Invoke-RestMethod -Uri "$base/services/browser/hosting/windows/runtime-files.json"
+            foreach ($file in $manifest) {
+              if ($file -match '\.\.' -or $file -notmatch '^(services/browser/(src|infra|hosting)/|packages/browser-client/src/|services/runtime/(browser-bridge|config)\.js$)') { throw 'Invalid runtime source manifest.' }
+              $target = Join-Path $source $file
+              New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+              Invoke-WebRequest -UseBasicParsing -Uri "$base/$file" -OutFile $target
+            }
+            & (Join-Path $source 'services/browser/hosting/windows/Install-LopeBrowser.ps1') -SourcePath $source -SiteOrigin 'https://lopeos.online' -Distro 'Ubuntu-24.04' -InstallRoot 'M:/LopeOS/browser' -DataRoot 'M:/LopeOS/browser-host-data'
+            $smoke = Join-Path $source 'smoke-dependencies'
+            $env:PLAYWRIGHT_BROWSERS_PATH = Join-Path $smoke 'browsers'
+            & npm.cmd install --prefix $smoke --no-audit --no-fund --ignore-scripts --package-lock=false playwright@1.65.0
+            if ($LASTEXITCODE -ne 0) { throw 'Could not prepare the isolated browser stream test client.' }
+            & node (Join-Path $smoke 'node_modules/playwright/cli.js') install chromium
+            if ($LASTEXITCODE -ne 0) { throw 'Could not install the stream test Chromium client.' }
+            $env:LOPE_BROWSER_SMOKE_PLAYWRIGHT = Join-Path $smoke 'node_modules/playwright/index.mjs'
+            $env:LOPE_BROWSER_WSL_DISTRO = 'Ubuntu-24.04'
+            & node (Join-Path $source 'services/browser/hosting/windows/smoke-stream.mjs')
+            if ($LASTEXITCODE -ne 0) { throw 'The private streaming test failed; Caddy remains unchanged.' }
+          } finally {
+            if (Test-Path $source) { Remove-Item $source -Recurse -Force }
+          }

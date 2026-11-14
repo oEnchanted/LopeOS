@@ -1,0 +1,122 @@
+vite v8.3.8 building client environment for production...
+transforming...
+[33m[PLUGIN_TIMINGS] [0mJavaScript callbacks ran for 2.6s of this 3.1s build (84%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin vite:worker-import-meta-url transform (84%, 2.6s, 1 call)
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+[33m[PLUGIN_TIMINGS] [0mJavaScript callbacks ran for 2.6s of this 3.1s build (84%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin vite:worker-import-meta-url transform (84%, 2.6s, 1 call)
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+✓ 2438 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-photoshop-audit/index.html                                                 1.27 kB │ gzip:     0.58 kB
+dist-photoshop-audit/tests/image-editor/release.html                            1.61 kB │ gzip:     0.52 kB
+dist-photoshop-audit/tests/image-editor/release-handoff.html                    2.68 kB │ gzip:     0.79 kB
+dist-photoshop-audit/assets/portrait.worker-BpVUlAII.js                        34.33 kB
+dist-photoshop-audit/assets/libraw-Cm6KFyZe.js                                 68.17 kB
+dist-photoshop-audit/assets/worker-BZtgTZAf.js                                 68.61 kB
+dist-photoshop-audit/assets/worker-BoSqcuBo.js                                347.97 kB
+dist-photoshop-audit/assets/denoise-worker-j8NTXL8t.js                        363.57 kB
+dist-photoshop-audit/assets/worker-DdpD9cWN.js                                374.10 kB
+dist-photoshop-audit/assets/docx-zip-worker-l0YjwXZp-BtxuvU0z.js              554.87 kB
+dist-photoshop-audit/assets/libraw-CKnqEbQ6.wasm                            1,417.72 kB │ gzip:   492.23 kB
+dist-photoshop-audit/assets/worker-DSVPrT54.js                              6,140.95 kB
+dist-photoshop-audit/assets/LocalAiDialog-arO4n79o.css                          4.17 kB │ gzip:     1.00 kB
+dist-photoshop-audit/assets/glass-CsLgiNOl.css                                  4.20 kB │ gzip:     1.08 kB
+dist-photoshop-audit/assets/SetupAssistant-Bns3ox2Y.css                         4.34 kB │ gzip:     1.14 kB
+dist-photoshop-audit/assets/files-9NivzrZg.css                                  4.83 kB │ gzip:     1.36 kB
+dist-photoshop-audit/assets/styles-Dadrg_UL.css                                 8.59 kB │ gzip:     2.57 kB
+dist-photoshop-audit/assets/AccountPanel-D6BTAoIk.css                          10.74 kB │ gzip:     2.42 kB
+dist-photoshop-audit/assets/Shell-DqTFbzvR.css                                 10.74 kB │ gzip:     2.59 kB
+dist-photoshop-audit/assets/weather-BLZcp7CI.css                               14.36 kB │ gzip:     3.32 kB
+dist-photoshop-audit/assets/calculator-BD0CoScA.css                            16.18 kB │ gzip:     3.23 kB
+dist-photoshop-audit/assets/Browser-DUAnM8WV.css                               20.83 kB │ gzip:     4.83 kB
+dist-photoshop-audit/assets/settings-GA8JB-nB.css                              26.66 kB │ gzip:     5.86 kB
+dist-photoshop-audit/assets/application-DF6JuJ-G.css                           27.80 kB │ gzip:     5.19 kB
+dist-photoshop-audit/assets/lightroom-Dqq7wdsI.css                             39.92 kB │ gzip:     8.50 kB
+dist-photoshop-audit/assets/image-editor-DaVokSgi.css                          50.06 kB │ gzip:     8.99 kB
+dist-photoshop-audit/assets/desktop-BViHYJkU.css                              108.67 kB │ gzip:    21.24 kB
+dist-photoshop-audit/assets/writer-nwqC4S2f.css                               216.19 kB │ gzip:    37.31 kB
+dist-photoshop-audit/assets/pdf-DJSSz72k.js                                     0.13 kB │ gzip:     0.13 kB
+dist-photoshop-audit/assets/docx-engine-CbLT9dH4.js                             0.13 kB │ gzip:     0.13 kB
+dist-photoshop-audit/assets/docx-engine-DW2ZAA80.js                             0.13 kB │ gzip:     0.13 kB
+dist-photoshop-audit/assets/chevron-down-D9--h8rn.js                            0.15 kB │ gzip:     0.15 kB
+dist-photoshop-audit/assets/chevron-up-Ct-cNPiZ.js                              0.15 kB │ gzip:     0.15 kB
+dist-photoshop-audit/assets/arrow-down-VRGuxlz_.js                              0.19 kB │ gzip:     0.18 kB
+dist-photoshop-audit/assets/crop-7fqm1n7C.js                                    0.21 kB │ gzip:     0.18 kB
+dist-photoshop-audit/assets/info-DJYhLSaR.js                                    0.23 kB │ gzip:     0.19 kB
+dist-photoshop-audit/assets/columns-2-qGXK2yE0.js                               0.23 kB │ gzip:     0.21 kB
+dist-photoshop-audit/assets/upload-CqQ1jd6B.js                                  0.26 kB │ gzip:     0.21 kB
+dist-photoshop-audit/assets/message-square-i-U_5XhS.js                          0.26 kB │ gzip:     0.22 kB
+dist-photoshop-audit/assets/grid-2x2-BdUHh9Sc.js                                0.27 kB │ gzip:     0.22 kB
+dist-photoshop-audit/assets/external-link-CcUkL4xE.js                           0.28 kB │ gzip:     0.22 kB
+dist-photoshop-audit/assets/settings-2-BVrCUZK4.js                              0.28 kB │ gzip:     0.21 kB
+dist-photoshop-audit/assets/ellipsis-pLlqtJRM.js                                0.28 kB │ gzip:     0.20 kB
+dist-photoshop-audit/assets/lock-keyhole-DKb5HloF.js                            0.28 kB │ gzip:     0.24 kB
+dist-photoshop-audit/assets/rotate-ccw-clock-CFtVyWyh.js                        0.29 kB │ gzip:     0.24 kB
+dist-photoshop-audit/assets/image-J0ERdVyl.js                                   0.29 kB │ gzip:     0.24 kB
+dist-photoshop-audit/assets/list-B8lI-dbl.js                                    0.33 kB │ gzip:     0.20 kB
+dist-photoshop-audit/assets/shield-check-CQtydh1u.js                            0.35 kB │ gzip:     0.27 kB
+dist-photoshop-audit/assets/accessibility-CdA6W2bi.js                           0.37 kB │ gzip:     0.26 kB
+dist-photoshop-audit/assets/palette-4TAgJASA.js                                 0.54 kB │ gzip:     0.30 kB
+dist-photoshop-audit/assets/list-ordered-DUzkwApy.js                            0.60 kB │ gzip:     0.33 kB
+dist-photoshop-audit/assets/hard-drive-Bax9ODiA.js                              0.62 kB │ gzip:     0.35 kB
+dist-photoshop-audit/assets/refresh-cw-78wfiqdY.js                              0.62 kB │ gzip:     0.36 kB
+dist-photoshop-audit/assets/star-D_O6JNXE.js                                    0.67 kB │ gzip:     0.39 kB
+dist-photoshop-audit/assets/undo-2-DtKb01zM.js                                  0.69 kB │ gzip:     0.37 kB
+dist-photoshop-audit/assets/save-B20lLcoQ.js                                    0.70 kB │ gzip:     0.37 kB
+dist-photoshop-audit/assets/earth-CWM3jN4D.js                                   0.70 kB │ gzip:     0.41 kB
+dist-photoshop-audit/assets/wand-sparkles-BMZ_v8DE.js                           1.02 kB │ gzip:     0.50 kB
+dist-photoshop-audit/assets/hooks-DzVjRDU9.js                                   1.33 kB │ gzip:     0.74 kB
+dist-photoshop-audit/assets/catalog-C7Rugcrk.js                                 1.42 kB │ gzip:     0.78 kB
+dist-photoshop-audit/assets/type-B-mbBhz6.js                                    1.45 kB │ gzip:     0.69 kB
+dist-photoshop-audit/assets/manifest-ukaO1NjM.js                                2.05 kB │ gzip:     0.96 kB
+dist-photoshop-audit/assets/cache-5sVII5LJ.js                                   2.15 kB │ gzip:     1.13 kB
+dist-photoshop-audit/assets/handoff-C1z3ucQz.js                                 2.38 kB │ gzip:     1.14 kB
+dist-photoshop-audit/assets/PasswordPromptSurface-DjV1JgjD.es-BUfdoHi7.js       2.40 kB │ gzip:     1.01 kB
+dist-photoshop-audit/assets/commands-ByfcmDk3.js                                2.88 kB │ gzip:     1.28 kB
+dist-photoshop-audit/assets/denoise-cache-Dpet-HN9.js                           2.91 kB │ gzip:     1.40 kB
+dist-photoshop-audit/assets/styles-C0ESIG8C.js                                  3.28 kB │ gzip:     1.57 kB
+dist-photoshop-audit/assets/LocationPicker-ZYYrQbhE.js                          3.47 kB │ gzip:     1.54 kB
+dist-photoshop-audit/assets/settings-BxspoQdd.js                                3.53 kB │ gzip:     1.28 kB
+dist-photoshop-audit/assets/square-CIeQCGjH.js                                  3.70 kB │ gzip:     1.74 kB
+dist-photoshop-audit/assets/Welcome-BCyiacgH.js                                 5.09 kB │ gzip:     1.81 kB
+dist-photoshop-audit/assets/formats-s2r9BuW1.js                                 5.54 kB │ gzip:     2.31 kB
+dist-photoshop-audit/assets/editor-BIa_XfnX.js                                  5.69 kB │ gzip:     2.62 kB
+dist-photoshop-audit/assets/store-BhJmb302.js                                   8.18 kB │ gzip:     3.32 kB
+dist-photoshop-audit/assets/FindReplaceSurface-BEnRLpD9.es-afPXGQYv.js          8.35 kB │ gzip:     2.28 kB
+dist-photoshop-audit/assets/PdfViewer-C2r-K8zC.es-Cw1WH9pW.js                   8.64 kB │ gzip:     3.26 kB
+dist-photoshop-audit/assets/react-Dk7jysz-.js                                   8.92 kB │ gzip:     3.46 kB
+dist-photoshop-audit/assets/text-editor-D7xep_Yw.js                            12.60 kB │ gzip:     4.48 kB
+dist-photoshop-audit/assets/weather-le1OauMW.js                                16.71 kB │ gzip:     5.31 kB
+dist-photoshop-audit/assets/LocalAiDialog-DFgndvU2.js                          19.85 kB │ gzip:     7.47 kB
+dist-photoshop-audit/assets/AccountPanel-CGQUN_3R.js                           23.19 kB │ gzip:     6.71 kB
+dist-photoshop-audit/assets/calculator-sMbfovzR.js                             26.93 kB │ gzip:     9.41 kB
+dist-photoshop-audit/assets/SetupAssistant-CeXvSqZS.js                         31.33 kB │ gzip:    10.07 kB
+dist-photoshop-audit/assets/files-CXV2ihSG.js                                  31.64 kB │ gzip:    10.13 kB
+dist-photoshop-audit/assets/Browser-BhsvZ0ol.js                                35.23 kB │ gzip:    11.09 kB
+dist-photoshop-audit/assets/settings--SYOPsbZ.js                               53.50 kB │ gzip:    16.75 kB
+dist-photoshop-audit/assets/desktop-DVAKZxpC.js                               118.30 kB │ gzip:    36.83 kB
+dist-photoshop-audit/assets/lightroom-CbMjOX3d.js                             121.08 kB │ gzip:    36.53 kB
+dist-photoshop-audit/assets/Shell-BuoLbNXI.js                                 152.51 kB │ gzip:    48.20 kB
+dist-photoshop-audit/assets/preload-helper-BAswiJCk.js                        222.37 kB │ gzip:    69.76 kB
+dist-photoshop-audit/assets/image-editor-BeWlKW08.js                          523.38 kB │ gzip:   158.17 kB
+dist-photoshop-audit/assets/pdf.worker.min-t-CYmkGJ.es-BIB1aa7o.js          1,652.12 kB │ gzip:   557.73 kB
+dist-photoshop-audit/assets/writer-Bc1WqgJL.js                              1,763.13 kB │ gzip:   549.99 kB
+dist-photoshop-audit/assets/lib-HanPIAr0.js                                 5,943.46 kB │ gzip: 2,145.78 kB
+dist-photoshop-audit/assets/docx-engine.es-DnfqRYL5.js                     16,850.87 kB │ gzip: 7,668.62 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mpackages/sdk/src/accounts.ts is dynamically imported by packages/sdk/src/reset.ts but also statically imported by apps/web/src/accounts/AccountPanel.tsx, apps/web/src/backup/local-data.ts, apps/web/src/setup/FirstRun.tsx, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mpackages/sdk/src/preferences.ts is dynamically imported by packages/sdk/src/reset.ts but also statically imported by apps/web/src/accounts/data.ts, apps/web/src/apps/settings/index.tsx, apps/web/src/apps/weather/LocationPicker.tsx, apps/web/src/apps/writer/systemAppearance.ts, apps/web/src/setup/FirstRun.tsx, ..., dynamic import will not move module into another chunk.
+
+✓ built in 7.09s

@@ -49,7 +49,7 @@ export function LocalModelsStep() {
     <div className="setup-ai-models">{state.models.map(model => <ModelCard key={model.id} model={model} busy={state.busy}/>)}</div>
     <div className="setup-ai-note"><ShieldCheck size={16} aria-hidden="true"/><p>Model files download from the sources above. Your messages and photos are processed on your device. Clearing browser data removes these downloads.</p></div>
     <p className="setup-ai-skip">You can continue setup while models download, or download them later in each app. Keep this tab open until downloads finish.</p>
-    <details className="setup-ai-external"><summary>Generative Fill setup</summary><p>Generative Fill uses a separate ComfyUI installation. Configure it in Image Editor.</p></details>
+    <details className="setup-ai-external"><summary>Generative Fill setup</summary><p>Generative Fill uses a separate ComfyUI installation. Configure it in Prism.</p></details>
   </div>;
 }
 export function LocalModelsSummary() {

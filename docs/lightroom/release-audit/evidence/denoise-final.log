@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "Standard luminance/color noise controls process real pixels offline before any model download and zero restores the source render",
+    "Cancelling the optional model/engine download leaves no partial installed package or photo change",
+    "Verified learned weights run locally and produce a real before/after 100% detail preview",
+    "Noise and focus changes refresh automatically; changes during inference remain editable and the latest settings win",
+    "Amount updates the preview without another inference; zero is identical to the original",
+    "Cancelling full-resolution inference terminates the AI worker and creates no partial derivative",
+    "Full inference works offline with cached tools; an injected quota failure leaves no orphan asset and retry saves without rerunning the model",
+    "The result is a separate 16-bit TIFF with inherited edits, saved model provenance and unchanged source bytes/recipe",
+    "Reload restores the denoised photo and edit recipe; verified local tools remain installed",
+    "Corrupt cached weights are refused by SHA-256 validation with an actionable error",
+    "Removing model tools retains denoised photos, which still export independently"
+  ],
+  "errors": []
+}

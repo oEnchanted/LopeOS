@@ -8,6 +8,8 @@
     "Saved OOXML text and bold run",
     "Preferences opens from the app and follows live system Light/Dark changes",
     "Closing Preferences retains the saved document",
+    "Picture selection, layout and actual mouse dragging update page position",
+    "Per-edge crop visibly renders and saves native OOXML percentages",
     "No browser page errors"
   ],
   "errors": []

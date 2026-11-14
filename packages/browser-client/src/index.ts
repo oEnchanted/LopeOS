@@ -35,18 +35,26 @@ export class BrowserClient {
     return this.json<BrowserSession>(`/sessions/${id}/uploads/${requestId}`, { method: 'POST',
       headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }, body: file });
   }
+  async uploadFiles(id: string, requestId: string, files: File[]) {
+    if (!files.length || files.length > 20 || files.reduce((sum, file) => sum + file.size, 0) > 32 * 1024 * 1024) throw new Error('Choose up to 20 files totaling at most 32 MiB.');
+    const form = new FormData(); for (const file of files) form.append('files', file, file.name);
+    const response = await this.request(`${this.base}/sessions/${id}/uploads/${requestId}`, { method: 'POST', body: form, credentials: 'same-origin' });
+    if (!response.ok) { const value = await response.json().catch(() => ({})); throw new Error(typeof value.error === 'string' ? value.error : value.error?.message || 'The file upload failed.'); }
+    return response.json() as Promise<BrowserSession>;
+  }
   async download(id: string, transferId: string): Promise<Blob> {
     const response = await this.request(`${this.base}/sessions/${id}/downloads/${transferId}/file`, { credentials: 'same-origin' });
     if (!response.ok) throw new Error('This download is no longer available.');
     return response.blob();
   }
   /** Reconnects to authoritative full snapshots. No page screenshots pass through this channel. */
-  subscribe(id: string, onState: (state: BrowserSession) => void, onConnection: (connected: boolean) => void = () => {}) {
+  subscribe(id: string, onState: (state: BrowserSession) => void, onConnection: (connected: boolean) => void = () => {}, onExpired?: () => void) {
     const controller = new AbortController();
     let retry: ReturnType<typeof setTimeout> | undefined; let attempt = 0;
     const connect = async () => {
       try {
         const response = await this.request(`${this.base}/sessions/${id}/events`, { signal: controller.signal, credentials: 'same-origin' });
+        if ([401, 404, 410].includes(response.status) && onExpired && !controller.signal.aborted) { onConnection(false); onExpired(); return; }
         if (!response.ok || !response.body) throw new Error('Disconnected');
         const reader = response.body.getReader(); const decoder = new TextDecoder(); let buffer = '';
         while (!controller.signal.aborted) {

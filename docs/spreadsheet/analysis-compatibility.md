@@ -1,0 +1,34 @@
+# Data and analysis compatibility
+
+`packages/spreadsheet-engine/src/analysis.ts` implements typed local operations independently of React and workbook storage. A `DataSet` contains ordered columns, scalar records and optional stable row identities. Sources are never transmitted to a service.
+
+| Operation | Implemented contract | Limits / differences |
+| --- | --- | --- |
+| Sort | Stable multi-key whole-record sort; numeric/text/boolean/error distinction; blank-last; case choice; identities retained | Text collation is fixed en-US. Worksheet adapter moves formulas/styles and shifts relative references; merged ranges reject sorting. Native Excel custom sort lists/color/icon sorts are unresolved. |
+| Filter | Equality, comparisons, contains/prefix/suffix, blanks, errors, membership and inclusive range | Numeric text remains text. Conditions combine with AND. No Excel date filter calendar UI or dynamic top-ten filter. |
+| Remove duplicates | Keeps first complete record, with case-insensitive text comparison | Values preserve number/text distinction; not an assertion of every Excel locale's equality semantics. |
+| Text to Columns | Single-character delimiter, quoted fields/escaped quotes, all output text | Preserves leading zeros/long identifiers. Fixed-width splitting and locale inference unresolved. |
+| Pivot | Multiple row/column/value fields; filters; sum/count/count-numbers/average/min/max/product/sample variance/sample deviation; group totals; row/column/grand totals; source-row drill-through; repeatable refresh | UI exposure may be narrower than engine API. Native pivot caches, slicers/timelines, calculated items, OLAP/Data Model and full Design-tab layout are unresolved. |
+| Grouping | Numeric interval buckets; year/quarter/month from validated ISO dates | Workbook serial dates need explicit date-system conversion before calendar grouping. No implicit browser timezone conversion. |
+| Show Values As | Raw values, fraction of grand total, row total or column total | Other Excel running total/rank/difference modes unresolved. Totals retain raw aggregates in the API. |
+| Typed query pipeline | Filter/select/rename/sort/distinct/type/split/append/inner or left equijoin/group/pivot/unpivot/take; step history; conversion errors | **Not Power Query M, DAX or Power Pivot.** Source refresh reruns stored steps over the current local source. No credential store or remote connectors. |
+| Chart data and rendering | Linked labels/numeric series; null gaps; column/bar/line/area/scatter/pie/doughnut SVG; shared view/print renderer | UI rendering explicitly limits 200 categories and 8 series, with a visible truncation notice. Numeric scatter x values are read before formatting. Pie/doughnut negative values show an error. Secondary axes/combinations and native chart style fidelity are unresolved. |
+| Goal Seek | One finite variable; bounded bracket expansion then safeguarded secant/bisection; target residual validated | Default residual tolerance 1e-8, 100 iterations, 500 evaluations; bounded search cannot establish that no root exists. No workbook edit commits unless the caller accepts the result. |
+| Local Solver | 1–16 variables; finite box bounds; min/max; equality and inequality constraints; coordinate pattern search with increasing quadratic penalty | Default step tolerance 1e-7, constraint tolerance 1e-6, 3,000 iterations and 50,000 evaluations. A converged result is feasible and locally stationary at the step resolution, **not a proven global optimum**. Not Excel's GRG, Simplex LP or Evolutionary engines. |
+| Failure behavior | Explicit invalid input, row/cell limits, cancellation, numeric failures and convergence failure statuses | Synchronous operations inspect AbortSignal at checkpoints; responsive mid-operation cancellation requires running them in a worker. UI-thread synchronous work cannot receive a new abort event while blocked. |
+
+Defaults bound transforms to 1,048,576 records and 5,000,000 materialized cells. Joins check projected output as it grows; charts reject more than 10,000 points by default. Pivot construction checks the row-by-column cross-product before materializing its result. Print uses a separate 200,000 rendered-cell / 300-page bound.
+
+Discrete expectations use exact equality. Numerical tests compare Goal Seek input/residual at 1e-8 and Solver variables at 1e-5 with feasibility at 1e-6. These are operation-specific test thresholds, not a blanket promise about all functions.
+
+## Fixtures and verification
+
+`fixtures.ts` generates a fictional monthly budget with dependent and cross-sheet formulas, number formats, nonnegative input validation, a table, conditional rules, a linked column chart, a named input and print settings. It also generates a 100,000-row analytics workbook (700,007 populated source cells) with typed zero-padded IDs, a table, linked summary formulas and pivot/chart metadata. The generated fixtures contain no live or personal data.
+
+Run `node --test tests/spreadsheet/analysis.test.ts tests/spreadsheet/print.test.ts tests/spreadsheet/chart-numerical.test.ts`. The suite covers whole-record moves, formula/style retention, typed filters, duplicate preservation, text splitting, pivot totals/drill-through/refresh, grouping, source error propagation, joins, transforms, numerical success/failure and print bounds/layout/escaping/chart fragments. The numerical-worker regression separately checks that Goal Seek commits the solved input rather than its target output. `node tests/spreadsheet/benchmark.mjs` records timings and host metadata in `docs/spreadsheet/benchmarks.json`. Node timings are not evidence of browser scroll latency, edit-to-paint latency or an independent Excel comparison.
+
+## Printing
+
+`apps/web/src/apps/spreadsheet/print.ts` produces one deterministic local HTML document used both for the preview iframe and the browser print / Save as PDF dialog. It supports a rectangular print area, hidden rows/columns, repeated row/column titles, manual breaks, margins, portrait/landscape, Letter/Legal/A4/A3, scale/fit, basic header/footer fields, gridlines/headings, basic styles and merged cells. `&P`, `&N`, `&A`, `&F` and `&D` expand to page, page count, sheet, workbook and the workbook modification date. This is fixed-layout browser output, not a native PDF parser or XLSX print-fidelity certification.
+
+Linked charts use the same escaped SVG as the editable view, extend the default print range, and are clipped across page breaks and repeated-title regions. Explicit print areas clip charts at their boundaries. Picture/drawing types beyond the chart model, conditional-format appearance in print, native theme fonts, advanced header/footer control codes and printer-specific pagination remain unresolved. Exact print fidelity needs a matched Excel/PDF reference and browser print-driver checks.

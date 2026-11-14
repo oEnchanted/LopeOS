@@ -1,0 +1,32 @@
+name: Install Lope Browser Ubuntu prerequisites
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  prerequisites:
+    runs-on: [self-hosted, Windows, X64, lope-production]
+    timeout-minutes: 35
+    steps:
+      - name: Install Ubuntu Docker and Node without a Windows restart
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $volume = Get-Volume -DriveLetter M
+          if ($volume.FileSystemType -ne 'NTFS' -or $volume.SizeRemaining -lt 20GB) { throw 'The selected M: browser volume needs NTFS and at least 20 GiB free.' }
+          $source = Join-Path 'M:/LopeOS/browser-setup' ('prerequisites-' + [Guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Force -Path (Join-Path $source 'temp') | Out-Null
+          $env:TEMP = Join-Path $source 'temp'
+          $env:TMP = $env:TEMP
+          $files = @('services/browser/hosting/windows/Install-LopeBrowserPrerequisites.ps1', 'services/browser/hosting/linux/configure-wsl.sh', 'services/browser/hosting/linux/install-prerequisites.sh', 'services/browser/hosting/windows/Prepare-LopeBrowserWSL.ps1')
+          try {
+            foreach ($file in $files) {
+              $target = Join-Path $source $file
+              New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+              Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA/$file" -OutFile $target
+            }
+            & (Join-Path $source $files[3]) -WslInstallRoot 'M:/LopeOS/browser-wsl' -PackageDirectory (Join-Path $source 'packages')
+            & (Join-Path $source $files[0]) -SourcePath $source -DistroDirectory 'M:/LopeOS/browser-ubuntu'
+          } finally {
+            if (Test-Path $source) { Remove-Item $source -Recurse -Force }
+          }

@@ -1,0 +1,1528 @@
+{
+  "date": "2026-11-13",
+  "base": "http://127.0.0.1:5191",
+  "phase": "development",
+  "browser": "158.0.8127.18",
+  "os": "darwin",
+  "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "setup": "Fresh guest context; only setup completion is seeded. No source-module imports, runtime mocks, injected app state or command execution. State inspections are read-only IndexedDB reads.",
+  "fixture": {
+    "name": "handoff-bayer.dng",
+    "sha256": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+    "bytes": 25190
+  },
+  "checks": [
+    {
+      "id": "LR-07-IMPORT",
+      "result": "PASSED",
+      "detail": "Sensor-only DNG imported through real production UI and edited to +0.5 EV; stored original hash matches fixture."
+    },
+    {
+      "id": "LR-07-HANDOFF",
+      "result": "PASSED",
+      "detail": "Shared file dialog saved a real native RGB/8 layered project into durable local LopeDrive and Prism opened it."
+    },
+    {
+      "id": "LR-07-FAILURE",
+      "result": "FAILED",
+      "error": "Error: expect(received).toMatchObject(expected)\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"unique\": 2,\n+   \"unique\": 4,\n  }\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate\n    at captureRawStack (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright-core@1.65.0/node_modules/playwright-core/lib/coreBundle.js:9551:17)\n    at callMatcherAsStep (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13342:57)\n    at Object.toMatchObject (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13334:23)\n    at /private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-handoff.mjs:58:225"
+    }
+  ],
+  "error": "Error: expect(received).toMatchObject(expected)\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"unique\": 2,\n+   \"unique\": 4,\n  }\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate\n    at captureRawStack (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright-core@1.65.0/node_modules/playwright-core/lib/coreBundle.js:9551:17)\n    at callMatcherAsStep (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13342:57)\n    at Object.toMatchObject (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13334:23)\n    at /private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-handoff.mjs:58:225",
+  "initial": {
+    "id": "41431686-d8f4-48d0-888c-8c09ba4edd29",
+    "name": "handoff-bayer.dng",
+    "hash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5",
+    "size": 25190,
+    "imported": "2026-11-13T23:18:20.622Z",
+    "metadata": {
+      "camera": "LopeOS Synthetic Bayer",
+      "lens": "",
+      "iso": 0,
+      "shutter": 0,
+      "aperture": 0,
+      "focalLength": 0,
+      "orientation": 1,
+      "width": 128,
+      "height": 96,
+      "bitDepth": 16,
+      "format": "dng",
+      "decoder": "LibRaw WASM 1.6.0; 16-bit linear sensor development",
+      "colorSpace": "linear sRGB",
+      "warnings": [
+        "RAW rendering uses LibRaw. Results may differ from other photo editors; support varies by camera and compression format."
+      ],
+      "raw": true
+    },
+    "analysis": {
+      "sharpness": 29.112429488304723,
+      "exposure": 60.58836556560602,
+      "score": 44.85039752695537,
+      "clipped": 0,
+      "method": "edge-energy-and-luminance-v1"
+    },
+    "recipe": {
+      "version": 1,
+      "engine": "lope-photo/1.0.0",
+      "profile": "color",
+      "values": {
+        "exposure": 0.5,
+        "contrast": 0,
+        "highlights": 0,
+        "shadows": 0,
+        "whites": 0,
+        "blacks": 0,
+        "temperature": 0,
+        "tint": 0,
+        "vibrance": 0,
+        "saturation": 0,
+        "texture": 0,
+        "clarity": 0,
+        "dehaze": 0,
+        "vignette": 0,
+        "grain": 0,
+        "sharpening": 0,
+        "noise": 0,
+        "colorNoise": 0,
+        "distortion": 0,
+        "fringing": 0,
+        "straighten": 0,
+        "vertical": 0,
+        "horizontal": 0
+      },
+      "curve": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "mixer": [
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        },
+        {
+          "hue": 0,
+          "saturation": 0,
+          "luminance": 0
+        }
+      ],
+      "grading": {
+        "shadows": [
+          0,
+          0
+        ],
+        "midtones": [
+          0,
+          0
+        ],
+        "highlights": [
+          0,
+          0
+        ]
+      },
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1
+      },
+      "rotation": 0,
+      "flipX": false,
+      "flipY": false,
+      "masks": [],
+      "retouch": []
+    },
+    "history": [
+      {
+        "label": "Adjust photo",
+        "recipe": {
+          "version": 1,
+          "engine": "lope-photo/1.0.0",
+          "profile": "color",
+          "values": {
+            "exposure": 0,
+            "contrast": 0,
+            "highlights": 0,
+            "shadows": 0,
+            "whites": 0,
+            "blacks": 0,
+            "temperature": 0,
+            "tint": 0,
+            "vibrance": 0,
+            "saturation": 0,
+            "texture": 0,
+            "clarity": 0,
+            "dehaze": 0,
+            "vignette": 0,
+            "grain": 0,
+            "sharpening": 0,
+            "noise": 0,
+            "colorNoise": 0,
+            "distortion": 0,
+            "fringing": 0,
+            "straighten": 0,
+            "vertical": 0,
+            "horizontal": 0
+          },
+          "curve": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 1,
+              "y": 1
+            }
+          ],
+          "mixer": [
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            },
+            {
+              "hue": 0,
+              "saturation": 0,
+              "luminance": 0
+            }
+          ],
+          "grading": {
+            "shadows": [
+              0,
+              0
+            ],
+            "midtones": [
+              0,
+              0
+            ],
+            "highlights": [
+              0,
+              0
+            ]
+          },
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 1
+          },
+          "rotation": 0,
+          "flipX": false,
+          "flipY": false,
+          "masks": [],
+          "retouch": []
+        },
+        "at": "2026-11-13T23:18:21.449Z"
+      }
+    ],
+    "future": [],
+    "rating": 0,
+    "flag": "none",
+    "label": "",
+    "keywords": [],
+    "albumIds": [],
+    "order": 0,
+    "versions": [],
+    "storage": "managed",
+    "originalHash": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5"
+  },
+  "driveBefore": {
+    "path": "/LopeDrive/handoff-return.lopeimage",
+    "hash": "6969d588313ee3852ef66b5911662baf819055165c33797e68bd005728b2092c",
+    "size": 88117,
+    "version": "03ca3eed-961e-4a16-a385-fe9ec79ba1c8",
+    "format": "lope-image",
+    "formatVersion": 1,
+    "document": {
+      "width": 128,
+      "height": 96,
+      "mode": "RGB",
+      "depth": 8,
+      "layers": [
+        {
+          "id": "6589407e-d3de-4255-aabe-7a5990665a8d",
+          "name": "Developed photo",
+          "kind": "raster",
+          "base": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "tiles": 1
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "failedResponses": [
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "status": 403
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    }
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:5191/",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@vite/client",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/main.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@react-refresh",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom_client.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/FirstRun.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/styles.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/shell.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/materials.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/desktop-polish.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/control-center.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/glass-surfaces.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-BnddDCXU.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/accounts.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/preferences.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/index.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Icons.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/appearance.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/background.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/wallpapers.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/settings/wallpaper-policy.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/ResetScreen.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/service.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/reset.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/service.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/setup.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/rolldown-runtime-C-UrYobY.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/contracts/src/preferences.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/background.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/react-dom-BwyQgGtu.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/model-updates.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/preflight.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/encryption.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/data.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/accounts/merge.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/setup/reset.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-ai/core.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/denoise-manifest.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/ai/catalog.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/index.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/lope-drive.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/backup/local-data.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/runtime-client/src/mounted-files.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/wallpapers/perfecthue-aurora-light.png",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/wallpapers/perfecthue-aurora-dark.png",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/accounts/session",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Shell.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/backup/lifecycle.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/UpdateUI.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/lucide-react.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/sdk/src/index.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/browser/service.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/registry.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/commands.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/WindowFrame.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/useWindowFullscreen.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/window-geometry.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SystemControls.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SearchPanel.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/DesktopExtras.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Dock.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/filePolicy.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/system.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/WeatherStatusBridge.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/FileDialog.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/ui/src/settings.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/updates/updates.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/manifests.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/browser/manifest.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/extensions.ts?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/index.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/trash.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/dock.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/SpotlightChat.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-ai/service.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/spotlight-engine.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/provider.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/useWeather.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/clipboard-store.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/files/operations.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/file-dialog.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/app-template/manifest.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/writer/manifest.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/manifest.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/manifest.ts?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/contracts.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/browser-client/src/navigation.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/calculator/engine.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/weather/store.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/shell/Welcome.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7392&longitude=-104.9903&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cweather_code%2Cis_day%2Cwind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m%2Cvisibility%2Cuv_index&hourly=temperature_2m%2Cweather_code%2Cis_day%2Cprecipitation_probability&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_probability_max%2Csunrise%2Csunset&forecast_days=10&forecast_hours=24&timezone=auto&temperature_unit=celsius&wind_speed_unit=kmh",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "method": "POST",
+      "bodyBytes": 2
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/index.tsx?t=1794611807869",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/hooks.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/library.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/grid-layout.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/presets.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/xmp.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/controls.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/viewport.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/worker-client.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/DenoiseDialog.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/lightroom.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/mask-outline.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/denoise-cache.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/lightroom/denoise-client.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/decode.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/jpeg.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/png.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/libraw-wasm.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/worker.js?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/libraw.wasm",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:5191/598352b0-e497-49c4-b155-5f5b9ab697cc",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:5191/071343b7-98c9-49e8-8566-5e255eae0732",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/decode.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/jpeg.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/png.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/libraw-wasm.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/worker.js?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/libraw.wasm",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/decode.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/render.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/tiff.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/jpeg.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/png.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/formats.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/photo-engine/src/noise.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/libraw-wasm.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/worker.js?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/libraw-wasm@1.6.0/node_modules/libraw-wasm/dist/libraw.wasm",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/index.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/index.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/psd.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/CanvasView.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/dialogs.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/menus.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/panels.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/panel-model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/filter-model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/tools.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/tool-model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/fixture.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/worker-client.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/recovery.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/session.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/image-editor.css",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/history.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/operations.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/render.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/preview.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/clipboard.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/filters.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection-brush.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/ag-psd.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/selection-outline.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/InlineType.tsx",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/apps/web/src/apps/image-editor/menu-model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/gpu.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/worker.ts?worker_file&type=module",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/@fs/Users/luke/Documents/LopeOS%20100/node_modules/.pnpm/vite@8.3.8_@types+node@26.6.6/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/native.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/psd.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/render.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/selection.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/pixels.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/model.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/preview.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/clipboard.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/filters.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/operations.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/ag-psd.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/composite.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/matrix.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/packages/image-engine/src/gpu.ts",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/node_modules/.vite/deps/rolldown-runtime-C-UrYobY.js?v=0a239a00",
+      "method": "GET",
+      "bodyBytes": 0
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "bodyBytes": 0
+    }
+  ],
+  "limits": [
+    "LopeOS Prism is the shipped Photoshop-style app; the interchange is native .lopeimage RGB/8, not Photoshop PSD16 or full Adobe interoperability.",
+    "Handoff renderer uses browser sRGB; the native JSON does not provide arbitrary ICC color management.",
+    "LopeDrive is local durable IndexedDB in this guest session. Remote authenticated runtime and cloud sync are not exercised.",
+    "Adobe reference captures and licensed application comparison are unavailable."
+  ]
+}

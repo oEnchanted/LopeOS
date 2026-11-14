@@ -1,14 +1,16 @@
+import { AppIcon } from '../../shell/Icons';
 import { cloneElement, useEffect, useRef, useState, type ReactElement } from 'react';
 import { FileText, X } from 'lucide-react';
 import { WriterEngine, assertReceipt, type SelectionCapture, type WriterSnapshot } from '../../../../../packages/document-engine/src';
 import type { WriterPreferences } from './preferences';
+import { insertPicture, readPictureFile } from './pictures';
 import { useAnimatedDismiss } from './motion';
 
 export type DialogKind = 'font' | 'paragraph' | 'table' | 'picture' | 'pictureformat' | 'tableformat' | 'link' | 'comment' | 'style' | 'header' | 'footer' | 'footnote' | 'endnote' | 'symbol' | 'zoom' | 'pagesetup' | 'wordcount' | 'language' | 'mode' | 'account' | 'share' | 'about' | 'help' | 'clipboard' | null;
-type Props = { readOnly?: boolean; preferences?: WriterPreferences; kind: NonNullable<DialogKind>; engine: WriterEngine | null; snapshot: WriterSnapshot; capture: SelectionCapture | null; close: () => void; perform: (action: () => unknown | Promise<unknown>) => Promise<void>; setTab: (tab: string) => void };
-const names: Record<NonNullable<DialogKind>, string> = { font: 'Font', paragraph: 'Paragraph', table: 'Insert Table', picture: 'Insert Picture', pictureformat: 'Picture Format', tableformat: 'Table Properties', link: 'Insert Hyperlink', comment: 'New Comment', style: 'Modify Style', header: 'Header', footer: 'Footer', footnote: 'Insert Footnote', endnote: 'Insert Endnote', symbol: 'Symbol', zoom: 'Zoom', pagesetup: 'Page Setup', wordcount: 'Word Count', language: 'Language', mode: 'Document Mode', account: 'Account', share: 'Share', about: 'About LopeOS Writer', help: 'Writer Help', clipboard: 'Clipboard' };
+type Props = { selectedPictureId?: string | null; selectPicture?: (id: string) => void; readOnly?: boolean; preferences?: WriterPreferences; kind: NonNullable<DialogKind>; engine: WriterEngine | null; snapshot: WriterSnapshot; capture: SelectionCapture | null; close: () => void; perform: (action: () => unknown | Promise<unknown>) => Promise<void>; setTab: (tab: string) => void };
+const names: Record<NonNullable<DialogKind>, string> = { font: 'Font', paragraph: 'Paragraph', table: 'Insert Table', picture: 'Insert Picture', pictureformat: 'Picture Format', tableformat: 'Table Properties', link: 'Insert Hyperlink', comment: 'New Comment', style: 'Modify Style', header: 'Header', footer: 'Footer', footnote: 'Insert Footnote', endnote: 'Insert Endnote', symbol: 'Symbol', zoom: 'Zoom', pagesetup: 'Page Setup', wordcount: 'Word Count', language: 'Language', mode: 'Document Mode', account: 'Account', share: 'Share', about: 'About LopeOS Quill', help: 'Quill Help', clipboard: 'Clipboard' };
 
-export function WriterDialog({ readOnly = false, preferences, kind, engine, snapshot, capture, close: onClose, perform, setTab: setRibbonTab }: Props) {
+export function WriterDialog({ selectedPictureId, selectPicture, readOnly = false, preferences, kind, engine, snapshot, capture, close: onClose, perform, setTab: setRibbonTab }: Props) {
   const [font, setFont] = useState(String(snapshot.state?.toolbar.commands['font-family']?.value || 'Aptos'));
   const [size, setSize] = useState(Number(snapshot.state?.toolbar.commands['font-size']?.value || 11));
   const [bold, setBold] = useState(Boolean(snapshot.state?.toolbar.commands.bold?.active));
@@ -42,15 +44,22 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
   const [pictures, setPictures] = useState<Awaited<ReturnType<WriterEngine['api']['images']['list']>>['items']>([]);
   const [pictureId, setPictureId] = useState('');
   const [lockAnchor, setLockAnchor] = useState(false);
-  const [crop, setCrop] = useState(0);
+  const [crop, setCrop] = useState({ left:0,right:0,top:0,bottom:0 });
   const [tab, setTab] = useState('');
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState('');
   const [loading, setLoading] = useState(['font','paragraph','pictureformat','tableformat'].includes(kind));
   const [paragraphCount, setParagraphCount] = useState(1);
   const changed = useRef(new Set<string>());
+  const pictureRequest = useRef(0);
   const root = useRef<HTMLElement>(null);
   const { close, closing } = useAnimatedDismiss(onClose, root);
+  useEffect(() => {
+    if (kind !== 'picture' || !file) return;
+    let active = true;
+    void readPictureFile(file).then(size => { if (!active) return; if (!changed.current.has('Width (px):')) setWidth(size.width); if (!changed.current.has('Height (px):')) setHeight(size.height); }).catch(cause => { if (active) setFailure(cause instanceof Error ? cause.message : 'The picture could not be opened.'); });
+    return () => { active = false; };
+  }, [file,kind]);
   const measurement = preferences?.measurementUnit === 'cm' ? 2.54 : 1;
   const unit = preferences?.measurementUnit === 'cm' ? 'cm' : 'inches';
   const leftLabel = `Left (${unit}):`, rightLabel = `Right (${unit}):`, tabLabel = `Tab stop (${unit}):`;
@@ -112,8 +121,8 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
         const result = await engine.api.images.list({});
         if (!active) return;
         setPictures(result.items);
-        const image = result.items.at(-1);
-        if (image) loadPicture(image);
+        const image = result.items.find(image => image.sdImageId === selectedPictureId) || result.items.at(-1);
+        if (image) loadPicture(await engine.api.images.get({ imageId: image.sdImageId }));
       } else if (kind === 'tableformat') {
         const context = await engine.ui!.tables.getContextAsync();
         if (!context.tableNodeId) return;
@@ -127,9 +136,17 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
   }, [kind, engine]);
   function loadPicture(image: typeof pictures[number]) {
     setPictureId(image.sdImageId); setWidth(image.properties.size?.width || 320); setHeight(image.properties.size?.height || 200);
+    setText(image.properties.description || image.properties.alt || '');
     const flags = image.properties as typeof image.properties & { inline?: boolean };
-    setWrap(flags.placement === 'floating' || flags.inline === false ? image.properties.wrap?.type === 'TopAndBottom' ? 'topAndBottom' : 'square' : 'inline');
-    setCrop((image.properties.crop?.left || 0) * 100); setLockAnchor(false); changed.current.clear();
+    setWrap(flags.placement === 'floating' || flags.inline === false ? image.properties.wrap?.type === 'TopAndBottom' ? 'topAndBottom' : image.properties.wrap?.type === 'None' ? 'none' : 'square' : 'inline');
+    setCrop({left:image.properties.crop?.left||0,right:image.properties.crop?.right||0,top:image.properties.crop?.top||0,bottom:image.properties.crop?.bottom||0}); setLockAnchor(false); changed.current.clear();
+  }
+  async function choosePicture(id: string) {
+    if (!engine) return;
+    const request = ++pictureRequest.current; setLoading(true); setFailure('');
+    try { const image = await engine.api.images.get({ imageId:id }); if (request === pictureRequest.current) loadPicture(image); }
+    catch (cause) { if (request === pictureRequest.current) setFailure(cause instanceof Error ? cause.message : 'The picture could not be opened.'); }
+    finally { if (request === pictureRequest.current) setLoading(false); }
   }
   const change = (key: string, action: () => void) => { changed.current.add(key); action(); };
   const has = (key: string) => changed.current.has(key);
@@ -146,7 +163,9 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
     if (invalid) { invalid.reportValidity(); return; }
     latest.current.pending = true; setPending(true); setFailure('');
     try {
-      if (capture && !['comment','style'].includes(kind)) engine.restore(capture);
+      // These operations use explicit captured targets. Restoring UI selection
+      // here can race the native paragraph transaction's revision check.
+      if (capture && !['comment','style','pictureformat','font','paragraph'].includes(kind)) engine.restore(capture);
       root.current?.focus({ preventScroll: true });
       const target = capture?.selectionTarget || engine.ui?.selection.current()?.selectionTarget;
       if (kind === 'font') {
@@ -165,7 +184,10 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
         if (has(tabLabel)) operations.push({ operationId: 'format.paragraph.setTabStop', input: { position: tabStop * 1440, alignment: 'left' } });
         if (shading) operations.push({ operationId: 'format.paragraph.setShading', input: { fill: shading.replace('#','') } });
         if (border) operations.push({ operationId: 'format.paragraph.setBorder', input: { side: 'bottom', style: 'single', color: '000000', size: 8 } });
-        if (operations.length) await engine.invoke('format.paragraph.applyBatch', { targets, operations });
+        // A single indentation edit needs one native setter, rather than a
+        // batch plan that can conflict with formatting-mark view hydration.
+        if (targets.length===1&&operations.length===1&&operations[0].operationId==='format.paragraph.setIndentation') await engine.invoke('format.paragraph.setIndentation',{target:targets[0],...operations[0].input});
+        else if (operations.length) await engine.invoke('format.paragraph.applyBatch', { targets, operations });
       } else if (kind === 'style') {
         const patch = { ...(has('Size:') && { fontSize: size * 2 }), ...(has('bold') && { bold }), ...(has('italic') && { italic }), ...(has('strike') && { strike }), ...(has('font') && { fontFamily: { ascii: font, hAnsi: font } }), ...(has('color') && { color: { val: color.replace('#','') } }), ...(has('underline') && { underline: { val: underline ? 'single' : 'none' } }) };
         if (Object.keys(patch).length) await engine.invoke('styles.apply', { target: { scope: 'style', styleId: style, channel: 'run' }, patch });
@@ -173,28 +195,29 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
         await engine.command('table-insert', { rows: Math.min(100, Math.max(1, rows)), columns: Math.min(20, Math.max(1, columns)) }); setRibbonTab('Table Layout');
       } else if (kind === 'picture') {
         if (!file) throw new Error('Choose an image first.');
-        if (!['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(file.type)) throw new Error('Choose a PNG, JPEG, WebP, or GIF image.');
-        if (file.size > 8 * 1024 * 1024) throw new Error('Choose an image smaller than 8 MB.');
-        const src = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
-        await engine.command('image', { src, alt: text || file.name, size: { width, height } });
-        if (preferences?.defaultPictureWrap && preferences.defaultPictureWrap !== 'inline') {
-          const image = (await engine.api.images.list({})).items.at(-1);
-          if (image) { assertReceipt(await engine.api.images.convertToFloating({ imageId: image.sdImageId })); assertReceipt(await engine.api.images.setWrapType({ imageId: image.sdImageId, type: preferences.defaultPictureWrap === 'square' ? 'Square' : 'TopAndBottom' })); }
-        }
+        const id = await insertPicture(engine,file,{ alt:text || file.name,width:has('Width (px):') ? width : undefined,height:has('Height (px):') ? height : undefined,wrap:preferences?.defaultPictureWrap });
+        selectPicture?.(id);
         setRibbonTab('Picture Format');
       } else if (kind === 'pictureformat') {
         const images = await engine.api.images.list({});
-        const image = images.items.find(image => image.sdImageId === pictureId) || images.items.at(-1);
+        const summary = images.items.find(image => image.sdImageId === pictureId);
+        const image = summary && await engine.api.images.get({ imageId: summary.sdImageId });
         if (!image) throw new Error('Insert a picture first.');
         const imageId = image.sdImageId;
         if (has('wrap')) {
           if (wrap === 'inline') assertReceipt(await engine.api.images.convertToInline({ imageId }));
-          else { assertReceipt(await engine.api.images.convertToFloating({ imageId })); assertReceipt(await engine.api.images.setWrapType({ imageId, type: wrap === 'square' ? 'Square' : 'TopAndBottom' })); }
+          else { if(image.properties.placement!=='floating')assertReceipt(await engine.api.images.convertToFloating({ imageId })); assertReceipt(await engine.api.images.setWrapType({ imageId, type: wrap === 'square' ? 'Square' : wrap === 'none' ? 'None' : 'TopAndBottom' })); }
         }
         if (has('lockAnchor') && wrap !== 'inline') assertReceipt(await engine.api.images.setAnchorOptions({ imageId, options: { lockAnchor } }));
+        if (has('pictureAlt')) assertReceipt(await engine.api.images.setAltText({ imageId,description:text }));
         // The engine requires both dimensions. Preserve the untouched dimension from the fresh image read.
         if (has('Width (px):') || has('Height (px):')) assertReceipt(await engine.api.images.setSize({ imageId, size: { width: has('Width (px):') ? width : image.properties.size?.width || width, height: has('Height (px):') ? height : image.properties.size?.height || height } }));
-        if (has('Crop each side (%):')) assertReceipt(await engine.api.images.crop({ imageId, crop: { left: crop / 100, right: crop / 100, top: crop / 100, bottom: crop / 100 } }));
+        const sides = ['left','right','top','bottom'] as const;
+        if (sides.some(side=>has(`Crop ${side} (%)`))) {
+          const next = Object.fromEntries(sides.map(side=>[side,has(`Crop ${side} (%)`)?crop[side]:image.properties.crop?.[side]||0])) as typeof crop;
+          if(next.left+next.right>=100||next.top+next.bottom>=100)throw new Error('Keep some of the picture visible between opposite crop edges.');
+          assertReceipt(await engine.api.images.crop({ imageId,crop:next }));
+        }
       } else if (kind === 'link') {
         const url = new URL(href);
         if (!['https:','http:','mailto:'].includes(url.protocol)) throw new Error('Use an https, http, or mailto link.');
@@ -244,7 +267,7 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
     {kind === 'paragraph' && <>{paragraphCount > 1 && <p className="wr-selection-note">{paragraphCount} selected paragraphs. Only settings you change will be applied.</p>}<div className="wr-dialog-tabs">{['Indents and Spacing','Line and Page Breaks'].map(t => <button key={t} className={(tab || 'Indents and Spacing') === t ? 'selected' : ''} onClick={() => setTab(t)}>{t}</button>)}</div>{tab !== 'Line and Page Breaks' ? <><fieldset><legend>General</legend>{label('Alignment:', <select value={align} onChange={e => change('align', () => setAlign(e.target.value))}>{['left','center','right','justify'].map(v => <option key={v}>{v}</option>)}</select>)}</fieldset><fieldset><legend>Indentation</legend>{number(leftLabel, Number((indent*measurement).toFixed(3)), value => setIndent(value/measurement), 0, 8*measurement, .01)}{number(rightLabel, Number((rightIndent*measurement).toFixed(3)), value => setRightIndent(value/measurement), 0, 8*measurement, .01)}{number(tabLabel, Number((tabStop*measurement).toFixed(3)), value => setTabStop(value/measurement), 0, 8*measurement, .01)}</fieldset><fieldset><legend>Spacing</legend><div className="wr-form-grid">{number('Before (pt):', before, setBefore, 0, 1584)}{number('After (pt):', after, setAfter, 0, 1584)}{number('Line spacing:', line, setLine, .5, 10, .05)}</div></fieldset></> : <fieldset><legend>Pagination</legend><div className="wr-stack-checks"><label><input type="checkbox" checked={widow} onChange={e => change('widow', () => setWidow(e.target.checked))}/>Widow/Orphan control</label><label><input type="checkbox" checked={keepNext} onChange={e => change('keepNext', () => setKeepNext(e.target.checked))}/>Keep with next</label><label><input type="checkbox" checked={pageBreak} onChange={e => change('pageBreak', () => setPageBreak(e.target.checked))}/>Page break before</label></div></fieldset>}<fieldset><legend>Preview</legend><div className="wr-paragraph-preview"><i/><i/><i/><i/></div></fieldset></>}
     {kind === 'style' && <>{label('Style:', <select value={style} onChange={e => setStyle(e.target.value)}>{[['Normal','Normal'],['NoSpacing','No Spacing'],['Heading1','Heading 1'],['Heading2','Heading 2'],['Title','Title']].map(([id,name]) => <option key={id} value={id}>{name}</option>)}</select>)}<p>Changes apply to all paragraphs using this style.</p>{fontControls}</>}
     {kind === 'table' && <><fieldset><legend>Table size</legend>{number('Number of columns:', columns, setColumns, 1, 20)}{number('Number of rows:', rows, setRows, 1, 100)}</fieldset><fieldset><legend>AutoFit behavior</legend><label><input type="radio" checked readOnly/>Fixed column width: Auto</label></fieldset></>}
-    {(kind === 'picture' || kind === 'pictureformat') && <>{kind === 'picture' ? <>{label('Image file:', <input type="file" aria-label="Picture file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={e => setFile(e.target.files?.[0] || null)}/>)}{label('Alt text:', <input value={text} onChange={e => setText(e.target.value)}/>)}</> : <>{label('Picture:', <select aria-label="Picture to format" value={pictureId} onChange={e => { const image = pictures.find(image => image.sdImageId === e.target.value); if (image) loadPicture(image); }}>{pictures.map((picture,index) => <option key={picture.sdImageId} value={picture.sdImageId}>{index+1}. {picture.properties.description || picture.properties.name || 'Picture'}</option>)}</select>)}{label('Text wrapping:', <select aria-label="Text wrapping" value={wrap} onChange={e => change('wrap', () => setWrap(e.target.value))}><option value="inline">In Line with Text</option><option value="square">Square</option><option value="topAndBottom">Top and Bottom</option></select>)}{number('Crop each side (%):', crop, setCrop, 0, 45)}<label><input type="checkbox" checked={lockAnchor} onChange={e => change('lockAnchor', () => setLockAnchor(e.target.checked))}/>Lock floating picture anchor</label></>}<div className="wr-form-grid">{number('Width (px):', width, setWidth, 1, 2000)}{number('Height (px):', height, setHeight, 1, 2000)}</div></>}
+    {(kind === 'picture' || kind === 'pictureformat') && <>{kind === 'picture' ? <>{label('Image file:', <input type="file" aria-label="Picture file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={e => setFile(e.target.files?.[0] || null)}/>)}{label('Alt text:', <input value={text} onChange={e => setText(e.target.value)}/>)}</> : <>{label('Picture:', <select aria-label="Picture to format" value={pictureId} onChange={e => void choosePicture(e.target.value)}>{pictures.map((picture,index) => <option key={picture.sdImageId} value={picture.sdImageId}>{index+1}. {picture.properties.name || picture.properties.description || 'Picture'}</option>)}</select>)}{label('Alt text:',<input aria-label="Picture alt text" value={text} onChange={event=>change('pictureAlt',()=>setText(event.target.value))}/>)}{label('Text wrapping:', <select aria-label="Text wrapping" value={wrap} onChange={e => change('wrap', () => setWrap(e.target.value))}><option value="inline">In Line with Text</option><option value="square">Square</option><option value="topAndBottom">Top and Bottom</option><option value="none">No text wrapping</option></select>)}<fieldset><legend>Crop</legend><div className="wr-form-grid">{(['left','right','top','bottom'] as const).map(side=>label(`Crop ${side} (%)`,<input type="number" aria-label={`Crop ${side} (%)`} value={crop[side]} min={0} max={99.999} step="any" onChange={event=>change(`Crop ${side} (%)`,()=>setCrop(previous=>({...previous,[side]:Number(event.target.value)})))}/>))}</div></fieldset><label><input type="checkbox" checked={lockAnchor} onChange={e => change('lockAnchor', () => setLockAnchor(e.target.checked))}/>Lock floating picture anchor</label></>}<div className="wr-form-grid">{number('Width (px):', width, setWidth, 1, 2000)}{number('Height (px):', height, setHeight, 1, 2000)}</div></>}
     {kind === 'tableformat' && <><p>Column width applies to the column containing the current cell.</p>{number('Column width (pt):', width, setWidth, 12, 600)}<label><input type="checkbox" checked={repeatHeader} onChange={e => change('repeatHeader', () => setRepeatHeader(e.target.checked))}/> Repeat first row as header</label></>}
     {kind === 'link' && <>{label('Text to display:', <input value={text} onChange={e => setText(e.target.value)} placeholder={capture?.quotedText || 'Link text'}/>)}{label('Address:', <input aria-label="Link address" value={href} onChange={e => setHref(e.target.value)}/>)}</>}
     {['comment','header','footer','footnote','endnote'].includes(kind) && <>{kind === 'comment' && <blockquote>{capture?.quotedText || 'Select document text before adding a comment.'}</blockquote>}{kind === 'header' || kind === 'footer' ? <p>Add a {kind} to the first section. Text is appended to existing {kind} content.</p> : null}<textarea aria-label={`${title} text`} autoFocus rows={4} value={text} onChange={e => setText(e.target.value)} placeholder={kind === 'comment' ? 'Mention or comment…' : 'Enter text…'}/></>}
@@ -255,7 +278,7 @@ export function WriterDialog({ readOnly = false, preferences, kind, engine, snap
     {kind === 'language' && <><p>Proofing language: English (United States)</p><p>A spelling and grammar service is not connected. Document language metadata is preserved on DOCX export.</p></>}
     {kind === 'mode' && <>{label('Mode:', <select value={wrap === 'inline' ? 'editing' : wrap} onChange={e => change('wrap', () => setWrap(e.target.value))}><option value="editing" disabled={readOnly}>Editing</option><option value="suggesting" disabled={readOnly}>Reviewing — Track Changes</option><option value="viewing">Viewing</option></select>)}</>}
     {kind === 'account' && <><p><strong>LopeOS Account</strong></p><p>Sign in through Settings → LopeOS Account for 1 GB of free storage. Your saved documents, preferences, and recovery drafts sync automatically. Open LopeDrive in Files to see sync progress.</p></>}{kind === 'share' && <><p><strong>Share a document copy</strong></p><p>Download a DOCX copy from File → Export to share it. Account sync keeps your own devices up to date; live collaboration is not connected.</p></>}
-    {kind === 'about' && <><div className="wr-about"><FileText size={40}/><div><h3>LopeOS Writer</h3><p>Version 0.1.0 • Document engine: SuperDoc 2.30.0</p></div></div><p>SuperDoc’s UI is AGPL-3.0; its DOCX Engine has a separate proprietary license.</p></>}
+    {kind === 'about' && <><div className="wr-about"><AppIcon name="writer" size={40}/><div><h3>LopeOS Quill</h3><p>Version 0.1.0 • Document engine: SuperDoc 2.30.0</p></div></div><p>SuperDoc’s UI is AGPL-3.0; its DOCX Engine has a separate proprietary license.</p></>}
     {kind === 'help' && <><p>Use the Home ribbon for formatting, Insert for tables and pictures, and Review for comments and tracked changes.</p><dl className="wr-statistics"><dt>Save</dt><dd>Ctrl / ⌘ S</dd><dt>Find</dt><dd>Ctrl / ⌘ F</dd><dt>Link</dt><dd>Ctrl / ⌘ K</dd><dt>Collapse ribbon</dt><dd>Ctrl / ⌘ F1</dd><dt>Ribbon focus</dt><dd>F6</dd></dl><p>Commands that require a connected service are unavailable. Hover a disabled command for its availability reason.</p></>}
     {kind === 'clipboard' && <p>Use Ctrl/⌘ C, X, and V inside the document for rich clipboard content. Ribbon clipboard controls use text and require browser clipboard permission.</p>}
     {['paragraph','tableformat'].includes(kind) && <fieldset><legend>Borders and Shading</legend>{label('Shading:', <select value={shading} onChange={e => setShading(e.target.value)}><option value="">Keep existing</option><option value="#FFFFFF">White</option><option value="#D9E2F3">Light blue</option><option value="#FFF2CC">Light yellow</option><option value="#E2EFDA">Light green</option></select>)}<label><input type="checkbox" checked={border} onChange={e => setBorder(e.target.checked)}/> {kind === 'paragraph' ? 'Apply bottom border' : 'Apply all borders'}</label></fieldset>}

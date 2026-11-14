@@ -1,0 +1,190 @@
+{
+  "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "date": "2026-11-13",
+  "method": "Per-file baseline SHA256 guard; only Lightroom/shared audit repairs and tests copied; unrelated concurrent work retained",
+  "conflicts": [],
+  "files": [
+    {
+      "path": "apps/web/src/apps/lightroom/backup.ts",
+      "beforeSha256": "19a36c7344fefea517acd7b51b8d8ace3a0291255ad3f941f5071bb1f8615717",
+      "afterSha256": "60835e95cd8164a201aadcccbb9a729108ddee81bcd333e7184f0deecd4d0057"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/controls.tsx",
+      "beforeSha256": "52eca1708fd63a4bf3f573d8d5c6f213582b11847bb585979efa1e5bc80c470c",
+      "afterSha256": "eb9bc60039b5359ceece18aaee544762e33c429793858e219749d31a8742c522"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/grid-layout.ts",
+      "beforeSha256": "c7a0683b2ce84dfff68498102a967038915c13122379ed444ba1f646cbe7fd7c",
+      "afterSha256": "194f3f4e136a03d5b178998af7882a2852af73e0ceca1208e57a764bfe4b80d4"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/index.tsx",
+      "beforeSha256": "d745671c2ce07f09881e5bc507bcf526a4ee83d342befa46e8dd34a5111b50b8",
+      "afterSha256": "c371810c5b25e300b6c8a0c535dba2d831ca558578614a7f871857bf13217335"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/library.ts",
+      "beforeSha256": "569fe5d40542929f7b29740585baf2f8f30ff2edc2104e8aa90aac4e9604d5ba",
+      "afterSha256": "0712188c3a8c3e01f4a33ce1648402bfad398d0254f9c9f83a1c06624ef28968"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/lightroom.css",
+      "beforeSha256": "daf64a431105440be265bd937febd2cda414d4883aadc50c9e9f6c3eb8036fc3",
+      "afterSha256": "a2880bcdd44e9aa0facb4840716a6a60ab829f721f94ddf656284e10c54bfaf0"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/mask-outline.ts",
+      "beforeSha256": null,
+      "afterSha256": "382697d4527b0fdf81089e6c5897b5daefd8be9a372c4fabe414894065d9c7ab"
+    },
+    {
+      "path": "apps/web/src/apps/lightroom/viewport.tsx",
+      "beforeSha256": "3b4157c9ac28ab8284a5e0a2a7b129a066180b8c2f95cf1738c576faca33fc17",
+      "afterSha256": "4d41d0fef78535afcfa41f99d5df96e371218c3170dd9bd891ffaabf9e1740c5"
+    },
+    {
+      "path": "apps/web/src/shell/Shell.tsx",
+      "beforeSha256": "e1f9af32b73a458d976a2fd113a7a59a70dd388fd3dde82999d1d45bee584f3e",
+      "afterSha256": "c6cb1ebf3af8c63d3ab7c6157886cc2174205ee4a8551e47608a94cbc029938a"
+    },
+    {
+      "path": "docs/lightroom/README.md",
+      "beforeSha256": "d2b31f0007052fe0b99098882a9ec51dbddebcec8604112f4c4f1b5bd99a20cb",
+      "afterSha256": "204e161259b55248dc9fe1da1404c9eccb7b26ee6e927ad94baba2b0f0758159"
+    },
+    {
+      "path": "packages/photo-engine/src/png.ts",
+      "beforeSha256": "0ce181932d7ede3fdf17eb3ac505889e70df9f9bd76b5862da87fd1aabcbfef9",
+      "afterSha256": "9b2f5891a787c8813c532046445a7d13d8c9004c5afc5c8e374166bd3dec399a"
+    },
+    {
+      "path": "packages/photo-engine/src/tiff.ts",
+      "beforeSha256": "06d23dab3671c4e208452ddf3ae751b35021f81f40af3115993e1d5e5ef3a313",
+      "afterSha256": "8d3f3b54c7a41594e72d2a01938008d196f4b34fee488439cd3397a9b16b3e03"
+    },
+    {
+      "path": "tests/lightroom/audit-probe.mjs",
+      "beforeSha256": null,
+      "afterSha256": "a24905ad367215d9dcc1d1b387857214b1795a0e8dffd0f8ec027717d701a206"
+    },
+    {
+      "path": "tests/lightroom/browser.mjs",
+      "beforeSha256": "d6e01e17ea75228230519dcc43e6fd72a34a34188e81f3d0f090e237ceb923ad",
+      "afterSha256": "8d9b62f1c9386d775504ab65319821f60b1ec40aa96cffe8081fb4049334bb6f"
+    },
+    {
+      "path": "tests/lightroom/controls-audit.mjs",
+      "beforeSha256": null,
+      "afterSha256": "7d321e09c2b9ea81cc6b87bb7feda05ca2101b12ade678f18ec8139bbc5fe3c4"
+    },
+    {
+      "path": "tests/lightroom/controls-harness.html",
+      "beforeSha256": null,
+      "afterSha256": "d73213a12ca597e92ac4a0ba01632ddcd564a233a01b92138e4434cb0aebd8a9"
+    },
+    {
+      "path": "tests/lightroom/controls-harness.tsx",
+      "beforeSha256": null,
+      "afterSha256": "5bb58b0b4d949a707e6579d9ff159043d5b0a6b500dbd4923f981e6793acd06e"
+    },
+    {
+      "path": "tests/lightroom/controls-integration.mjs",
+      "beforeSha256": null,
+      "afterSha256": "46618c72b939ee5dfdff9cdfff5e1e78410afa6a9b70a446c0cdfcf11f53805a"
+    },
+    {
+      "path": "tests/lightroom/denoise-browser.mjs",
+      "beforeSha256": "52009c6e5fe6b664544b55a0c00c15d562b0c6bc019cc5f15a225bbf83223a3c",
+      "afterSha256": "43ce3af72fd1c67b4ae1e58330a0fc0f525d3bc03ebf6091e0e48f62e342bce1"
+    },
+    {
+      "path": "tests/lightroom/handoff.tsx",
+      "beforeSha256": "545fe770d4d9f7e4057db1771bce4cae11cb9c788bbc4470b1cf59a92d24b1a7",
+      "afterSha256": "b37eb9940f3ffc7d3266ad6c8e536c94ba84eaa35bc0e772785fa1c896ed08d9"
+    },
+    {
+      "path": "tests/lightroom/production.mjs",
+      "beforeSha256": "da747622079c479e6be337feeafae7e83a2e03a2f0646837334d5b21cd439b98",
+      "afterSha256": "55e058c517e8aca4ce55e54f8db66634b551a8351938c7deb6a555be08d3e3b4"
+    },
+    {
+      "path": "tests/lightroom/release-codec-fixtures.ts",
+      "beforeSha256": null,
+      "afterSha256": "7e213301e25f06af31f67d6a98eb5c222a18136431e3aebe4425c4a78d2c6fcb"
+    },
+    {
+      "path": "tests/lightroom/release-codec-reader.py",
+      "beforeSha256": null,
+      "afterSha256": "90bdcd345d23a96ec0ae5d395c17dcdb656d7a48ea38dbd7f89cbca3dfb6d8f9"
+    },
+    {
+      "path": "tests/lightroom/release-codec-worker.mjs",
+      "beforeSha256": null,
+      "afterSha256": "9b9bb0ad73d320bf79b70d80bb5df2ab50fb7e845b3880b47a63086e39e0aeed"
+    },
+    {
+      "path": "tests/lightroom/release-codec.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "722459849a825668673f835909faf46d5338fe668491c5f116033dd2c2c01804"
+    },
+    {
+      "path": "tests/lightroom/release-data.mjs",
+      "beforeSha256": null,
+      "afterSha256": "c136c07e938cbdc5a7c0c9a5756ac9208910f38139b15374cbb1cbaba97ad5b2"
+    },
+    {
+      "path": "tests/lightroom/release-details.mjs",
+      "beforeSha256": null,
+      "afterSha256": "81b8788601ac4c9c6959d578d4b622795874e4f0ae86c8240268c0d26c558171"
+    },
+    {
+      "path": "tests/lightroom/release-handoff-reader.py",
+      "beforeSha256": null,
+      "afterSha256": "f075fe89f4cbabb2eb067db4462b19a855ed452b1bb2dffcc507f28bf903d465"
+    },
+    {
+      "path": "tests/lightroom/release-handoff.mjs",
+      "beforeSha256": null,
+      "afterSha256": "f39d969cc951ecd025151169e5c958d48dc0dcd6150e13716da26f8dce6b7c7b"
+    },
+    {
+      "path": "tests/lightroom/release-regressions.mjs",
+      "beforeSha256": null,
+      "afterSha256": "5d4b510b36d642c49e674c6861015b17ff04f28a7c268fe18fd249c8c0409231"
+    },
+    {
+      "path": "tests/lightroom/release-ui.mjs",
+      "beforeSha256": null,
+      "afterSha256": "729e16e7f8ce0a17e563571743eb5390d4cd202df2dd04d144b8f8e93f33b5c9"
+    },
+    {
+      "path": "tests/lightroom/vite.audit.config.ts",
+      "beforeSha256": null,
+      "afterSha256": "2c20a665f9259f87d30bd575b90a7c8bd573aaa5aee1807acba775021ee4dc88"
+    }
+  ],
+  "workspaceTypecheck": {
+    "result": "FAILED",
+    "evidence": "evidence/workspace-integration-typecheck.log",
+    "errors": [
+      {
+        "file": "apps/web/src/apps/movie-maker/index.tsx",
+        "line": 123,
+        "diagnostic": "TS1005: '}' expected"
+      },
+      {
+        "file": "apps/web/src/apps/spreadsheet/index.tsx",
+        "line": 73,
+        "diagnostic": "TS1005: '}' expected"
+      }
+    ],
+    "scope": "Concurrent new application edits in shared workspace; absent from isolated tested candidate, intentionally preserved."
+  },
+  "artifactVerification": {
+    "result": "PASS",
+    "files": 112,
+    "sha256": "e335772008336e6aa32e3bef08dacbacc0b558e76f6a6be14ba2183347871af3"
+  }
+}

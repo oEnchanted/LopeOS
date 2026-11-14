@@ -1,0 +1,113 @@
+
+> lopeos@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+[33m[PLUGIN_TIMINGS] [0mJavaScript callbacks ran for 2.5s of this 3.3s build (77%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin vite:worker-import-meta-url transform (77%, 2.5s, 1 call)
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+[33m[PLUGIN_TIMINGS] [0mJavaScript callbacks ran for 2.5s of this 3.3s build (78%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin vite:worker-import-meta-url transform (77%, 2.5s, 1 call)
+Additional callback time came from callbacks under 1s.
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+✓ 2431 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                 0.95 kB │ gzip:     0.52 kB
+dist/assets/portrait.worker-BpVUlAII.js                        34.33 kB
+dist/assets/libraw-Cm6KFyZe.js                                 68.17 kB
+dist/assets/worker-BZtgTZAf.js                                 68.61 kB
+dist/assets/worker-B_2WWifo.js                                344.99 kB
+dist/assets/denoise-worker-COryL2hF.js                        360.70 kB
+dist/assets/worker-BtFVJZrj.js                                370.92 kB
+dist/assets/docx-zip-worker-l0YjwXZp-BtxuvU0z.js              554.87 kB
+dist/assets/libraw-CKnqEbQ6.wasm                            1,417.72 kB │ gzip:   492.23 kB
+dist/assets/worker-DSVPrT54.js                              6,140.95 kB
+dist/assets/LocalAiDialog-arO4n79o.css                          4.17 kB │ gzip:     1.00 kB
+dist/assets/SetupAssistant-Bns3ox2Y.css                         4.34 kB │ gzip:     1.14 kB
+dist/assets/files-9NivzrZg.css                                  4.83 kB │ gzip:     1.36 kB
+dist/assets/AccountPanel-D6BTAoIk.css                          10.74 kB │ gzip:     2.42 kB
+dist/assets/Shell-DqTFbzvR.css                                 10.74 kB │ gzip:     2.59 kB
+dist/assets/weather-BLZcp7CI.css                               14.36 kB │ gzip:     3.32 kB
+dist/assets/calculator-BD0CoScA.css                            16.18 kB │ gzip:     3.23 kB
+dist/assets/Browser-DUAnM8WV.css                               20.83 kB │ gzip:     4.83 kB
+dist/assets/settings-GA8JB-nB.css                              26.66 kB │ gzip:     5.86 kB
+dist/assets/application-DF6JuJ-G.css                           27.80 kB │ gzip:     5.19 kB
+dist/assets/lightroom-Dqq7wdsI.css                             39.92 kB │ gzip:     8.50 kB
+dist/assets/image-editor-gAkIYgvD.css                          49.91 kB │ gzip:     8.95 kB
+dist/assets/index-BNYRiNsz.css                                117.22 kB │ gzip:    23.10 kB
+dist/assets/writer-CTzzztby.css                               220.39 kB │ gzip:    38.31 kB
+dist/assets/pdf-DJSSz72k.js                                     0.13 kB │ gzip:     0.13 kB
+dist/assets/docx-engine-CbLT9dH4.js                             0.13 kB │ gzip:     0.13 kB
+dist/assets/docx-engine-DW2ZAA80.js                             0.13 kB │ gzip:     0.13 kB
+dist/assets/chevron-down-CDMinf9e.js                            0.16 kB │ gzip:     0.15 kB
+dist/assets/chevron-up-8BTvAL2l.js                              0.16 kB │ gzip:     0.16 kB
+dist/assets/arrow-down-O6enCfqh.js                              0.19 kB │ gzip:     0.18 kB
+dist/assets/crop-QISs7kTJ.js                                    0.21 kB │ gzip:     0.18 kB
+dist/assets/info-CRMY_LOV.js                                    0.23 kB │ gzip:     0.19 kB
+dist/assets/columns-2-DILj_-Ce.js                               0.23 kB │ gzip:     0.21 kB
+dist/assets/upload-DBkfg7zi.js                                  0.26 kB │ gzip:     0.21 kB
+dist/assets/message-square-BLGw9Gdd.js                          0.26 kB │ gzip:     0.22 kB
+dist/assets/grid-2x2-DzMFzoDQ.js                                0.27 kB │ gzip:     0.22 kB
+dist/assets/external-link-BaDlaWGV.js                           0.28 kB │ gzip:     0.22 kB
+dist/assets/settings-2-BnxzLfCF.js                              0.28 kB │ gzip:     0.21 kB
+dist/assets/ellipsis-GNkDX4pj.js                                0.28 kB │ gzip:     0.20 kB
+dist/assets/lock-keyhole-CwthmedL.js                            0.28 kB │ gzip:     0.24 kB
+dist/assets/rotate-ccw-clock-C9m7GgF_.js                        0.29 kB │ gzip:     0.24 kB
+dist/assets/image-i6wDKmLs.js                                   0.30 kB │ gzip:     0.24 kB
+dist/assets/list-D9FJBdE_.js                                    0.33 kB │ gzip:     0.21 kB
+dist/assets/shield-check-CTyPXdii.js                            0.35 kB │ gzip:     0.27 kB
+dist/assets/accessibility-t_iViTSF.js                           0.37 kB │ gzip:     0.26 kB
+dist/assets/palette-OcHdBwEA.js                                 0.54 kB │ gzip:     0.30 kB
+dist/assets/list-ordered-BToc4ih9.js                            0.60 kB │ gzip:     0.33 kB
+dist/assets/star-eMISuPlj.js                                    0.67 kB │ gzip:     0.39 kB
+dist/assets/undo-2-SoUAPIFj.js                                  0.69 kB │ gzip:     0.37 kB
+dist/assets/save-D5eLZ5n7.js                                    0.70 kB │ gzip:     0.37 kB
+dist/assets/earth-C8HsezBo.js                                   0.70 kB │ gzip:     0.41 kB
+dist/assets/wand-sparkles-CTrrJQRf.js                           1.02 kB │ gzip:     0.50 kB
+dist/assets/hooks-DzVjRDU9.js                                   1.33 kB │ gzip:     0.74 kB
+dist/assets/type-K6sOKL1K.js                                    1.45 kB │ gzip:     0.69 kB
+dist/assets/manifest-7iQyGq1w.js                                1.73 kB │ gzip:     0.82 kB
+dist/assets/cache-FpJ-sUTN.js                                   2.15 kB │ gzip:     1.13 kB
+dist/assets/PasswordPromptSurface-DjV1JgjD.es-YM2c9p6y.js       2.40 kB │ gzip:     1.01 kB
+dist/assets/denoise-cache-CkzRdpnU.js                           2.91 kB │ gzip:     1.41 kB
+dist/assets/LocationPicker-CDx4TrDb.js                          3.36 kB │ gzip:     1.49 kB
+dist/assets/Welcome-CNaKYSGX.js                                 4.98 kB │ gzip:     1.76 kB
+dist/assets/store-D4RF_UrH.js                                   8.18 kB │ gzip:     3.32 kB
+dist/assets/settings-BNATglgz.js                                8.28 kB │ gzip:     3.32 kB
+dist/assets/FindReplaceSurface-BEnRLpD9.es-DY7hCbFJ.js          8.35 kB │ gzip:     2.28 kB
+dist/assets/PdfViewer-C2r-K8zC.es-DDD5lwbS.js                   8.64 kB │ gzip:     3.26 kB
+dist/assets/react-Dk7jysz-.js                                   8.92 kB │ gzip:     3.46 kB
+dist/assets/text-editor-Bk9UyNLV.js                            12.56 kB │ gzip:     4.46 kB
+dist/assets/weather-Cwz-Eoic.js                                16.58 kB │ gzip:     5.25 kB
+dist/assets/LocalAiDialog-B20f19F3.js                          19.79 kB │ gzip:     7.44 kB
+dist/assets/AccountPanel-DB9Z9FmH.js                           23.04 kB │ gzip:     6.64 kB
+dist/assets/calculator-D39hfWlS.js                             26.85 kB │ gzip:     9.40 kB
+dist/assets/SetupAssistant-3n5kGUnV.js                         31.15 kB │ gzip:    10.01 kB
+dist/assets/files-oL5-_bL6.js                                  31.41 kB │ gzip:    10.05 kB
+dist/assets/Browser-DxoPesG3.js                                35.02 kB │ gzip:    11.00 kB
+dist/assets/settings-7ob9Y40l.js                               53.28 kB │ gzip:    16.66 kB
+dist/assets/lightroom-CA2iN4ih.js                             122.49 kB │ gzip:    36.89 kB
+dist/assets/Shell-czizEfWV.js                                 160.07 kB │ gzip:    50.82 kB
+dist/assets/index-DL-LZ9W_.js                                 345.09 kB │ gzip:   108.08 kB
+dist/assets/image-editor-D2CcJAN5.js                          500.18 kB │ gzip:   151.02 kB
+dist/assets/pdf.worker.min-t-CYmkGJ.es-BIB1aa7o.js          1,652.12 kB │ gzip:   557.73 kB
+dist/assets/writer-BECv5OCX.js                              1,762.95 kB │ gzip:   549.59 kB
+dist/assets/lib-HanPIAr0.js                                 5,943.46 kB │ gzip: 2,145.78 kB
+dist/assets/docx-engine.es-BeCV2bQM.js                     16,850.86 kB │ gzip: 7,668.62 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mpackages/sdk/src/accounts.ts is dynamically imported by packages/sdk/src/reset.ts but also statically imported by apps/web/src/accounts/AccountPanel.tsx, apps/web/src/backup/local-data.ts, apps/web/src/setup/FirstRun.tsx, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mpackages/sdk/src/preferences.ts is dynamically imported by packages/sdk/src/reset.ts but also statically imported by apps/web/src/accounts/data.ts, apps/web/src/apps/settings/index.tsx, apps/web/src/apps/weather/LocationPicker.tsx, apps/web/src/apps/writer/systemAppearance.ts, apps/web/src/setup/FirstRun.tsx, ..., dynamic import will not move module into another chunk.
+
+✓ built in 7.46s

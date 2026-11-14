@@ -1,0 +1,4 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["../../apps/web/src/apps/movie-maker", "../../packages/movie-maker", "../../packages/media-engine"]
+}

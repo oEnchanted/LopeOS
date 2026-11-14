@@ -1,0 +1,61 @@
+{
+  "engine": "chromium",
+  "base": "http://127.0.0.1:4192",
+  "ranAt": "2026-11-14T00:04:29.211Z",
+  "steps": [
+    {
+      "name": "Desktop boots under enforced + report-only policy",
+      "result": "PASS"
+    },
+    {
+      "name": "Launch Weather",
+      "result": "PASS"
+    },
+    {
+      "name": "Launch Files",
+      "result": "PASS"
+    },
+    {
+      "name": "Launch Lope Browser",
+      "result": "PASS"
+    },
+    {
+      "name": "Spotlight opens and searches",
+      "result": "FAIL",
+      "error": "expect(locator).toBeVisible() failed"
+    },
+    {
+      "name": "Settings wallpaper + appearance panes render",
+      "result": "PASS"
+    },
+    {
+      "name": "Control Center and notifications open",
+      "result": "FAIL",
+      "error": "locator.click: Timeout 30000ms exceeded."
+    }
+  ],
+  "enforced": {
+    "pageErrors": [],
+    "framedByForeignOrigin": {
+      "rendered": false,
+      "accessibleBody": "cross-origin (inaccessible)",
+      "console": [
+        "Framing 'http://127.0.0.1:4192/' violates the following Content Security Policy directive: \"frame-ancestors 'self'\". The request has been blocked.\n",
+        "Framing 'http://127.0.0.1:4192/' violates the following report-only Content Security Policy directive: \"frame-ancestors 'self'\". The violation has been logged, but no further action has been taken.\n"
+      ]
+    }
+  },
+  "reportOnly": {
+    "reportCount": 1,
+    "reports": [
+      {
+        "directive": "frame-ancestors",
+        "blocked": "http://127.0.0.1:4192/"
+      }
+    ]
+  },
+  "consoleIssues": [],
+  "externalHostsRequested": [
+    "api.open-meteo.com"
+  ]
+}

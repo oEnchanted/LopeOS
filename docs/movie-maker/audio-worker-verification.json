@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-13",
+  "passed": true,
+  "browser": "Playwright Chromium",
+  "maxError": 0,
+  "legacyMaxError": 0,
+  "sourceStillIntact": true,
+  "abortName": "AbortError",
+  "disposalName": "AbortError",
+  "webm": {
+    "duration": 3.013,
+    "width": 640,
+    "height": 360,
+    "videoCodec": "vp8",
+    "audioCodec": "opus",
+    "frameCount": 90,
+    "framesPerSecond": 30,
+    "audioPeak": 0.1964556872844696
+  }
+}

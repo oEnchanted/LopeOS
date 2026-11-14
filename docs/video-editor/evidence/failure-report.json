@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-14T00:00:56.068Z",
+  "checks": [
+    "Nested audio crossing a nonzero clip start",
+    "Frame hold produces silence",
+    "Quota failure preserves committed project",
+    "Missing media and matching checksum relink",
+    "Failed worker restarts for the next request",
+    "Square export preserves widescreen aspect ratio"
+  ],
+  "nestedError": 0,
+  "quotaPreservedSnapshot": true,
+  "missingMedia": true,
+  "matchingOriginalRelink": true,
+  "workerRecovered": true,
+  "frameHoldSilent": true,
+  "aspectFit": {
+    "barRed": 0,
+    "centerRed": 254
+  },
+  "passed": true
+}

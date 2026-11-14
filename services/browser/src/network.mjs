@@ -19,7 +19,7 @@ export async function publicDestination(host, port, { resolve = lookup, testOrig
   const addresses = await resolve(host.replace(/^\[|\]$/g, ''), { all: true, verbatim: true });
   const explicitTest = testOrigins.includes(`${host}:${port}`);
   if (!addresses.length || (!explicitTest && (![80, 443].includes(port) || addresses.some(item => !publicAddress(item.address))))) throw new Error('This network destination is unavailable.');
-  return { ...addresses[0], port };
+  return { ...(addresses.find(item => item.family === 4) ?? addresses[0]), port };
 }
 
 /** Public web egress for all tabs, workers, redirects and WebSockets. Pair with OS egress policy. */

@@ -1,5 +1,7 @@
 # LopeOS Lightroom
 
+**Latest release audit: NOT READY for publication.** The [November 13 final audit](release-audit/release-report.md) supersedes the earlier verification summary below. It includes the repaired candidate, guarded integration record, before/after evidence, production workflow results and unresolved identity-release blockers.
+
 Lightroom is the independent Lightroom-style photo library registered as `lope.lightroom`. Open **Lightroom** from the Dock, application search (which also matches “Lightroom”), or Files → File → Open With. It uses the existing LopeOS window frame, global commands, settings, file service, notifications, and session restoration. The photograph and its evaluation surround remain opaque neutral surfaces.
 
 This is a working local photo application, **not completed Lightroom 10.0 equivalence**. The full acceptance backlog remains in [the feature matrix](feature-matrix.json); unimplemented capabilities are explicitly unavailable in the app. No Adobe icons, sample photos, profiles, or screenshot assets are bundled in the product. The photographic examples are [public-domain Jon Sullivan photos](../../public/photos/credits.json).

@@ -100,6 +100,32 @@ try {
   }), { type: 'image/png', data: [137, 80, 78, 71, 255] });
   console.log('PASS second device restores files, settings, app preferences, Writer binary draft, and photo Blob');
 
+  async function setProfilePhoto(page, color) {
+    return page.evaluate(async color => {
+      const { prepareProfilePhoto } = await import('/apps/web/src/setup/photo.ts');
+      const canvas = document.createElement('canvas'); canvas.width = 480; canvas.height = 320;
+      const context = canvas.getContext('2d'); context.fillStyle = color; context.fillRect(0, 0, canvas.width, canvas.height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      const picture = await prepareProfilePhoto(new File([blob], 'profile.png', { type: 'image/png' }));
+      window.accountTest.preferences.set('accountProfilePicture', picture);
+      await window.accountTest.cloudAccount.syncNow();
+      return picture;
+    }, color);
+  }
+  const firstPicture = await setProfilePhoto(a, '#c75478');
+  assert.ok(firstPicture.startsWith('data:image/jpeg;base64,'));
+  await b.evaluate(() => window.accountTest.cloudAccount.syncNow());
+  assert.equal(await b.evaluate(() => window.accountTest.preferences.get('accountProfilePicture', null)), firstPicture);
+  assert.equal(await b.evaluate(() => JSON.parse(localStorage.getItem('lope.profile.v1')).accountProfilePicture), firstPicture);
+  const secondPicture = await setProfilePhoto(b, '#2777ac');
+  assert.notEqual(firstPicture, secondPicture);
+  await a.evaluate(() => window.accountTest.cloudAccount.syncNow());
+  assert.equal(await a.evaluate(() => window.accountTest.preferences.get('accountProfilePicture', null)), secondPicture);
+  await a.evaluate(async () => { window.accountTest.preferences.set('accountProfilePicture', null); await window.accountTest.cloudAccount.syncNow(); });
+  await b.evaluate(() => window.accountTest.cloudAccount.syncNow());
+  assert.equal(await b.evaluate(() => window.accountTest.preferences.get('accountProfilePicture', 'missing')), null);
+  console.log('PASS profile pictures upload, replace, and remove across encrypted account sessions');
+
   await b.evaluate(async () => { await window.accountTest.drive.write('/LopeDrive/Documents/hello.txt', 'second device'); await window.accountTest.cloudAccount.syncNow(); });
   await a.evaluate(() => window.accountTest.cloudAccount.syncNow());
   assert.equal(await a.evaluate(async () => (await window.accountTest.drive.read('/LopeDrive/Documents/hello.txt')).content), 'second device');

@@ -1,0 +1,12 @@
+{
+  "name": "@lopeos/media-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@mediabunny/aac-encoder": "1.66.0",
+    "@wasm-audio-decoders/aac": "0.0.1",
+    "mediabunny": "1.66.0"
+  }
+}

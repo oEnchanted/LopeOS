@@ -1,0 +1,8 @@
+.lope-image-editor .ie-audit-dropdown {
+  position: absolute;
+  display: block;
+  max-height: calc(100% - 8px);
+  max-width: calc(100% - 8px);
+  overflow: auto;
+  z-index: 45;
+}

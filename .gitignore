@@ -4,6 +4,7 @@ dist/
 .accounts-data/
 workspace/
 .browser-data/
+.browser-host/
 services/browser/.data/
 services/browser/.profiles/
 test-results/
@@ -14,3 +15,8 @@ tests/integration/tests/
 .DS_Store
 
 Caddyfile.windows.generated
+
+tests/spreadsheet/results/
+
+# Packaged release-candidate archives exceed GitHub's 100 MB file limit.
+docs/lightroom/release-audit/release-candidate.tar.gz

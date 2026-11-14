@@ -1,0 +1,92 @@
+{
+  "before": {
+    "bucketOpaquePixels": 64,
+    "scaledMask": {
+      "dimensions": [
+        8,
+        8
+      ],
+      "visiblePixels": 4
+    },
+    "alignedChildX": [
+      10,
+      10
+    ],
+    "corruptNative": {
+      "missing transform x": "ACCEPTED",
+      "missing paths": "ACCEPTED",
+      "non-array guides": "ACCEPTED",
+      "unknown active layer": "ACCEPTED",
+      "invalid adjustment": "ACCEPTED",
+      "invalid raster filter": "Cannot read properties of null (reading 'mask')",
+      "invalid effect": "ACCEPTED"
+    },
+    "featheredCopy": {
+      "width": 1,
+      "pixels": [
+        30,
+        60,
+        90,
+        255
+      ]
+    },
+    "maskDeletion": {
+      "target": "mask",
+      "paintedPixel": [
+        54,
+        54,
+        54,
+        255
+      ]
+    }
+  },
+  "after": {
+    "bucketOpaquePixels": 0,
+    "scaledMask": {
+      "dimensions": [
+        32,
+        32
+      ],
+      "visiblePixels": 64
+    },
+    "alignedChildX": [
+      0,
+      30
+    ],
+    "corruptNative": {
+      "missing transform x": "Invalid layer structure.",
+      "missing paths": "Invalid document paths or guides.",
+      "non-array guides": "Invalid document paths or guides.",
+      "unknown active layer": "Invalid active layer selection.",
+      "invalid adjustment": "Invalid adjustment data.",
+      "invalid raster filter": "Invalid raster filter.",
+      "invalid effect": "Invalid layer effect."
+    },
+    "featheredCopy": {
+      "width": 3,
+      "pixels": [
+        30,
+        60,
+        90,
+        64,
+        30,
+        60,
+        90,
+        255,
+        30,
+        60,
+        90,
+        64
+      ]
+    },
+    "maskDeletion": {
+      "target": "pixels",
+      "paintedPixel": [
+        255,
+        0,
+        0,
+        255
+      ]
+    }
+  }
+}

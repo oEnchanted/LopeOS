@@ -1,3 +1,4 @@
+import { preferencesName } from './labels.ts';
 import { chromium, expect } from '@playwright/test';
 import { writerFilesystem } from './runtime.ts';
 const base=process.env.WRITER_TEST_URL || 'http://127.0.0.1:5173';
@@ -11,7 +12,7 @@ try {
  await expect(page.locator('.writer-opening')).toHaveCount(0,{timeout:30000});
  await page.evaluate(()=>window.testSystemPreferences.set('theme','dark'));
  await page.getByRole('button',{name:'Preferences',exact:true}).click();
- const modal=page.getByRole('dialog',{name:'Writer Preferences',exact:true});
+ const modal=page.getByRole('dialog',{name:preferencesName,exact:true});
  const settle=async()=>modal.evaluate(node=>Promise.all(node.getAnimations({subtree:true}).map(animation=>animation.finished.catch(()=>{}))));
  await expect(modal).toBeVisible();await settle();
  await page.screenshot({path:'docs/writer/screenshots/preferences-home.png'});await page.screenshot({path:'docs/writer/screenshots/preferences-home-dark.png'});

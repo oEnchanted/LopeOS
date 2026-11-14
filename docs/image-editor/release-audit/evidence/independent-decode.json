@@ -1,0 +1,172 @@
+{
+  "reader": "Pillow raw PSD channels plus independently documented merged-preview white-matte interpretation",
+  "version": "11.3.0",
+  "result": "PASS_ENCODED_COMPOSITE",
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "records": [
+    {
+      "name": "original.png",
+      "sha256": "a88982b60fa4522884788a027964bc7f960d3688a2e06f5c325e51010dd1c2da",
+      "format": "PNG",
+      "dimensions": [
+        96,
+        64
+      ],
+      "mode": "RGBA",
+      "framesRecognized": 1,
+      "layersRecognized": null,
+      "pixelSha256": "db11c3dad49f408aa737dc2e028f431387250a9cd6c21cb29744c183e160364d"
+    },
+    {
+      "name": "layered.png",
+      "sha256": "1d24d9e6d2d8c9c054c0fd20afb3b90a141f1237e3297fa36dacfb9659559af6",
+      "format": "PNG",
+      "dimensions": [
+        96,
+        64
+      ],
+      "mode": "RGBA",
+      "framesRecognized": 1,
+      "layersRecognized": null,
+      "pixelSha256": "35b64c6f254d6f173c633cf4b682d19a24c56faeb44516eafb5ef26d95d0a7b3"
+    },
+    {
+      "name": "layered.psd",
+      "sha256": "de8274466b86fbded54647bb38d3d7a1d2c35254aaabfcf12e89fe475b5bdfa1",
+      "format": "PSD",
+      "dimensions": [
+        96,
+        64
+      ],
+      "mode": "RGBA",
+      "framesRecognized": 2,
+      "layersRecognized": [
+        [
+          "Layer 1",
+          "RGBA",
+          [
+            0,
+            0,
+            96,
+            64
+          ],
+          [
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              10316,
+              "R"
+            ],
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              10574,
+              "G"
+            ],
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              10832,
+              "B"
+            ],
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              11090,
+              "A"
+            ]
+          ]
+        ],
+        [
+          "Audit caf?\n??",
+          "RGBA",
+          [
+            0,
+            0,
+            96,
+            64
+          ],
+          [
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              11348,
+              "R"
+            ],
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              11606,
+              "G"
+            ],
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              11992,
+              "B"
+            ],
+            [
+              "packbits",
+              [
+                0,
+                0,
+                96,
+                64
+              ],
+              12378,
+              "A"
+            ]
+          ]
+        ]
+      ],
+      "pixelSha256": "6701d2ab6749f0b5f14cef3852f04285b61ae2c8ab31db88c470b9df3bf63589"
+    }
+  ],
+  "compositeComparison": {
+    "encodedMatteMismatchedPixels": 0,
+    "alphaMismatches": 0,
+    "partialAlphaPixels": 34,
+    "maxCompositedChannelQuantizationError": 0.9764705882352942,
+    "formula": "rawPSD_C = int(PNG_C * alpha/255 + 255 * (1-alpha/255))",
+    "interpretation": "Pillow exposes stored matte RGB; raw RGBA is not straight-alpha. No pixel-identity claim; inverse at low alpha amplifies 8-bit quantization."
+  },
+  "sources": [
+    "https://github.com/psd-tools/psd-tools/blob/v1.10.9/src/psd_tools/api/pil_io.py"
+  ],
+  "limits": "Composite and supported raster layer records only. Pillow does not expose all adjustment/masked/text semantic records; frame count is not a complete layer count. Native Adobe mask/text/effect/profile/Smart Object semantics and PSB not certified."
+}

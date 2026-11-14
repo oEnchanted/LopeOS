@@ -1,0 +1,17 @@
+{
+  "engine": "chromium",
+  "base": "http://127.0.0.1:4190",
+  "ranAt": "2026-11-14T00:04:35.899Z",
+  "pass": 0,
+  "fail": 1,
+  "results": [
+    {
+      "id": "kbd-01",
+      "title": "Global shortcuts still work after launching an app from the Dock",
+      "result": "FAIL",
+      "ms": 5949,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: locator('.spotlight') | Expected: visible | Timeout: 5000ms | Error: element(s) not found",
+      "pageErrors": []
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+✖ PNG16 grayscale tRNS compares the full 16-bit sample and preserves transparency (60.055541ms)
+✖ PNG16 RGB tRNS requires all three channels to match (4.051417ms)
+✖ PNG16 rejects unsupported PQ transfer instead of silently interpreting it as sRGB (21.572625ms)
+✖ PNG16 rejects unsupported HLG transfer instead of silently interpreting it as sRGB (32.905333ms)
+✖ PNG16 rejects unsupported narrow range instead of silently interpreting it as sRGB (4.518042ms)
+✖ PNG16 rejects unsupported RGB matrix mismatch instead of silently interpreting it as sRGB (5.859208ms)
+✖ PNG16 honors sRGB cICP precedence over lower-precedence color metadata (0.420167ms)
+✖ PNG16 rejects unsupported chromaticities when no higher-precedence sRGB declaration exists (10.216ms)
+✔ PNG16 accepts the standard sRGB chromaticities (13.784333ms)
+✖ TIFF rejects RGB data with fewer than three samples per pixel (20.308667ms)
+✖ TIFF rejects absent strip byte counts rather than reading bytes outside the declared strip (0.375709ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 1
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 605.102625
+
+✖ failing tests:
+
+test at tests/lightroom/release-codec.test.ts:18:1
+✖ PNG16 grayscale tRNS compares the full 16-bit sample and preserves transparency (60.055541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:20:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:22:1
+✖ PNG16 RGB tRNS requires all three channels to match (4.051417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:24:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:27:3
+✖ PNG16 rejects unsupported PQ transfer instead of silently interpreting it as sRGB (21.572625ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:28:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /color transform|range|matrix|characteristics/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:27:3
+✖ PNG16 rejects unsupported HLG transfer instead of silently interpreting it as sRGB (32.905333ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:28:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /color transform|range|matrix|characteristics/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:27:3
+✖ PNG16 rejects unsupported narrow range instead of silently interpreting it as sRGB (4.518042ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:28:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /color transform|range|matrix|characteristics/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:27:3
+✖ PNG16 rejects unsupported RGB matrix mismatch instead of silently interpreting it as sRGB (5.859208ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:28:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /color transform|range|matrix|characteristics/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:31:1
+✖ PNG16 honors sRGB cICP precedence over lower-precedence color metadata (0.420167ms)
+  Error: Non-sRGB PNG gamma requires an additional color transform.
+      at decodePng16 (file:///private/tmp/lopeos-lightroom-release-audit/packages/photo-engine/src/png.ts:14:54)
+      at TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:32:22)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/lightroom/release-codec.test.ts:35:1
+✖ PNG16 rejects unsupported chromaticities when no higher-precedence sRGB declaration exists (10.216ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:36:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /color transform|chromatic/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:47:1
+✖ TIFF rejects RGB data with fewer than three samples per pixel (20.308667ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:49:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /variant|samples|channels/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests/lightroom/release-codec.test.ts:51:1
+✖ TIFF rejects absent strip byte counts rather than reading bytes outside the declared strip (0.375709ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-codec.test.ts:54:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /strip/,
+    operator: 'throws',
+    diff: 'simple'
+  }

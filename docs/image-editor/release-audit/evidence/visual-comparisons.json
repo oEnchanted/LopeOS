@@ -1,0 +1,106 @@
+{
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "referenceComparison": "UNVERIFIED: no matched authorized Adobe captures; no Adobe overlay/diff fabricated",
+  "implementationPairs": [
+    {
+      "before": "ui-cancelled-stroke-before.png",
+      "after": "ui-cancelled-stroke-after.png",
+      "beforePixels": [
+        1440,
+        900
+      ],
+      "afterPixels": [
+        1440,
+        900
+      ],
+      "classification": "Implementation before/after regression, NOT Adobe-reference parity",
+      "status": "GENERATED",
+      "overlay": "ui-cancelled-stroke-overlay.png",
+      "difference": "ui-cancelled-stroke-difference.png",
+      "overlayAlpha": 0.5,
+      "differenceContrast": 4,
+      "dynamicExcludedRegions": [],
+      "changedPixels": 22666
+    },
+    {
+      "before": "ui-color-before.png",
+      "after": "ui-color-after.png",
+      "beforePixels": [
+        283,
+        149
+      ],
+      "afterPixels": [
+        283,
+        149
+      ],
+      "classification": "Implementation before/after regression, NOT Adobe-reference parity",
+      "status": "GENERATED",
+      "overlay": "ui-color-overlay.png",
+      "difference": "ui-color-difference.png",
+      "overlayAlpha": 0.5,
+      "differenceContrast": 4,
+      "dynamicExcludedRegions": [],
+      "changedPixels": 24711
+    },
+    {
+      "before": "ui-layer-context-before.png",
+      "after": "ui-layer-context-after.png",
+      "beforePixels": [
+        210,
+        225
+      ],
+      "afterPixels": [
+        210,
+        225
+      ],
+      "classification": "Implementation before/after regression, NOT Adobe-reference parity",
+      "status": "GENERATED",
+      "overlay": "ui-layer-context-overlay.png",
+      "difference": "ui-layer-context-difference.png",
+      "overlayAlpha": 0.5,
+      "differenceContrast": 4,
+      "dynamicExcludedRegions": [],
+      "changedPixels": 34194
+    },
+    {
+      "before": "ui-numeric-before.png",
+      "after": "ui-numeric-after.png",
+      "beforePixels": [
+        580,
+        332
+      ],
+      "afterPixels": [
+        580,
+        332
+      ],
+      "classification": "Implementation before/after regression, NOT Adobe-reference parity",
+      "status": "GENERATED",
+      "overlay": "ui-numeric-overlay.png",
+      "difference": "ui-numeric-difference.png",
+      "overlayAlpha": 0.5,
+      "differenceContrast": 4,
+      "dynamicExcludedRegions": [],
+      "changedPixels": 144
+    },
+    {
+      "before": "ui-tool-group-before.png",
+      "after": "ui-tool-group-after.png",
+      "beforePixels": [
+        1440,
+        900
+      ],
+      "afterPixels": [
+        1440,
+        900
+      ],
+      "classification": "Implementation before/after regression, NOT Adobe-reference parity",
+      "status": "GENERATED",
+      "overlay": "ui-tool-group-overlay.png",
+      "difference": "ui-tool-group-difference.png",
+      "overlayAlpha": 0.5,
+      "differenceContrast": 4,
+      "dynamicExcludedRegions": [],
+      "changedPixels": 18846
+    }
+  ]
+}

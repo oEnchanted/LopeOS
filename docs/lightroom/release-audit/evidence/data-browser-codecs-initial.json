@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-13",
+  "fixture": "Original procedural uncompressed 16-bit Bayer DNG 1.4; 128x96; no embedded preview; LopeOS synthetic camera",
+  "results": [
+    {
+      "browser": "Chromium",
+      "status": "failed",
+      "error": "Error: page.evaluate: Error: Codec check exceeded 30 seconds.\n    at PhotoWorker.cancel (http://127.0.0.1:5191/apps/web/src/apps/lightroom/worker-client.ts:36:51)\n    at eval (eval at evaluate (:370:30), <anonymous>:3:41)"
+    },
+    {
+      "browser": "Firefox",
+      "status": "unavailable",
+      "error": "Error: browserType.launchPersistentContext: Failed to launch the browser process.\nBrowser logs:\n\n<launching> /Users/luke/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /private/tmp/lope-photo-firefox-kUhiKd -juggler-pipe about:blank\n<launched> pid=77982\n[pid=77982][err] *** You are running in headless mode.\n[pid=77982][err] Could not find profile folder.\n[pid=77982] <process did exit: exitCode=1, signal=null>\n[pid=77982] starting temporary directories cleanup"
+    },
+    {
+      "browser": "WebKit",
+      "status": "failed",
+      "error": "Error: page.evaluate: Error: Codec check exceeded 30 seconds."
+    }
+  ]
+}

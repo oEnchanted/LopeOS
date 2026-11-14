@@ -1,0 +1,56 @@
+.sheets-formula-assist {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 82;
+  min-width: 280px;
+  max-width: min(620px, 75vw);
+  border-radius: 5px;
+  padding: 4px;
+  color: var(--glass-text);
+}
+.sheets-function-suggestions {
+  max-height: 230px;
+  overflow: auto;
+}
+.sheets-app .sheets-function-suggestions button {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  padding: 5px 8px;
+  text-align: left;
+  font-size: 11px;
+  color: var(--glass-text);
+}
+.sheets-app .sheets-function-suggestions button[aria-selected="true"] {
+  background: var(--glass-active);
+  outline: 1px solid var(--glass-inset-border);
+  outline-offset: -1px;
+}
+.sheets-function-suggestions span,
+.sheets-function-suggestions > small,
+.sheets-function-signature span,
+.sheets-function-signature small {
+  color: var(--glass-muted);
+  font-size: 10px;
+}
+.sheets-function-suggestions > small {
+  display: block;
+  padding: 5px 8px;
+}
+.sheets-function-signature {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 7px 8px;
+  line-height: 1.4;
+}
+.sheets-function-suggestions + .sheets-function-signature {
+  border-top: 1px solid var(--glass-inset-border);
+}
+.sheets-function-signature > strong {
+  font-size: 11px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}

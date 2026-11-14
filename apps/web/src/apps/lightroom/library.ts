@@ -1,17 +1,56 @@
 import { validateRecipe, type Album, type Asset } from '../../../../../packages/photo-engine/src/model.ts';
 const DATABASE='lope.photo-library.v1';
 let opening:Promise<IDBDatabase>|undefined;
-function database(){return opening??=new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(DATABASE,1);request.onupgradeneeded=()=>{const db=request.result;const assets=db.createObjectStore('assets',{keyPath:'id'});assets.createIndex('hash','hash',{unique:false});db.createObjectStore('originals');db.createObjectStore('albums',{keyPath:'id'});db.createObjectStore('jobs',{keyPath:'id'});};request.onsuccess=()=>{const db=request.result;db.onversionchange=()=>{db.close();opening=undefined;};resolve(db);};request.onerror=()=>{opening=undefined;reject(request.error||new Error('Photo library storage is unavailable.'));};request.onblocked=()=>reject(new Error('Close other Lightroom tabs to upgrade this library.'));});}
+function database(){return opening??=new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(DATABASE,1);request.onupgradeneeded=()=>{const db=request.result;const assets=db.createObjectStore('assets',{keyPath:'id'});assets.createIndex('hash','hash',{unique:false});db.createObjectStore('originals');db.createObjectStore('albums',{keyPath:'id'});db.createObjectStore('jobs',{keyPath:'id'});};request.onsuccess=()=>{const db=request.result;db.onversionchange=()=>{db.close();opening=undefined;};resolve(db);};request.onerror=()=>{opening=undefined;reject(request.error||new Error('Photo library storage is unavailable.'));};request.onblocked=()=>reject(new Error('Close other Luma tabs to upgrade this library.'));});}
 function value<T>(request:IDBRequest<T>):Promise<T>{return new Promise((resolve,reject)=>{request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});}
 function committed(tx:IDBTransaction):Promise<void>{return new Promise((resolve,reject)=>{tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error('Photo library write failed.'));tx.onabort=()=>reject(tx.error||new Error('Photo library transaction was cancelled.'));});}
 export async function loadLibrary(){const db=await database(),tx=db.transaction(['assets','albums','jobs'],'readonly');const [assets,albums,jobs]=await Promise.all([value(tx.objectStore('assets').getAll()),value(tx.objectStore('albums').getAll()),value(tx.objectStore('jobs').getAll())]);return {assets:assets as Asset[],albums:albums as Album[],jobs:jobs as ImportJournal[]};}
-export async function saveAssets(assets:Asset[]){const db=await database();const tx=db.transaction('assets','readwrite'),done=committed(tx);for(const asset of assets){validateRecipe(asset.recipe);tx.objectStore('assets').put(asset);}await done;}
+export async function saveAssets(assets:Asset[]){
+  // Validate the entire batch before opening a transaction. A synchronous failure
+  // after an earlier put must not allow that earlier record to commit on its own.
+  const records=assets.map(asset=>({...asset,recipe:validateRecipe(asset.recipe)}));
+  const db=await database(),tx=db.transaction('assets','readwrite'),done=committed(tx);
+  try{for(const asset of records)tx.objectStore('assets').put(asset);}
+  catch(cause){try{tx.abort();}catch{/* Already aborted. */}await done.catch(()=>{});throw cause;}
+  await done;
+}
 export async function addAsset(asset:Asset,original?:Blob){validateRecipe(asset.recipe);const db=await database(),tx=db.transaction(['assets','originals'],'readwrite'),done=committed(tx);try{tx.objectStore('assets').add(asset);if(original)tx.objectStore('originals').add(original,asset.id);}catch(cause){try{tx.abort();}catch{/* Already aborted. */}await done.catch(()=>{});throw cause;}await done;}
 export async function originalBlob(id:string):Promise<Blob>{const db=await database(),blob=await value(db.transaction('originals').objectStore('originals').get(id));if(!(blob instanceof Blob))throw new Error('The managed original is missing. Relink the photo to its original file.');return blob;}
 export async function relinkOriginal(asset:Asset,blob:Blob){if(await hashBlob(blob)!==asset.hash)throw new Error('This file has different content. Select the original with the matching checksum.');const db=await database(),tx=db.transaction(['assets','originals'],'readwrite'),done=committed(tx);tx.objectStore('originals').put(blob,asset.id);tx.objectStore('assets').put({...asset,storage:'managed',path:undefined,sourceVersion:undefined});await done;}
 export async function deleteAssets(ids:string[]){const db=await database(),tx=db.transaction(['assets','originals'],'readwrite'),done=committed(tx);for(const id of ids){tx.objectStore('assets').delete(id);tx.objectStore('originals').delete(id);}await done;}
 export async function saveAlbum(album:Album){const db=await database(),tx=db.transaction('albums','readwrite'),done=committed(tx);tx.objectStore('albums').put(album);await done;}
-export async function removeAlbum(id:string,assets:Asset[]){const db=await database(),tx=db.transaction(['albums','assets'],'readwrite'),done=committed(tx);tx.objectStore('albums').delete(id);for(const a of assets.filter(a=>a.albumIds.includes(id)))tx.objectStore('assets').put({...a,albumIds:a.albumIds.filter(v=>v!==id)});await done;}
+export async function removeAlbum(id:string,assets:Asset[]){
+  const db=await database(),tx=db.transaction(['albums','assets'],'readwrite'),done=committed(tx);
+  try{
+    const store=tx.objectStore('albums'),albums=await value(store.getAll()) as Album[];
+    store.delete(id);
+    // Match the UI's move-to-root behavior durably, so nested albums stay visible
+    // after restarting the app instead of retaining a deleted parent ID.
+    for(const child of albums)if(child.parentId===id)store.put({...child,parentId:undefined});
+    for(const a of assets.filter(a=>a.albumIds.includes(id)))tx.objectStore('assets').put({...a,albumIds:a.albumIds.filter(v=>v!==id)});
+  }catch(cause){try{tx.abort();}catch{/* Already aborted. */}await done.catch(()=>{});throw cause;}
+  await done;
+}
+/** Commit a validated backup as one unit; existing stable IDs are never replaced. */
+export async function restoreLibrary(entries:{asset:Asset;original:Blob}[],albums:Album[]):Promise<number>{
+  const seen=new Set<string>();
+  const records=entries.map(({asset,original})=>{
+    if(seen.has(asset.id))throw new Error('Backup contains duplicate asset IDs.');
+    seen.add(asset.id);return {asset:{...asset,recipe:validateRecipe(asset.recipe)},original};
+  });
+  const db=await database(),tx=db.transaction(['assets','originals','albums'],'readwrite'),done=committed(tx);
+  let restored=0;
+  try{
+    const assets=tx.objectStore('assets'),originals=tx.objectStore('originals'),albumStore=tx.objectStore('albums');
+    const [assetKeys,albumKeys]=await Promise.all([value(assets.getAllKeys()),value(albumStore.getAllKeys())]);
+    const existingAssets=new Set(assetKeys),existingAlbums=new Set(albumKeys);
+    for(const album of albums)if(!existingAlbums.has(album.id)){albumStore.add(album);existingAlbums.add(album.id);}
+    for(const record of records)if(!existingAssets.has(record.asset.id)){
+      assets.add(record.asset);originals.add(record.original,record.asset.id);restored++;
+    }
+  }catch(cause){try{tx.abort();}catch{/* Already aborted. */}await done.catch(()=>{});throw cause;}
+  await done;return restored;
+}
 export async function hashBlob(blob:Blob){const hash=await crypto.subtle.digest('SHA-256',await blob.arrayBuffer());return Array.from(new Uint8Array(hash),n=>n.toString(16).padStart(2,'0')).join('');}
 export type ImportJournal={id:string;started:string;names:string[];completed:number;errors:string[]};
 export async function journal(job:ImportJournal,remove=false){const db=await database(),tx=db.transaction('jobs','readwrite'),done=committed(tx);if(remove)tx.objectStore('jobs').delete(job.id);else tx.objectStore('jobs').put(job);await done;}
@@ -20,7 +59,12 @@ export function visibleAssets(assets:Asset[],album:Album|undefined,scope:string,
   let result=assets.filter(a=>scope==='trash'?!!a.trashed:!a.trashed);
   if(scope==='picks')result=result.filter(a=>a.flag==='pick');if(scope==='recent'){const day=Date.now()-7*86400000;result=result.filter(a=>Date.parse(a.imported)>day);}
   if(album?.type==='album')result=result.filter(a=>a.albumIds.includes(album.id));
-  if(album?.type==='folder'){const descendants=new Set([album.id]);for(let depth=0;depth<32;depth++){const before=descendants.size;for(const a of albums)if(a.parentId&&descendants.has(a.parentId))descendants.add(a.id);if(before===descendants.size)break;}result=result.filter(a=>a.albumIds.some(id=>descendants.has(id)));}
+  if(album?.type==='folder'){
+    const children=new Map<string,string[]>();for(const a of albums)if(a.parentId)children.set(a.parentId,[...(children.get(a.parentId)||[]),a.id]);
+    const descendants=new Set([album.id]),pending=[album.id];
+    while(pending.length)for(const id of children.get(pending.pop()!)||[])if(!descendants.has(id)){descendants.add(id);pending.push(id);}
+    result=result.filter(a=>a.albumIds.some(id=>descendants.has(id)));
+  }
   const rule=album?.type==='smart'?album.rules:undefined;
   result=result.filter(a=>a.rating>=Math.max(filters.rating,rule?.rating||0)&&(!filters.flag||a.flag===filters.flag)&&(!rule?.flag||a.flag===rule.flag)&&(!filters.label||a.label===filters.label));
   for(const q of [filters.query,rule?.text||''].map(s=>s.trim().toLowerCase()).filter(Boolean)){const words=q.split(/\s+/);result=result.filter(a=>{const haystack=[a.name,...a.keywords,a.metadata.camera,a.metadata.lens,a.metadata.captured,a.metadata.format].join(' ').toLowerCase();return words.every(w=>haystack.includes(w));});}

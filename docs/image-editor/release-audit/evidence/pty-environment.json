@@ -1,0 +1,1 @@
+{"cause":"Installed node-pty spawn-helper lacked execute permission (-rw-r--r--)","repair":"Copied dependency to isolated /private/tmp/lopeos-audit-node-pty and restored executable bits only in that copy; original node_modules untouched","sourceCodeChanged":false}

@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5191",
+  "phase": "before",
+  "fixture": "Disposable procedural storage-only blobs; no codec assertion uses these files",
+  "results": [
+    {
+      "id": "LR-DATA-001",
+      "passed": false,
+      "rejection": "Error: Invalid Exposure value.",
+      "ratings": [
+        {
+          "id": "batch-a",
+          "rating": 5
+        },
+        {
+          "id": "batch-b",
+          "rating": 0
+        }
+      ]
+    },
+    {
+      "id": "LR-DATA-002",
+      "passed": false,
+      "rejection": "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': ()=>{} could not be cloned.",
+      "ratings": [
+        {
+          "id": "clone-a",
+          "rating": 4
+        },
+        {
+          "id": "clone-b",
+          "rating": 0
+        }
+      ]
+    },
+    {
+      "id": "LR-DATA-003",
+      "passed": false,
+      "storedChild": {
+        "id": "child",
+        "name": "Nested album",
+        "type": "album",
+        "parentId": "folder"
+      },
+      "sourceHash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2"
+    },
+    {
+      "id": "LR-DATA-004",
+      "passed": false,
+      "rejection": "Error: Photo library write failed.",
+      "assetCount": 1,
+      "albumCount": 1
+    },
+    {
+      "id": "LR-DATA-005",
+      "passed": false,
+      "rejection": "QuotaExceededError: Injected storage quota failure",
+      "assetCount": 1,
+      "albumCount": 1
+    },
+    {
+      "id": "LR-DATA-006",
+      "passed": true,
+      "restoredCounts": [
+        1,
+        0
+      ],
+      "ratings": [
+        {
+          "id": "restore-a",
+          "rating": 5
+        },
+        {
+          "id": "restore-b",
+          "rating": 0
+        }
+      ],
+      "hashes": [
+        {
+          "id": "restore-a",
+          "hash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2"
+        },
+        {
+          "id": "restore-b",
+          "hash": "ea91f918b855ee22258ccd582a5661c4fa89fb59f1743fa95a976987d2b806a2"
+        }
+      ],
+      "progress": [
+        {
+          "done": 1,
+          "total": 2
+        },
+        {
+          "done": 2,
+          "total": 2
+        }
+      ]
+    },
+    {
+      "id": "LR-DATA-007",
+      "passed": false,
+      "depth": 50,
+      "visibleIds": []
+    }
+  ],
+  "errors": []
+}

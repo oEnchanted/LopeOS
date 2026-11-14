@@ -1,0 +1,220 @@
+[
+  {
+    "id": "ENGINE-001",
+    "severity": "P1",
+    "title": "Bucket outside source",
+    "reproduction": "Create transparent 8\u00d78 raster; Paint Bucket red at document (-1,1), or outside a translated layer.",
+    "expected": "No source pixels change.",
+    "before": 64,
+    "after": 0,
+    "source": {
+      "path": "packages/image-engine/src/pixels.ts",
+      "line": 128
+    },
+    "test": {
+      "path": "tests/image-editor/release-engine.test.ts",
+      "line": 8
+    },
+    "retest": "PASS",
+    "evidence": [
+      "engine-before.tap",
+      "engine-after.tap",
+      "engine-reproductions.json"
+    ],
+    "reference": "Observed baseline regression and engine/document preservation invariants. No Adobe capture claim."
+  },
+  {
+    "id": "ENGINE-002",
+    "severity": "P1",
+    "title": "Mask clips downscaled source",
+    "reproduction": "Place 32\u00d732 opaque raster into 8\u00d78 document with .25 scale; add Reveal All mask. Repeat with 16\u00d716 at .5 scale and document selection (4,2)\u2192(8,8).",
+    "expected": "Reveal All preserves all 64 visible pixels; selection mask covers exactly selected document pixels.",
+    "before": {
+      "dimensions": [
+        8,
+        8
+      ],
+      "visiblePixels": 4
+    },
+    "after": {
+      "dimensions": [
+        32,
+        32
+      ],
+      "visiblePixels": 64
+    },
+    "source": {
+      "path": "packages/image-engine/src/pixels.ts",
+      "line": 155
+    },
+    "test": {
+      "path": "tests/image-editor/release-engine.test.ts",
+      "line": 18
+    },
+    "retest": "PASS",
+    "evidence": [
+      "engine-before.tap",
+      "engine-after.tap",
+      "engine-reproductions.json"
+    ],
+    "reference": "Observed baseline regression and engine/document preservation invariants. No Adobe capture claim."
+  },
+  {
+    "id": "ENGINE-003",
+    "severity": "P1",
+    "title": "Nested alignment changes group geometry",
+    "reproduction": "Group two 10\u00d710 children at x=10 and x=40; select group plus right child; align left in 100\u00d7100 document.",
+    "expected": "Child positions become x=0 and x=30; spacing is retained.",
+    "before": [
+      10,
+      10
+    ],
+    "after": [
+      0,
+      30
+    ],
+    "source": {
+      "path": "packages/image-engine/src/operations.ts",
+      "line": 67
+    },
+    "test": {
+      "path": "tests/image-editor/release-engine.test.ts",
+      "line": 37
+    },
+    "retest": "PASS",
+    "evidence": [
+      "engine-before.tap",
+      "engine-after.tap",
+      "engine-reproductions.json"
+    ],
+    "reference": "Observed baseline regression and engine/document preservation invariants. No Adobe capture claim."
+  },
+  {
+    "id": "ENGINE-004",
+    "severity": "P1",
+    "title": "Native parser accepts corrupt editable state",
+    "reproduction": "Serialize 8\u00d78 native document; separately delete transform x/paths, substitute object guides, select unknown ID, or inject malformed adjustment/effect/filter. Open.",
+    "expected": "Each malformed document is rejected before acceptance with an Invalid data error.",
+    "before": {
+      "missing transform x": "ACCEPTED",
+      "missing paths": "ACCEPTED",
+      "non-array guides": "ACCEPTED",
+      "unknown active layer": "ACCEPTED",
+      "invalid adjustment": "ACCEPTED",
+      "invalid raster filter": "Cannot read properties of null (reading 'mask')",
+      "invalid effect": "ACCEPTED"
+    },
+    "after": {
+      "missing transform x": "Invalid layer structure.",
+      "missing paths": "Invalid document paths or guides.",
+      "non-array guides": "Invalid document paths or guides.",
+      "unknown active layer": "Invalid active layer selection.",
+      "invalid adjustment": "Invalid adjustment data.",
+      "invalid raster filter": "Invalid raster filter.",
+      "invalid effect": "Invalid layer effect."
+    },
+    "source": {
+      "path": "packages/image-engine/src/native.ts",
+      "line": 30
+    },
+    "test": {
+      "path": "tests/image-editor/release-engine.test.ts",
+      "line": 49
+    },
+    "retest": "PASS",
+    "evidence": [
+      "engine-before.tap",
+      "engine-after.tap",
+      "engine-reproductions.json"
+    ],
+    "reference": "Observed baseline regression and engine/document preservation invariants. No Adobe capture claim."
+  },
+  {
+    "id": "ENGINE-005",
+    "severity": "P1",
+    "title": "Copy truncates soft selection edges",
+    "reproduction": "Copy opaque 3\u00d71 raster through coverage [64,255,64]; also copy [0,64,0].",
+    "expected": "Copy preserves width 3 and alpha [64,255,64]; low-coverage-only selection remains copyable.",
+    "before": {
+      "width": 1,
+      "pixels": [
+        30,
+        60,
+        90,
+        255
+      ]
+    },
+    "after": {
+      "width": 3,
+      "pixels": [
+        30,
+        60,
+        90,
+        64,
+        30,
+        60,
+        90,
+        255,
+        30,
+        60,
+        90,
+        64
+      ]
+    },
+    "source": {
+      "path": "packages/image-engine/src/clipboard.ts",
+      "line": 6
+    },
+    "test": {
+      "path": "tests/image-editor/release-engine.test.ts",
+      "line": 68
+    },
+    "retest": "PASS",
+    "evidence": [
+      "engine-before.tap",
+      "engine-after.tap",
+      "engine-reproductions.json"
+    ],
+    "reference": "Observed baseline regression and engine/document preservation invariants. No Adobe capture claim."
+  },
+  {
+    "id": "ENGINE-006",
+    "severity": "P1",
+    "title": "Deleted mask leaves incorrect paint target",
+    "reproduction": "Create transparent raster and mask; select mask, delete mask, paint red at (3,3), undo painting, undo deletion.",
+    "expected": "Paint targets pixels and writes [255,0,0,255]; undo restores source transparency and selected mask.",
+    "before": {
+      "target": "mask",
+      "paintedPixel": [
+        54,
+        54,
+        54,
+        255
+      ]
+    },
+    "after": {
+      "target": "pixels",
+      "paintedPixel": [
+        255,
+        0,
+        0,
+        255
+      ]
+    },
+    "source": {
+      "path": "packages/image-engine/src/model.ts",
+      "line": 53
+    },
+    "test": {
+      "path": "tests/image-editor/release-engine.test.ts",
+      "line": 79
+    },
+    "retest": "PASS",
+    "evidence": [
+      "engine-before.tap",
+      "engine-after.tap",
+      "engine-reproductions.json"
+    ],
+    "reference": "Observed baseline regression and engine/document preservation invariants. No Adobe capture claim."
+  }
+]

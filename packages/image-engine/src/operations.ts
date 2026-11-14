@@ -64,7 +64,11 @@ export function flipSelected(doc:ImageDocument,horizontal=true):ImageDocument{
   return transformSelected(doc,horizontal?[-1,0,0,1,left+right,0]:[1,0,0,-1,0,top+bottom]);
 }
 export function alignLayers(doc: ImageDocument, alignment: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom' | 'distribute-x' | 'distribute-y'): ImageDocument {
-  const selected = allLayers(doc.layers).filter(item => doc.activeIds.includes(item.id) && !item.locked); if (!selected.length) return doc;
+  // A selected group already carries its descendants. Aligning a selected
+  // child again changes the group's internal geometry and can move it twice.
+  const selected: Layer[] = [];
+  const collect = (items: Layer[]) => { for (const item of items) { if (item.locked) continue; if (doc.activeIds.includes(item.id)) selected.push(item); else if (item.children) collect(item.children); } };
+  collect(doc.layers); if (!selected.length) return doc;
   let next = doc; const bounds = selected.map(item => transformedBounds(item, doc));
   const area = selected.length > 1 ? { x: Math.min(...bounds.map(b => b.x)), y: Math.min(...bounds.map(b => b.y)), right: Math.max(...bounds.map(b => b.x + b.width)), bottom: Math.max(...bounds.map(b => b.y + b.height)) } : { x: 0, y: 0, right: doc.width, bottom: doc.height };
   if (alignment.startsWith('distribute')) {

@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-13",
+  "checks": [
+    "Quick Mask paints independent selection coverage and supports undo/redo without changing layer pixels",
+    "Alpha channels save, load and retain selection coverage in native files",
+    "Color Range selects matching colors across the image with soft coverage",
+    "Border and Smooth selection commands change coverage in one reversible transaction",
+    "Dodge, Burn and Sponge flyouts perform real reversible pixel operations",
+    "Blur, Sharpen and Smudge are accessible through the toolbar with undoable strokes",
+    "Nine added adjustment types create editable nondestructive layers without altering source pixels",
+    "Eight added filters apply as editable source-preserving Smart Filters and undo to original pixels",
+    "Smart Filter parameters and alpha channels survive Save, Close and Reopen",
+    "Retouching an embedded source gives a rasterize instruction without creating a layer or history change"
+  ],
+  "errors": []
+}

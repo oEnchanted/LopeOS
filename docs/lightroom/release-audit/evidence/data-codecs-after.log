@@ -1,0 +1,23 @@
+✔ PNG16 grayscale tRNS compares the full 16-bit sample and preserves transparency (33.818208ms)
+✔ PNG16 RGB tRNS requires all three channels to match (2.958417ms)
+✔ PNG16 rejects unsupported PQ transfer instead of silently interpreting it as sRGB (1.053375ms)
+✔ PNG16 rejects unsupported HLG transfer instead of silently interpreting it as sRGB (0.611209ms)
+✔ PNG16 rejects unsupported narrow range instead of silently interpreting it as sRGB (0.251875ms)
+✔ PNG16 rejects unsupported RGB matrix mismatch instead of silently interpreting it as sRGB (0.203ms)
+✔ PNG16 honors sRGB cICP precedence over lower-precedence color metadata (4.289208ms)
+✔ PNG16 rejects unsupported chromaticities when no higher-precedence sRGB declaration exists (0.548916ms)
+✔ PNG16 accepts the standard sRGB chromaticities (0.817833ms)
+✔ TIFF rejects RGB data with fewer than three samples per pixel (0.84175ms)
+✔ TIFF rejects absent strip byte counts rather than reading bytes outside the declared strip (0.288167ms)
+✔ TIFF associated alpha is unpremultiplied before conversion to linear RGB (0.188458ms)
+✔ TIFF unassociated alpha preserves the unmultiplied color samples (0.056333ms)
+✔ TIFF unspecified extra data is not silently interpreted as transparency (0.046416ms)
+✔ TIFF associated transparent pixels have zero color rather than division artifacts (0.334917ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 301.821292

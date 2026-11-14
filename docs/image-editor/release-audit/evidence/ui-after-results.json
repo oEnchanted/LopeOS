@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5189",
+  "entry": "/tests/image-editor/release.html",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "dpr": 1,
+  "checks": [
+    {
+      "id": "PS-UI-01-empty-numeric-draft",
+      "expected": "",
+      "actual": "",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-02-negative-numeric-draft",
+      "expected": "-25",
+      "actual": "-25",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-02-negative-decimal-draft",
+      "expected": "-0.25",
+      "actual": "-0.25",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-01-empty-draft-restores-last-valid-value",
+      "expected": "-0.25",
+      "actual": "-0.25",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-03-shortcut-selects-pencil",
+      "expected": "pencil",
+      "actual": "pencil",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-03-group-retains-last-tool",
+      "expected": 1,
+      "actual": 1,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-04-focus-loss-cancels-move",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-04-focus-loss-cancels-paint",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-no-page-errors",
+      "expected": [],
+      "actual": [],
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "build": {
+    "commit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+    "branch": "audit/photoshop-release-20261113",
+    "dirty": true,
+    "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+    "builtAt": "2026-11-13T23:14:00.318Z",
+    "mode": "production"
+  }
+}

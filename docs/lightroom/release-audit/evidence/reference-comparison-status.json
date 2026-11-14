@@ -1,0 +1,21 @@
+{
+  "status": "UNVERIFIED",
+  "sideBySide": "Not a valid identity measurement without paired capture conditions",
+  "overlay50Percent": "NOT GENERATED: source reference image is cropped and has unknown UI/device scaling; no same photo fixture",
+  "differenceImage": "NOT GENERATED: no legitimate capture normalization available",
+  "suppliedReferencePixels": [
+    [
+      1920,
+      1241
+    ],
+    [
+      1200,
+      675
+    ]
+  ],
+  "referenceCssPixels": null,
+  "sourceImagesImmutable": true,
+  "excludedRegions": [],
+  "missing": "Full uncropped installed 10.0 Advanced/Dark/Compact/macOS captures with About/build, English, exact display/UI scale, same fixture/tool/zoom and panel states",
+  "agentAction": "Continue functional and before/after repair evidence; retain NOT READY until required identity evidence exists."
+}

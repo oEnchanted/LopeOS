@@ -1,5 +1,6 @@
 import { ACCOUNTS_STORAGE_KEY, validAccount } from '../../../../packages/sdk/src/accounts.ts';
 import { preferenceSchema, validatePreferenceImport } from '../../../../packages/contracts/src/preferences.ts';
+import { PROFILE_STORAGE_KEY, isProfileData } from '../../../../packages/contracts/src/profile.ts';
 
 /** Portable JSON representation; every non-primitive is tagged to avoid collisions with app data. */
 export type EncodedValue = null | boolean | string | number
@@ -29,6 +30,7 @@ const databases: Record<string, DatabaseDefinition> = {
 /** Shared schema used by automatic account sync as well as legacy backup readers. */
 export const localDatabaseDefinitions = databases;
 const storageKeys = new Set([
+  PROFILE_STORAGE_KEY,
   ACCOUNTS_STORAGE_KEY, 'lope.preferences.v2', 'lope.preferences.apps.v1', 'lope.history.apps.v1',
   'lope.session.documents.v1', 'lope.assets.wallpapers.v1', 'lope.session.layout.v1', 'lope.layout.v1',
   'lope.history.search.v1', 'lope.history.notifications.v1', 'lope.history.diagnostics.v1', 'lope.history.recentApps.v1',
@@ -145,7 +147,10 @@ export function decodeLocalValue(value: EncodedValue): unknown {
 
 function validateStorage(key: string, value: unknown): void {
   if (!isBackupStorageKey(key) || typeof value !== 'string') return invalid('unsupported browser storage entry: ' + key);
-  if (key === ACCOUNTS_STORAGE_KEY) {
+  if (key === PROFILE_STORAGE_KEY) {
+    let profile: unknown; try { profile = JSON.parse(value); } catch { return invalid('unreadable account profile.'); }
+    if (!isProfileData(profile)) return invalid('invalid account profile picture.');
+  } else if (key === ACCOUNTS_STORAGE_KEY) {
     let document: unknown; try { document = JSON.parse(value); } catch { return invalid('unreadable accounts.'); }
     if (!object(document) || document.version !== 1 || !Array.isArray(document.accounts) || !document.accounts.every(validAccount)) return invalid('invalid user accounts.');
     if (new Set(document.accounts.map(account => account.id)).size !== document.accounts.length || new Set(document.accounts.map(account => account.accountName)).size !== document.accounts.length) invalid('duplicate user accounts.');

@@ -1,3 +1,4 @@
+import { preferencesName, writerName } from './labels.ts';
 import { seedSession } from '../setup/seed-session.mjs';
 import { test, expect } from '@playwright/test';
 import { writerFilesystem } from './runtime';
@@ -12,11 +13,11 @@ test('LopeOS manifest, window, global menus, and lifecycle use the same Writer c
  await seedSession(page);await page.goto('/');
  const app=page.locator('[data-app-id="lope.writer"]');await expect(app).toBeVisible();
  await expect(app.getByRole('button',{name:'Save',exact:true})).toBeEnabled({timeout:30000});
- await page.locator('.menubar').getByRole('menuitem',{name:'Writer',exact:true}).click();
+ await page.locator('.menubar').getByRole('menuitem',{name:writerName,exact:true}).click();
  await page.getByRole('menuitem',{name:/^Preferences/}).click();
- await expect(app.getByRole('dialog',{name:'Writer Preferences',exact:true})).toBeVisible();
+ await expect(app.getByRole('dialog',{name:preferencesName,exact:true})).toBeVisible();
  await app.getByRole('button',{name:'Close Preferences',exact:true}).click();
- await expect(app.getByRole('dialog',{name:'Writer Preferences',exact:true})).toHaveCount(0);
+ await expect(app.getByRole('dialog',{name:preferencesName,exact:true})).toHaveCount(0);
  await page.locator('.menubar').getByRole('menuitem',{name:'Format',exact:true}).click();
  await page.getByRole('menuitem',{name:/^Font/}).click();
  await expect(app.getByRole('dialog',{name:'Font',exact:true})).toBeVisible();

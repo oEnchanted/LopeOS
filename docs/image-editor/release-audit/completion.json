@@ -1,0 +1,19 @@
+{
+  "verdict": "NOT READY",
+  "published": false,
+  "deployed": false,
+  "temporaryServersStopped": [
+    5187,
+    5188,
+    5189
+  ],
+  "candidateBuild": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "repairsCopiedToPrimaryWorkspace": true,
+  "copiedSourceMatchesCandidate": true,
+  "primaryImageEngineTests": {
+    "passed": 63,
+    "failed": 0
+  },
+  "primaryScopedTypecheck": "PASS",
+  "primaryWholeProjectTypecheck": "FAIL in concurrent spreadsheet/movie-maker/media work; see evidence log"
+}

@@ -30,7 +30,12 @@ export interface FileEntry { name: string; path: string; type: 'file' | 'directo
 /** Capacity of the volume backing the workspace, which may be shared with other data. */
 export interface FileStorageInfo { totalBytes: number; usedBytes: number; availableBytes: number; scope: 'runtime-volume' }
 export interface FileRead { content: string; version: string }
-export interface WriteOptions { version?: string; createOnly?: boolean }
+export interface WriteOptions {
+  version?: string;
+  createOnly?: boolean;
+  /** Client-only precondition: local providers check before commit; remote providers before sending. Never serialized. */
+  assertCurrent?: () => void;
+}
 export interface FileService {
   list(path: string): Promise<FileEntry[]>; stat(path: string): Promise<FileEntry>;
   read(path: string): Promise<FileRead>; write(path: string, content: string, expectedVersion?: string | WriteOptions): Promise<FileRead>;

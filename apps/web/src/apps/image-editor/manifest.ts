@@ -1,6 +1,6 @@
 import type { AppManifest } from '../../../../../packages/contracts/src';
 export const imageEditorManifest: AppManifest = {
-  contractVersion: 1, id: 'lope.image-editor', name: 'Image Editor', description: 'Edit images with layers, masks, and drawing tools.', icon: 'image-editor',
+  contractVersion: 1, id: 'lope.image-editor', name: 'Prism', description: 'Edit images with layers, masks, and drawing tools.', icon: 'image-editor',
   entry: () => import('./index'), defaultSize: { width: 1320, height: 840 }, minSize: { width: 740, height: 500 }, singleton: true,
   fileAssociations: ['.lopeimage', '.psd', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', 'image/png', 'image/jpeg', 'image/webp', 'image/vnd.adobe.photoshop'],
   menus: [

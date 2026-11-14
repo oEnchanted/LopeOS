@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-13T23:34:26.206Z",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "repeat project save uses acknowledged version and preserves latest edits",
+    "external save conflict preserves both external file and unsaved editor text",
+    "corrupt/unsupported multi-file import reports failures without removing existing edits",
+    "denied microphone permission has actionable import-narration recovery",
+    "microphone permission resolving after dialog close immediately stops every track",
+    "pending permission cancelled by importing narration; modal blocks underlying edit commands",
+    "generated live narration records, pauses, resumes, stops, plays for review and deletes with no active tracks",
+    "late permission result after app unmount stops tracks",
+    "200% equivalent layout (640x400 CSS, 2x device scale): editing reachable, storyboard visible, no app overflow, keyboard multi-selection and visible focus"
+  ],
+  "status": "PASS"
+}

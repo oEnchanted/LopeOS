@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-13",
+  "timezone": "America/Denver",
+  "auditOwner": "Agent 2 — Photoshop",
+  "verdictConstraint": "NOT READY while any required state is unknown or any discrepancy is unresolved/unapproved",
+  "target": {
+    "product": "Adobe Photoshop desktop",
+    "version": "CS6",
+    "edition": "Standard",
+    "exactBuild": null,
+    "exactBuildStatus": "UNVERIFIED — no authorized installation or build-labelled user capture",
+    "platform": "Windows",
+    "platformVersion": null,
+    "platformVersionStatus": "UNVERIFIED",
+    "workspace": "Essentials, reset",
+    "theme": "Dark; exact Interface color-theme swatch unverified",
+    "density": null,
+    "interfaceLanguage": "English",
+    "shortcutScheme": "Default desktop Windows Ctrl scheme; exact CS6 behavior must be captured",
+    "uiScalePercent": null,
+    "devicePixelRatio": null,
+    "windowClientDimensions": null,
+    "documentZoomPercent": null,
+    "preferences": {
+      "interfaceFontSize": null,
+      "interfaceFontTypeface": null,
+      "colorThemeSwatch": null,
+      "useShiftKeyForToolSwitch": null,
+      "paintingCursorMode": null,
+      "otherCursorMode": null,
+      "pressureAvailability": null,
+      "rulerUnits": null,
+      "colorSettings": null,
+      "workingProfile": null,
+      "zoomResizesWindows": null,
+      "scrubbyZoom": null,
+      "legacyCompositing": null
+    },
+    "remainingSettingsStatus": "UNVERIFIED. Null records unknown reference settings and is not an inferred default."
+  },
+  "baselineDecision": {
+    "retained": true,
+    "sources": [
+      "docs/image-editor/reference-inventory.md",
+      "docs/image-editor/cs6-comparison.md",
+      "docs/image-editor/cs6-inventory.json"
+    ],
+    "reason": "User mandate explicitly preserves an established baseline. CS6 Standard/Windows is already recorded; 28.0/macOS fallback does not apply.",
+    "originalProductPrompt": "Not independently present in this checkout; existing contract documents are the recorded source.",
+    "mismatches": [
+      {
+        "id": "PS-REF-001",
+        "description": "Retained modern Adobe workspace JPG has unknown exact edition/build/platform/scaling and different source artwork/panel state; it cannot establish CS6 visual identity.",
+        "resolution": "Keep immutable as a supplementary organization illustration. Obtain matched CS6 captures before certification."
+      },
+      {
+        "id": "PS-REF-002",
+        "description": "Shipped Contextual Task Bar, local AI, modern menu entries and new-document styling are beyond retained CS6 baseline.",
+        "resolution": "Inventory shipped extensions separately; no new visual exception or feature waiver is approved by this audit."
+      }
+    ]
+  },
+  "comparisonBoundary": {
+    "included": [
+      "Entire application client area",
+      "Application commands exposed in LopeOS menu service",
+      "Internal menus, popovers, dialogs, all tools and panels, canvases and state transitions"
+    ],
+    "excluded": [
+      "LopeOS outer OS frame only, per existing integration contract"
+    ],
+    "approvedExceptions": [
+      {
+        "difference": "LopeOS outer window chrome",
+        "basis": "Recorded existing reference-inventory.md and integration.md contract; not a new audit waiver"
+      },
+      {
+        "difference": "LopeOS application branding",
+        "basis": "Existing LopeOS Image Editor/Prism product contract; exact approved extent not independently recorded"
+      }
+    ],
+    "notApproved": [
+      "Modern floating surfaces inside CS6 workspace",
+      "Missing tools/panels/formats",
+      "Browser shortcut limitations",
+      "Algorithm/rasterization differences without evidence",
+      "Independent icon geometry",
+      "Reference-artwork mismatch as a basis for claiming pixel identity"
+    ]
+  },
+  "sources": [
+    {
+      "id": "CS6-MANUAL",
+      "url": "https://help.adobe.com/archive/en/photoshop/cs6/photoshop_reference.pdf",
+      "type": "Official archived desktop manual",
+      "accessed": "2026-11-13",
+      "downloadStatus": "Verified official download with curl; web extraction tool rejected PDF length",
+      "localPath": "/private/tmp/lope-photoshop-cs6-audit-reference.pdf",
+      "sha256": "f23bc92eb0f0a257ee068963ccaebc61096642c8d18ea6f99866efcb553f1f5c",
+      "bytes": 11764677,
+      "pages": 757,
+      "coverDate": "February 2013",
+      "printedPageToOneBasedPdfPageOffset": 7,
+      "permittedUse": "Behavioral/feature scope; manual includes separately labelled CS6 Extended and Creative Cloud updates; not a matched installation capture"
+    },
+    {
+      "id": "CURRENT-WORKSPACE",
+      "url": "https://helpx.adobe.com/photoshop/desktop/get-started/learn-the-basics/workspace-overview.html",
+      "accessed": "2026-11-13",
+      "pageUpdated": "2026-11-10",
+      "status": "Verified official desktop documentation",
+      "permittedUse": "General region terminology only; current release geometry is not CS6 evidence"
+    },
+    {
+      "id": "CURRENT-MASKS",
+      "url": "https://helpx.adobe.com/photoshop/desktop/create-masks/layer-masks/edit-and-refine-layer-masks.html",
+      "accessed": "2026-11-13",
+      "pageUpdated": "2026-09-29",
+      "status": "Verified official desktop documentation",
+      "permittedUse": "Supplemental mask semantics: thumbnail target, grayscale coverage and source preservation; CS6 manual page 170 is retained baseline"
+    },
+    {
+      "id": "CURRENT-RELEASE-NOTES",
+      "url": "https://helpx.adobe.com/photoshop/desktop/whats-new/photoshop-on-desktop-release-notes.html",
+      "accessed": "2026-11-13",
+      "pageUpdated": "2026-11-10",
+      "status": "Verified November 2026 version 28.0 heading and Relight, Quick Compare, Generative restyle, Remove entries",
+      "permittedUse": "Confirms mandate fallback statement only. Does not upgrade historical target."
+    },
+    {
+      "id": "SUPPLEMENTARY-WORKSPACE-IMAGE",
+      "url": "https://helpx-prod.scene7.com/is/image/HelpxProdLoc/ps-desktop-updated-drover-workspace-overview-updated-6?%24pjpeg%24=&jpegSize=200&wid=1200",
+      "localPath": "docs/image-editor/reference/adobe-workspace-2026.jpg",
+      "sha256": "8014da4f31ac3f5a769bcd9a58c656b291311e616d8ae777b182061e53ab5631",
+      "bytes": 129586,
+      "dimensionsDevicePixels": [
+        1200,
+        775
+      ],
+      "immutable": true,
+      "matchedReference": false,
+      "knownConditions": {
+        "language": "English",
+        "workspaceAppearance": "Dark, collapsed panel arrangement",
+        "exactBuild": null,
+        "platform": null,
+        "uiScalePercent": null,
+        "devicePixelRatio": null,
+        "sourceFixtureHash": null
+      },
+      "copyright": "Adobe; retained documentation illustration, not shipped runtime art"
+    }
+  ],
+  "referenceCaptureAvailability": {
+    "authorizedInstallation": false,
+    "userSuppliedMatchedCaptures": false,
+    "matchedBeforeAfterPairs": 0,
+    "validOverlays": 0,
+    "validDifferenceImages": 0,
+    "oneCssPixelAnchorComparison": "UNVERIFIED",
+    "whyNoSyntheticComparison": "Resizing unrelated reference imagery or using LopeOS screenshots as Adobe originals would fabricate parity evidence.",
+    "captureRequest": "reference-request.md"
+  },
+  "implementationCapture": {
+    "baseCommit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+    "branch": "audit/photoshop-release-20261113",
+    "worktree": "/private/tmp/lopeos-photoshop-audit",
+    "sourceSnapshot": "audit-baseline.json contains hashes of preserved in-progress files copied into this worktree",
+    "host": {
+      "platform": "Darwin",
+      "release": "27.2.0",
+      "architecture": "arm64"
+    },
+    "finalBuild": "See release-report.md and workflow-results.json; inventory generation is not final build certification",
+    "requestedClientSizesCssPixels": [
+      [
+        1440,
+        900
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        740,
+        500
+      ]
+    ],
+    "requestedBrowserZoomPercent": [
+      100,
+      125,
+      200
+    ],
+    "cssVsDevicePixels": "Capture actual CSS innerWidth/innerHeight, DPR and screenshot device dimensions for every run. DPR emulation is not browser zoom.",
+    "candidateBuildId": "a541957198019a6db2ff85a8b7518a270c425ae392e063f2f6edad1eba5078f0",
+    "builtAt": "2026-11-13T23:07:48.049Z",
+    "buildManifest": "build-manifest.json",
+    "productionObservedBrowser": "Chromium 158.0.8127.18 (headless Playwright)"
+  },
+  "fixtureHashes": {
+    "independent-psd-composite.png": "1e98384047cb66f614cb1dae8f94465a7c8d2c0ff33cd8ecb54707afd3ccbaee",
+    "independent-psd-normalized-composite.png": "97c810c2a4dc8590e177d38bbebc0c1779d8683d41393c0b9831fb385f6b9ddb",
+    "layered.lopeimage": "02c09254845735a643c0383a1a15d4f9af06275ca7d3d460c450354def622f26",
+    "layered.png": "1d24d9e6d2d8c9c054c0fd20afb3b90a141f1237e3297fa36dacfb9659559af6",
+    "layered.psd": "de8274466b86fbded54647bb38d3d7a1d2c35254aaabfcf12e89fe475b5bdfa1",
+    "original.png": "a88982b60fa4522884788a027964bc7f960d3688a2e06f5c325e51010dd1c2da",
+    "psd-tools-merged-composite.png": "8f5a104020cd81546cb17aa5d67d442bdcb1624f9de46913f69b030551cb9b8f"
+  },
+  "requiredEvidenceStillMissing": [
+    "Authorized CS6 Standard Windows exact build, Windows version and preference/scaling manifest",
+    "Reset Essentials full client screenshot with same disposable source fixture and document zoom",
+    "Expanded menus/submenus and all panels/tools/options/dialogs in applicable and disabled states",
+    "Paired hover/focus/pressed/loading/error/modal edge states",
+    "Adobe-side native layered PSD round-trip appearance/editability observations",
+    "Matched layout anchors at reference viewport; reference resizing behavior at requested unmatched viewports",
+    "Reference behavior for claimed supported browser limitations and intentional differences approved by product owner"
+  ],
+  "finalAuditedBuild": {
+    "commit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+    "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+    "branch": "audit/photoshop-release-20261113",
+    "dirty": true,
+    "source": "build-manifest.json",
+    "note": "No release commit fabricated; artifact and source hashes freeze this integrated candidate."
+  }
+}

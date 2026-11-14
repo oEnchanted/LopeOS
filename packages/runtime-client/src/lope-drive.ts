@@ -68,6 +68,7 @@ export function createLopeDriveService(databaseName = DRIVE_DATABASE) {
     if (get(entries, parent(path)).type !== 'directory') throw failure('NOT_DIRECTORY', 'The destination is not a folder.');
   }
   async function writeBinary(path: string, data: Uint8Array, options: WriteOptions = {}) {
+    options.assertCurrent?.();
     writable(path);
     if (data.byteLength > MAX_DRIVE_FILE_BYTES) throw failure('LIMIT', 'LopeDrive currently supports files up to 64 MiB each.');
     const entry = await transaction('readwrite', (entries, store) => {
@@ -75,6 +76,7 @@ export function createLopeDriveService(databaseName = DRIVE_DATABASE) {
       const existing = entries.get(path);
       if (existing?.type === 'directory' || options.createOnly && existing || options.version !== undefined && existing?.version !== options.version) throw failure('CONFLICT', 'This file changed or already exists. Save a separate copy.');
       const value: RecordEntry = { path, name: path.split('/').at(-1)!, type: 'file', size: data.byteLength, modified: new Date().toISOString(), version: crypto.randomUUID(), data: new Blob([new Uint8Array(data)]) };
+      options.assertCurrent?.();
       store.put(value); return publicEntry(value);
     });
     changed(path); return entry;

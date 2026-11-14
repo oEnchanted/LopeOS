@@ -1,0 +1,119 @@
+{
+  "date": "2026-11-13",
+  "reader": "Pillow 11.3.0",
+  "results": [
+    {
+      "file": "docs/lightroom/release-audit/evidence/codec-fixtures/gray16-trns.png.export.png",
+      "sha256": "d0d5d37ff111da7fa77ebac723cf781351a6a5a485547ce11373942deb953e6b",
+      "dimensions": [
+        2,
+        1
+      ],
+      "bitDepth": 16,
+      "colorType": 6,
+      "sRGB": true,
+      "rgba8": [
+        [
+          18,
+          18,
+          18,
+          0
+        ],
+        [
+          18,
+          18,
+          18,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "file": "docs/lightroom/release-audit/evidence/codec-fixtures/rgb16-trns.png.export.png",
+      "sha256": "e4eb600551f0d7cea510c0d1afe2e53d2564e4ad156574d461a41af6f83b5966",
+      "dimensions": [
+        2,
+        1
+      ],
+      "bitDepth": 16,
+      "colorType": 6,
+      "sRGB": true,
+      "rgba8": [
+        [
+          3,
+          7,
+          11,
+          0
+        ],
+        [
+          3,
+          7,
+          11,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "file": "docs/lightroom/release-audit/evidence/codec-fixtures/associated-alpha16.tif.export.png",
+      "sha256": "a87980444ef75f31c20af7e7546d48857522f4dd316729bb75a622fa2a424971",
+      "dimensions": [
+        1,
+        1
+      ],
+      "bitDepth": 16,
+      "colorType": 6,
+      "sRGB": true,
+      "rgba8": [
+        [
+          102,
+          51,
+          25,
+          128
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "file": "docs/lightroom/release-audit/evidence/codec-fixtures/unassociated-alpha16.tif.export.png",
+      "sha256": "468320caabd48b5ec47aa87b87d00021831e4d4405d36d2aab1f70467b593425",
+      "dimensions": [
+        1,
+        1
+      ],
+      "bitDepth": 16,
+      "colorType": 6,
+      "sRGB": true,
+      "rgba8": [
+        [
+          51,
+          25,
+          12,
+          128
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "file": "docs/lightroom/release-audit/evidence/codec-fixtures/unspecified-extra16.tif.export.png",
+      "sha256": "8beae91a5f45befb45e103e90ec5bab946cf5ee14e03eb2396573948ac5c9614",
+      "dimensions": [
+        1,
+        1
+      ],
+      "bitDepth": 16,
+      "colorType": 6,
+      "sRGB": true,
+      "rgba8": [
+        [
+          51,
+          25,
+          12,
+          255
+        ]
+      ],
+      "passed": true
+    }
+  ],
+  "limits": "Pillow validates reopened pixels at 8 bits/channel; PNG IHDR independently confirms encoded 16-bit RGBA. This does not validate arbitrary color profiles."
+}

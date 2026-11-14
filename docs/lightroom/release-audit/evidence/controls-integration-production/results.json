@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-13",
+  "phase": "production",
+  "base": "http://127.0.0.1:5193",
+  "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "browser": "158.0.8127.18",
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "deviceScaleFactor": 1,
+  "setup": "Fresh guest context; real shell, real sample-file imports, no source-module imports or services mocks.",
+  "checks": [
+    {
+      "id": "LR-INTEGRATION-MASK-TARGET",
+      "result": "PASS",
+      "observed": {
+        "activePhoto": "forest.jpg",
+        "activeMask": "Forest mask"
+      }
+    },
+    {
+      "id": "LR-INTEGRATION-SELECT-ALL-AFTER-DESELECT",
+      "result": "PASS",
+      "observed": {
+        "selected": 2,
+        "exportEnabled": true
+      }
+    },
+    {
+      "id": "LR-INTEGRATION-RESIZER",
+      "result": "PASS",
+      "observed": {
+        "before": 286,
+        "after": 278,
+        "activePhotoPreserved": true
+      }
+    },
+    {
+      "id": "LR-INTEGRATION-CROP-KEYBOARD",
+      "result": "PASS",
+      "observed": {
+        "width": 99.9,
+        "height": 99.2,
+        "activePhotoPreserved": true
+      }
+    },
+    {
+      "id": "LR-INTEGRATION-NUMERIC-PERSISTENCE",
+      "result": "PASS",
+      "observed": {
+        "value": -0.75,
+        "escapeRestored": true,
+        "reloadPersisted": true
+      }
+    },
+    {
+      "id": "LR-INTEGRATION-BEFORE-PAN",
+      "result": "PASS",
+      "observed": {
+        "pan": {
+          "x": 70,
+          "y": 20
+        },
+        "originalReadOnly": true
+      }
+    }
+  ],
+  "errors": [],
+  "productionArtifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2"
+}

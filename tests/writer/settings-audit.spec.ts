@@ -1,8 +1,9 @@
+import { preferencesName, writerName } from './labels.ts';
 import { test, expect, type Page } from '@playwright/test';
 import { writerFilesystem } from './runtime';
 import { seedSession } from '../setup/seed-session.mjs';
 
-const preferences = (page: Page) => page.getByRole('dialog',{name:'Writer Preferences',exact:true});
+const preferences = (page: Page) => page.getByRole('dialog',{name:preferencesName,exact:true});
 async function open(page: Page, category?: string) {
   await writerFilesystem(page);
   await page.addInitScript(()=>localStorage.setItem('test.writer.autosave','false'));
@@ -85,7 +86,7 @@ test('recovery interval follows shared updates and preserves conflicting drafts'
   await interval.fill('8');await updateInterval(9);
   await expect(interval).toHaveValue('8');
   await modal.getByRole('button',{name:'Show all preferences',exact:true}).focus();
-  await expect(modal.getByText('The interval changed in another Writer window.',{exact:false})).toBeVisible();
+  await expect(modal.getByText(`The interval changed in another ${writerName} window.`,{exact:false})).toBeVisible();
   await modal.getByRole('button',{name:'Use my interval',exact:true}).click();
   await expect(interval).toHaveValue('8');
   await updateInterval(10);await expect(interval).toHaveValue('10');

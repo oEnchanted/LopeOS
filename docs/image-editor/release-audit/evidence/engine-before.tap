@@ -1,0 +1,2100 @@
+TAP version 13
+# Subtest: Paint Bucket outside the layer does not wrap into another pixel row
+not ok 1 - Paint Bucket outside the layer does not wrap into another pixel row
+  ---
+  duration_ms: 12.327584
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Uint8ClampedArray(256) [
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255,
+    +   255,
+        0,
+        0,
+    +   255
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0,
+    -   0
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 0
+    1: 0
+    2: 0
+    3: 0
+    4: 0
+    5: 0
+    6: 0
+    7: 0
+    8: 0
+    9: 0
+    10: 0
+    11: 0
+    12: 0
+    13: 0
+    14: 0
+    15: 0
+    16: 0
+    17: 0
+    18: 0
+    19: 0
+    20: 0
+    21: 0
+    22: 0
+    23: 0
+    24: 0
+    25: 0
+    26: 0
+    27: 0
+    28: 0
+    29: 0
+    30: 0
+    31: 0
+    32: 0
+    33: 0
+    34: 0
+    35: 0
+    36: 0
+    37: 0
+    38: 0
+    39: 0
+    40: 0
+    41: 0
+    42: 0
+    43: 0
+    44: 0
+    45: 0
+    46: 0
+    47: 0
+    48: 0
+    49: 0
+    50: 0
+    51: 0
+    52: 0
+    53: 0
+    54: 0
+    55: 0
+    56: 0
+    57: 0
+    58: 0
+    59: 0
+    60: 0
+    61: 0
+    62: 0
+    63: 0
+    64: 0
+    65: 0
+    66: 0
+    67: 0
+    68: 0
+    69: 0
+    70: 0
+    71: 0
+    72: 0
+    73: 0
+    74: 0
+    75: 0
+    76: 0
+    77: 0
+    78: 0
+    79: 0
+    80: 0
+    81: 0
+    82: 0
+    83: 0
+    84: 0
+    85: 0
+    86: 0
+    87: 0
+    88: 0
+    89: 0
+    90: 0
+    91: 0
+    92: 0
+    93: 0
+    94: 0
+    95: 0
+    96: 0
+    97: 0
+    98: 0
+    99: 0
+    100: 0
+    101: 0
+    102: 0
+    103: 0
+    104: 0
+    105: 0
+    106: 0
+    107: 0
+    108: 0
+    109: 0
+    110: 0
+    111: 0
+    112: 0
+    113: 0
+    114: 0
+    115: 0
+    116: 0
+    117: 0
+    118: 0
+    119: 0
+    120: 0
+    121: 0
+    122: 0
+    123: 0
+    124: 0
+    125: 0
+    126: 0
+    127: 0
+    128: 0
+    129: 0
+    130: 0
+    131: 0
+    132: 0
+    133: 0
+    134: 0
+    135: 0
+    136: 0
+    137: 0
+    138: 0
+    139: 0
+    140: 0
+    141: 0
+    142: 0
+    143: 0
+    144: 0
+    145: 0
+    146: 0
+    147: 0
+    148: 0
+    149: 0
+    150: 0
+    151: 0
+    152: 0
+    153: 0
+    154: 0
+    155: 0
+    156: 0
+    157: 0
+    158: 0
+    159: 0
+    160: 0
+    161: 0
+    162: 0
+    163: 0
+    164: 0
+    165: 0
+    166: 0
+    167: 0
+    168: 0
+    169: 0
+    170: 0
+    171: 0
+    172: 0
+    173: 0
+    174: 0
+    175: 0
+    176: 0
+    177: 0
+    178: 0
+    179: 0
+    180: 0
+    181: 0
+    182: 0
+    183: 0
+    184: 0
+    185: 0
+    186: 0
+    187: 0
+    188: 0
+    189: 0
+    190: 0
+    191: 0
+    192: 0
+    193: 0
+    194: 0
+    195: 0
+    196: 0
+    197: 0
+    198: 0
+    199: 0
+    200: 0
+    201: 0
+    202: 0
+    203: 0
+    204: 0
+    205: 0
+    206: 0
+    207: 0
+    208: 0
+    209: 0
+    210: 0
+    211: 0
+    212: 0
+    213: 0
+    214: 0
+    215: 0
+    216: 0
+    217: 0
+    218: 0
+    219: 0
+    220: 0
+    221: 0
+    222: 0
+    223: 0
+    224: 0
+    225: 0
+    226: 0
+    227: 0
+    228: 0
+    229: 0
+    230: 0
+    231: 0
+    232: 0
+    233: 0
+    234: 0
+    235: 0
+    236: 0
+    237: 0
+    238: 0
+    239: 0
+    240: 0
+    241: 0
+    242: 0
+    243: 0
+    244: 0
+    245: 0
+    246: 0
+    247: 0
+    248: 0
+    249: 0
+    250: 0
+    251: 0
+    252: 0
+    253: 0
+    254: 0
+    255: 0
+  actual:
+    0: 255
+    1: 0
+    2: 0
+    3: 255
+    4: 255
+    5: 0
+    6: 0
+    7: 255
+    8: 255
+    9: 0
+    10: 0
+    11: 255
+    12: 255
+    13: 0
+    14: 0
+    15: 255
+    16: 255
+    17: 0
+    18: 0
+    19: 255
+    20: 255
+    21: 0
+    22: 0
+    23: 255
+    24: 255
+    25: 0
+    26: 0
+    27: 255
+    28: 255
+    29: 0
+    30: 0
+    31: 255
+    32: 255
+    33: 0
+    34: 0
+    35: 255
+    36: 255
+    37: 0
+    38: 0
+    39: 255
+    40: 255
+    41: 0
+    42: 0
+    43: 255
+    44: 255
+    45: 0
+    46: 0
+    47: 255
+    48: 255
+    49: 0
+    50: 0
+    51: 255
+    52: 255
+    53: 0
+    54: 0
+    55: 255
+    56: 255
+    57: 0
+    58: 0
+    59: 255
+    60: 255
+    61: 0
+    62: 0
+    63: 255
+    64: 255
+    65: 0
+    66: 0
+    67: 255
+    68: 255
+    69: 0
+    70: 0
+    71: 255
+    72: 255
+    73: 0
+    74: 0
+    75: 255
+    76: 255
+    77: 0
+    78: 0
+    79: 255
+    80: 255
+    81: 0
+    82: 0
+    83: 255
+    84: 255
+    85: 0
+    86: 0
+    87: 255
+    88: 255
+    89: 0
+    90: 0
+    91: 255
+    92: 255
+    93: 0
+    94: 0
+    95: 255
+    96: 255
+    97: 0
+    98: 0
+    99: 255
+    100: 255
+    101: 0
+    102: 0
+    103: 255
+    104: 255
+    105: 0
+    106: 0
+    107: 255
+    108: 255
+    109: 0
+    110: 0
+    111: 255
+    112: 255
+    113: 0
+    114: 0
+    115: 255
+    116: 255
+    117: 0
+    118: 0
+    119: 255
+    120: 255
+    121: 0
+    122: 0
+    123: 255
+    124: 255
+    125: 0
+    126: 0
+    127: 255
+    128: 255
+    129: 0
+    130: 0
+    131: 255
+    132: 255
+    133: 0
+    134: 0
+    135: 255
+    136: 255
+    137: 0
+    138: 0
+    139: 255
+    140: 255
+    141: 0
+    142: 0
+    143: 255
+    144: 255
+    145: 0
+    146: 0
+    147: 255
+    148: 255
+    149: 0
+    150: 0
+    151: 255
+    152: 255
+    153: 0
+    154: 0
+    155: 255
+    156: 255
+    157: 0
+    158: 0
+    159: 255
+    160: 255
+    161: 0
+    162: 0
+    163: 255
+    164: 255
+    165: 0
+    166: 0
+    167: 255
+    168: 255
+    169: 0
+    170: 0
+    171: 255
+    172: 255
+    173: 0
+    174: 0
+    175: 255
+    176: 255
+    177: 0
+    178: 0
+    179: 255
+    180: 255
+    181: 0
+    182: 0
+    183: 255
+    184: 255
+    185: 0
+    186: 0
+    187: 255
+    188: 255
+    189: 0
+    190: 0
+    191: 255
+    192: 255
+    193: 0
+    194: 0
+    195: 255
+    196: 255
+    197: 0
+    198: 0
+    199: 255
+    200: 255
+    201: 0
+    202: 0
+    203: 255
+    204: 255
+    205: 0
+    206: 0
+    207: 255
+    208: 255
+    209: 0
+    210: 0
+    211: 255
+    212: 255
+    213: 0
+    214: 0
+    215: 255
+    216: 255
+    217: 0
+    218: 0
+    219: 255
+    220: 255
+    221: 0
+    222: 0
+    223: 255
+    224: 255
+    225: 0
+    226: 0
+    227: 255
+    228: 255
+    229: 0
+    230: 0
+    231: 255
+    232: 255
+    233: 0
+    234: 0
+    235: 255
+    236: 255
+    237: 0
+    238: 0
+    239: 255
+    240: 255
+    241: 0
+    242: 0
+    243: 255
+    244: 255
+    245: 0
+    246: 0
+    247: 255
+    248: 255
+    249: 0
+    250: 0
+    251: 255
+    252: 255
+    253: 0
+    254: 0
+    255: 255
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:12:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Reveal All mask covers a downscaled raster source instead of clipping to document dimensions
+not ok 2 - Reveal All mask covers a downscaled raster source instead of clipping to document dimensions
+  ---
+  duration_ms: 4.957166
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      Uint8ClampedArray(256) [
+        240,
+        80,
+        20,
+        255,
+    ...
+        255,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+        240,
+        80,
+        20,
+        255,
+        240,
+    ...
+        255,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0,
+    +   0
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255,
+    -   240,
+    -   80,
+    -   20,
+    -   255
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 240
+    1: 80
+    2: 20
+    3: 255
+    4: 240
+    5: 80
+    6: 20
+    7: 255
+    8: 240
+    9: 80
+    10: 20
+    11: 255
+    12: 240
+    13: 80
+    14: 20
+    15: 255
+    16: 240
+    17: 80
+    18: 20
+    19: 255
+    20: 240
+    21: 80
+    22: 20
+    23: 255
+    24: 240
+    25: 80
+    26: 20
+    27: 255
+    28: 240
+    29: 80
+    30: 20
+    31: 255
+    32: 240
+    33: 80
+    34: 20
+    35: 255
+    36: 240
+    37: 80
+    38: 20
+    39: 255
+    40: 240
+    41: 80
+    42: 20
+    43: 255
+    44: 240
+    45: 80
+    46: 20
+    47: 255
+    48: 240
+    49: 80
+    50: 20
+    51: 255
+    52: 240
+    53: 80
+    54: 20
+    55: 255
+    56: 240
+    57: 80
+    58: 20
+    59: 255
+    60: 240
+    61: 80
+    62: 20
+    63: 255
+    64: 240
+    65: 80
+    66: 20
+    67: 255
+    68: 240
+    69: 80
+    70: 20
+    71: 255
+    72: 240
+    73: 80
+    74: 20
+    75: 255
+    76: 240
+    77: 80
+    78: 20
+    79: 255
+    80: 240
+    81: 80
+    82: 20
+    83: 255
+    84: 240
+    85: 80
+    86: 20
+    87: 255
+    88: 240
+    89: 80
+    90: 20
+    91: 255
+    92: 240
+    93: 80
+    94: 20
+    95: 255
+    96: 240
+    97: 80
+    98: 20
+    99: 255
+    100: 240
+    101: 80
+    102: 20
+    103: 255
+    104: 240
+    105: 80
+    106: 20
+    107: 255
+    108: 240
+    109: 80
+    110: 20
+    111: 255
+    112: 240
+    113: 80
+    114: 20
+    115: 255
+    116: 240
+    117: 80
+    118: 20
+    119: 255
+    120: 240
+    121: 80
+    122: 20
+    123: 255
+    124: 240
+    125: 80
+    126: 20
+    127: 255
+    128: 240
+    129: 80
+    130: 20
+    131: 255
+    132: 240
+    133: 80
+    134: 20
+    135: 255
+    136: 240
+    137: 80
+    138: 20
+    139: 255
+    140: 240
+    141: 80
+    142: 20
+    143: 255
+    144: 240
+    145: 80
+    146: 20
+    147: 255
+    148: 240
+    149: 80
+    150: 20
+    151: 255
+    152: 240
+    153: 80
+    154: 20
+    155: 255
+    156: 240
+    157: 80
+    158: 20
+    159: 255
+    160: 240
+    161: 80
+    162: 20
+    163: 255
+    164: 240
+    165: 80
+    166: 20
+    167: 255
+    168: 240
+    169: 80
+    170: 20
+    171: 255
+    172: 240
+    173: 80
+    174: 20
+    175: 255
+    176: 240
+    177: 80
+    178: 20
+    179: 255
+    180: 240
+    181: 80
+    182: 20
+    183: 255
+    184: 240
+    185: 80
+    186: 20
+    187: 255
+    188: 240
+    189: 80
+    190: 20
+    191: 255
+    192: 240
+    193: 80
+    194: 20
+    195: 255
+    196: 240
+    197: 80
+    198: 20
+    199: 255
+    200: 240
+    201: 80
+    202: 20
+    203: 255
+    204: 240
+    205: 80
+    206: 20
+    207: 255
+    208: 240
+    209: 80
+    210: 20
+    211: 255
+    212: 240
+    213: 80
+    214: 20
+    215: 255
+    216: 240
+    217: 80
+    218: 20
+    219: 255
+    220: 240
+    221: 80
+    222: 20
+    223: 255
+    224: 240
+    225: 80
+    226: 20
+    227: 255
+    228: 240
+    229: 80
+    230: 20
+    231: 255
+    232: 240
+    233: 80
+    234: 20
+    235: 255
+    236: 240
+    237: 80
+    238: 20
+    239: 255
+    240: 240
+    241: 80
+    242: 20
+    243: 255
+    244: 240
+    245: 80
+    246: 20
+    247: 255
+    248: 240
+    249: 80
+    250: 20
+    251: 255
+    252: 240
+    253: 80
+    254: 20
+    255: 255
+  actual:
+    0: 240
+    1: 80
+    2: 20
+    3: 255
+    4: 240
+    5: 80
+    6: 20
+    7: 255
+    8: 0
+    9: 0
+    10: 0
+    11: 0
+    12: 0
+    13: 0
+    14: 0
+    15: 0
+    16: 0
+    17: 0
+    18: 0
+    19: 0
+    20: 0
+    21: 0
+    22: 0
+    23: 0
+    24: 0
+    25: 0
+    26: 0
+    27: 0
+    28: 0
+    29: 0
+    30: 0
+    31: 0
+    32: 240
+    33: 80
+    34: 20
+    35: 255
+    36: 240
+    37: 80
+    38: 20
+    39: 255
+    40: 0
+    41: 0
+    42: 0
+    43: 0
+    44: 0
+    45: 0
+    46: 0
+    47: 0
+    48: 0
+    49: 0
+    50: 0
+    51: 0
+    52: 0
+    53: 0
+    54: 0
+    55: 0
+    56: 0
+    57: 0
+    58: 0
+    59: 0
+    60: 0
+    61: 0
+    62: 0
+    63: 0
+    64: 0
+    65: 0
+    66: 0
+    67: 0
+    68: 0
+    69: 0
+    70: 0
+    71: 0
+    72: 0
+    73: 0
+    74: 0
+    75: 0
+    76: 0
+    77: 0
+    78: 0
+    79: 0
+    80: 0
+    81: 0
+    82: 0
+    83: 0
+    84: 0
+    85: 0
+    86: 0
+    87: 0
+    88: 0
+    89: 0
+    90: 0
+    91: 0
+    92: 0
+    93: 0
+    94: 0
+    95: 0
+    96: 0
+    97: 0
+    98: 0
+    99: 0
+    100: 0
+    101: 0
+    102: 0
+    103: 0
+    104: 0
+    105: 0
+    106: 0
+    107: 0
+    108: 0
+    109: 0
+    110: 0
+    111: 0
+    112: 0
+    113: 0
+    114: 0
+    115: 0
+    116: 0
+    117: 0
+    118: 0
+    119: 0
+    120: 0
+    121: 0
+    122: 0
+    123: 0
+    124: 0
+    125: 0
+    126: 0
+    127: 0
+    128: 0
+    129: 0
+    130: 0
+    131: 0
+    132: 0
+    133: 0
+    134: 0
+    135: 0
+    136: 0
+    137: 0
+    138: 0
+    139: 0
+    140: 0
+    141: 0
+    142: 0
+    143: 0
+    144: 0
+    145: 0
+    146: 0
+    147: 0
+    148: 0
+    149: 0
+    150: 0
+    151: 0
+    152: 0
+    153: 0
+    154: 0
+    155: 0
+    156: 0
+    157: 0
+    158: 0
+    159: 0
+    160: 0
+    161: 0
+    162: 0
+    163: 0
+    164: 0
+    165: 0
+    166: 0
+    167: 0
+    168: 0
+    169: 0
+    170: 0
+    171: 0
+    172: 0
+    173: 0
+    174: 0
+    175: 0
+    176: 0
+    177: 0
+    178: 0
+    179: 0
+    180: 0
+    181: 0
+    182: 0
+    183: 0
+    184: 0
+    185: 0
+    186: 0
+    187: 0
+    188: 0
+    189: 0
+    190: 0
+    191: 0
+    192: 0
+    193: 0
+    194: 0
+    195: 0
+    196: 0
+    197: 0
+    198: 0
+    199: 0
+    200: 0
+    201: 0
+    202: 0
+    203: 0
+    204: 0
+    205: 0
+    206: 0
+    207: 0
+    208: 0
+    209: 0
+    210: 0
+    211: 0
+    212: 0
+    213: 0
+    214: 0
+    215: 0
+    216: 0
+    217: 0
+    218: 0
+    219: 0
+    220: 0
+    221: 0
+    222: 0
+    223: 0
+    224: 0
+    225: 0
+    226: 0
+    227: 0
+    228: 0
+    229: 0
+    230: 0
+    231: 0
+    232: 0
+    233: 0
+    234: 0
+    235: 0
+    236: 0
+    237: 0
+    238: 0
+    239: 0
+    240: 0
+    241: 0
+    242: 0
+    243: 0
+    244: 0
+    245: 0
+    246: 0
+    247: 0
+    248: 0
+    249: 0
+    250: 0
+    251: 0
+    252: 0
+    253: 0
+    254: 0
+    255: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:22:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: Selection mask samples transformed source pixel centers and retains the whole source extent
+not ok 3 - Selection mask samples transformed source pixel centers and retains the whole source extent
+  ---
+  duration_ms: 0.629166
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:27:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 255
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 255
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:33:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: Aligning a group plus a selected descendant moves the descendant exactly once
+not ok 4 - Aligning a group plus a selected descendant moves the descendant exactly once
+  ---
+  duration_ms: 0.419916
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:37:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    10 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 10
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:44:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: Native Open rejects corrupt geometry, collections and filter data before accepting a document
+not ok 5 - Native Open rejects corrupt geometry, collections and filter data before accepting a document
+  ---
+  duration_ms: 0.571833
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:49:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception: missing transform position'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:63:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: Copy retains feathered selection coverage outside the marching-ants boundary
+not ok 6 - Copy retains feathered selection coverage outside the marching-ants boundary
+  ---
+  duration_ms: 0.349
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:68:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    -   3,
+        1,
+    +   1
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 3
+    1: 1
+  actual:
+    0: 1
+    1: 1
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:72:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: Deleting the active mask retargets color painting; undo restores mask editing and original pixels
+not ok 7 - Deleting the active mask retargets color painting; undo restores mask editing and original pixels
+  ---
+  duration_ms: 0.249834
+  type: 'test'
+  location: '/private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:79:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'mask' !== 'pixels'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pixels'
+  actual: 'mask'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/lope-engine-before-qvncuw0v/tests/image-editor/release-engine.test.ts:84:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 0
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 435.672084

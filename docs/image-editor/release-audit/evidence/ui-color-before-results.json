@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5188",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "dpr": 1,
+  "checks": [
+    {
+      "id": "PS-UI-05-color-hue-reflects-selected-color",
+      "expected": "120",
+      "actual": "30",
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-05-color-marker-reflects-selected-color",
+      "expected": {
+        "left": "100%",
+        "top": "0%"
+      },
+      "actual": {
+        "left": "45%",
+        "top": "25%"
+      },
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-06-hue-preserves-saturation-and-brightness",
+      "expected": "rgb(0, 0, 255)",
+      "actual": "rgb(102, 102, 204)",
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-07-saturation-keyboard-does-not-change-hue",
+      "expected": "rgb(3, 255, 3)",
+      "actual": "rgb(102, 104, 204)",
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-color-no-page-errors",
+      "expected": [],
+      "actual": [],
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

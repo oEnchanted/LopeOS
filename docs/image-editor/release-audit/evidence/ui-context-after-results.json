@@ -1,0 +1,69 @@
+{
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "base": "http://127.0.0.1:5189",
+  "entry": "/tests/image-editor/release.html",
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "id": "PS-UI-09-context-command-disabled",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-10-context-initial-focus",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-10-context-escape-dismisses",
+      "expected": 0,
+      "actual": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-10-context-focus-return",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-10-arrow-skips-disabled",
+      "expected": "Group from Layers",
+      "actual": "Group from Layers",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-11-panel-context-focus",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-12-compact-popup-contained",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-12-scaled-popup-contained",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-context-no-page-errors",
+      "expected": [],
+      "actual": [],
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "build": {
+    "commit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+    "branch": "audit/photoshop-release-20261113",
+    "dirty": true,
+    "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+    "builtAt": "2026-11-13T23:14:00.318Z",
+    "mode": "production"
+  }
+}

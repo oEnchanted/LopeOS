@@ -1,0 +1,123 @@
+{
+  "result": "PASS: expected PSD merged white-matte encoding; direct Pillow straight-RGBA comparison was invalid",
+  "productSourceChanged": false,
+  "reader": {
+    "name": "Pillow",
+    "version": "11.3.0",
+    "pluginSha256": "2269cd446e1500db361804d754407943ecb2d49b2473a5d1551b59622d9f00b8"
+  },
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "fixtures": {
+    "layered.png": "1d24d9e6d2d8c9c054c0fd20afb3b90a141f1237e3297fa36dacfb9659559af6",
+    "layered.psd": "de8274466b86fbded54647bb38d3d7a1d2c35254aaabfcf12e89fe475b5bdfa1"
+  },
+  "negativeLayerCount": -4,
+  "partialAlphaPixels": 34,
+  "rawVisibleMismatchesBeforeNormalization": 34,
+  "alphaMismatches": 0,
+  "exactEncodedWhiteMatteMismatches": 0,
+  "maximumInverseStraightChannelQuantizationError": 6.384615384615387,
+  "maximumVisibleChannelQuantizationError": 0.9764705882352969,
+  "forward": "For 0<A<255: stored C = trunc(straight C * A/255 + 255*(1-A/255)). Opaque channels remain unchanged.",
+  "inverse": "For A>0: straight C = clamp((stored C + A - 255)*255/A). Alpha is unchanged; alpha-zero RGB is invisible.",
+  "example": {
+    "coordinate": [
+      38,
+      20
+    ],
+    "png": [
+      47,
+      175,
+      110,
+      194
+    ],
+    "pillowRawPsd": [
+      96,
+      194,
+      144,
+      194
+    ]
+  },
+  "sources": [
+    {
+      "url": "https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/",
+      "scope": "Layer info: negative layer count identifies merged transparency. The specification does not itself state the white-matte interpretation."
+    },
+    {
+      "url": "https://github.com/psd-tools/psd-tools/blob/v1.10.9/src/psd_tools/api/pil_io.py",
+      "scope": "Independent reader calls _remove_white_background for merged image data, not layer image data."
+    },
+    {
+      "url": "https://github.com/python-pillow/Pillow/blob/main/src/PIL/PsdImagePlugin.py",
+      "scope": "Pillow directly maps four PSD RGB channels to RGBA; no merged white-matte removal."
+    },
+    {
+      "path": "packages/image-engine/node_modules/ag-psd/src/psdWriter.ts:322",
+      "scope": "Installed ag-psd 31.0.3 adds white matte to merged RGB."
+    },
+    {
+      "path": "packages/image-engine/node_modules/ag-psd/src/psdReader.ts:1010",
+      "scope": "Installed ag-psd 31.0.3 removes merged white matte."
+    }
+  ],
+  "limits": "This checks merged channel encoding and a documented independent-reader transformation. It does not establish exact Adobe rendering, lossless merged RGB recovery, or complete layer/text/mask/effect interoperability. Eight-bit white matting quantizes partially transparent RGB; retain native originals.",
+  "independentReaderExecution": {
+    "status": "PASS",
+    "reader": "psd-tools",
+    "version": "1.10.9",
+    "method": "PSDImage.open(...).topil(apply_icc=False)",
+    "alphaMismatches": 0,
+    "maximumStraightChannelError": 7,
+    "maximumVisibleChannelError": 1.2588235294117647,
+    "example": {
+      "coordinate": [
+        38,
+        20
+      ],
+      "png": [
+        47,
+        175,
+        110,
+        194
+      ],
+      "psdTools": [
+        46,
+        174,
+        109,
+        194
+      ]
+    },
+    "layers": [
+      {
+        "name": "Layer 1",
+        "kind": "pixel",
+        "hasMask": false,
+        "blendMode": "BlendMode.NORMAL",
+        "opacity": 255
+      },
+      {
+        "name": "original.png",
+        "kind": "pixel",
+        "hasMask": true,
+        "blendMode": "BlendMode.NORMAL",
+        "opacity": 255
+      },
+      {
+        "name": "Brightness/Contrast",
+        "kind": "brightnesscontrast",
+        "hasMask": true,
+        "blendMode": "BlendMode.NORMAL",
+        "opacity": 255
+      },
+      {
+        "name": "Audit caf\u00e9\n\u4e16\u754c",
+        "kind": "type",
+        "hasMask": false,
+        "blendMode": "BlendMode.NORMAL",
+        "opacity": 255,
+        "text": "Audit caf\u00e9\r\u4e16\u754c"
+      }
+    ],
+    "limits": "Merged preview decode plus layer/mask/text metadata inspection; this does not certify Photoshop rendering or every semantic field."
+  }
+}

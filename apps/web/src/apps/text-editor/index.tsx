@@ -122,7 +122,7 @@ export default function TextEditor({ context }: { context: AppContext }) {
     try {
       const snapshot = current.current;
       let path = snapshot.path;
-      if (as || !path) path = await context.services.dialogs.saveFile({ defaultName: snapshot.path ? baseName(snapshot.path) : 'Untitled.txt' });
+      if (as || !path) path = await context.services.dialogs.saveFile({ defaultName: snapshot.path || 'Untitled.txt' });
       if (!path) return false;
       const content = snapshot.text;
       const data = new TextEncoder().encode(content);

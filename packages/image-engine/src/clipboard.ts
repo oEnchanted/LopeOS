@@ -3,7 +3,9 @@ import { SurfaceWriter, pixel } from './pixels.ts';
 import { selectionBounds } from './selection.ts';
 export type PixelClipboard={pixels:Surface;origin:Point;resolution:number};
 export function copyRendered(doc:ImageDocument,rgba:Uint8ClampedArray,bounds?:{x:number;y:number;width:number;height:number}):PixelClipboard{
-  const selection=doc.selection?selectionBounds(doc):null;if(doc.selection&&!selection)throw new Error('The selection is empty.');
+  // Marching ants use 50% coverage, but copied pixels must include every
+  // nonzero feathered edge, even when no marching-ants boundary is visible.
+  const selection=doc.selection?selectionBounds(doc,0):null;if(doc.selection&&!selection)throw new Error('The selection is empty.');
   const area=selection||bounds||{x:0,y:0,width:doc.width,height:doc.height};const x=Math.max(0,Math.floor(area.x)),y=Math.max(0,Math.floor(area.y)),width=Math.min(doc.width-x,Math.ceil(area.width)),height=Math.min(doc.height-y,Math.ceil(area.height));
   if(width<1||height<1)throw new Error('There are no pixels to copy.');const writer=new SurfaceWriter(surface(width,height));
   for(let row=0;row<height;row++)for(let column=0;column<width;column++){const at=((row+y)*doc.width+column+x)*4;const alpha=rgba[at+3]*(doc.selection?doc.selection[(row+y)*doc.width+column+x]/255:1);if(alpha)writer.set(column,row,[rgba[at],rgba[at+1],rgba[at+2],alpha]);}

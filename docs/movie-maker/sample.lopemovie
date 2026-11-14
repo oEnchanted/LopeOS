@@ -1,0 +1,514 @@
+{
+  "format": "lope-movie",
+  "version": 1,
+  "id": "lope-sample-adventure-v1",
+  "name": "A little adventure",
+  "fps": {
+    "num": 30,
+    "den": 1
+  },
+  "aspectRatio": "16:9",
+  "assets": {
+    "sample-scene-1": {
+      "id": "sample-scene-1",
+      "name": "01 - First light.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 21931,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-2": {
+      "id": "sample-scene-2",
+      "name": "02 - By the water.png",
+      "kind": "image",
+      "mime": "image/png",
+      "size": 62414,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-3": {
+      "id": "sample-scene-3",
+      "name": "River in motion.webm",
+      "kind": "video",
+      "mime": "video/webm",
+      "size": 1822979,
+      "durationFrames": 720,
+      "width": 640,
+      "height": 360,
+      "hasAudio": true
+    },
+    "sample-scene-4": {
+      "id": "sample-scene-4",
+      "name": "03 - The quiet trail.webp",
+      "kind": "image",
+      "mime": "image/webp",
+      "size": 6832,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-5": {
+      "id": "sample-scene-5",
+      "name": "04 - Into the hills.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 22020,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-6": {
+      "id": "sample-scene-6",
+      "name": "05 - Cloud watching.png",
+      "kind": "image",
+      "mime": "image/png",
+      "size": 61292,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-7": {
+      "id": "sample-scene-7",
+      "name": "Over the hills.webm",
+      "kind": "video",
+      "mime": "video/webm",
+      "size": 1263527,
+      "durationFrames": 720,
+      "width": 640,
+      "height": 360,
+      "hasAudio": true
+    },
+    "sample-scene-8": {
+      "id": "sample-scene-8",
+      "name": "06 - Wild places.webp",
+      "kind": "image",
+      "mime": "image/webp",
+      "size": 6530,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-9": {
+      "id": "sample-scene-9",
+      "name": "07 - Golden hour.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 20495,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-scene-10": {
+      "id": "sample-scene-10",
+      "name": "08 - The way home.png",
+      "kind": "image",
+      "mime": "image/png",
+      "size": 62241,
+      "durationFrames": 210,
+      "width": 960,
+      "height": 540,
+      "hasAudio": false
+    },
+    "sample-music": {
+      "id": "sample-music",
+      "name": "A little adventure - original music.wav",
+      "kind": "audio",
+      "mime": "audio/wav",
+      "size": 7938044,
+      "durationFrames": 5400,
+      "width": 0,
+      "height": 0,
+      "hasAudio": true
+    },
+    "sample-narration": {
+      "id": "sample-narration",
+      "name": "A little adventure - narration.wav",
+      "kind": "audio",
+      "mime": "audio/wav",
+      "size": 508268,
+      "durationFrames": 342,
+      "width": 0,
+      "height": 0,
+      "hasAudio": true
+    }
+  },
+  "clips": [
+    {
+      "id": "sample-title",
+      "name": "A little adventure",
+      "kind": "title",
+      "sourceIn": 0,
+      "sourceOut": 180,
+      "duration": 180,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "none",
+      "transition": {
+        "kind": "none",
+        "duration": 0
+      },
+      "volume": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "text": {
+        "text": "A little adventure",
+        "font": "Arial",
+        "size": 64,
+        "color": "#ffffff",
+        "position": "center",
+        "outline": 2,
+        "background": "#00000000",
+        "animation": "fade"
+      }
+    },
+    {
+      "id": "sample-clip-1",
+      "assetId": "sample-scene-1",
+      "name": "01 - First light.jpg",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "in",
+      "transition": {
+        "kind": "dissolve",
+        "duration": 24
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-2",
+      "assetId": "sample-scene-2",
+      "name": "02 - By the water.png",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "out",
+      "transition": {
+        "kind": "fade",
+        "duration": 12
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-3",
+      "assetId": "sample-scene-3",
+      "name": "River in motion.webm",
+      "kind": "video",
+      "sourceIn": 45,
+      "sourceOut": 549,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "none",
+      "transition": {
+        "kind": "fade",
+        "duration": 12
+      },
+      "volume": 0.7,
+      "fadeIn": 15,
+      "fadeOut": 30
+    },
+    {
+      "id": "sample-clip-4",
+      "assetId": "sample-scene-4",
+      "name": "03 - The quiet trail.webp",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "out",
+      "transition": {
+        "kind": "dissolve",
+        "duration": 24
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-5",
+      "assetId": "sample-scene-5",
+      "name": "04 - Into the hills.jpg",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "warm",
+      "panZoom": "in",
+      "transition": {
+        "kind": "fade",
+        "duration": 12
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-6",
+      "assetId": "sample-scene-6",
+      "name": "05 - Cloud watching.png",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "out",
+      "transition": {
+        "kind": "fade",
+        "duration": 12
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-7",
+      "assetId": "sample-scene-7",
+      "name": "Over the hills.webm",
+      "kind": "video",
+      "sourceIn": 75,
+      "sourceOut": 579,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "none",
+      "transition": {
+        "kind": "dissolve",
+        "duration": 24
+      },
+      "volume": 0.7,
+      "fadeIn": 15,
+      "fadeOut": 30
+    },
+    {
+      "id": "sample-clip-8",
+      "assetId": "sample-scene-8",
+      "name": "06 - Wild places.webp",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "out",
+      "transition": {
+        "kind": "fade",
+        "duration": 12
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-9",
+      "assetId": "sample-scene-9",
+      "name": "07 - Golden hour.jpg",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "vintage",
+      "panZoom": "in",
+      "transition": {
+        "kind": "fade",
+        "duration": 12
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-clip-10",
+      "assetId": "sample-scene-10",
+      "name": "08 - The way home.png",
+      "kind": "image",
+      "sourceIn": 0,
+      "sourceOut": 504,
+      "duration": 504,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "out",
+      "transition": {
+        "kind": "dissolve",
+        "duration": 24
+      },
+      "volume": 0.7,
+      "fadeIn": 0,
+      "fadeOut": 0
+    },
+    {
+      "id": "sample-credits",
+      "name": "Credits",
+      "kind": "title",
+      "sourceIn": 0,
+      "sourceOut": 180,
+      "duration": 180,
+      "speed": 1,
+      "rotation": 0,
+      "fit": "fit",
+      "effect": "none",
+      "panZoom": "none",
+      "transition": {
+        "kind": "none",
+        "duration": 0
+      },
+      "volume": 1,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "text": {
+        "text": "A little adventure\nMade with LopeOS Movie Maker\nOriginal sample illustrations & music",
+        "font": "Arial",
+        "size": 38,
+        "color": "#ffffff",
+        "position": "center",
+        "outline": 2,
+        "background": "#00000000",
+        "animation": "scroll"
+      }
+    }
+  ],
+  "overlays": [
+    {
+      "text": "A morning worth remembering",
+      "font": "Arial",
+      "size": 34,
+      "color": "#ffffff",
+      "position": "bottom",
+      "outline": 1,
+      "background": "#152537a0",
+      "animation": "rise",
+      "id": "sample-caption-0",
+      "clipId": "sample-clip-1",
+      "start": 60,
+      "duration": 150
+    },
+    {
+      "text": "Follow the river",
+      "font": "Arial",
+      "size": 34,
+      "color": "#ffffff",
+      "position": "bottom",
+      "outline": 1,
+      "background": "#152537a0",
+      "animation": "rise",
+      "id": "sample-caption-2",
+      "clipId": "sample-clip-3",
+      "start": 60,
+      "duration": 150
+    },
+    {
+      "text": "Take the scenic route",
+      "font": "Arial",
+      "size": 34,
+      "color": "#ffffff",
+      "position": "bottom",
+      "outline": 1,
+      "background": "#152537a0",
+      "animation": "rise",
+      "id": "sample-caption-5",
+      "clipId": "sample-clip-6",
+      "start": 60,
+      "duration": 150
+    },
+    {
+      "text": "A little closer to home",
+      "font": "Arial",
+      "size": 34,
+      "color": "#ffffff",
+      "position": "bottom",
+      "outline": 1,
+      "background": "#152537a0",
+      "animation": "rise",
+      "id": "sample-caption-8",
+      "clipId": "sample-clip-9",
+      "start": 60,
+      "duration": 150
+    }
+  ],
+  "audio": [
+    {
+      "id": "sample-music-track",
+      "assetId": "sample-music",
+      "name": "A little adventure - original music.wav",
+      "kind": "music",
+      "start": 0,
+      "sourceIn": 0,
+      "sourceOut": 5400,
+      "volume": 0.7,
+      "fadeIn": 60,
+      "fadeOut": 120
+    },
+    {
+      "id": "sample-narration-track",
+      "assetId": "sample-narration",
+      "name": "A little adventure - narration.wav",
+      "kind": "narration",
+      "clipId": "sample-clip-1",
+      "start": 45,
+      "sourceIn": 3,
+      "sourceOut": 339,
+      "volume": 1,
+      "fadeIn": 3,
+      "fadeOut": 6
+    }
+  ],
+  "emphasis": "narration",
+  "exportSettings": {
+    "width": 1280,
+    "height": 720,
+    "fps": {
+      "num": 30,
+      "den": 1
+    },
+    "bitrate": 5000000,
+    "audioBitrate": 128000,
+    "includeAudio": true
+  }
+}

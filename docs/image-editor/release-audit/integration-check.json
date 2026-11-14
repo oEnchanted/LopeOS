@@ -1,0 +1,20 @@
+{
+  "ownedFiles": [
+    "apps/web/src/apps/image-editor/CanvasView.tsx",
+    "apps/web/src/apps/image-editor/index.tsx",
+    "apps/web/src/apps/image-editor/menus.tsx",
+    "apps/web/src/apps/image-editor/menus.css",
+    "apps/web/src/apps/image-editor/panels.tsx",
+    "apps/web/src/apps/image-editor/session.ts",
+    "apps/web/src/apps/image-editor/tools.tsx",
+    "packages/image-engine/src/clipboard.ts",
+    "packages/image-engine/src/model.ts",
+    "packages/image-engine/src/native.ts",
+    "packages/image-engine/src/operations.ts",
+    "packages/image-engine/src/pixels.ts",
+    "packages/image-engine/src/selection.ts"
+  ],
+  "concurrentConflicts": [],
+  "baseline": "audit-baseline.json SHA256 plus base commit blobs",
+  "preserveUserWork": true
+}

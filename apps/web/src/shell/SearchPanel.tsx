@@ -188,10 +188,14 @@ export function SearchPanel({ services, commands, close, initialScope = 'all' }:
       event.preventDefault(); event.stopPropagation(); if (conversationMode && ['loading', 'checking', 'generating'].includes(ai.phase)) { spotlightAI.stop(); input.current?.focus(); return; } if (q) changeQuery(''); else if (scope !== 'all') changeScope('all'); else close(); return;
     }
     if (event.key === 'Tab') {
-      const nodes = [...(dialog.current?.querySelectorAll<HTMLElement>('button:not(:disabled):not([tabindex="-1"]),input:not(:disabled),textarea:not(:disabled),select:not(:disabled),[tabindex="0"]') ?? [])];
-      const first = nodes[0], last = nodes.at(-1);
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      // Move focus explicitly on every Tab. WebKit's native order skips buttons (unless the
+      // user enabled Safari's "Press Tab to highlight each item") and would leave the dialog.
+      const nodes = [...(dialog.current?.querySelectorAll<HTMLElement>('button:not(:disabled):not([tabindex="-1"]),input:not(:disabled),textarea:not(:disabled),select:not(:disabled),a[href],[tabindex="0"]') ?? [])].filter(node => node.getClientRects().length > 0);
+      if (nodes.length) {
+        event.preventDefault();
+        const index = nodes.indexOf(document.activeElement as HTMLElement);
+        nodes[index < 0 ? (event.shiftKey ? nodes.length - 1 : 0) : (index + (event.shiftKey ? -1 : 1) + nodes.length) % nodes.length].focus();
+      }
       event.stopPropagation(); return;
     }
     if (event.target !== input.current) return;

@@ -1,9 +1,10 @@
+import { preferencesName } from './labels.ts';
 import { test, expect, type Page } from '@playwright/test';
 import { createRequire } from 'node:module';
 import { writerFilesystem } from './runtime';
 import { pdfText } from './pdf';
 const { unzipSync, strFromU8 } = createRequire(import.meta.url)('../../packages/document-engine/node_modules/fflate');
-const modal = (page: Page) => page.getByRole('dialog', { name: 'Writer Preferences', exact: true });
+const modal = (page: Page) => page.getByRole('dialog', { name: preferencesName, exact: true });
 const body = (page: Page) => page.getByRole('textbox', { name: 'Document content', exact: true });
 async function open(page: Page, path = '') {
   const fs = await writerFilesystem(page);
@@ -52,7 +53,7 @@ test('category grid, history, search, File Options and keyboard shortcut open th
   await modal(page).getByRole('button', { name:'Show all preferences',exact:true }).click();
   await modal(page).getByRole('button', { name:'Save',exact:true }).click();
   await modal(page).getByRole('button', { name:'Previous preferences pane',exact:true }).click();
-  await expect(modal(page).locator('h1')).toHaveText('Writer Preferences');
+  await expect(modal(page).locator('h1')).toHaveText(preferencesName);
   await modal(page).getByRole('button', { name:'Previous preferences pane',exact:true }).click();
   await expect(modal(page).locator('h1')).toHaveText('General');
   await modal(page).getByLabel('Search preferences', {exact:true}).fill('recovery');

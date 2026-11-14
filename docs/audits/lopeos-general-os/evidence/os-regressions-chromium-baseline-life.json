@@ -1,0 +1,27 @@
+{
+  "engine": "chromium",
+  "base": "http://127.0.0.1:4190",
+  "ranAt": "2026-11-13T23:38:43.394Z",
+  "pass": 0,
+  "fail": 2,
+  "results": [
+    {
+      "id": "life-01",
+      "title": "Retrying an app whose code chunk failed to load actually reloads it",
+      "result": "FAIL",
+      "ms": 8861,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: getByTestId('calculator-app') | Expected: visible | Timeout: 8000ms | Error: element(s) not found",
+      "pageErrors": []
+    },
+    {
+      "id": "life-02",
+      "title": "A failed desktop (Shell) chunk shows a recovery path instead of a blank page",
+      "result": "FAIL",
+      "ms": 10063,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: getByRole('alert') | Expected: visible | Timeout: 10000ms | Error: element(s) not found",
+      "pageErrors": [
+        "Failed to fetch dynamically imported module: http://127.0.0.1:4190/assets/Shell-j865si10.js"
+      ]
+    }
+  ]
+}

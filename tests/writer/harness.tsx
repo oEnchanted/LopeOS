@@ -9,6 +9,9 @@ import { Commands } from '../../apps/web/src/shell/commands';
 import { fileService } from '../../packages/runtime-client/src';
 import { WriterEngine, createDocument } from '../../packages/document-engine/src';
 import type { AppContext } from '../../packages/contracts/src';
+// Test-only access to the same public adapter mounted by the real Writer UI.
+const mountWriter = WriterEngine.prototype.mount;
+WriterEngine.prototype.mount = function (...args) { (window as any).writerTestEngine = this; return mountWriter.apply(this,args); };
 const query = new URLSearchParams(location.search);
 if (query.has('engine')) {
   const host = document.getElementById('root')!;

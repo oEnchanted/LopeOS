@@ -1,0 +1,6 @@
+apps/web/src/apps/movie-maker/manifest.ts(6,23): error TS2307: Cannot find module './index' or its corresponding type declarations.
+apps/web/src/apps/spreadsheet/manifest.ts(6,23): error TS2307: Cannot find module './index' or its corresponding type declarations.
+packages/media-engine/src/media.ts(2,33): error TS2307: Cannot find module '../../movie-maker/src/model' or its corresponding type declarations.
+packages/media-engine/src/types.ts(1,47): error TS2307: Cannot find module '../../movie-maker/src/model' or its corresponding type declarations.
+packages/spreadsheet-engine/src/persistence.ts(2,56): error TS2307: Cannot find module './io.ts' or its corresponding type declarations.
+packages/spreadsheet-engine/src/persistence.ts(54,32): error TS18048: 'previous' is possibly 'undefined'.

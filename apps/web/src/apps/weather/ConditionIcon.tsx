@@ -15,7 +15,7 @@ export function ConditionIcon({ code, isDay = true, size = 30 }: { code: number;
       <g stroke="#ffd779" strokeWidth="2" strokeLinecap="round"><path d="M20 4v3M20 33v3M4 20h3M33 20h3M8.7 8.7l2.2 2.2M29.1 29.1l2.2 2.2M8.7 31.3l2.2-2.2M29.1 10.9l2.2-2.2"/></g>
       <circle cx="20" cy="20" r="9" fill={'url(#' + id + '-sun)'}/>
     </g> : <path d={partial ? 'M24 5a13 13 0 0 1-14 18A12 12 0 0 0 24 5Z' : 'M25 5A15 15 0 0 1 8 27 15 15 0 1 0 25 5Z'} fill="#fff2cf"/>)}
-    {!clear && !fog && <path d="M11 29a7 7 0 1 1 1.2-13.9A9 9 0 0 1 29.5 17a6 6 0 0 1 .5 12H11Z" fill={'url(#' + id + '-cloud)'} stroke="#fff" strokeOpacity=".32" strokeWidth=".5"/>}
+    {!clear && !fog && <path d="M11 29a7 7 0 1 1 1.2-13.9A9 9 0 0 1 29.5 17a6 6 0 0 1 .5 12H11Z" fill={'url(#' + id + '-cloud)'} stroke="var(--glass-muted, #fff)" strokeOpacity=".4" strokeWidth=".7"/>}
     {rain && <path d="m13 32-2 4m10-4-2 4m10-4-2 4" stroke="#8ed3ff" strokeWidth="2.3" strokeLinecap="round"/>}
     {snow && <g fill="#d9f4ff"><circle cx="12" cy="34" r="1.6"/><circle cx="21" cy="36" r="1.6"/><circle cx="29" cy="33" r="1.6"/></g>}
     {storm && <path d="m22 25-6 8h5l-2 6 9-10h-6l3-4Z" fill="#ffdc78"/>}

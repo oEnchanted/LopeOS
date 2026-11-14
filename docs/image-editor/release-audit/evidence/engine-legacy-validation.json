@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "baseline": "ec4599f",
+  "fixture": "engine-legacy-fixture.lopeimage",
+  "sha256": "0fa1f167da7b086aa3b9ce7059a56005f8bb510c0de3bd979243df372c49ca33",
+  "checks": [
+    "Old serializer → current parser preserves every field, typed byte and layer",
+    "Current reserialization equals old serialized bytes",
+    "Old constructor fields, optional omissions, Unicode text, negative tracking, masks, nested group, shape, embedded source, effects, adjustments, filters, paths/guides and soft saved selection accepted"
+  ],
+  "review": {
+    "metadata": "All required native metadata has been emitted since original engine commit 71e9cb5.",
+    "transforms": "x/y/rotation/scale were always required Transform fields; optional skewX remains accepted.",
+    "text": "Leading .1–10 and tracking -100–1000 are supported UI ranges and pass; new validation rejects non-finite/missing values.",
+    "optional": "Absent rasterFilters, savedSelections, skewX, mask offset, text and shapes remain accepted.",
+    "boundary": "No private user project corpus was available or read; unknown externally authored v1 files are not certified."
+  }
+}

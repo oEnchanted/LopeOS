@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-13",
+  "browser": "Chromium 158.0.8127.18",
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "scale": 1,
+  "checks": [
+    "Lightroom is registered and launches from the LopeOS Dock",
+    "Four real public-domain JPEGs are decoded, reviewed and durably imported",
+    "Exposure changes actual image pixels and numeric values",
+    "Undo reproduces the original rendering",
+    "Aspect crop changes actual output dimensions",
+    "A source-relative gradient mask can be placed on the photograph",
+    "Named version is stored independently from the active recipe",
+    "Reload restores photos, recipe, crop, mask, star rating and window",
+    "Export is a real 16-bit PNG with the committed crop dimensions",
+    "Grid and square layouts display the durable library",
+    "Typing Lightroom shortcut letters in search does not trigger app commands",
+    "Every original checksum remains unchanged; mask, version and rating exist in durable storage",
+    "Library backup is a real ZIP; same-library restoration validates bytes and skips existing asset IDs",
+    "A fresh browser library restores originals, albums, masks, versions and ratings from the ZIP backup",
+    "XMP round trip preserves keywords and supported approximate edit parameters with an import report",
+    "Narrow LopeOS window collapses navigation without root overflow",
+    "Injected quota failure produces an honest failed-save state; retry durably recovers the pending edit",
+    "A preset applies to all four selected photos and one shared undo restores all four prior recipes",
+    "Returning from Detail restores the virtualized grid scroll position",
+    "A real IndexedDB library of 1000 procedural photos scrolls with fewer than 80 thumbnail elements rendered"
+  ],
+  "metrics": {
+    "previewUpdateObservedWithPollingMs": 983,
+    "lastPreviewRequestMs": 286.69999999925494,
+    "largeLibrary": {
+      "storedPhotos": 1000,
+      "renderedElementsAtTop": 40,
+      "fixture": "Original 32x24 procedural PNG, kept as 1000 separate stable asset identities"
+    }
+  },
+  "errors": []
+}

@@ -125,6 +125,12 @@ export function createBrowserServer(engine, options) {
           const value = parse(await body(request));
           if (!Array.isArray(value.fileIds) || value.fileIds.some(v => typeof v !== 'string')) throw new Error('Invalid file selection.');
           files = value.fileIds.map(fileId => ({ fileId }));
+        } else if (type.startsWith('multipart/form-data')) {
+          const raw = await body(request, 33 * 1024 * 1024);
+          const form = await new Response(raw, { headers: { 'Content-Type': type } }).formData();
+          const selected = form.getAll('files');
+          if (!selected.length || selected.length > 20 || selected.some(file => typeof file === 'string') || selected.reduce((sum, file) => sum + file.size, 0) > 32 * 1024 * 1024) throw new Error('Choose up to 20 files totaling at most 32 MiB.');
+          files = await Promise.all(selected.map(async file => ({ name: file.name, bytes: Buffer.from(await file.arrayBuffer()) })));
         } else {
           const raw = await body(request, 32 * 1024 * 1024);
           const filename = request.headers['x-file-name'];

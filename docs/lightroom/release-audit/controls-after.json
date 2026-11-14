@@ -1,0 +1,122 @@
+{
+  "phase": "after",
+  "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "browser": "158.0.8127.18",
+  "viewport": {
+    "width": 1000,
+    "height": 800
+  },
+  "deviceScaleFactor": 1,
+  "checks": [
+    {
+      "id": "LR-CTRL-001",
+      "result": "PASS",
+      "observed": {
+        "value": "-0.75",
+        "commits": 1
+      }
+    },
+    {
+      "id": "LR-CTRL-002",
+      "result": "PASS",
+      "observed": {
+        "value": "1.25"
+      }
+    },
+    {
+      "id": "LR-CTRL-003",
+      "result": "PASS",
+      "observed": {
+        "clampedMaximum": 5,
+        "emptyEditPreservesValue": true,
+        "finePrecision": "0.123"
+      }
+    },
+    {
+      "id": "LR-VIEW-001",
+      "result": "PASS",
+      "observed": {
+        "x": 80,
+        "y": 35
+      }
+    },
+    {
+      "id": "LR-VIEW-002",
+      "result": "PASS",
+      "observed": {
+        "delta": {
+          "x": -40,
+          "y": 15
+        },
+        "originalRemainsReadOnly": true
+      }
+    },
+    {
+      "id": "LR-VIEW-003",
+      "result": "PASS",
+      "observed": {
+        "sameNamedAssetResetsPan": true
+      }
+    },
+    {
+      "id": "LR-MASK-001",
+      "result": "PASS",
+      "observed": {
+        "x": 37.5,
+        "y": 20,
+        "width": 50,
+        "height": 40
+      }
+    },
+    {
+      "id": "LR-MASK-002",
+      "result": "PASS",
+      "observed": {
+        "width": 10,
+        "height": 16
+      }
+    },
+    {
+      "id": "LR-MASK-003",
+      "result": "PASS",
+      "observed": {
+        "outsideSourceClickLeavesRecipeValid": true
+      }
+    },
+    {
+      "id": "LR-CROP-001",
+      "result": "PASS",
+      "observed": {
+        "escapeRestoresCrop": true
+      }
+    },
+    {
+      "id": "LR-CROP-002",
+      "result": "PASS",
+      "observed": {
+        "crop": {
+          "x": 0,
+          "y": 0,
+          "width": 0.9975,
+          "height": 0.9666666666666667
+        },
+        "keyboardStep": "1 preview pixel; Shift 10 preview pixels; native granularity unverified"
+      }
+    },
+    {
+      "id": "LR-CURVE-001",
+      "result": "PASS",
+      "observed": {
+        "escapeRestoresCurvePoint": true
+      }
+    },
+    {
+      "id": "LR-CURVE-002",
+      "result": "PASS",
+      "observed": {
+        "keyboardDeletionRetainsEndpoints": true
+      }
+    }
+  ],
+  "errors": []
+}

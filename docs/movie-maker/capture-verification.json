@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "Camera access starts only after Enable camera; permission denial remains recoverable",
+    "Camera permission resolving after dialog close stops video and microphone tracks",
+    "Late camera permission after tab suspension cannot reactivate hidden capture",
+    "Generated webcam video and microphone use real MediaRecorder: preview, pause/resume, stop, playable review and editable clip import with audio",
+    "Snapshot renders the selected project frame as genuine 1280×720 PNG and inserts it as an editable still",
+    "Audio-only export downloads independently decoded stereo PCM WAV with audible source sound",
+    "Add music accepts the real audio track of a video without adding its picture to the storyboard",
+    "Unmounted capture stops every track even when permission resolves afterward"
+  ],
+  "errors": [],
+  "recordedFrames": 42,
+  "snapshot": {
+    "width": 1280,
+    "height": 720,
+    "bytes": 86304
+  },
+  "audioOnly": {
+    "channels": 2,
+    "sampleRate": 48000,
+    "duration": 8.4,
+    "rms": 0.05670027874083156
+  },
+  "passed": true
+}

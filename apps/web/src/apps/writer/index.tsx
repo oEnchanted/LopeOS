@@ -15,6 +15,7 @@ import { useWriterPreferences, playWriterSound } from './preferences';
 import { useExitPresence, useReducedMotion } from './motion';
 import { useSystemAppearance } from './systemAppearance';
 import { readRecovery, writeRecovery, type RecoveryRecord } from './recovery';
+import { PictureInteractions, type PictureActions } from './PictureInteractions';
 import './writer.css';
 import './appearance.css';
 import './motion.css';
@@ -64,6 +65,8 @@ export default function Writer({ context }: { context: AppContext }) {
   const app = useRef<HTMLDivElement>(null);
   const engine = useRef<WriterEngine | null>(null);
   const capture = useRef<SelectionCapture | null>(null);
+  const pictureActions = useRef<PictureActions>(null);
+  const [selectedPictureId, setSelectedPictureId] = useState<string | null>(null);
   const guardResolve = useRef<((result: boolean) => void) | null>(null);
   const overwriteResolve = useRef<((result: boolean) => void) | null>(null);
   const working = useRef(false);
@@ -111,7 +114,7 @@ export default function Writer({ context }: { context: AppContext }) {
   useEffect(() => { if (!opening && snapshot.ready && !dialog && !preferencesOpen && !backstage && !app.current?.querySelector('[role="dialog"]')) { const focused = document.activeElement; if (!focused || focused === document.body || focused === app.current || host.current?.contains(focused)) engine.current?.focus(); } }, [opening, snapshot.ready]);
   function changeAutosave(value: boolean) { setAutosave(value); context.services.settings.set('writer.autosave',value); }
   useEffect(() => {
-    context.lifecycle.setTitle(`${dirty ? '● ' : ''}${source.title} — Writer`);
+    context.lifecycle.setTitle(`${dirty ? '● ' : ''}${source.title} — Quill`);
   }, [source.title, dirty, context.lifecycle]);
 
   const safeToLeave = useCallback((): Promise<boolean> => {
@@ -222,7 +225,7 @@ export default function Writer({ context }: { context: AppContext }) {
       const stillDirty = engine.current.snapshot.revision !== revision;
       setSaveStatus(stillDirty ? 'Unsaved changes' : 'Saved'); remember(path);
       if (!stillDirty) await writeRecovery(context.windowId).catch(() => {});
-      if (!automatic) context.services.notify({ title: 'Writer', message: `Saved ${baseName(path)}`, tone: 'success' });
+      if (!automatic) context.services.notify({ title: 'Quill', message: `Saved ${baseName(path)}`, tone: 'success' });
       if (!automatic) playWriterSound(preferences.eventSounds);
       return !stillDirty;
     } catch (cause) { if (errorCode(cause) === 'CONFLICT') setConflict(true); setSaveStatus('Save failed • changes kept'); report(cause); return false; }
@@ -264,6 +267,12 @@ export default function Writer({ context }: { context: AppContext }) {
   }, [snapshot.revision, dirty, snapshot.ready, autosave, preferences.recoveryEnabled, preferences.recoveryDelay, conflict]);
 
   function freezeSelection() { capture.current = engine.current?.capture() ?? null; }
+  function selectPicture(id: string | null) {
+    setSelectedPictureId(id);
+    if (id) setActiveTab('Picture Format');
+    else setActiveTab(tab => tab === 'Picture Format' ? 'Home' : tab);
+  }
+  useEffect(() => { setSelectedPictureId(null); }, [source.bytes]);
   async function command(id: string, value?: unknown) {
     if (id === 'ruler') { updatePreference('ruler',!preferences.ruler); engine.current?.focus(); return; }
     if (id === 'formatting-marks') { updatePreference('formattingMarks',!preferences.formattingMarks); engine.current?.focus(); return; }
@@ -326,7 +335,7 @@ export default function Writer({ context }: { context: AppContext }) {
     { id: 'writer.ruler', label: 'Ruler', execute: () => command('ruler') },
     { id: 'writer.marks', label: 'Show/Hide ¶', shortcut: 'Mod+Shift+8', execute: () => command('formatting-marks') },
     { id: 'writer.collapse', label: 'Collapse Ribbon', shortcut: 'Mod+F1', checked: collapsed, execute: () => setCollapsed(!collapsed) },
-    { id: 'writer.about', label: 'About Writer', execute: () => openDialog('about') },
+    { id: 'writer.about', label: 'About Quill', execute: () => openDialog('about') },
   ];
   useAppCommands(context, commands);
   function run(id: string) { const c = commands.find(c => c.id === `writer.${id}`); if (c) void c.execute(); }
@@ -338,7 +347,7 @@ export default function Writer({ context }: { context: AppContext }) {
     const timer = setTimeout(() => { if (!engine.current?.ui?.tables.isInTable()) setActiveTab(tab => tab.startsWith('Table ') ? 'Home' : tab); }, 120);
     return () => clearTimeout(timer);
   }, [activeTab, inTable]);
-  return <div className="writer-app" tabIndex={-1} ref={app} data-testid="writer-app" data-theme={preferences.theme} data-dark-page={preferences.darkPage} data-motion={animate ? 'on' : 'off'} data-modern-comments={preferences.modernComments} data-group-titles={preferences.groupTitles} data-large-controls={preferences.largerControls} data-vertical-ruler={preferences.verticalRuler} data-horizontal-scrollbar={preferences.horizontalScrollbar} data-vertical-scrollbar={preferences.verticalScrollbar} data-paste-options={preferences.showPasteOptions} onKeyDown={e => {
+  return <div className="writer-app" tabIndex={-1} ref={app} data-testid="writer-app" data-document-mode={snapshot.state?.documentMode} data-theme={preferences.theme} data-dark-page={preferences.darkPage} data-motion={animate ? 'on' : 'off'} data-modern-comments={preferences.modernComments} data-group-titles={preferences.groupTitles} data-large-controls={preferences.largerControls} data-vertical-ruler={preferences.verticalRuler} data-horizontal-scrollbar={preferences.horizontalScrollbar} data-vertical-scrollbar={preferences.verticalScrollbar} data-paste-options={preferences.showPasteOptions} onKeyDown={e => {
     if (e.key === 'Escape' && !(e.target as HTMLElement).closest('[role="dialog"], [role="menu"], .wr-menu')) { if (backstage) closeBackstage(); setQueryCommand(''); }
   }} onKeyDownCapture={e => {
     if ((e.target as HTMLElement).closest('[role="dialog"]')) return;
@@ -367,10 +376,10 @@ export default function Writer({ context }: { context: AppContext }) {
       <button aria-label="Preferences" title="Preferences (Ctrl/⌘+,)" onClick={() => run('preferences')}><Settings size={17}/></button>
     </div>
     <div className="writer-tab-row">
-      <div className="writer-tabs" role="tablist" aria-label="Ribbon tabs">{tabs.map((tab, i) => <button key={tab} role="tab" tabIndex={activeTab === tab ? 0 : -1} aria-selected={activeTab === tab && !backstage} onDoubleClick={() => setCollapsed(!collapsed)} onClick={() => { if (tab === 'File') setBackstage('Home'); else { setActiveTab(tab); setCollapsed(false); setBackstage(null); } }} onKeyDown={e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length]; if (next === 'File') setBackstage('Home'); else { setActiveTab(next); setCollapsed(false); setBackstage(null); } const buttons = e.currentTarget.parentElement!.querySelectorAll('button'); buttons[tabs.indexOf(next)].focus(); } }}>{tab}</button>)}{inTable && <><button role="tab" aria-selected={activeTab === 'Table Design'} className="writer-context-tab" onClick={() => setActiveTab('Table Design')}>Table Design</button><button role="tab" aria-selected={activeTab === 'Table Layout'} className="writer-context-tab" onClick={() => setActiveTab('Table Layout')}>Table Layout</button></>}{activeTab === 'Picture Format' && <button role="tab" aria-selected className="writer-context-tab">Picture Format</button>}</div>
+      <div className="writer-tabs" role="tablist" aria-label="Ribbon tabs">{tabs.map((tab, i) => <button key={tab} role="tab" tabIndex={activeTab === tab ? 0 : -1} aria-selected={activeTab === tab && !backstage} onDoubleClick={() => setCollapsed(!collapsed)} onClick={() => { if (tab === 'File') setBackstage('Home'); else { setActiveTab(tab); setCollapsed(false); setBackstage(null); } }} onKeyDown={e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length]; if (next === 'File') setBackstage('Home'); else { setActiveTab(next); setCollapsed(false); setBackstage(null); } const buttons = e.currentTarget.parentElement!.querySelectorAll('button'); buttons[tabs.indexOf(next)].focus(); } }}>{tab}</button>)}{inTable && <><button role="tab" aria-selected={activeTab === 'Table Design'} className="writer-context-tab" onClick={() => setActiveTab('Table Design')}>Table Design</button><button role="tab" aria-selected={activeTab === 'Table Layout'} className="writer-context-tab" onClick={() => setActiveTab('Table Layout')}>Table Layout</button></>}{(selectedPictureId || activeTab === 'Picture Format') && <button role="tab" aria-selected={activeTab === 'Picture Format'} className="writer-context-tab" onClick={() => { setActiveTab('Picture Format'); setCollapsed(false); }}>Picture Format</button>}</div>
       <div className="writer-tab-actions"><button onClick={() => togglePane('comments')}><MessageSquare size={14}/>Comments</button><button onClick={() => openDialog('mode')}>{source.readOnly ? 'Viewing' : snapshot.state?.documentMode === 'suggesting' ? 'Reviewing' : 'Editing'}<ChevronDown size={11}/></button><button className="writer-share" onClick={() => openDialog('share')}><Share2 size={13}/>Share<ChevronDown size={11}/></button></div>
     </div>
-    {!collapsed && <Ribbon measurementUnit={preferences.measurementUnit} key={activeTab} tab={activeTab} snapshot={opening ? { ...snapshot, ready: false } : snapshot} engine={opening ? null : engine.current} command={command} run={run} dialog={openDialog} pane={togglePane} freeze={freezeSelection} setTab={setActiveTab} perform={perform}/>}
+    {!collapsed && <Ribbon pictureId={selectedPictureId} pictureLayout={() => pictureActions.current?.layout()} pictureResetCrop={() => pictureActions.current?.resetCrop()} pictureCrop={() => pictureActions.current?.crop()} measurementUnit={preferences.measurementUnit} key={activeTab} tab={activeTab} snapshot={opening ? { ...snapshot, ready: false } : snapshot} engine={opening ? null : engine.current} command={command} run={run} dialog={openDialog} pane={togglePane} freeze={freezeSelection} setTab={setActiveTab} perform={perform}/>}
     <button className="writer-collapse" aria-label={collapsed ? 'Expand ribbon' : 'Collapse ribbon'} title="Ribbon display options (Ctrl+F1)" onClick={() => setCollapsed(!collapsed)}>{collapsed ? <ChevronDown size={12}/> : <ChevronUp size={12}/>}</button>
     {conflict && <div className="writer-message warning" role="alert"><strong>This file changed elsewhere.</strong> Your edits are preserved.<button onClick={() => void save(true)}>Save a copy</button><button onClick={() => source.path && void readPath(source.path)}>Reload</button></div>}
     {error && <div className="writer-message error" role="alert"><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError('')}><X size={14}/></button></div>}
@@ -382,7 +391,8 @@ export default function Writer({ context }: { context: AppContext }) {
     </div>
     <footer className="writer-statusbar"><button onClick={() => { setNavigationOpen(true); setNavigationTab('Pages'); }}>Page {snapshot.page} of {snapshot.pages}</button><button onClick={() => openDialog('wordcount')}>{snapshot.words.toLocaleString()} words</button><button onClick={() => openDialog('language')}>English (United States)</button><span className="writer-save-status" role="status">{notice || saveStatus}</span>{snapshot.missingFonts.length > 0 && <span className="writer-font-warning" title={`Unavailable fonts: ${snapshot.missingFonts.join(', ')}. Substitutions may change line wrapping.`}>Font substitution: {snapshot.missingFonts.join(', ')}</span>}<div className="writer-view-controls"><button aria-label="Read mode" aria-pressed={snapshot.state?.documentMode === 'viewing'} className={snapshot.state?.documentMode === 'viewing' ? 'selected' : ''} onClick={() => engine.current?.setMode('viewing')}><BookOpen size={14}/></button><button aria-label="Print layout" aria-pressed={snapshot.state?.documentMode !== 'viewing'} className={snapshot.state?.documentMode !== 'viewing' ? 'selected' : ''} disabled={source.readOnly} onClick={() => engine.current?.setMode('editing')}><FileText size={14}/></button><button aria-label="Fit page width" onClick={() => engine.current?.fitWidth()}>↔</button><button aria-label="Zoom out" onClick={() => engine.current?.setZoom(Math.max(25, zoom - 10))}><Minus size={12}/></button><input aria-label="Document zoom" type="range" min="25" max="200" step="5" value={zoom} onChange={e => engine.current?.setZoom(Number(e.target.value))}/><button aria-label="Zoom in" onClick={() => engine.current?.setZoom(Math.min(200, zoom + 10))}><Plus size={12}/></button><button onClick={() => openDialog('zoom')}>{Math.round(zoom)}%</button></div></footer>
     {backstage && <Backstage section={backstage} setSection={setBackstage} close={closeBackstage} source={source} context={context} run={run} openPath={path => void readPath(path)} printSource={printSource} preferences={preferences} error={error} engine={engine.current} perform={perform}/>}
-    {dialog && <WriterDialog key={dialog} readOnly={source.readOnly} kind={dialog} engine={engine.current} snapshot={snapshot} capture={capture.current} close={() => { setDialog(null); capture.current = null; }} perform={perform} preferences={preferences} setTab={setActiveTab}/>}
+    <PictureInteractions textScale={systemAppearance.textScale} increaseContrast={systemAppearance.increaseContrast} systemTheme={systemAppearance.theme} ref={pictureActions} root={app} engine={engine.current} snapshot={snapshot} selectedId={selectedPictureId} select={selectPicture} format={() => openDialog('pictureformat')} defaultWrap={preferences.defaultPictureWrap} unit={preferences.measurementUnit} blocked={opening || Boolean(dialog || preferencesOpen || backstage || guard || overwrite || compatibility)} perform={perform}/>
+    {dialog && <WriterDialog key={dialog} selectedPictureId={selectedPictureId} selectPicture={selectPicture} readOnly={source.readOnly} kind={dialog} engine={engine.current} snapshot={snapshot} capture={capture.current} close={() => { setDialog(null); capture.current = null; }} perform={perform} preferences={preferences} setTab={setActiveTab}/>}
     {preferencesOpen && <Preferences preferences={preferences} update={updatePreference} autosave={autosave} setAutosave={changeAutosave} context={context} close={() => { setPreferencesOpen(false); engine.current?.focus(); }}/>}
     {printReviewWarning && <Prompt title="Print document markup?" onCancel={() => setPrintReviewWarning(false)}><h2>Print document markup?</h2><p>This document contains comments or tracked changes. Check the review display before printing.</p><div className="writer-dialog-actions"><button onClick={() => setPrintReviewWarning(false)}>Cancel</button><button className="primary" onClick={() => { setPrintReviewWarning(false); void preview(true); }}>Continue to Print</button></div></Prompt>}
     {guard && <Prompt title="Save your changes?" onCancel={() => finishGuard(false)} busy={busy}><h2>Save your changes?</h2><p>Do you want to save changes to {source.title}?</p><p>Your unsaved edits will be lost if you discard them.</p><div className="writer-dialog-actions"><button onClick={() => finishGuard(false)}>Cancel</button><button onClick={() => { recoveryEpoch.current++; void writeRecovery(context.windowId); finishGuard(true); }}>Don’t Save</button><button className="primary" disabled={busy} onClick={() => void save().then(ok => { if (ok) finishGuard(true); })}>Save</button></div></Prompt>}

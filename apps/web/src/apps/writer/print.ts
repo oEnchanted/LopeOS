@@ -23,7 +23,7 @@ export function createPrintHtml(mount: HTMLElement, expectedPages: number, optio
     clone.style.margin = '0'; clone.style.contentVisibility = 'visible'; clone.removeAttribute('aria-hidden');
     return clone.outerHTML;
   }).join('\n');
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Writer document</title>${styles}<style>
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Quill document</title>${styles}<style>
 ${pageRules}
 html,body{height:auto!important;overflow:visible!important;margin:0!important;padding:0!important;background:#fff!important}
 .writer-app.wr-print-document{height:auto!important;width:auto!important;overflow:visible!important;display:block!important;background:#fff!important}

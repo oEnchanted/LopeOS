@@ -1,0 +1,41 @@
+{
+  "baselineCommit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+  "baselineExtraction": "Tracked packages/image-engine/src at baseline commit, unchanged seven regression tests copied into isolated temporary source tree; original worktree files never replaced.",
+  "baselineDirectory": "/private/tmp/lope-engine-before-qvncuw0v",
+  "commands": [
+    "node --test --test-reporter=tap tests/image-editor/release-engine.test.ts",
+    "node --test tests/image-editor/*.test.ts",
+    "npx tsc --noEmit -p tests/image-editor/tsconfig.json"
+  ],
+  "node": "v26.12.1",
+  "os": "macOS-27.2-arm64-arm-64bit",
+  "testSha256": "f1bdfc6d5f68300a345350f3127a33d2e51e95092bbed9e64451aab54137050c",
+  "sourceSha256": {
+    "packages/image-engine/src/ai/README.md": "036eea8b682ad396c695a5f960e30ba40da480ba9b3e0fa98f61a9c3e28dc750",
+    "packages/image-engine/src/ai/cache.ts": "8dceda1555fba67d584fec42e3f4dfc17a6131c8e82e5faadbcf5654b36e2442",
+    "packages/image-engine/src/ai/catalog.ts": "4e096bcaa9c4e2f26e57d3126ad44712943ea1c589d8528405102bb67544415d",
+    "packages/image-engine/src/ai/comfy.ts": "cc0119e74fb74b6777674fece576ecc2a7ef9e6b10c1afbe8a601e579382197b",
+    "packages/image-engine/src/ai/matte.ts": "2ede66ce120c886b4ec5e2ed002b59e3db2356191048aacd1ea3b7936af3d3fe",
+    "packages/image-engine/src/ai/portrait-scene.ts": "15fdaafcae6f2833d4e1d373562881e25207b3254a7b6922695453cccf3cd131",
+    "packages/image-engine/src/clipboard.ts": "7c0bb39d58b983ec82ac767afc56c22f722ca7100d4e140090124cb3b81d242f",
+    "packages/image-engine/src/composite.ts": "d3c2d08da2494f8e34e039e0076a00c6ce1c5562e1ca60f49d3fc79b1ff76bf7",
+    "packages/image-engine/src/filters.ts": "37047f678d1cff65f22a125f8f7fc5c0ea1a799570b8b6597fc103ad89584109",
+    "packages/image-engine/src/gpu.ts": "8916362627e00078a1d04dbd9fb4b364710d794ac193887da04830ad53ce12cf",
+    "packages/image-engine/src/history.ts": "e7d51227e2b93b0462c0a350cf6f3ae9700a933e1ea5a09715feb0d23607bb17",
+    "packages/image-engine/src/index.ts": "50b65487143625ac611c90d55a62758a50dc54fb5d3ed3e795624b74e10af3ba",
+    "packages/image-engine/src/matrix.ts": "38800cd07daacf961419bb5b3b8d79167f6f0840ab95a60f43bdc6bbb3876177",
+    "packages/image-engine/src/model.ts": "1d602bdbb77255164d16e04205d94130b99ddc135591025ba98d6b60f2fcacdd",
+    "packages/image-engine/src/native.ts": "7b75a7ec6869c9e54d4188a9343ddcc55f4e53949a8a9c4419aed5c8a753e879",
+    "packages/image-engine/src/operations.ts": "f4fd000325807e9e13d28678e734984da6e5e4f89dcb32d5edcda45b9d05930a",
+    "packages/image-engine/src/pixels.ts": "8d34b7222ddea9b6d43fb63ba099bf8c807ecfd062dd05b5f9e81f2403827b43",
+    "packages/image-engine/src/preview.ts": "a34b54d050307ca6c53de2500036cbd15bc689cdd55c3f67826eee52eb89f4d7",
+    "packages/image-engine/src/psd.ts": "4d01d4daadba09ee09427055385b4d30f9ce9cd4937da799ca432dac7b0728f4",
+    "packages/image-engine/src/render.ts": "bf9f8a8e63467267a08a17f5974643e88d12285872fe9cdccbccaf7626ef21f4",
+    "packages/image-engine/src/selection-brush.ts": "97a4e5662e35c0848b8cda841d87eedcaaea531cf17871ccce230eb2e1dadd13",
+    "packages/image-engine/src/selection.ts": "697961857843d68cdf367a174e3a33d715cb3364d9ab08e1dd1748d729e6c17c",
+    "packages/image-engine/src/worker.ts": "eb865059cf2df770ad38322a15dea58560f9b2214a5f7db2eedd1ac8e7170630"
+  },
+  "before": "0 passed / 7 failed",
+  "after": "7 passed / 0 failed",
+  "referenceBoundary": "Functional data-integrity invariants; no Adobe rendering or UI-parity assertion."
+}

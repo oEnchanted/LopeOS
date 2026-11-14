@@ -1,0 +1,443 @@
+{
+  "date": "2026-11-13",
+  "passed": true,
+  "browser": "Playwright Chromium",
+  "effects": [
+    {
+      "id": "none",
+      "difference": 0,
+      "hash": 632873501
+    },
+    {
+      "id": "grayscale",
+      "difference": 29.53724537037037,
+      "hash": 1718617625
+    },
+    {
+      "id": "blackwhite-orange",
+      "difference": 34.64142361111111,
+      "hash": 301735565
+    },
+    {
+      "id": "blackwhite-red",
+      "difference": 38.20601851851852,
+      "hash": 2777241753
+    },
+    {
+      "id": "blackwhite-yellow",
+      "difference": 37.90889467592593,
+      "hash": 3123054476
+    },
+    {
+      "id": "sepia",
+      "difference": 35.97240162037037,
+      "hash": 1787141232
+    },
+    {
+      "id": "cyan",
+      "difference": 41.012505787037036,
+      "hash": 688832828
+    },
+    {
+      "id": "warm",
+      "difference": 7.6054456018518515,
+      "hash": 241040526
+    },
+    {
+      "id": "cool",
+      "difference": 8.295902777777778,
+      "hash": 812345783
+    },
+    {
+      "id": "contrast",
+      "difference": 15.02197337962963,
+      "hash": 518380374
+    },
+    {
+      "id": "vintage",
+      "difference": 22.367233796296297,
+      "hash": 1974074661
+    },
+    {
+      "id": "hue-cycle",
+      "difference": 22.997974537037038,
+      "hash": 1647157453
+    },
+    {
+      "id": "blur",
+      "difference": 3.7542881944444444,
+      "hash": 3962063400
+    },
+    {
+      "id": "pixelate",
+      "difference": 4.5221527777777775,
+      "hash": 712786949
+    },
+    {
+      "id": "negative",
+      "difference": 76.98605324074074,
+      "hash": 642482853
+    },
+    {
+      "id": "posterize",
+      "difference": 14.265462962962962,
+      "hash": 4181426143
+    },
+    {
+      "id": "threshold",
+      "difference": 99.59852430555556,
+      "hash": 1378379052
+    },
+    {
+      "id": "edge",
+      "difference": 113.20987847222223,
+      "hash": 3628404810
+    },
+    {
+      "id": "mirror-horizontal",
+      "difference": 60.33662037037037,
+      "hash": 422857353
+    },
+    {
+      "id": "mirror-vertical",
+      "difference": 35.402199074074076,
+      "hash": 1231506413
+    },
+    {
+      "id": "fade-in-black",
+      "difference": 57.654646990740744,
+      "hash": 133065660
+    },
+    {
+      "id": "fade-out-black",
+      "difference": 81.19962962962963,
+      "hash": 1380534523
+    },
+    {
+      "id": "fade-in-white",
+      "difference": 68.34535300925926,
+      "hash": 38597880
+    },
+    {
+      "id": "fade-out-white",
+      "difference": 96.80037037037037,
+      "hash": 1718732811
+    }
+  ],
+  "panZoom": [
+    {
+      "id": "none",
+      "difference": 0
+    },
+    {
+      "id": "left",
+      "difference": 25.767725694444444
+    },
+    {
+      "id": "right",
+      "difference": 25.767725694444444
+    },
+    {
+      "id": "up",
+      "difference": 14.364913194444444
+    },
+    {
+      "id": "down",
+      "difference": 14.364913194444444
+    },
+    {
+      "id": "up-left",
+      "difference": 32.1746875
+    },
+    {
+      "id": "up-right",
+      "difference": 25.875630787037036
+    },
+    {
+      "id": "down-left",
+      "difference": 25.875630787037036
+    },
+    {
+      "id": "down-right",
+      "difference": 32.1746875
+    },
+    {
+      "id": "in",
+      "difference": 12.747523148148149
+    },
+    {
+      "id": "in-top",
+      "difference": 15.009380787037037
+    },
+    {
+      "id": "in-bottom",
+      "difference": 15.012152777777779
+    },
+    {
+      "id": "in-left",
+      "difference": 22.43236689814815
+    },
+    {
+      "id": "in-right",
+      "difference": 17.95505787037037
+    },
+    {
+      "id": "in-top-left",
+      "difference": 24.843327546296297
+    },
+    {
+      "id": "in-top-right",
+      "difference": 18.581255787037037
+    },
+    {
+      "id": "in-bottom-left",
+      "difference": 21.928003472222223
+    },
+    {
+      "id": "in-bottom-right",
+      "difference": 20.904050925925926
+    },
+    {
+      "id": "out",
+      "difference": 12.747523148148149
+    },
+    {
+      "id": "out-top",
+      "difference": 15.009380787037037
+    },
+    {
+      "id": "out-bottom",
+      "difference": 15.012152777777779
+    },
+    {
+      "id": "out-left",
+      "difference": 22.43236689814815
+    },
+    {
+      "id": "out-right",
+      "difference": 17.95505787037037
+    },
+    {
+      "id": "out-top-left",
+      "difference": 24.843327546296297
+    },
+    {
+      "id": "out-top-right",
+      "difference": 18.581255787037037
+    },
+    {
+      "id": "out-bottom-left",
+      "difference": 21.928003472222223
+    },
+    {
+      "id": "out-bottom-right",
+      "difference": 20.904050925925926
+    }
+  ],
+  "transitions": [
+    {
+      "id": "none",
+      "middleHash": 632873501,
+      "startToEnd": 0
+    },
+    {
+      "id": "dissolve",
+      "middleHash": 3502599,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "fade",
+      "middleHash": 1532102085,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "fade-white",
+      "middleHash": 2123157957,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "wipe-left",
+      "middleHash": 2982408033,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "wipe-right",
+      "middleHash": 1903799497,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "wipe-up",
+      "middleHash": 1943288613,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "wipe-down",
+      "middleHash": 3160062797,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "wipe-diagonal-left",
+      "middleHash": 601393020,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "wipe-diagonal-right",
+      "middleHash": 2522889361,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "slide-left",
+      "middleHash": 3818790601,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "slide-right",
+      "middleHash": 791271777,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "slide-up",
+      "middleHash": 1814195021,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "slide-down",
+      "middleHash": 2680003365,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "iris",
+      "middleHash": 2631483317,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "diamond",
+      "middleHash": 2997403110,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "barn-door",
+      "middleHash": 813382117,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "blinds-horizontal",
+      "middleHash": 3918532966,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "blinds-vertical",
+      "middleHash": 2062471644,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "checkerboard",
+      "middleHash": 3254549611,
+      "startToEnd": 92.07013888888889
+    },
+    {
+      "id": "pixelate",
+      "middleHash": 3777922957,
+      "startToEnd": 92.07013888888889
+    }
+  ],
+  "textAnimations": [
+    {
+      "id": "none",
+      "difference": 0
+    },
+    {
+      "id": "fade",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "rise",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "scroll",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "zoom",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "stretch",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "slide-left",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "slide-right",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "fly",
+      "difference": 1.5366377314814814
+    },
+    {
+      "id": "spin",
+      "difference": 1.5366377314814814
+    }
+  ],
+  "orderedStackGrayError": 0,
+  "stackOrderDifference": 162.24715277777779,
+  "independentTitleTextTiming": [
+    {
+      "frame": 15,
+      "difference": 0
+    },
+    {
+      "frame": 45,
+      "difference": 1.5366377314814814
+    },
+    {
+      "frame": 75,
+      "difference": 0.9107291666666667
+    },
+    {
+      "frame": 135,
+      "difference": 0
+    }
+  ],
+  "export": {
+    "duration": 3,
+    "width": 320,
+    "height": 180,
+    "videoCodec": "vp8",
+    "audioCodec": null,
+    "frameCount": 90,
+    "framesPerSecond": 30,
+    "audioPeak": 0
+  },
+  "comparisons": [
+    {
+      "frame": 5,
+      "meanAbsoluteChannelError": 0.44646412037037037
+    },
+    {
+      "frame": 20,
+      "meanAbsoluteChannelError": 0.4484201388888889
+    },
+    {
+      "frame": 35,
+      "meanAbsoluteChannelError": 0.9814814814814815
+    },
+    {
+      "frame": 45,
+      "meanAbsoluteChannelError": 1.1752199074074074
+    },
+    {
+      "frame": 65,
+      "meanAbsoluteChannelError": 1.245486111111111
+    },
+    {
+      "frame": 80,
+      "meanAbsoluteChannelError": 1.4390219907407407
+    }
+  ],
+  "errors": []
+}

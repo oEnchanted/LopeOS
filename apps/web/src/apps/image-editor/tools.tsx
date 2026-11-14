@@ -8,6 +8,10 @@ export function Toolbar({ tool, setTool, foreground, background, onColor, swap, 
   const effectiveColumns=autoColumns&&compact||columns;
   const [open, setOpen] = useState<number | null>(null);
   const [chosen, setChosen] = useState<Record<number, ToolId>>({});
+  useEffect(() => {
+    const group = TOOL_GROUPS.findIndex(items => items.some(item => item.id === tool));
+    if (group >= 0) setChosen(previous => previous[group] === tool ? previous : { ...previous, [group]: tool });
+  }, [tool]);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);const longPress=useRef(false);
   useEffect(() => () => clearTimeout(timer.current), []);
   useEffect(()=>{if(open!==null)toolbar.current?.closest('.lope-image-editor')?.querySelector<HTMLButtonElement>('.ie-tool-flyout button')?.focus();},[open]);
@@ -18,7 +22,7 @@ export function Toolbar({ tool, setTool, foreground, background, onColor, swap, 
       const selected = group.find(item => item.id === tool); const item = selected || group.find(item => item.id === chosen[i]) || group[0]; const Icon = item.icon;const root=toolbar.current?.closest('.lope-image-editor');const rootBounds=root?.getBoundingClientRect(),trigger=triggers.current[i]?.getBoundingClientRect();
       return <div className="ie-tool-wrap" key={i} onPointerDown={e => e.stopPropagation()}>
         <button ref={node=>{triggers.current[i]=node;}} className={`ie-tool ${selected ? 'is-active' : ''}`} aria-label={item.label} aria-pressed={Boolean(selected)} aria-haspopup={group.length>1?'menu':undefined} aria-expanded={group.length>1?open===i:undefined} disabled={Boolean(item.disabled)} title={item.disabled || `${item.label} (${item.key})${group.length > 1 ? ' · Right-click for more tools' : ''}`} onClick={() => { if(longPress.current){longPress.current=false;return;}setTool(item.id); setOpen(null); }} onPointerDown={() => { longPress.current=false;if (group.length > 1) timer.current = setTimeout(() => {longPress.current=true;setOpen(i);}, 430); }} onPointerUp={() => clearTimeout(timer.current)} onPointerCancel={()=>clearTimeout(timer.current)} onPointerLeave={()=>clearTimeout(timer.current)} onKeyDown={e=>{if(group.length>1&&['ArrowRight','ArrowDown'].includes(e.key)){e.preventDefault();setOpen(i);}}} onContextMenu={e => { e.preventDefault(); if (group.length > 1) setOpen(open === i ? null : i); }}><Icon size={18} strokeWidth={1.65}/>{group.length > 1 && <i className="ie-tool-group-mark"/>}</button>
-        {open === i && root&&rootBounds&&trigger&&createPortal(<div className="ie-tool-flyout" style={{position:'absolute',left:Math.min(rootBounds.width-240,trigger.right-rootBounds.left+3),top:Math.max(5,Math.min(rootBounds.height-group.length*29-10,trigger.top-rootBounds.top))}} onPointerDown={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();setOpen(null);triggers.current[i]?.focus();}else if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const items=[...e.currentTarget.querySelectorAll<HTMLButtonElement>('button')],index=items.indexOf(document.activeElement as HTMLButtonElement);items[e.key==='Home'?0:e.key==='End'?items.length-1:(index+(e.key==='ArrowDown'?1:items.length-1))%items.length]?.focus();}}} role="menu" aria-label={`${group[0].label} group`}>{group.map(option => <button key={option.id} role="menuitem" onClick={() => { setTool(option.id); setChosen({ ...chosen, [i]: option.id }); setOpen(null); }}><option.icon size={17}/><span>{option.label}</span><kbd>{option.key}</kbd></button>)}</div>,root)}
+        {open === i && root&&rootBounds&&trigger&&createPortal(<div className="ie-tool-flyout" style={{position:'absolute',left:Math.min(rootBounds.width-240,trigger.right-rootBounds.left+3),top:Math.max(5,Math.min(rootBounds.height-group.length*29-10,trigger.top-rootBounds.top))}} onPointerDown={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();setOpen(null);triggers.current[i]?.focus();}else if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const items=[...e.currentTarget.querySelectorAll<HTMLButtonElement>('button')],index=items.indexOf(document.activeElement as HTMLButtonElement);items[e.key==='Home'?0:e.key==='End'?items.length-1:(index+(e.key==='ArrowDown'?1:items.length-1))%items.length]?.focus();}}} role="menu" aria-label={`${group[0].label} group`}>{group.map(option => <button key={option.id} role="menuitem" onClick={() => { setTool(option.id); setChosen({ ...chosen, [i]: option.id }); setOpen(null); triggers.current[i]?.focus(); }}><option.icon size={17}/><span>{option.label}</span><kbd>{option.key}</kbd></button>)}</div>,root)}
       </div>;
     })}</div>
     <button className="ie-more-tools" title="Toolbar groups" aria-label="Toolbar groups" onClick={() => setOpen(open === 7 ? null : 7)}><Ellipsis size={20}/></button>
@@ -28,7 +32,26 @@ export function Toolbar({ tool, setTool, foreground, background, onColor, swap, 
 }
 import { useEffect, useRef, useState } from 'react';
 export function NumberField({ label, value, onChange, min = -100000, max = 100000, step = 1, suffix = '', disabled=false }: { label: string; value: number; onChange: (value: number) => void; min?: number; max?: number; step?: number; suffix?: string; disabled?: boolean }) {
-  return <label className="ie-number-field"><span>{label}</span><span><input aria-label={label} disabled={disabled} type="number" min={min} max={max} step={step} value={Math.round(value * 1000) / 1000} onChange={e => { if (e.currentTarget.value !== '') onChange(Math.min(max, Math.max(min, e.currentTarget.valueAsNumber || 0))); }}/>{suffix && <em>{suffix}</em>}</span></label>;
+  const formatted = (next: number) => String(Math.round(next * 1000) / 1000);
+  const [draft, setDraft] = useState(() => formatted(value));
+  const emitted = useRef(value);
+  useEffect(() => {
+    // Preserve intermediate input such as a minus sign or decimal point, while
+    // still accepting changes from sliders, undo, and another selected layer.
+    if (value !== emitted.current) setDraft(formatted(value));
+    emitted.current = value;
+  }, [value]);
+  const finish = () => {
+    const parsed = draft.trim() === '' ? value : Number(draft);
+    const next = Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : value;
+    setDraft(formatted(next));
+    if (next !== value) { emitted.current = next; onChange(next); }
+  };
+  return <label className="ie-number-field"><span>{label}</span><span><input aria-label={label} disabled={disabled} type="number" min={min} max={max} step={step} value={draft} onChange={e => {
+    setDraft(e.currentTarget.value);
+    const next = e.currentTarget.valueAsNumber;
+    if (Number.isFinite(next) && next >= min && next <= max && next !== value) { emitted.current = next; onChange(next); }
+  }} onBlur={finish} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }}/>{suffix && <em>{suffix}</em>}</span></label>;
 }
 export function OptionsBar({ tool, brush, setBrush, options, setOptions, onAlign, onTransform, onFit, onActual, onText, foreground, typeStyle, onTypeStyle }: { tool: ToolId; brush: BrushSettings; setBrush: (settings: BrushSettings) => void; options: ToolOptions; setOptions: (settings: ToolOptions) => void; onAlign: (align: string) => void; onTransform: () => void; onFit: () => void; onActual: () => void; onText: () => void; foreground: string; typeStyle: NonNullable<Layer['text']>; onTypeStyle: (style: NonNullable<Layer['text']>) => void }) {
   const active = TOOLS.find(t => t.id === tool)!; const Icon = active.icon;

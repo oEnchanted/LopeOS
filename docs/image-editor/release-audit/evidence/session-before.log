@@ -1,0 +1,27 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+ExpectError: An untouched document must not inherit another tab’s selection
+
+expect(received).toBe(expected) // Object.is equality
+
+Expected: false
+Received: true
+    at captureRawStack (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright-core@1.65.0/node_modules/playwright-core/lib/coreBundle.js:9551:17)
+    at callMatcherAsStep (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13342:57)
+    at Object.toBe (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13334:23)
+    at /private/tmp/lopeos-photoshop-audit/tests/image-editor/release-session.mjs:26:109 {
+  matcherResult: {
+    actual: true,
+    expected: false,
+    message: 'expect(received).toBe(expected) // Object.is equality\n' +
+      '\n' +
+      'Expected: false\n' +
+      'Received: true',
+    name: 'toBe',
+    pass: false
+  }
+}
+
+Node.js v26.12.1

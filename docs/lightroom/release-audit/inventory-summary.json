@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-13",
+  "inventoryKind": "source/contract coverage, not complete observed Adobe-state inventory",
+  "items": 502,
+  "counts": {
+    "PASSED": 0,
+    "FAILED": 45,
+    "UNVERIFIED": 457,
+    "NOT_APPLICABLE": 0
+  },
+  "uniqueRegisteredCommands": 32,
+  "mandatoryWorkflows": [
+    "LR-01",
+    "LR-02",
+    "LR-03",
+    "LR-04",
+    "LR-05",
+    "LR-06",
+    "LR-07",
+    "LR-08",
+    "LR-09"
+  ],
+  "limit": "No row is passed from source existence. Reference captures/build/DPI unavailable. Runtime evidence must be attached separately before closing a row."
+}

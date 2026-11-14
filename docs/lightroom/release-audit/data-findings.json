@@ -1,0 +1,545 @@
+{
+  "date": "2026-11-13",
+  "scope": "Lightroom storage transactions, durable folder hierarchy, native PNG16/TIFF decode and real worker PNG16 export; no Photoshop/shared files changed by this subagent",
+  "sourceSnapshot": "a3c817f81d6528885ea04120ae4b702a9f2b19ee",
+  "dependencies": {
+    "node": "26.12.1",
+    "playwright": "1.65.0",
+    "typescript": "7.0.2",
+    "libraw-wasm": "1.6.0",
+    "Pillow": "11.3.0",
+    "Chromium": "158.0.8127.18",
+    "WebKit": "27.2"
+  },
+  "issues": [
+    {
+      "id": "LR-DATA-001",
+      "severity": "P1",
+      "title": "Invalid later recipe leaves a partially saved batch",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "Local source contract and observed Chromium behavior",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Save two assets, changing the first rating to 5 and giving the second exposure 99.",
+      "expected": "Reject batch without changing either durable asset.",
+      "before": "Promise rejects; first asset rating persists as 5.",
+      "rootCause": "Validation occurs after the first IDB put was queued.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/library.ts"
+      ],
+      "fix": "Validate all recipes before starting the transaction.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-data.mjs: LR-DATA-001"
+        ],
+        "beforeEvidence": "evidence/data-storage-before.json",
+        "afterEvidence": "evidence/data-storage-after.json"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-002",
+      "severity": "P1",
+      "title": "Synchronous IDB clone failure leaves a partially saved batch",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "Local source contract and observed Chromium behavior",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Save two assets; give the second an uncloneable function property.",
+      "expected": "Reject entire write; retain both stored records.",
+      "before": "First rating commits as 4 although the operation rejects.",
+      "rootCause": "Synchronous put error did not explicitly abort the transaction.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/library.ts"
+      ],
+      "fix": "Abort and settle the transaction on synchronous queueing errors.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-data.mjs: LR-DATA-002"
+        ],
+        "beforeEvidence": "evidence/data-storage-before.json",
+        "afterEvidence": "evidence/data-storage-after.json"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-003",
+      "severity": "P2",
+      "title": "Deleting a parent folder orphans child albums after reload",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "Local source contract and observed Chromium behavior",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Create folder and child album; delete folder; reload durable albums.",
+      "expected": "Child appears at library root as the current UI promises, preserving membership and original bytes.",
+      "before": "Child retains deleted parent ID in IndexedDB.",
+      "rootCause": "Only in-memory UI state reparents children.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/library.ts"
+      ],
+      "fix": "Persist direct-child reparenting in the same transaction as deletion and membership changes.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-data.mjs: LR-DATA-003"
+        ],
+        "beforeEvidence": "evidence/data-storage-before.json",
+        "afterEvidence": "evidence/data-storage-after.json"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-004",
+      "severity": "P1",
+      "title": "Duplicate asset IDs cause a partial backup restore",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "Local source contract and observed Chromium behavior",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Restore a valid-CRC archive containing two records with the same stable asset ID and a new folder.",
+      "expected": "Reject invalid archive before writes.",
+      "before": "First photo and album persist before second photo fails.",
+      "rootCause": "No duplicate-ID preflight; restoration uses independent per-record transactions.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/library.ts",
+        "apps/web/src/apps/lightroom/backup.ts"
+      ],
+      "fix": "Preflight duplicate asset/album IDs and commit restore atomically.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-data.mjs: LR-DATA-004"
+        ],
+        "beforeEvidence": "evidence/data-storage-before.json",
+        "afterEvidence": "evidence/data-storage-after.json"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-005",
+      "severity": "P1",
+      "title": "Storage failure leaves a partially restored library",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "Local source contract and observed Chromium behavior",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Inject QuotaExceededError while storing the second original of a two-photo archive.",
+      "expected": "Retain pre-restore library and report failure; no false completion.",
+      "before": "First original/photo and new folder remain committed.",
+      "rootCause": "Each restored album/photo used a separate transaction.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/library.ts",
+        "apps/web/src/apps/lightroom/backup.ts"
+      ],
+      "fix": "Use one assets/originals/albums transaction and emit completion only after it commits.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-data.mjs: LR-DATA-005",
+          "release-data.mjs: LR-DATA-006 valid restore and skip-existing IDs"
+        ],
+        "beforeEvidence": "evidence/data-storage-before.json",
+        "afterEvidence": "evidence/data-storage-after.json"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-007",
+      "severity": "P2",
+      "title": "Deep folder contents depend on album ordering",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "Local source contract and observed Chromium behavior",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Filter root of 50-level folder hierarchy supplied in reverse order.",
+      "expected": "Include the leaf photo, independent of insertion/order.",
+      "before": "Leaf disappears because traversal stops after 32 passes.",
+      "rootCause": "Depth cap truncates reverse-ordered traversal.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/library.ts"
+      ],
+      "fix": "Traverse child adjacency with a visited set, handling arbitrary finite depth and cycles.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-data.mjs: LR-DATA-007"
+        ],
+        "beforeEvidence": "evidence/data-storage-before.json",
+        "afterEvidence": "evidence/data-storage-after.json"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-008",
+      "severity": "P1",
+      "title": "PNG16 tRNS transparency is discarded",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://www.w3.org/TR/2025/REC-png-3-20250624/ (sections 11.3.1.1 and 11.3.2)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Decode grayscale/RGB PNG16 with tRNS and samples differing only in low bits, then export PNG16.",
+      "expected": "Match all 16 bits and preserve alpha 0 only on the exact transparent color.",
+      "before": "All pixels become opaque.",
+      "rootCause": "Native PNG16 decoder ignored tRNS.",
+      "changedFiles": [
+        "packages/photo-engine/src/png.ts"
+      ],
+      "fix": "Validate transparency samples and compare complete 16-bit gray/RGB values before transfer conversion.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts",
+          "release-codec-worker.mjs",
+          "release-codec-reader.py"
+        ],
+        "beforeEvidence": "evidence/data-codecs-before.log",
+        "afterEvidence": [
+          "evidence/data-codecs-after.log",
+          "evidence/data-codec-worker.json",
+          "evidence/data-codec-reader.json"
+        ]
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-009",
+      "severity": "P1",
+      "title": "PNG cICP can silently misinterpret HDR or range",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://www.w3.org/TR/2025/REC-png-3-20250624/ (sections 11.3.1.1 and 11.3.2)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Decode PNG16 with primaries 1 but PQ/HLG transfer, narrow range, or non-RGB matrix.",
+      "expected": "Reject unsupported transform without claiming sRGB pixels.",
+      "before": "Input is decoded using sRGB transfer regardless of those fields.",
+      "rootCause": "Only cICP primaries were checked.",
+      "changedFiles": [
+        "packages/photo-engine/src/png.ts"
+      ],
+      "fix": "Require full-range sRGB primaries/transfer/matrix/range together; explicitly reject unsupported combinations.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts",
+          "release-codec-worker.mjs PQ failure"
+        ],
+        "beforeEvidence": "evidence/data-codecs-before.log",
+        "afterEvidence": [
+          "evidence/data-codecs-after.log",
+          "evidence/data-codec-worker.json"
+        ]
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-010",
+      "severity": "P1",
+      "title": "PNG16 ignores non-sRGB chromaticities",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://www.w3.org/TR/2025/REC-png-3-20250624/ (sections 11.3.1.1 and 11.3.2)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Decode PNG16 with Display P3-like cHRM and no higher-priority color declaration.",
+      "expected": "Apply correct transform or reject unsupported gamut.",
+      "before": "Pixels are interpreted as linear sRGB.",
+      "rootCause": "Native decoder ignored cHRM.",
+      "changedFiles": [
+        "packages/photo-engine/src/png.ts"
+      ],
+      "fix": "Validate cHRM and reject unsupported chromaticities; retain standard sRGB support.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts"
+        ],
+        "beforeEvidence": "evidence/data-codecs-before.log",
+        "afterEvidence": "evidence/data-codecs-after.log"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-011",
+      "severity": "P2",
+      "title": "Valid cICP sRGB rejected because of lower-priority gAMA",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://www.w3.org/TR/2025/REC-png-3-20250624/ (sections 11.3.1.1 and 11.3.2)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Decode PNG16 with gAMA 100000 and cICP 1/13/0/1.",
+      "expected": "Honor cICP precedence and decode as sRGB.",
+      "before": "Immediate gamma error rejects valid higher-priority color declaration.",
+      "rootCause": "Metadata was rejected during parsing before determining precedence.",
+      "changedFiles": [
+        "packages/photo-engine/src/png.ts"
+      ],
+      "fix": "Collect metadata, then resolve cICP > ICC > sRGB > gamma/chromaticity.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts"
+        ],
+        "beforeEvidence": "evidence/data-codecs-before.log",
+        "afterEvidence": "evidence/data-codecs-after.log"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-012",
+      "severity": "P1",
+      "title": "Malformed RGB TIFF sample count reads wrong pixels",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://printtechnologies.org/standards/files/tiff-v6.pdf (TIFF 6.0 primary specification, sections 8 and 18)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Change RGB TIFF SamplesPerPixel to 2.",
+      "expected": "Reject unsupported or inconsistent channel layout.",
+      "before": "Decoder reads later sample bytes as RGB channels.",
+      "rootCause": "Photometric interpretation and sample count were validated independently.",
+      "changedFiles": [
+        "packages/photo-engine/src/tiff.ts"
+      ],
+      "fix": "Require one/two samples for gray and three/four for RGB.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts"
+        ],
+        "beforeEvidence": "evidence/data-codecs-before.log",
+        "afterEvidence": "evidence/data-codecs-after.log"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-013",
+      "severity": "P1",
+      "title": "TIFF missing strip byte counts is accepted",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://printtechnologies.org/standards/files/tiff-v6.pdf (TIFF 6.0 primary specification, sections 8 and 18)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Remove StripByteCounts tag while retaining pixel bytes.",
+      "expected": "Reject incomplete strip metadata.",
+      "before": "Decoder reads pixels without required declared byte bounds.",
+      "rootCause": "Comparison against undefined count evaluates false.",
+      "changedFiles": [
+        "packages/photo-engine/src/tiff.ts"
+      ],
+      "fix": "Require complete finite integer strip offsets/counts and row metadata.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts"
+        ],
+        "beforeEvidence": "evidence/data-codecs-before.log",
+        "afterEvidence": "evidence/data-codecs-after.log"
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-014",
+      "severity": "P1",
+      "title": "Associated-alpha TIFF darkens colors on development/export",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://printtechnologies.org/standards/files/tiff-v6.pdf (TIFF 6.0 primary specification, sections 8 and 18)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Decode TIFF16 with ExtraSamples=1 and half-alpha premultiplied RGB; export PNG16.",
+      "expected": "Unpremultiply color before conversion, retaining alpha and source bytes.",
+      "before": "Already premultiplied color is treated as straight RGB and darkened a second time when composited.",
+      "rootCause": "TIFF ExtraSamples alpha semantics were ignored.",
+      "changedFiles": [
+        "packages/photo-engine/src/tiff.ts"
+      ],
+      "fix": "Interpret associated versus unassociated alpha; handle zero alpha without division artifacts.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts",
+          "release-codec-worker.mjs",
+          "release-codec-reader.py"
+        ],
+        "beforeEvidence": "evidence/data-tiff-alpha-before.log",
+        "afterEvidence": [
+          "evidence/data-codecs-after.log",
+          "evidence/data-codec-worker.json",
+          "evidence/data-codec-reader.json"
+        ]
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    },
+    {
+      "id": "LR-DATA-015",
+      "severity": "P1",
+      "title": "Unspecified TIFF extra sample is treated as transparency",
+      "owner": "Agent 1 / lightroom_data",
+      "source": "https://printtechnologies.org/standards/files/tiff-v6.pdf (TIFF 6.0 primary specification, sections 8 and 18)",
+      "referenceConditions": "Isolated snapshot a3c817f; local development server 127.0.0.1:5191; disposable library/browser context",
+      "reproduction": "Decode TIFF16 RGB plus an extra channel with ExtraSamples=0.",
+      "expected": "Ignore unspecified extra channel as alpha and retain opaque RGB.",
+      "before": "Extra channel becomes alpha, making image partially transparent.",
+      "rootCause": "Any four-channel TIFF was treated as RGBA.",
+      "changedFiles": [
+        "packages/photo-engine/src/tiff.ts"
+      ],
+      "fix": "Apply alpha only for declared ExtraSamples 1 or 2.",
+      "verification": {
+        "status": "PASS on repaired development sources; final integrated commit/build recorded by parent release report",
+        "tests": [
+          "release-codec.test.ts",
+          "release-codec-worker.mjs",
+          "release-codec-reader.py"
+        ],
+        "beforeEvidence": "evidence/data-tiff-alpha-before.log",
+        "afterEvidence": [
+          "evidence/data-codecs-after.log",
+          "evidence/data-codec-worker.json",
+          "evidence/data-codec-reader.json"
+        ]
+      },
+      "commit": "Parent-owned integrated audit commit; see release-report.md"
+    }
+  ],
+  "testCommands": [
+    "npm run test:photos",
+    "node --test tests/lightroom/release-codec.test.ts",
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5191 node tests/lightroom/release-data.mjs",
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5191 node tests/lightroom/release-codec-worker.mjs",
+    "python3 tests/lightroom/release-codec-reader.py",
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5191 node tests/lightroom/codecs.mjs",
+    "python3 tests/lightroom/validate-exports.py",
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5193 node tests/lightroom/release-handoff.mjs",
+    "python3 tests/lightroom/release-handoff-reader.py"
+  ],
+  "results": {
+    "existingPhotoTests": {
+      "passed": 24,
+      "evidence": "evidence/data-tests-after.log"
+    },
+    "newCodecTests": {
+      "passed": 15,
+      "evidence": "evidence/data-codecs-after.log"
+    },
+    "storageScenarios": {
+      "passed": 7,
+      "evidence": "evidence/data-storage-after.json"
+    },
+    "workerFixturePaths": {
+      "passed": 6,
+      "evidence": "evidence/data-codec-worker.json"
+    },
+    "independentExportReopens": {
+      "passed": 5,
+      "evidence": "evidence/data-codec-reader.json"
+    },
+    "browserMatrix": {
+      "passed": [
+        "Chromium 158.0.8127.18",
+        "WebKit 27.2"
+      ],
+      "unavailable": [
+        "Firefox: installed engine could not find launch profile"
+      ],
+      "fixture": "128x96 original procedural Bayer DNG without embedded preview; actual LibRaw RGB16 development and JPEG/PNG16/TIFF16 export at 64x48",
+      "evidence": "evidence/data-browser-codecs.json",
+      "initialEnvironmentFailure": "Isolated symlinked node_modules worker path was denied by Vite. First failure is retained in evidence/data-browser-codecs-initial.json; audit-only server allow-list correction resolved it."
+    },
+    "independentRawExportReopens": {
+      "passed": 6,
+      "files": [
+        "chromium-export.jpg",
+        "chromium-export.png",
+        "chromium-export.tif",
+        "webkit-export.jpg",
+        "webkit-export.png",
+        "webkit-export.tif"
+      ],
+      "evidence": "evidence/data-independent-reader.json",
+      "reader": "Pillow 11.3.0 / LittleCMS",
+      "checks": "64x48 dimensions, real formats, TIFF16 sample tags, embedded LopeOS sRGB ICC parsing and transform for JPEG/TIFF",
+      "preExistingFilesAlsoReopenedButNotCurrentBuildEvidence": [
+        "ai-denoise-export.tif",
+        "ai-denoise-production-export.tif",
+        "production-export.tif"
+      ]
+    },
+    "typecheck": {
+      "status": "passed after integrated Props interface completed",
+      "evidence": "evidence/data-typecheck.log",
+      "command": "npx tsc --noEmit"
+    },
+    "productionHandoff": {
+      "passed": 6,
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+      "base": "http://127.0.0.1:5193",
+      "evidence": "evidence/handoff-production/results.json",
+      "independentReader": "evidence/handoff-production/independent-reader.json",
+      "boundary": "Real full shell and LopeDrive persistence; no runtime mocks or source imports. No page exceptions. Authenticated runtime startup health/identity/trash401 and visitor403 remain recorded, so this is not a clean-console release-gate pass."
+    }
+  },
+  "fixtures": [
+    {
+      "path": "evidence/codec-fixtures/gray16-trns.png",
+      "sha256": "85d1c91c0fb2bcc4c36a6994c261420b21c9f5fc5dc6f6924a67faffa4039afd",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/gray16-trns.png.export.png",
+      "outputSha256": "d0d5d37ff111da7fa77ebac723cf781351a6a5a485547ce11373942deb953e6b"
+    },
+    {
+      "path": "evidence/codec-fixtures/rgb16-trns.png",
+      "sha256": "b65afbca28e5c0799a6004fb38241ea551f304da8cb1712adc63c2c384556325",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/rgb16-trns.png.export.png",
+      "outputSha256": "e4eb600551f0d7cea510c0d1afe2e53d2564e4ad156574d461a41af6f83b5966"
+    },
+    {
+      "path": "evidence/codec-fixtures/associated-alpha16.tif",
+      "sha256": "96b1c7a03fbbf2be23bf2d40952dfeb23dda528666f64048495c16d06298dfa1",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/associated-alpha16.tif.export.png",
+      "outputSha256": "a87980444ef75f31c20af7e7546d48857522f4dd316729bb75a622fa2a424971"
+    },
+    {
+      "path": "evidence/codec-fixtures/unassociated-alpha16.tif",
+      "sha256": "5178c1ca11803f3a92edfbeaa4b7dce29bdb2f41ce3e13a089707c5624712865",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/unassociated-alpha16.tif.export.png",
+      "outputSha256": "468320caabd48b5ec47aa87b87d00021831e4d4405d36d2aab1f70467b593425"
+    },
+    {
+      "path": "evidence/codec-fixtures/unspecified-extra16.tif",
+      "sha256": "f0952a86f7c93a249fed921ba51221bce6290e6ed1baa3047ee409f02a1bf276",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/unspecified-extra16.tif.export.png",
+      "outputSha256": "8beae91a5f45befb45e103e90ec5bab946cf5ee14e03eb2396573948ac5c9614"
+    },
+    {
+      "path": "evidence/codec-fixtures/pq-transfer16.png",
+      "sha256": "1084a13cb8d73ef605f28a7113fe311ceb184555ce5ea42cceeda8642b884d58",
+      "outputPath": null,
+      "outputSha256": null
+    },
+    {
+      "path": "evidence/codec-fixtures/synthetic-bayer.dng",
+      "sha256": "82fe52052946545ce02faf09cae9249b847844abeb5f9a5123e7d687ce7962f5"
+    },
+    {
+      "path": "evidence/codec-fixtures/chromium-export.jpg",
+      "sha256": "60be6b64e381250a7da85df6aa0d9896cbdb0078e68adfcfc372963db82b9d67"
+    },
+    {
+      "path": "evidence/codec-fixtures/chromium-export.png",
+      "sha256": "74fe8c76f75ca016aafab93f74a87aefeb111528b66545afa9923a1440f01896"
+    },
+    {
+      "path": "evidence/codec-fixtures/chromium-export.tif",
+      "sha256": "3775a492df0ddb1cdb12bd2c1d57b004b20c60e7792226ba21f2247f0170cee2"
+    },
+    {
+      "path": "evidence/codec-fixtures/webkit-export.jpg",
+      "sha256": "7c24dcfb564d52dde7e4ed7835422fc2c45b8f734a01efc4b6bab9c863b2c65e"
+    },
+    {
+      "path": "evidence/codec-fixtures/webkit-export.png",
+      "sha256": "ca5cd59bf2e142dee5cd84d405864599627d0ba51159bb1eec4c7bac67d31b36"
+    },
+    {
+      "path": "evidence/codec-fixtures/webkit-export.tif",
+      "sha256": "3775a492df0ddb1cdb12bd2c1d57b004b20c60e7792226ba21f2247f0170cee2"
+    }
+  ],
+  "limits": [
+    "These are data/functional checks, not measured Adobe UI or rendering parity.",
+    "Storage-only fixtures are explicitly not used as codec/media evidence. Codec fixtures are genuine procedural editable PNG16/TIFF16 files.",
+    "Backup restore is exercised through its storage API. Current user changes removed its visible dialog; this audit does not reintroduce that UI or certify a user-facing backup workflow.",
+    "Arbitrary ICC transforms, wide-gamut/HDR interpretation and missing codecs remain unsupported. Rejecting those inputs is not feature parity.",
+    "TIFF exporter currently writes RGB, not an alpha channel; alpha preservation is verified for PNG16 output only.",
+    "Potential non-square straightening distortion from normalized-coordinate transforms is UNVERIFIED; no aspect-correct rotation/pixel parity claim is made.",
+    "Browser matrix testing is of installed engines, not proof of current stable browser coverage.",
+    "No original source bytes or immutable Adobe reference images were changed."
+  ],
+  "recommendation": "NOT READY for identity gate: unresolved reference, feature and integrated release scope belongs to parent report."
+}

@@ -1,0 +1,6 @@
+{"browser":"chromium","width":1440,"height":900,"result":"PASS"}
+{"browser":"chromium","width":1920,"height":1080,"result":"PASS"}
+{"browser":"chromium","width":740,"height":500,"result":"PASS"}
+{"browser":"chromium","width":1152,"height":720,"result":"PASS"}
+{"browser":"chromium","width":720,"height":450,"result":"PASS"}
+{"browser":"chrome","width":1440,"height":900,"result":"PASS"}

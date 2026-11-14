@@ -1,0 +1,27 @@
+LR-FIX-001 PASS
+LR-FIX-002 PASS
+LR-FIX-003 PASS
+LR-FIX-004 PASS
+LR-FIX-005 PASS
+[
+  {
+    "id": "LR-FIX-001",
+    "result": "PASS"
+  },
+  {
+    "id": "LR-FIX-002",
+    "result": "PASS"
+  },
+  {
+    "id": "LR-FIX-003",
+    "result": "PASS"
+  },
+  {
+    "id": "LR-FIX-004",
+    "result": "PASS"
+  },
+  {
+    "id": "LR-FIX-005",
+    "result": "PASS"
+  }
+]

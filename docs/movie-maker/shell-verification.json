@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-13",
+  "passed": true,
+  "viewport": {
+    "width": 1440,
+    "height": 1000,
+    "deviceScaleFactor": 1
+  },
+  "checks": [
+    "Manifest registers Movie Maker with the live LopeOS desktop",
+    "Shared window frame wraps opaque ribbon/preview/storyboard",
+    "Sample opens through the real app lifecycle and services"
+  ],
+  "errors": []
+}

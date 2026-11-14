@@ -6,5 +6,5 @@ export class PhotoWorker {
     return new Promise<T>((resolve,reject)=>{const id=++this.sequence;this.waiting.set(id,{resolve,reject});try{this.worker!.postMessage({id,action,payload});}catch(cause){this.waiting.delete(id);reject(cause);}});
   }
   cancel(message='Operation cancelled.'){this.worker?.terminate();this.worker=undefined;for(const p of this.waiting.values())p.reject(new Error(message));this.waiting.clear();}
-  dispose(){this.cancel('Lightroom closed.');}
+  dispose(){this.cancel('Luma closed.');}
 }

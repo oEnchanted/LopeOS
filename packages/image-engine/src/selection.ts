@@ -64,9 +64,9 @@ export function growSelection(doc: ImageDocument, amount: number): ImageDocument
   }
   return { ...doc, selection: input };
 }
-export function selectionBounds(doc: ImageDocument) {
+export function selectionBounds(doc: ImageDocument, threshold = 127) {
   if (!doc.selection) return null;
   let x1 = doc.width; let y1 = doc.height; let x2 = -1; let y2 = -1;
-  for (let y = 0; y < doc.height; y++) for (let x = 0; x < doc.width; x++) if (doc.selection[y * doc.width + x] > 127) { x1 = Math.min(x, x1); y1 = Math.min(y, y1); x2 = Math.max(x, x2); y2 = Math.max(y, y2); }
+  for (let y = 0; y < doc.height; y++) for (let x = 0; x < doc.width; x++) if (doc.selection[y * doc.width + x] > threshold) { x1 = Math.min(x, x1); y1 = Math.min(y, y1); x2 = Math.max(x, x2); y2 = Math.max(y, y2); }
   return x2 < 0 ? null : { x: x1, y: y1, width: x2 - x1 + 1, height: y2 - y1 + 1 };
 }

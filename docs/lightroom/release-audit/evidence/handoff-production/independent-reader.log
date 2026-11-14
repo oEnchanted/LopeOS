@@ -1,0 +1,23 @@
+{
+  "reader": "Pillow 11.3.0",
+  "file": "docs/lightroom/release-audit/evidence/handoff-production/returned-derivative.png",
+  "format": "PNG",
+  "dimensions": [
+    128,
+    96
+  ],
+  "bitDepth": 16,
+  "colorType": 6,
+  "sRGB": 0,
+  "uniqueRgba8": [
+    [
+      0,
+      0,
+      0,
+      255
+    ]
+  ],
+  "sha256": "4d1b5cd513cc6d76f48ba03a4387959f3b6afc0bc9d7a6e610266f9defc56061",
+  "result": "PASSED",
+  "limit": "The native handoff is RGB/8. PNG16 cannot recreate precision discarded during that interchange."
+}

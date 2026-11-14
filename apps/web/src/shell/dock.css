@@ -1,4 +1,6 @@
-.dock { max-width: calc(100% - 24px); }
+.dock { width: max-content; max-width: calc(100% - 24px); scrollbar-width: none; }
+.dock::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.dock-separator { flex-shrink: 0; }
 .dock-panel { position: absolute; z-index: 31000; border-radius: 16px; overflow: hidden; max-height: calc(100% - 56px); max-width: calc(100% - 16px); color: var(--glass-text); }
 .dock-panel button { color: inherit; background: transparent; }
 .dock-panel button:hover, .dock-panel button:focus-visible { background: var(--glass-hover); }
@@ -32,7 +34,9 @@
 .dock-window-title { display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 7px; line-height: 1; }
 .dock-trash.is-drop-target { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 10px; background: var(--glass-active); }
 .dock .app-icon--trash, .dock .app-icon--trash-full, .dock .app-icon--downloads { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.dock[data-overflow=false] { overflow: visible; }
 .dock[data-overflow=true] { overflow-x: auto; overflow-y: hidden; }
 .dock[data-position=left][data-overflow=true], .dock[data-position=right][data-overflow=true] { overflow-x: hidden; overflow-y: auto; }
+.dock[data-overflow=true] .dock-tooltip { display: none; }
 @media (prefers-reduced-motion: reduce) { .dock .dock-item { transition: none; transform: none !important; } }
 .desktop[data-reduce-motion=true] .dock .dock-item { transition: none; transform: none !important; }

@@ -1,0 +1,7 @@
+{"name":"browser","source":"tests/image-editor/browser.mjs","result":"PASS","exit":0}
+{"name":"stability","source":"tests/image-editor/stability.mjs","result":"PASS","exit":0}
+{"name":"cs6-browser","source":"tests/image-editor/cs6-browser.mjs","result":"PASS","exit":0}
+{"name":"presets","source":"tests/image-editor/presets.mjs","result":"PASS","exit":0}
+{"name":"smart-filter-browser","source":"tests/image-editor/smart-filter-browser.mjs","result":"PASS","exit":0}
+{"name":"blend-browser","source":"tests/image-editor/blend-browser.mjs","result":"PASS","exit":0}
+{"name":"handoff","source":"tests/lightroom/handoff.mjs","result":"PASS","exit":0}

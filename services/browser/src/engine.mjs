@@ -22,6 +22,7 @@ export class BrowserEngine extends EventEmitter {
   constructor(options) {
     super(); this.options = options;
     this.profileRoot = resolve(options.dataRoot);
+    this.transferRoot = resolve(options.transferRoot || join(this.profileRoot, 'transfers'));
     this.streamUrl = options.streamUrl ?? null;
   }
   async start() {
@@ -108,7 +109,7 @@ export class BrowserEngine extends EventEmitter {
     await this.saveTask;
   }
   async configureContext(session) {
-    const dir = join(this.profileRoot, 'transfers', session.id);
+    const dir = join(this.transferRoot, session.id);
     await mkdir(dir, { recursive: true, mode: 0o700 });
     await this.cdp.send('Browser.setDownloadBehavior', { behavior: 'allowAndName', downloadPath: dir,
       eventsEnabled: true, ...(session.contextId ? { browserContextId: session.contextId } : {}) });
@@ -136,7 +137,7 @@ export class BrowserEngine extends EventEmitter {
     for (const [key, item] of this.uploadRequests) if (item.sessionId === sessionId) this.uploadRequests.delete(key);
     for (const [key, item] of this.downloads) if (item.sessionId === sessionId) this.downloads.delete(key);
     this.sessions.delete(sessionId); this.closedTabs.delete(sessionId);
-    await rm(join(this.profileRoot, 'transfers', sessionId), { recursive: true, force: true });
+    await rm(join(this.transferRoot, sessionId), { recursive: true, force: true });
     await this.activate(this.normal, this.normal.tabs[0]);
   }
   async attach(info) {
@@ -301,7 +302,7 @@ export class BrowserEngine extends EventEmitter {
       ...(session.contextId ? { browserContextId: session.contextId } : {}) }).catch(() => {}); return; }
     const transfer = { id: event.guid, name: cleanName(event.suggestedFilename), receivedBytes: 0, totalBytes: 0, state: 'progress' };
     session.downloads.unshift(transfer);
-    this.downloads.set(event.guid, { transfer, sessionId: session.id, path: join(this.profileRoot, 'transfers', session.id, event.guid) });
+    this.downloads.set(event.guid, { transfer, sessionId: session.id, path: join(this.transferRoot, session.id, event.guid) });
     this.changed(session);
   }
   async downloadProgress(event) {
@@ -332,7 +333,7 @@ export class BrowserEngine extends EventEmitter {
     if (!request || request.sessionId !== sessionId) throw new Error('This file chooser is no longer available.');
     if (!files.length || files.length > (request.multiple ? 20 : 1)) throw new Error('Select the allowed number of files.');
     const tab = this.targets.get(request.tabId); if (!tab) throw new Error('The upload tab was closed.');
-    const directory = join(this.profileRoot, 'transfers', sessionId, 'uploads', requestId);
+    const directory = join(this.transferRoot, sessionId, 'uploads', requestId);
     await mkdir(directory, { recursive: true, mode: 0o700 });
     const paths = [];
     for (const [index, file] of files.entries()) {
@@ -352,7 +353,7 @@ export class BrowserEngine extends EventEmitter {
   async restart(erase = false) {
     const revision = this.normal.revision;
     await this.close();
-    if (erase) await rm(this.profileRoot, { recursive: true, force: true });
+    if (erase) { await rm(join(this.transferRoot, 'normal'), { recursive: true, force: true }); await rm(this.profileRoot, { recursive: true, force: true }); }
     this.sessions.clear(); this.targets.clear(); this.frames.clear(); this.attaching.clear();
     this.downloads.clear(); this.uploadRequests.clear(); this.closedTabs.clear(); this.defaultContextId = null;
     this.stopping = false; this.normal = null;
@@ -446,7 +447,7 @@ export class BrowserEngine extends EventEmitter {
           await this.cdp.send('Target.disposeBrowserContext', { browserContextId: session.contextId });
           const { browserContextId } = await this.cdp.send('Target.createBrowserContext', { disposeOnDetach: true });
           Object.assign(session, { contextId: browserContextId, tabs: [], activeTabId: null, history: [], bookmarks: [], downloads: [], uploads: [] });
-          await rm(join(this.profileRoot, 'transfers', sessionId), { recursive: true, force: true });
+          await rm(join(this.transferRoot, sessionId), { recursive: true, force: true });
           await this.configureContext(session); await this.createTab(session);
         } else {
           return this.restart(true);

@@ -1,6 +1,7 @@
-/** Decode and shrink photos before saving them to the local account record. */
+/** Normalize to a small raster image, stripping metadata before account sync. */
 export async function prepareProfilePhoto(file: File): Promise<string> {
-  if (!file.type.startsWith('image/') || file.size > 15 * 1024 * 1024) throw new Error('Choose an image smaller than 15 MB.');
+  if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif', 'image/bmp'].includes(file.type)) throw new Error('Choose a JPG, PNG, WebP, GIF, AVIF, or BMP image.');
+  if (!file.size || file.size > 15 * 1024 * 1024) throw new Error('Choose an image smaller than 15 MB.');
   const url = URL.createObjectURL(file);
   try {
     const image = new Image();
@@ -12,8 +13,10 @@ export async function prepareProfilePhoto(file: File): Promise<string> {
     canvas.width = canvas.height = 256;
     const context = canvas.getContext('2d');
     if (!context) throw new Error('Canvas unavailable');
+    context.fillStyle = '#ffffff';
+    context.fillRect(0, 0, 256, 256);
     context.drawImage(image, (image.naturalWidth - side) / 2, (image.naturalHeight - side) / 2, side, side, 0, 0, 256, 256);
     return canvas.toDataURL('image/jpeg', .88);
-  } catch { throw new Error('Choose an image smaller than 15 MB.'); }
+  } catch { throw new Error('This image could not be opened. Try another image.'); }
   finally { URL.revokeObjectURL(url); }
 }

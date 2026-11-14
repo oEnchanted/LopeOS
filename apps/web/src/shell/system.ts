@@ -96,11 +96,17 @@ export async function readAloud(text: string) {
   speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text.slice(0, 10000)); utterance.voice = voice; utterance.rate = preferences.getSnapshot().speechRate; utterance.volume = preferences.getSnapshot().soundMuted ? 0 : preferences.getSnapshot().soundVolume / 100; speechSynthesis.speak(utterance);
 }
 const historyMemory = new Map<string, unknown>();
-export function readHistory<T>(name: string, fallback: T): T { if (historyMemory.has(name)) return historyMemory.get(name) as T; try { const raw = localStorage.getItem('lope.history.' + name + '.v1'); if (raw) { const value = JSON.parse(raw); historyMemory.set(name, value); return value; } } catch {} return fallback; }
+/** Persisted or synced history can be stale or damaged; never hand callers a different shape than their fallback. */
+export function readHistory<T>(name: string, fallback: T): T {
+  const usable = (value: unknown) => !Array.isArray(fallback) || Array.isArray(value);
+  if (historyMemory.has(name)) { const value = historyMemory.get(name); return usable(value) ? value as T : fallback; }
+  try { const raw = localStorage.getItem('lope.history.' + name + '.v1'); if (raw) { const value = JSON.parse(raw); if (!usable(value)) return fallback; historyMemory.set(name, value); return value; } } catch {}
+  return fallback;
+}
 export function writeHistory(name: string, value: unknown) { historyMemory.set(name, value); try { localStorage.setItem('lope.history.' + name + '.v1', JSON.stringify(value)); } catch {} window.dispatchEvent(new CustomEvent('lope:history-updated')); }
 export function clearHistory(name: string) { writeHistory(name, []); }
 export interface StoredNotification extends AppNotification { id: string; time: number; appId?: string }
-export function notificationHistory(): StoredNotification[] { const days = preferences.getSnapshot().notificationHistoryDays; return days ? readHistory<StoredNotification[]>('notifications', []).filter(n => n && typeof n.time === 'number' && n.time > Date.now() - days * 86400000).slice(-100) : []; }
+export function notificationHistory(): StoredNotification[] { const days = preferences.getSnapshot().notificationHistoryDays; return days ? readHistory<StoredNotification[]>('notifications', []).filter(n => n && typeof n.time === 'number' && typeof n.title === 'string' && typeof n.message === 'string' && n.time > Date.now() - days * 86400000).slice(-100) : []; }
 export function recordNotification(n: StoredNotification) { if (preferences.getSnapshot().notificationHistoryDays) writeHistory('notifications', [...notificationHistory(), n].slice(-100)); }
 export function diagnostics(event: 'app-error' | 'service-unavailable' | 'storage-unavailable') { if (!preferences.getSnapshot().diagnostics) return; writeHistory('diagnostics', [...readHistory<object[]>('diagnostics', []), { event, time: new Date().toISOString() }].slice(-100)); }
 export function diagnosticsExport() { return { build: buildInfo, capabilities: { media: !!navigator.mediaDevices, permissions: !!navigator.permissions, storageEstimate: !!navigator.storage?.estimate, fullscreen: !!document.fullscreenEnabled, speech: 'speechSynthesis' in window }, events: readHistory('diagnostics', []) }; }

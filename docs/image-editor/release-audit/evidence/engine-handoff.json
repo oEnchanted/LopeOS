@@ -1,0 +1,32 @@
+{
+  "result": "PASS",
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "commit": "ec4599f2b2e4bab9e09e8018d9146445213c8711",
+  "scope": "Independent production bundle execution using isolated SDK filesystem; native/runtime permissions and LopeOS menu focus are not tested by this harness.",
+  "errors": [],
+  "failedRequests": [],
+  "externalRequests": [],
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "interchange": "Lope Image native JSON v1, RGB/8; high-bit-depth interchange unavailable in Image Editor",
+  "checks": [
+    "A native layered project is written through the shared file service and opened by the real Image Editor",
+    "Saving Image Editor changes creates a separate returned derivative with its source relationship and immutable native-project snapshot",
+    "Original photo checksum and nondestructive recipe remain unchanged through the round trip"
+  ],
+  "returned": {
+    "source": {
+      "hash": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+      "actual": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+      "exposure": 0.5
+    },
+    "child": {
+      "name": "yosemite-edit.lopeimage",
+      "format": "lopeimage",
+      "parentId": "9dacf6d9-be1b-469a-84db-943a74e25e7d",
+      "depth": 8,
+      "hash": "15db74d7058d4c4ee0232f8ea04207859acfb15e6257e0a21b7e1b355a021a4c",
+      "actual": "15db74d7058d4c4ee0232f8ea04207859acfb15e6257e0a21b7e1b355a021a4c"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "host": {
+    "cpu": "Apple M1 Pro",
+    "memoryBytes": 17179869184,
+    "browser": "158.0.8127.18",
+    "viewport": {
+      "width": 1366,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "headless": true
+  },
+  "rows": 100000,
+  "cells": 700007,
+  "openMs": 9748.5,
+  "navigationMs": 81,
+  "editToDependentRecalculationMs": 4446,
+  "renderedCells": 480,
+  "scrollFrameMs": {
+    "median": 15.899999998509884,
+    "p95": 36.400000002235174,
+    "max": 41.099999997764826
+  },
+  "memory": {
+    "usedJSHeapSize": 588000000,
+    "totalJSHeapSize": 703000000
+  },
+  "limitations": [
+    "Headless synthetic input; not physical-display latency.",
+    "Browser heap snapshot is not process peak memory.",
+    "Single local run; no independent Excel performance comparison."
+  ]
+}

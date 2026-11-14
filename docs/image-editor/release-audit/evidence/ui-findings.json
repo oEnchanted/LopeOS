@@ -1,0 +1,178 @@
+{
+  "issues": [
+    {
+      "id": "PS-UI-01",
+      "severity": "P2",
+      "surface": "Numeric controls",
+      "reproduction": "Open New Document; clear Width.",
+      "expected": "An empty draft can be replaced; an abandoned blank restores the last valid value.",
+      "actual": "Clearing Width immediately restores 1600.",
+      "cause": "Controlled value always came from committed numeric state.",
+      "fix": "Keep numeric drafts through empty/sign/decimal input; synchronize external changes and clamp on blur.",
+      "files": [
+        "apps/web/src/apps/image-editor/tools.tsx"
+      ],
+      "verification": "release-ui.mjs: empty draft and empty-on-blur assertions",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-02",
+      "severity": "P1",
+      "surface": "Transform numeric input",
+      "reproduction": "Open Transform; clear Horizontal; type -25 one key at a time.",
+      "expected": "Horizontal reads -25 and previews the negative coordinate.",
+      "actual": "Minus sign is discarded and input reads 025 (positive 25).",
+      "cause": "Controlled input reset an incomplete minus to the committed number.",
+      "fix": "Shared NumberField draft repair also accepts negative decimals.",
+      "files": [
+        "apps/web/src/apps/image-editor/tools.tsx"
+      ],
+      "verification": "release-ui.mjs: -25 and -0.25 assertions",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-03",
+      "severity": "P2",
+      "surface": "Toolbar tool groups",
+      "reproduction": "Select Brush; Shift+B selects Pencil; select Move.",
+      "expected": "Brush/Pencil slot retains Pencil as the last selected member.",
+      "actual": "Slot reverts to Brush because only flyout clicks updated its memory.",
+      "cause": "chosen state omitted keyboard and other tool transitions.",
+      "fix": "Record the active tool in its group for every tool change; restore trigger focus after flyout choice.",
+      "files": [
+        "apps/web/src/apps/image-editor/tools.tsx"
+      ],
+      "verification": "release-ui.mjs: tool/group assertions",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-04",
+      "severity": "P1",
+      "surface": "Canvas pointer gestures",
+      "reproduction": "Drag a layer, dispatch window blur, return pointer and release; compare saved document.",
+      "expected": "Interrupted gesture is cancelled and no history/file change occurs.",
+      "actual": "Gesture remains live and commits after focus returns.",
+      "cause": "Window blur reset only temporary hand-tool state; gesture and pointer capture remained live.",
+      "fix": "Cancel gesture on blur, pointer cancel and lost capture; invalidate queued previews and release capture.",
+      "files": [
+        "apps/web/src/apps/image-editor/CanvasView.tsx"
+      ],
+      "verification": "release-ui.mjs: unchanged serialized document for interrupted Move and Pencil. Before reproduction is Move; original screenshot filename says stroke.",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-05",
+      "severity": "P2",
+      "surface": "Color panel",
+      "reproduction": "Set foreground to #00ff00 in the Color Picker.",
+      "expected": "Hue 120; saturation marker at 100%, brightness 100%.",
+      "actual": "Hue 30; static marker at 45%/25%.",
+      "cause": "Local hue initialized to 30 and marker was hardcoded.",
+      "fix": "Derive HSV and marker from current foreground; retain hue for achromatic colors.",
+      "files": [
+        "apps/web/src/apps/image-editor/panels.tsx"
+      ],
+      "verification": "release-ui-color.mjs: hue and marker assertions",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-06",
+      "severity": "P2",
+      "surface": "Color hue slider",
+      "reproduction": "Set foreground to pure green; move hue to 240.",
+      "expected": "Pure blue #0000ff with unchanged saturation/brightness.",
+      "actual": "Desaturated/dimmed #6666cc.",
+      "cause": "Hue adjustment hardcoded saturation .5 and value .8.",
+      "fix": "Use actual saturation and value when changing hue.",
+      "files": [
+        "apps/web/src/apps/image-editor/panels.tsx"
+      ],
+      "verification": "release-ui-color.mjs: RGB result assertion",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-07",
+      "severity": "P2",
+      "surface": "Color saturation keyboard control",
+      "reproduction": "Set pure green; focus saturation/brightness; press ArrowLeft.",
+      "expected": "Decrease saturation by 1%; preserve hue and brightness.",
+      "actual": "Rotates hue and resets saturation/brightness.",
+      "cause": "Slider keyboard handler changed hue rather than the labeled dimensions.",
+      "fix": "Left/right adjust saturation; up/down brightness; Shift increases step; expose current accessible values.",
+      "files": [
+        "apps/web/src/apps/image-editor/panels.tsx"
+      ],
+      "verification": "release-ui-color.mjs: expected rgb(3,255,3)",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-08",
+      "severity": "P2",
+      "surface": "Color background chip",
+      "reproduction": "Set background to #123456.",
+      "expected": "Color panel background chip matches the selected background.",
+      "actual": "Chip was hardcoded white (code-observed).",
+      "cause": "Panels had no background prop.",
+      "fix": "Pass current background from index.tsx to ColorPanel.",
+      "files": [
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/index.tsx"
+      ],
+      "verification": "release-ui-color.mjs: expected rgb(18,52,86)",
+      "reference_status": "Functional invariant verified; Adobe-specific visual/state identity UNVERIFIED",
+      "status": "FIXED_AND_RETESTED_PRODUCTION"
+    },
+    {
+      "id": "PS-UI-09",
+      "severity": "P2",
+      "surface": "Layers context menu",
+      "reproduction": "Lock active layer; right-click its row.",
+      "expected": "Delete, mask, effects, embed, and merge reflect the command registry disabled state.",
+      "actual": "All context actions remain visually enabled.",
+      "cause": "Context menu buttons had no command-enabled binding.",
+      "fix": "Pass registered commands to Panels and use each command enabled state and dynamic clipping label.",
+      "files": [
+        "apps/web/src/apps/image-editor/panels.tsx",
+        "apps/web/src/apps/image-editor/index.tsx"
+      ],
+      "verification": "release-ui-context.mjs disabled Delete assertion",
+      "status": "FIXED_AND_RETESTED_PRODUCTION",
+      "reference_status": "Functional state verified; Adobe placement UNVERIFIED"
+    },
+    {
+      "id": "PS-UI-10",
+      "severity": "P2",
+      "surface": "Layers and panel context menu keyboard/focus",
+      "reproduction": "Open layer context menu; press Escape; use keyboard to open panel menu.",
+      "expected": "Focus enters menu; arrows skip unavailable actions; Escape closes and returns focus; keyboard invocation works; menus stay in the app near edges.",
+      "actual": "Layer menu retained prior focus and stayed open after Escape. Panel context used the same inaccessible implementation.",
+      "cause": "No focus/key handlers or app-relative geometry; raw viewport coordinates under transformed windows.",
+      "fix": "App-local portaled context menu handles focus lifecycle, arrows/Home/End, Escape/Tab, scaled coordinates, bounds and resize; layer rows support ContextMenu/Shift+F10 and retain multi-selection.",
+      "files": [
+        "apps/web/src/apps/image-editor/panels.tsx"
+      ],
+      "verification": "release-ui-context.mjs focus, Escape, enabled navigation, compact and scaled bounds assertions",
+      "status": "FIXED_AND_RETESTED_PRODUCTION",
+      "reference_status": "Functional state verified; Adobe placement UNVERIFIED"
+    }
+  ],
+  "regressions": {
+    "stability": "10 workflows pass, no page errors",
+    "browser": "17 workflow assertions pass, then obsolete About Image Editor selector fails against Prism rename; not a complete pass",
+    "typecheck": "PASS"
+  },
+  "unresolved_code_observations": [
+    "Exact Adobe numeric field, toolbar and color panel geometry/state still needs pinned CS6 Windows captures."
+  ],
+  "production_build_id": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "production_checks": 24,
+  "additional_keyboard_isolation_assertions": 2,
+  "independent_handoff": "PASS; original checksum and recipe preserved; returned derivative links source; same final build. SDK filesystem fixture, native runtime/shared menu focus unverified."
+}

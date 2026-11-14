@@ -1,0 +1,43 @@
+{
+  "measuredAt": "2026-11-13T23:46:42.232Z",
+  "hardware": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M1 Pro",
+    "logicalCpus": 8,
+    "memoryBytes": 17179869184,
+    "node": "v26.12.1"
+  },
+  "fixture": {
+    "rows": 100000,
+    "occupiedCells": 200001,
+    "formulas": 100001
+  },
+  "timingsMs": {
+    "fixture": 6324.613000000001,
+    "dependencyGraph": 17084.144042,
+    "fullCalculation": 6013.177415999999,
+    "editToRecalc": 1046.2293750000026,
+    "incrementalCalculation": 1045.7341670000023
+  },
+  "evaluated": {
+    "full": 100001,
+    "incremental": 2
+  },
+  "memory": {
+    "rss": 457337720,
+    "heapTotal": 349356032,
+    "heapUsed": 303956080,
+    "external": 6337996,
+    "arrayBuffers": 192192,
+    "peakRssBytes": null,
+    "resourceUsageReportedMaxRssBytes": 356646912,
+    "peakMeasurementStatus": "UNVERIFIED: resourceUsage high-water report was below process.memoryUsage RSS. Raw reported value is retained separately; this run does not establish peak memory."
+  },
+  "notes": [
+    "Node process measurements, not browser scrolling or physical-display latency.",
+    "One deterministic run; full calculation includes 100,000 dependent formulas and a sparse whole-column SUM.",
+    "Peak RSS is operating-system-reported process peak; no GPU memory is measured.",
+    "Concurrent repository work was active during this run. Timings are recorded observations, not isolated-hardware guarantees."
+  ]
+}

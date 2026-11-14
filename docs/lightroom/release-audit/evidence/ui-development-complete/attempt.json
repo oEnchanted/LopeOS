@@ -1,0 +1,17 @@
+{
+  "status": "INTERRUPTED_TEST_HARNESS_REPAIR",
+  "passedThrough": [
+    "empty guest launch",
+    "menu order and focus ownership",
+    "album creation",
+    "RAW import review and select-all",
+    "desktop view/rating/flag/original shortcuts",
+    "real exposure edit",
+    "gradient mask",
+    "square crop",
+    "named version"
+  ],
+  "observedProductFailure": "Filter opened through outer button did not close on Escape; main agent repaired for retest",
+  "testHarnessFailure": "Capture helper tried to dismiss background notification through modal; helper corrected and dependent failures not treated as product defects",
+  "finalAuthority": "Use final production results.json after rerun; this preliminary run is not release sign-off"
+}

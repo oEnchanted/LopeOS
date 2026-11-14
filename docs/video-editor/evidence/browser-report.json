@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-14T00:00:59.985Z",
+  "hardware": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M1 Pro",
+    "logicalCpus": 8,
+    "totalMemoryBytes": 17179869184
+  },
+  "browser": "158.0.8127.18",
+  "checks": [
+    "Real WebM/AAC MP4 import, source frames, J/L edit, transform/color keyframes, title, caption and mixed audio export",
+    "Preview/export pixel comparison, independent frame count, cancellation, corrupt input, native recovery and portable package round trip",
+    "Finished WebM and MP4 independently opened and sought at three positions by HTMLVideoElement",
+    "24/25/30/23.976/29.97/59.94 offline frame counts and endpoints",
+    "UI: real sample project, numerical effect changes pixels, undo/redo, split, independent source/program seeks, reload preserves media and decisions",
+    "Compact viewport has no root overflow"
+  ],
+  "measurements": {
+    "core": {
+      "info": {
+        "kind": "video",
+        "duration": 3,
+        "startTime": 0,
+        "width": 320,
+        "height": 180,
+        "rotation": 0,
+        "fps": 30,
+        "videoCodec": "vp8",
+        "audioCodec": "opus",
+        "channels": 2,
+        "sampleRate": 48000,
+        "color": {
+          "primaries": "bt709",
+          "transfer": "iec61966-2-1",
+          "matrix": "bt709",
+          "range": "full",
+          "bitDepth": null,
+          "policy": "sdr"
+        }
+      },
+      "outInfo": {
+        "kind": "video",
+        "duration": 2,
+        "startTime": 0,
+        "width": 320,
+        "height": 180,
+        "rotation": 0,
+        "fps": 30,
+        "videoCodec": "vp8",
+        "audioCodec": "opus",
+        "channels": 2,
+        "sampleRate": 48000,
+        "color": {
+          "primaries": "bt709",
+          "transfer": "iec61966-2-1",
+          "matrix": "bt709",
+          "range": "full",
+          "bitDepth": null,
+          "policy": "sdr"
+        }
+      },
+      "mp4Info": {
+        "kind": "video",
+        "duration": 2,
+        "startTime": 0,
+        "width": 320,
+        "height": 180,
+        "rotation": 0,
+        "fps": 30,
+        "videoCodec": "avc",
+        "audioCodec": "aac",
+        "channels": 2,
+        "sampleRate": 48000,
+        "color": {
+          "primaries": "bt709",
+          "transfer": "iec61966-2-1",
+          "matrix": "bt709",
+          "range": "full",
+          "bitDepth": null,
+          "policy": "sdr"
+        }
+      },
+      "frames": 60,
+      "samples": 96000,
+      "stats": {
+        "packetCount": 60,
+        "averagePacketRate": 30,
+        "averageBitrate": 376828
+      },
+      "mae": 1.4717534722222223,
+      "peak": 0.5112850666046143,
+      "aacPeak": 0.5185813307762146,
+      "checksum": 1062338,
+      "cancelled": true,
+      "corrupt": true,
+      "savedEqual": true,
+      "archiveEqual": true,
+      "elapsedMs": 1694.5
+    },
+    "independentPlayback": [
+      {
+        "duration": 2.02,
+        "width": 320,
+        "height": 180
+      },
+      {
+        "duration": 2.069333,
+        "width": 320,
+        "height": 180
+      }
+    ],
+    "rates": [
+      {
+        "fps": {
+          "num": 24000,
+          "den": 1001
+        },
+        "frames": 30,
+        "packetCount": 30,
+        "duration": 1.252,
+        "expected": 1.25125,
+        "timestampError": 0.0007500000000000284
+      },
+      {
+        "fps": {
+          "num": 24,
+          "den": 1
+        },
+        "frames": 30,
+        "packetCount": 30,
+        "duration": 1.25,
+        "expected": 1.25,
+        "timestampError": 0
+      },
+      {
+        "fps": {
+          "num": 25,
+          "den": 1
+        },
+        "frames": 30,
+        "packetCount": 30,
+        "duration": 1.2,
+        "expected": 1.2,
+        "timestampError": 0
+      },
+      {
+        "fps": {
+          "num": 30000,
+          "den": 1001
+        },
+        "frames": 30,
+        "packetCount": 30,
+        "duration": 1.001,
+        "expected": 1.001,
+        "timestampError": 0
+      },
+      {
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "frames": 30,
+        "packetCount": 30,
+        "duration": 1,
+        "expected": 1,
+        "timestampError": 0
+      },
+      {
+        "fps": {
+          "num": 60000,
+          "den": 1001
+        },
+        "frames": 30,
+        "packetCount": 30,
+        "duration": 0.501,
+        "expected": 0.5005,
+        "timestampError": 0.000500000000000056
+      }
+    ]
+  },
+  "errors": [],
+  "passed": true
+}

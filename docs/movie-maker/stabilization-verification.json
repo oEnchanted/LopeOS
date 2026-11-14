@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-13",
+  "passed": true,
+  "browser": "Playwright Chromium",
+  "beforeRms": 3.285574531189333,
+  "afterRms": 0.16222349929464322,
+  "reductionPercent": 95.06255305564714,
+  "confidence": 0.9998230528894768,
+  "cropScale": 1.047777970751044,
+  "croppedAreaPercent": 8.91193561775756,
+  "samples": 60,
+  "lastProgress": 1,
+  "progressMonotonic": true,
+  "workerLaunched": true,
+  "roundtrip": true,
+  "cancelName": "AbortError",
+  "originalIntact": true,
+  "previewExportMeanError": 0.8571469907407407,
+  "renderedRms": 0.08882907064655436,
+  "renderedConfidence": 0.9773321053604543,
+  "export": {
+    "duration": 2,
+    "width": 240,
+    "height": 144,
+    "videoCodec": "vp8",
+    "audioCodec": null,
+    "frameCount": 60,
+    "framesPerSecond": 30,
+    "audioPeak": 0
+  },
+  "errors": []
+}

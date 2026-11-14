@@ -65,7 +65,16 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
   useLayoutEffect(() => {
     const element = nav.current;
     if (!element) return;
-    const measure = () => setOverflow(p.dockPosition === 'bottom' ? element.scrollWidth > element.clientWidth + 1 : element.scrollHeight > element.clientHeight + 1);
+    const measure = () => {
+      const lastItem = element.lastElementChild as HTMLElement | null;
+      if (!lastItem) return setOverflow(false);
+      const style = getComputedStyle(element);
+      // Measure the item layout: tooltips and hover transforms can inflate scrollWidth/Height.
+      const horizontal = p.dockPosition === 'bottom';
+      const end = horizontal ? lastItem.offsetLeft + lastItem.offsetWidth : lastItem.offsetTop + lastItem.offsetHeight;
+      const padding = parseFloat(horizontal ? style.paddingRight : style.paddingBottom);
+      setOverflow(end + padding > (horizontal ? element.clientWidth : element.clientHeight) + 1);
+    };
     measure(); const observer = new ResizeObserver(measure); observer.observe(element);
     return () => observer.disconnect();
   }, [pinnedIds.join(','), runningIds.join(','), recentIds.join(','), minimized.length, p.dockSize, p.dockPosition]);
@@ -175,9 +184,10 @@ export function Dock({ pinned, running, windows, history, services, activate, ne
   return <>
     {p.dockAutoHide && <button className="dock-reveal" data-position={p.dockPosition} aria-label="Reveal application Dock" onClick={() => setRevealed(true)} onFocus={() => setRevealed(true)} onDragEnter={() => setRevealed(true)}/>}
     <nav ref={nav} className={'dock glass ' + (revealed || panel || dropActive ? 'is-revealed' : '')} aria-label="Application Dock" data-position={p.dockPosition} data-autohide={p.dockAutoHide} data-magnify={p.dockMagnification} data-indicators={p.runningIndicators} data-overflow={overflow} onKeyDown={event => {
-      event.stopPropagation(); const keys = p.dockPosition === 'bottom' ? ['ArrowLeft', 'ArrowRight'] : ['ArrowUp', 'ArrowDown'];
-      if (![...keys, 'Home', 'End'].includes(event.key)) return;
-      event.preventDefault(); const buttons = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')], index = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      const keys = p.dockPosition === 'bottom' ? ['ArrowLeft', 'ArrowRight'] : ['ArrowUp', 'ArrowDown'];
+      // Only consume Dock navigation keys; global shortcuts (⌘K, ⌘W, Alt+F10) must still reach the shell.
+      if (event.altKey || event.metaKey || event.ctrlKey || ![...keys, 'Home', 'End'].includes(event.key)) return;
+      event.stopPropagation(); event.preventDefault(); const buttons = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')], index = buttons.indexOf(document.activeElement as HTMLButtonElement);
       buttons[event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : (index + (event.key === keys[0] ? -1 : 1) + buttons.length) % buttons.length]?.focus();
     }}>
       <button className="dock-item" aria-label="All applications" onClick={() => { dismiss(); showSearch(); }}><span className="dock-tooltip">All applications</span><AppIcon name="apps" size={p.dockSize}/></button>

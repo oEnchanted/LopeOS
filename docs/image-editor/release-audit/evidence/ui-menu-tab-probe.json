@@ -1,0 +1,9 @@
+{
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5188",
+  "trigger": "Layers panel menu > Tab",
+  "expected": "Panel visibility unchanged",
+  "before": "ie-panels ",
+  "after": "ie-panels is-collapsed",
+  "pass": false
+}

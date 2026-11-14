@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "status": "Substantial implementation with explicit compatibility limits; not full Excel parity",
+  "referenceBaselineDocument": "docs/spreadsheet/reference-baseline.md",
+  "libraryDecision": {
+    "selected": {
+      "package": "fast-formula-parser",
+      "version": "1.0.19",
+      "license": "MIT",
+      "role": "Pinned LL(1) parser and scalar function implementation",
+      "source": "https://github.com/LesterLyu/fast-formula-parser"
+    },
+    "notSelected": {
+      "package": "hyperformula",
+      "reason": "GPLv3 or proprietary license. No project GPL adoption or commercial license was assumed.",
+      "source": "https://handsontable.com/docs/hyperformula/guide/licensing"
+    },
+    "corrections": "Local tested extensions fix sparse aggregates, missing common functions, blank/error distinction, TRIM behavior, dynamic array operators, date arithmetic, lexical LET/LAMBDA, and row visibility semantics."
+  },
+  "architecture": {
+    "model": "packages/spreadsheet-engine/src/model.ts",
+    "staticTokenizerAndAst": "packages/spreadsheet-engine/src/formula-ast.ts",
+    "calculationAndDependencies": "packages/spreadsheet-engine/src/calculation.ts",
+    "referenceTransforms": "packages/spreadsheet-engine/src/references.ts",
+    "worker": "apps/web/src/apps/spreadsheet/calculation.worker.ts",
+    "formulaEditor": "apps/web/src/apps/spreadsheet/FormulaAssist.tsx"
+  },
+  "verification": {
+    "command": "node --test tests/spreadsheet/engine.test.ts",
+    "testGroups": 25,
+    "passed": 25,
+    "failed": 0,
+    "typecheck": "tsc -p tests/spreadsheet/tsconfig.json",
+    "typecheckResult": "passed",
+    "registryFunctions": 518,
+    "engineAvailableNames": 315,
+    "statusCounts": {
+      "fixture-tested": 77,
+      "available-unverified": 235,
+      "unsupported": 198,
+      "blocked": 8
+    },
+    "discreteResults": "Exact equality",
+    "numericalTolerances": {
+      "PMT": "absolute 1e-8",
+      "NPER": "absolute 1e-10"
+    },
+    "independentExcelDifferentialTests": false
+  },
+  "implemented": [
+    "Sparse workbook/sheet/cell model with Excel coordinate boundaries",
+    "Tokenizer and static AST, dependency graph and range dependencies without whole-column expansion",
+    "Dirty propagation and persistent worker incremental recalculation; structural fallback rebuild",
+    "Cross-sheet, quoted-sheet, range-name and named-expression references",
+    "Relative, absolute and mixed reference transforms including whole row/column copy and structural edits",
+    "Circular-reference detection and explicit error propagation; no eval or imported code execution",
+    "Manual/automatic modes, explicit recalculation, local volatile functions",
+    "Scalar/array operator broadcasting, dynamic spills, blocked spills and downstream spill dependencies",
+    "Nested lexical LET, immediately invoked and named LAMBDA, recursion bounds and lazy scalar IF",
+    "1900/1904 civil date arithmetic including historical serial 60",
+    "Number formatting independent of values, custom numeric SSF formatting and bounded date-format rendering",
+    "Typed validation with atomic user batches and protected-cell edits",
+    "Table column/current-row references, downward table auto-expansion and formula autofill with undo metadata",
+    "Distinct filtered/manually hidden rows in SUBTOTAL and reference AGGREGATE",
+    "Cell-delta undo/redo and structural workbook snapshots",
+    "Worker response revision isolation, formula autocomplete/signature help and reference-outline extraction",
+    "Dynamic elementwise text operations, regression-tested for UPPER/LOWER/LEFT/LEN/TRIM"
+  ],
+  "limits": {
+    "denseRangeCells": 250000,
+    "outputArrayCells": 250000,
+    "editBatchCells": 250000,
+    "expressionRecursion": 128,
+    "dependencyRecursion": 128,
+    "staticAstNesting": 256,
+    "historyEntries": 30,
+    "formulaCharacters": 32768
+  },
+  "unresolved": [
+    "Iterative circular calculation and convergence settings",
+    "R1C1 calculation grammar, 3D references, complete union/intersection and implicit-intersection compatibility",
+    "Full structured-reference grammar, totals specifiers and automatic table expansion to the right",
+    "LAMBDA closures and higher-order MAP/REDUCE/SCAN/BYROW/BYCOL semantics",
+    "Complete legacy-array and spill-reference suffix compatibility",
+    "All-function dynamic-array broadcasting and complete coercion/error edge cases",
+    "Locale-aware formula input and locale-specific DATEVALUE parsing; current DATEVALUE requires yyyy-mm-dd",
+    "Reference rewrite semantics for every sort/cross-workbook/move combination",
+    "External-workbook formula refresh, services and remote data connections",
+    "Native Excel differential tests and full per-function argument/error certification",
+    "Exact custom-date format locale coverage and all conditional display rules"
+  ],
+  "notes": [
+    "#CIRC! is a LopeOS diagnostic for circular references; it is not a claim of identical native Excel presentation.",
+    "SUM/AVERAGE/MIN/MAX/COUNT families use sparse traversal for whole-column ranges; functions requiring dense matrices reject oversized ranges with explicit errors.",
+    "Table auto-expansion only applies to contiguous edited rows immediately below a table, skips totals/protected tables and avoids overlapping tables or merges. Existing occupied cells are preserved.",
+    "Worksheet protection restricts editing; it is not encryption.",
+    "No local workbook data is sent to remote formula services.",
+    "The Microsoft catalog is current documentation; per-function introduction markers are evidence, not blanket availability claims for the pinned UI reference.",
+    "Union collections passed into local aggregate/numeric adapters produce explicit #VALUE! rather than fabricated zero. Use separate range arguments."
+  ],
+  "sources": [
+    "https://support.microsoft.com/en-us/excel/excel-functions-alphabetical",
+    "https://support.microsoft.com/en-us/excel/functions/let-function",
+    "https://support.microsoft.com/en-us/excel/dynamic-array-formulas-and-spilled-array-behavior",
+    "https://github.com/LesterLyu/fast-formula-parser",
+    "https://handsontable.com/docs/hyperformula/guide/licensing"
+  ]
+}

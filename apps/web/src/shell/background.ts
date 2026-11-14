@@ -21,12 +21,20 @@ export interface DesktopBackground {
   backgroundImage: string;
   wallpaper?: Wallpaper | PersonalWallpaper;
 }
+/**
+ * Personal wallpapers are persisted and account-synced, so treat them as untrusted.
+ * Only a plain base64 raster data URL may reach CSS url(): quotes, parentheses or
+ * whitespace could otherwise add extra image layers that fetch remote URLs.
+ */
+export function isSafeImageDataURL(value: unknown): value is string {
+  return typeof value === 'string' && value.length <= 4 * 1024 * 1024 && /^data:image\/(?:png|jpeg|webp|avif|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(value);
+}
 export function resolveDesktopBackground(p: Preferences, personal?: PersonalWallpaper | null): DesktopBackground {
   if (p.wallpaper === 'sky') {
     const sky = p.background === 'automatic' ? automaticSky() : p.background;
     return { id: `sky-${sky}`, name: skyOptions.find(option => option.id === p.background)!.name, backgroundImage: `var(--sky-${sky})` };
   }
-  const wallpaper = p.wallpaper === 'personal' && personal?.asset.startsWith('data:image/') ? personal
+  const wallpaper = p.wallpaper === 'personal' && isSafeImageDataURL(personal?.asset) ? personal
     : wallpapers.find(wallpaper => wallpaper.id === p.wallpaper && isWallpaperAvailable(wallpaper)) ?? wallpapers[0];
   return { id: wallpaper.id, name: wallpaper.name, backgroundImage: `url("${wallpaper.asset}")`, wallpaper };
 }

@@ -1,7 +1,7 @@
 import type { AppManifest } from '../../../../../packages/contracts/src';
 import { photoExtensions } from '../../../../../packages/photo-engine/src/formats';
 export const lightroomManifest:AppManifest={
-  contractVersion:1,id:'lope.lightroom',name:'Lightroom',description:'Organize, edit, and export photos.',icon:'lightroom',singleton:true,
+  contractVersion:1,id:'lope.lightroom',name:'Luma',description:'Organize, edit, and export photos.',icon:'lightroom',singleton:true,
   entry:()=>import('./index'),defaultSize:{width:1360,height:860},minSize:{width:680,height:460},
   fileAssociations:photoExtensions,
   menus:[

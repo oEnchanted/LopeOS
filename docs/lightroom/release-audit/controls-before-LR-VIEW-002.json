@@ -1,0 +1,17 @@
+{
+  "phase": "before",
+  "browser": "158.0.8127.18",
+  "viewport": {
+    "width": 1000,
+    "height": 800
+  },
+  "deviceScaleFactor": 1,
+  "checks": [
+    {
+      "id": "LR-VIEW-002",
+      "result": "FAIL",
+      "error": "expect(received).toBeLessThanOrEqual(expected)\n\nExpected: <= 1\nReceived:    40"
+    }
+  ],
+  "errors": []
+}

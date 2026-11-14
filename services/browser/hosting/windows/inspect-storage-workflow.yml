@@ -1,0 +1,18 @@
+name: Inspect Lope Browser storage capacity
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  storage:
+    runs-on: [self-hosted, Windows, X64, lope-production]
+    timeout-minutes: 5
+    steps:
+      - name: Read fixed-drive free capacity only
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $target = Join-Path $env:RUNNER_TEMP ('lope-browser-storage-' + [Guid]::NewGuid().ToString('N') + '.ps1')
+          try {
+            Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA/services/browser/hosting/windows/Inspect-LopeBrowserStorage.ps1" -OutFile $target
+            & $target
+          } finally { Remove-Item -LiteralPath $target -Force -ErrorAction SilentlyContinue }

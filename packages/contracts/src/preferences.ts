@@ -11,6 +11,18 @@ const statusList = (all = false): PreferenceSpec<string[]> => ({ default: [...st
 const paths: PreferenceSpec<string[]> = { default: ['/Documents','/Downloads'], valid: (v): v is string[] => list([]).valid(v) && v.length > 0 && v.every(x => x.startsWith('/') && !x.split('/').includes('..') && !x.includes('\\')) };
 const flags = (): PreferenceSpec<Record<string, boolean>> => ({ default: {}, valid: (v): v is Record<string, boolean> => !!v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length <= 100 && Object.entries(v).every(([k, val]) => /^[a-z0-9][a-z0-9._-]{0,80}$/i.test(k) && !['__proto__','constructor','prototype'].includes(k) && typeof val === 'boolean') });
 export interface WeatherLocationPreference { name: string; latitude: number; longitude: number; country?: string; timezone?: string }
+export const MAX_WEATHER_LOCATIONS = 20;
+export const weatherLocationKey = (location: Pick<WeatherLocationPreference, 'latitude' | 'longitude'>) => `${location.latitude.toFixed(4)},${location.longitude.toFixed(4)}`;
+const defaultWeatherLocation: WeatherLocationPreference = { name: 'Denver', latitude: 39.7392, longitude: -104.9903, country: 'United States', timezone: 'America/Denver' };
+export function validWeatherLocationPreference(value: unknown): value is WeatherLocationPreference {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const location = value as WeatherLocationPreference;
+  return Object.keys(value).every(key => ['name','latitude','longitude','country','timezone'].includes(key))
+    && ['country','timezone'].every(key => !(key in value) || text('', 100).valid((value as Record<string, unknown>)[key]))
+    && text('', 100).valid(location.name) && Boolean(location.name.trim())
+    && Number.isFinite(location.latitude) && Math.abs(location.latitude) <= 90
+    && Number.isFinite(location.longitude) && Math.abs(location.longitude) <= 180;
+}
 export const preferenceSchema = {
   theme: choice('light', ['light','dark','system']),
   accent: color('#167bac'), selection: color('#73c9ec'), glassClarity: number(64, 0, 100),
@@ -19,7 +31,7 @@ export const preferenceSchema = {
   wallpaper: text('perfecthue-light'), background: choice('automatic', ['automatic','morning','afternoon','blue-hour','midnight']), wallpaperFit: choice('fill', ['fill','fit','center']), wallpaperRotation: number(0, 0, 1440),
   dockSize: number(52, 36, 68), dockMagnification: bool(true), dockPosition: choice('bottom', ['bottom','left','right']),
   dockAutoHide: bool(false), windowAnimation: choice('gentle', ['gentle','none']), runningIndicators: bool(true),
-  pinned: list(['lope.welcome','lope.files','lope.browser','lope.editor','lope.weather','lope.calculator','lope.settings','lope.writer','lope.image-editor','lope.lightroom']),
+  pinned: list(['lope.welcome','lope.files','lope.browser','lope.weather','lope.writer','lope.image-editor','lope.lightroom']),
   showRecentApps: bool(true), minimizeDestination: choice('app', ['app','dock']),
   titlebarDoubleClick: choice('maximize', ['maximize','minimize','none']), desktopItems: bool(true),
   showDesktopBehavior: choice('toggle', ['toggle','minimize']),
@@ -46,7 +58,8 @@ export const preferenceSchema = {
   cameraTools: bool(true), microphoneTools: bool(true), screenTools: bool(true), locationAccess: bool(true),
   clipboardHistory: bool(false), clipboardRetentionMinutes: number(15, 1, 60), diagnostics: bool(false),
   fileAccess: flags(), appLaunch: flags(),
-  'weather.location': { default: { name: 'Denver', latitude: 39.7392, longitude: -104.9903, country: 'United States', timezone: 'America/Denver' }, valid: (v: unknown): v is WeatherLocationPreference => !!v && typeof v === 'object' && Object.keys(v).every(k => ['name','latitude','longitude','country','timezone'].includes(k)) && ['country','timezone'].every(k => !(k in v) || text('',100).valid((v as Record<string,unknown>)[k])) && typeof (v as WeatherLocationPreference).name === 'string' && (v as WeatherLocationPreference).name.length <= 100 && Number.isFinite((v as WeatherLocationPreference).latitude) && Math.abs((v as WeatherLocationPreference).latitude) <= 90 && Number.isFinite((v as WeatherLocationPreference).longitude) && Math.abs((v as WeatherLocationPreference).longitude) <= 180 } as PreferenceSpec<WeatherLocationPreference>,
+  'weather.location': { default: defaultWeatherLocation, valid: validWeatherLocationPreference } as PreferenceSpec<WeatherLocationPreference>,
+  'weather.locations': { default: [defaultWeatherLocation], valid: (value: unknown): value is WeatherLocationPreference[] => Array.isArray(value) && value.length > 0 && value.length <= MAX_WEATHER_LOCATIONS && value.every(validWeatherLocationPreference) && new Set(value.map(weatherLocationKey)).size === value.length } as PreferenceSpec<WeatherLocationPreference[]>,
   'weather.units': choice('celsius', ['celsius','fahrenheit']), weatherAutoRefresh: bool(true),
   'defaults.browser': text('lope.browser'), 'defaults.text': text('lope.editor'),
 };
@@ -63,5 +76,11 @@ export function validatePreferenceImport(input: unknown): { values: Partial<Pref
   const entries = Object.entries(document.preferences);
   if (entries.length > 150) throw new Error('Too many preferences in this file.');
   for (const [key, value] of entries) if (!validPreference(key, value)) throw new Error('Invalid or unsupported preference: ' + key);
-  return { values: Object.fromEntries(entries) as Partial<Preferences>, count: entries.length };
+  const values = Object.fromEntries(entries) as Partial<Preferences>;
+  // Version 2 snapshots predate saved cities. Migrate within the imported account
+  // record, never from another account or this device's currently selected city.
+  if (values['weather.location'] && !values['weather.locations']) values['weather.locations'] = [values['weather.location']];
+  if (values['weather.locations'] && !values['weather.location']) values['weather.location'] = values['weather.locations'][0];
+  if (values['weather.location'] && values['weather.locations'] && !values['weather.locations'].some(location => weatherLocationKey(location) === weatherLocationKey(values['weather.location']!))) throw new Error('The active weather location must be in the saved locations.');
+  return { values, count: entries.length };
 }

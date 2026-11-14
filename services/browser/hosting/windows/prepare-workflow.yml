@@ -1,0 +1,15 @@
+name: Prepare Lope Browser WSL prerequisites
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: [self-hosted, Windows, X64, lope-production]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Enable approved WSL prerequisites without rebooting Windows
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: ./services/browser/hosting/windows/Prepare-LopeBrowserWSL.ps1

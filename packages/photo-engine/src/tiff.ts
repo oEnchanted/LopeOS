@@ -31,19 +31,28 @@ export function decodeTiff(bytes: Uint8Array): { image: FloatImage; bitDepth: nu
   if(tags.has(50706))throw new Error('DNG sensor data requires the RAW decoder.');
   const width=get(256)[0],height=get(257)[0];checkDimensions(width,height);
   const bits=get(258,[8]),depth=bits[0],compression=get(259,[1])[0],photo=get(262,[2])[0],samples=get(277,[1])[0],sampleFormat=get(339,[1])[0];
-  if(compression!==1||get(284,[1])[0]!==1||![1,2].includes(photo)||![1,2,3,4].includes(samples)||![8,16,32].includes(depth)||bits.some(v=>v!==depth)||depth===32&&sampleFormat!==3||depth!==32&&sampleFormat!==1||tags.has(322))throw new Error('This TIFF variant needs another decoder. Supported: uncompressed striped grayscale/RGB(A), 8/16-bit unsigned or 32-bit float.');
+  if(compression!==1||get(284,[1])[0]!==1||!(photo===1&&[1,2].includes(samples)||photo===2&&[3,4].includes(samples))||![8,16,32].includes(depth)||bits.some(v=>v!==depth)||depth===32&&sampleFormat!==3||depth!==32&&sampleFormat!==1||tags.has(322))throw new Error('This TIFF variant needs another decoder. Supported: uncompressed striped grayscale/RGB(A), 8/16-bit unsigned or 32-bit float.');
+  const extra=get(338,[0])[0],hasExtra=photo===1?samples===2:samples===4,hasAlpha=hasExtra&&(extra===1||extra===2);
+  if(hasExtra&&![0,1,2].includes(extra))throw new Error('Unsupported TIFF extra sample type.');
   if(tags.has(34675)){
     const profile=get(34675),known=srgbProfile(depth===32);
     if(profile.length!==known.length||profile.some((n,i)=>n!==known[i]))throw new Error('This TIFF ICC profile requires an additional color transform. LopeOS sRGB TIFFs can be reopened directly.');
   }
-  const offsets=get(273),counts=get(279),rows=get(278,[height])[0];if(!offsets.length||rows<1)throw new Error('TIFF strip data is missing.');
+  const offsets=get(273),counts=get(279),rows=get(278,[height])[0];
+  if(!Number.isInteger(rows)||rows<1||offsets.length<Math.ceil(height/rows)||counts.length<Math.ceil(height/rows)||offsets.some(n=>!Number.isInteger(n)||n<0)||counts.some(n=>!Number.isInteger(n)||n<0))throw new Error('TIFF strip data is missing or invalid.');
   const little=bytes[0]===73,view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),data=new Float32Array(width*height*4),size=depth/8;
   for(let y=0;y<height;y++){
     const strip=Math.floor(y/rows),at=offsets[strip]+(y%rows)*width*samples*size;
     if(!Number.isFinite(at)||at<0||at+width*samples*size>bytes.length||(y%rows+1)*width*samples*size>counts[strip])throw new Error('Truncated TIFF pixel strip.');
     for(let x=0;x<width;x++){
       const read=(c:number)=>{const p=at+(x*samples+c)*size;const n=depth===32?view.getFloat32(p,little):depth===16?view.getUint16(p,little)/65535:bytes[p]/255;return Number.isFinite(n)?n:0;};
-      const i=(y*width+x)*4;for(let c=0;c<3;c++){const n=read(photo===1?0:c);data[i+c]=depth===32?n:srgbToLinear(n);}data[i+3]=(photo===1&&samples===2||photo===2&&samples===4)?clamp(read(samples-1)):1;
+      const i=(y*width+x)*4,alpha=hasAlpha?clamp(read(samples-1)):1;
+      for(let c=0;c<3;c++){
+        let n=read(photo===1?0:c);
+        if(hasAlpha&&extra===1)n=alpha?n/alpha:0;
+        data[i+c]=depth===32?n:srgbToLinear(n);
+      }
+      data[i+3]=alpha;
     }
   }
   return {image:orientImage({width,height,data},get(274,[1])[0]),bitDepth:depth,tags};

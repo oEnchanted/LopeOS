@@ -1,0 +1,64 @@
+{
+  "phase": "before",
+  "browser": "158.0.8127.18",
+  "viewport": {
+    "width": 1000,
+    "height": 800
+  },
+  "deviceScaleFactor": 1,
+  "checks": [
+    {
+      "id": "LR-CTRL-001",
+      "result": "FAIL",
+      "error": "expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('spinbutton', { name: 'Exposure value' })\nExpected: \"-0.75\"\nReceived: \"00.75\"\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveValue\" getByRole('spinbutton', { name: 'Exposure value' }) with timeout 5000ms\n  - waiting for getByRole('spinbutton', { name: 'Exposure value' })\n    14 × locator resolved to <input max=\"5\" min=\"-5\" step=\"0.01\" type=\"number\" value=\"00.75\" aria-label=\"Exposure value\"/>\n       - unexpected value \"00.75\"\n"
+    },
+    {
+      "id": "LR-CTRL-002",
+      "result": "FAIL",
+      "error": "expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('spinbutton', { name: 'Exposure value' })\nExpected: \"1.25\"\nReceived: \"3.4\"\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveValue\" getByRole('spinbutton', { name: 'Exposure value' }) with timeout 5000ms\n  - waiting for getByRole('spinbutton', { name: 'Exposure value' })\n    14 × locator resolved to <input max=\"5\" min=\"-5\" step=\"0.01\" value=\"3.4\" type=\"number\" aria-label=\"Exposure value\"/>\n       - unexpected value \"3.4\"\n"
+    },
+    {
+      "id": "LR-CTRL-003",
+      "result": "FAIL",
+      "error": "expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('spinbutton', { name: 'Exposure value' })\nExpected: \"0.123\"\nReceived: \"0.12\"\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveValue\" getByRole('spinbutton', { name: 'Exposure value' }) with timeout 5000ms\n  - waiting for getByRole('spinbutton', { name: 'Exposure value' })\n    14 × locator resolved to <input max=\"5\" min=\"-5\" step=\"0.01\" value=\"0.12\" type=\"number\" aria-label=\"Exposure value\"/>\n       - unexpected value \"0.12\"\n"
+    },
+    {
+      "id": "LR-VIEW-001",
+      "result": "FAIL",
+      "error": "expect(received).toBeLessThanOrEqual(expected)\n\nExpected: <= 1\nReceived:    40"
+    },
+    {
+      "id": "LR-MASK-001",
+      "result": "FAIL",
+      "error": "expect(received).toBeLessThan(expected)\n\nExpected: < 0.1\nReceived:   10"
+    },
+    {
+      "id": "LR-MASK-002",
+      "result": "FAIL",
+      "error": "expect(received).toBeLessThan(expected)\n\nExpected: < 0.1\nReceived:   10"
+    },
+    {
+      "id": "LR-MASK-003",
+      "result": "FAIL",
+      "error": "expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false"
+    },
+    {
+      "id": "LR-CROP-001",
+      "result": "FAIL",
+      "error": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"height\": 1,\n-   \"width\": 1,\n+   \"height\": 0.8516666666666666,\n+   \"width\": 0.8387500000000001,\n    \"x\": 0,\n    \"y\": 0,\n  }"
+    },
+    {
+      "id": "LR-CURVE-001",
+      "result": "FAIL",
+      "error": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"x\": 0.5,\n-   \"y\": 0.5,\n+   \"x\": 0.6309841840695112,\n+   \"y\": 0.6873509734066428,\n  }"
+    },
+    {
+      "id": "LR-CURVE-002",
+      "result": "FAIL",
+      "error": "expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('.ps-curve circle')\nExpected: 2\nReceived: 3\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveCount\" locator('.ps-curve circle') with timeout 5000ms\n  - waiting for locator('.ps-curve circle')\n    14 × locator resolved to 3 elements\n       - unexpected value \"3\"\n"
+    }
+  ],
+  "errors": [
+    "Invalid mask component."
+  ]
+}

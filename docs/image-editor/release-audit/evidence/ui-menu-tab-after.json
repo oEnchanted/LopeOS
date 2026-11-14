@@ -1,0 +1,11 @@
+{
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5189",
+  "trigger": "Layers panel menu > Tab; reopen > b",
+  "expected": "Panel visibility and active tool unchanged",
+  "before": "ie-panels ",
+  "after": "ie-panels ",
+  "toolBefore": "move",
+  "pass": true
+}

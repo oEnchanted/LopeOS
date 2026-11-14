@@ -9,7 +9,14 @@ import { formatReleaseDate, formatUpdateBytes, softwareUpdates, useSoftwareUpdat
 import '../setup/reset.css';
 import './updates.css';
 
-const working = new Set<UpdateState['status']>(['starting', 'checking', 'preparing', 'downloading', 'verifying', 'installing', 'restarting']);
+const working = new Set<UpdateState['status']>(['starting', 'checking', 'preparing', 'checking-release', 'checking-storage', 'checking-models', 'downloading', 'verifying', 'installing', 'restarting']);
+const phases: Partial<Record<UpdateState['status'], string>> = {
+  'checking-release': 'Checking update availability…',
+  'checking-storage': 'Checking browser storage…',
+  'checking-models': 'Checking for model updates…',
+  downloading: 'Downloading update…', verifying: 'Verifying update…',
+  installing: 'Installing update…', restarting: 'Restarting LopeOS…',
+};
 const install = () => { void softwareUpdates.requestInstall(); };
 const check = () => { void softwareUpdates.check(); };
 
@@ -19,6 +26,7 @@ function updateStatus(state: UpdateState) {
   if (state.caching) return 'Saving this release for future visits…';
   if (state.status === 'checking') return 'Checking for updates…';
   if (state.status === 'preparing') return 'Checking open apps for unsaved work…';
+  if (phases[state.status]) return phases[state.status];
   if (state.available) return 'A new LopeOS release is available.';
   if (state.offline) return 'You’re offline. Connect to check for updates.';
   if (state.lastChecked) return 'You’re using the latest published release.';
@@ -42,9 +50,10 @@ export function SoftwareUpdateSettings() {
           <Button variant="primary" disabled={busy || state.offline || state.status === 'unsupported'} onClick={install}><Download size={14}/>Download &amp; install</Button>
         </SettingsRow>
         <SettingsRow label="Release size" description="Some files may already be cached. Transfer size can be smaller when the server compresses files."><span className="settings-value">{formatUpdateBytes(state.available.totalBytes)}</span></SettingsRow>
-        <SettingsRow label="Before you update" description="LopeOS checks open apps for unsaved work, downloads and verifies the release, then restarts. Your accounts, settings, and saved files are kept."/>
+        <SettingsRow label="Before you update" description="LopeOS checks unsaved work, update availability, browser storage, and model versions, then downloads and verifies the release before restarting. Your accounts, settings, and saved files are kept. Model downloads remain optional."/>
       </>}
       {state.lastChecked && <SettingsRow label="Last checked"><span className="settings-value">{formatReleaseDate(new Date(state.lastChecked).toISOString())}</span></SettingsRow>}
+      {state.modelCheck && <SettingsRow label="Model update check" description={state.modelCheck}/>}
     </SettingsGroup>
     {state.error && <div className="software-update-error" role="alert">{state.error}</div>}
     <SettingsGroup title="Cached software" description="Software Update manages this LopeOS web workspace. Your device’s operating system is managed separately.">
@@ -63,8 +72,13 @@ function UpdateBootScreen({ state }: { state: UpdateState }) {
   const container = useRef<HTMLElement>(null);
   const retry = useRef<HTMLButtonElement>(null);
   const error = state.status === 'error';
-  const progress = state.status === 'restarting' ? 100 : state.totalBytes ? Math.min(100, Math.floor(state.receivedBytes / state.totalBytes * 100)) : 0;
-  const phase = error ? 'Update couldn’t finish.' : state.status === 'restarting' ? 'Restarting LopeOS…' : state.status === 'installing' ? 'Installing update…' : state.status === 'verifying' ? 'Verifying update…' : 'Downloading update…';
+  const progress = state.progress;
+  const phase = error ? 'Update couldn’t finish.' : phases[state.status] || 'Preparing update…';
+  const preflight = state.status.startsWith('checking-');
+  const detail = state.status === 'checking-release' ? 'Confirming the published release is still available.'
+    : state.status === 'checking-storage' ? 'Checking the update cache and space for this release.'
+    : state.status === 'checking-models' ? 'Comparing Spotlight AI, photo denoise, and portrait model versions.'
+    : `${state.completedFiles} of ${state.totalFiles} files prepared`;
 
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
@@ -94,12 +108,13 @@ function UpdateBootScreen({ state }: { state: UpdateState }) {
   }}>
     <div className="reset-boot__logo" aria-hidden="true"><LopeMark size={88}/></div>
     <div className="reset-boot__lower">
-      <div className="reset-boot__progress" role="progressbar" aria-label="Preparing LopeOS update" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress} aria-valuetext={progress + '% of release prepared'}><span style={{ width: progress + '%' }}/></div>
+      <div className="reset-boot__progress" role="progressbar" aria-label="Preparing LopeOS update" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress} aria-valuetext={`${progress}% · ${phase}`}><span style={{ width: progress + '%' }}/></div>
       <h1 className="software-update-boot__phase" role="status">{phase}</h1>
       {state.available && <p className="software-update-boot__version">LopeOS {state.available.version} · {formatUpdateBytes(state.available.totalBytes)}</p>}
       {!error && <>
-        <p className="software-update-boot__download">{formatUpdateBytes(state.downloadedBytes)} of {formatUpdateBytes(state.downloadBytes)} downloaded</p>
-        <p className="software-update-boot__detail">{progress}% prepared · {state.completedFiles} of {state.totalFiles} files</p>
+        {!preflight && <p className="software-update-boot__download">{formatUpdateBytes(state.downloadedBytes)} of {formatUpdateBytes(state.downloadBytes)} downloaded</p>}
+        <p className="software-update-boot__detail">{detail}</p>
+        {state.modelCheck && <p className="software-update-boot__hint">{state.modelCheck}</p>}
         <p className="software-update-boot__hint">Keep this tab open. LopeOS will restart when the update is ready.</p>
       </>}
       {error && <div className="reset-boot__error" role="alert">
@@ -120,7 +135,7 @@ export function UpdateExperience() {
       <div className="software-update-prompt__release glass-inset"><span aria-hidden="true"><LopeMark size={38}/></span><div><strong>LopeOS {state.available.version}</strong><small>Published {formatReleaseDate(state.available.releasedAt)}</small></div></div>
       <dl className="software-update-prompt__details"><div><dt>Release size</dt><dd>{formatUpdateBytes(state.available.totalBytes)}</dd></div><div><dt>Installed version</dt><dd>LopeOS {state.current.version}</dd></div><div><dt>Installed build</dt><dd>{formatReleaseDate(state.current.build)}</dd></div></dl>
       <p>You can keep using your current release and update later in Settings → Software Update.</p>
-      <p>LopeOS will check for unsaved work before updating, then restart. Your accounts, settings, and saved files are kept.</p>
+      <p>LopeOS will check unsaved work, browser storage, and model updates before installing and restarting. Your accounts, settings, and saved files are kept. Model downloads remain optional.</p>
       {state.error && <p className="software-update-error" role="alert">{state.error}</p>}
       {state.offline && <p role="status">Connect to the internet to download this update.</p>}
       <div className="dialog-actions"><Button onClick={() => softwareUpdates.dismissPrompt()}>Later</Button><Button variant="primary" disabled={working.has(state.status) || state.caching || state.offline} onClick={install}><Download size={14}/>Download &amp; install</Button></div>

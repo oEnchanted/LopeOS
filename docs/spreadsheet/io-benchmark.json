@@ -1,0 +1,50 @@
+{
+  "environment": {
+    "node": "v26.12.1",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M1 Pro",
+    "totalMemoryGiB": 16
+  },
+  "dataset": {
+    "rows": 100000,
+    "columns": 3,
+    "populatedCells": 300003,
+    "table": true,
+    "xlsxBytes": 1303771,
+    "csvBytes": 1587019
+  },
+  "measurements": [
+    {
+      "operation": "Import 100000-row, 3-column CSV as text",
+      "elapsedMs": 215.69,
+      "rssMiBAfter": 197.99
+    },
+    {
+      "operation": "Export 100000-row XLSX table",
+      "elapsedMs": 2847.18,
+      "rssMiBAfter": 625.11
+    },
+    {
+      "operation": "Import 100000-row XLSX table",
+      "elapsedMs": 2197.44,
+      "rssMiBAfter": 717.53
+    },
+    {
+      "operation": "Export 100000-row CSV",
+      "elapsedMs": 193.71,
+      "rssMiBAfter": 725.12
+    }
+  ],
+  "maximumResidentSetKiB": 787760,
+  "validation": {
+    "reopenedCells": 300003,
+    "tableName": "Analytics",
+    "csvRows": 100001
+  },
+  "notes": [
+    "Node process timings, not browser scrolling latency.",
+    "XLSX library buffers the entire bounded package.",
+    "Maximum RSS is the process high-water mark, including all preceding phases."
+  ]
+}

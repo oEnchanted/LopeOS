@@ -1,0 +1,143 @@
+{
+  "reader": "Pillow 11.3.0",
+  "profileReader": "Pillow ImageCms / LittleCMS",
+  "date": "2026-11-13",
+  "results": [
+    {
+      "file": "ai-denoise-export.tif",
+      "format": "TIFF",
+      "width": 384,
+      "height": 288,
+      "mode": "RGB",
+      "bitsPerSample": [
+        16,
+        16,
+        16
+      ],
+      "sampleFormat": [
+        1,
+        1,
+        1
+      ],
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    },
+    {
+      "file": "ai-denoise-production-export.tif",
+      "format": "TIFF",
+      "width": 128,
+      "height": 96,
+      "mode": "RGB",
+      "bitsPerSample": [
+        16,
+        16,
+        16
+      ],
+      "sampleFormat": [
+        1,
+        1,
+        1
+      ],
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    },
+    {
+      "file": "chromium-export.jpg",
+      "format": "JPEG",
+      "width": 64,
+      "height": 48,
+      "mode": "RGB",
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    },
+    {
+      "file": "chromium-export.png",
+      "format": "PNG",
+      "width": 64,
+      "height": 48,
+      "mode": "RGBA",
+      "result": "passed"
+    },
+    {
+      "file": "chromium-export.tif",
+      "format": "TIFF",
+      "width": 64,
+      "height": 48,
+      "mode": "RGB",
+      "bitsPerSample": [
+        16,
+        16,
+        16
+      ],
+      "sampleFormat": [
+        1,
+        1,
+        1
+      ],
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    },
+    {
+      "file": "production-export.tif",
+      "format": "TIFF",
+      "width": 128,
+      "height": 96,
+      "mode": "RGB",
+      "bitsPerSample": [
+        16,
+        16,
+        16
+      ],
+      "sampleFormat": [
+        1,
+        1,
+        1
+      ],
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    },
+    {
+      "file": "webkit-export.jpg",
+      "format": "JPEG",
+      "width": 64,
+      "height": 48,
+      "mode": "RGB",
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    },
+    {
+      "file": "webkit-export.png",
+      "format": "PNG",
+      "width": 64,
+      "height": 48,
+      "mode": "RGBA",
+      "result": "passed"
+    },
+    {
+      "file": "webkit-export.tif",
+      "format": "TIFF",
+      "width": 64,
+      "height": 48,
+      "mode": "RGB",
+      "bitsPerSample": [
+        16,
+        16,
+        16
+      ],
+      "sampleFormat": [
+        1,
+        1,
+        1
+      ],
+      "profile": "LopeOS sRGB",
+      "iccTransform": "passed",
+      "result": "passed"
+    }
+  ]
+}

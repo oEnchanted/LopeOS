@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "sourceDefectsFound": [],
+  "testFailures": [
+    {
+      "id": "UI-SIZE-680x460",
+      "cause": "Viewport was reduced before shrinking the previously large app window, so the window manager moved the resize handle while pointer automation used stale coordinates.",
+      "repair": "Keep outer viewport at least as large during the size sequence, then resize actual window using handles.",
+      "observedMinimum": "Independent outer minimum680x460 successfully measured client678x419."
+    },
+    {
+      "id": "UI-CAPABILITIES",
+      "cause": "Menu locator matched both OS Application menu and Prism internal menubar.",
+      "repair": "Scope to menubar named Application menu."
+    },
+    {
+      "id": "UI-SOURCE-INTEGRITY",
+      "cause": "Same unscoped menubar locator collision before downloading original.",
+      "repair": "Scope to menubar named Application menu."
+    }
+  ],
+  "retest": "ui-production-final/results.json; same production artifact tree; test corrections only"
+}

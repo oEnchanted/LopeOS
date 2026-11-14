@@ -1,0 +1,46 @@
+.wallpaper-picker {
+  --picker-text: var(--text);
+  --picker-muted: var(--text-muted, var(--muted));
+  container: wallpaper-choices / inline-size;
+  display: grid; gap: 12px; min-width: 0; color: var(--picker-text);
+}
+.setup-screen .wallpaper-picker { --picker-text: var(--setup-text); --picker-muted: var(--setup-muted); }
+.wallpaper-picker-current { display: grid; gap: 2px; min-width: 0; font-size: .95em; line-height: 1.5; }
+.wallpaper-picker-current > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wallpaper-picker-current > button { justify-self: start; }
+.wallpaper-picker-current > button, .wallpaper-picker-empty > button { padding: 0; background: transparent; color: inherit; text-decoration: underline; font-size: inherit; }
+.wallpaper-picker-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.wallpaper-picker-search { display: flex; flex: 1 1 190px; align-items: center; gap: 7px; padding: 7px 10px; min-width: 0; border-radius: 9px; }
+.wallpaper-picker-search > input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--picker-text); font-size: calc(12px * var(--ui-text-scale, 1)); }
+.wallpaper-picker-search > input::placeholder { color: var(--picker-muted); opacity: 1; }
+.wallpaper-picker-search:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wallpaper-picker-tones { display: flex; gap: 2px; padding: 3px; border-radius: 9px; }
+.wallpaper-picker-tones > button { min-height: 30px; padding: 5px 12px; border-radius: 6px; background: transparent; color: var(--picker-text); font-size: calc(12px * var(--ui-text-scale, 1)); }
+.wallpaper-picker-tones > button:hover { background: var(--glass-hover); }
+.wallpaper-picker-tones > button[aria-pressed=true] { background: var(--accent); color: var(--accent-ink, #fff); }
+.wallpaper-picker-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; min-width: 0; animation: wallpaper-picker-reveal 280ms ease-out; }
+@keyframes wallpaper-picker-reveal { from { opacity: .35; } to { opacity: 1; } }
+.wallpaper-picker-card { display: flex; flex-direction: column; min-width: 0; padding: 6px; border-radius: 11px; text-align: left; color: var(--picker-text); }
+.wallpaper-picker-card:hover { outline: 1px solid var(--accent); outline-offset: 0; }
+.wallpaper-picker-card[aria-pressed=true] { outline: 2px solid var(--accent); outline-offset: 0; }
+.wallpaper-picker-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.wallpaper-picker-image { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; }
+.wallpaper-picker-image--night { filter: brightness(.35) saturate(1.4) hue-rotate(18deg); }
+.wallpaper-picker-caption { display: flex; align-items: center; gap: 7px; width: 100%; padding: 8px 3px 3px; }
+.wallpaper-picker-caption > span:first-child { flex: 1; min-width: 0; }
+.wallpaper-picker-caption strong { display: block; font-size: calc(12px * var(--ui-text-scale, 1)); font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.wallpaper-picker-caption small { display: block; margin-top: 3px; font-size: calc(10px * var(--ui-text-scale, 1)); line-height: 1.4; color: var(--picker-muted); }
+.wallpaper-picker-check { display: grid; place-items: center; flex: 0 0 17px; height: 17px; border-radius: 50%; border: 1px solid currentColor; }
+[aria-pressed=true] > .wallpaper-picker-caption > .wallpaper-picker-check { color: var(--accent-ink, #fff); background: var(--accent); border-color: var(--accent); }
+.wallpaper-picker-pages { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; font-size: calc(11px * var(--ui-text-scale, 1)); line-height: 1.5; font-variant-numeric: tabular-nums; }
+.wallpaper-picker-pages > span { color: var(--picker-muted); }
+.wallpaper-picker-pages > div { display: flex; align-items: center; gap: 8px; }
+.wallpaper-picker-pages button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border-radius: 8px; color: var(--picker-text); }
+.wallpaper-picker-pages button[aria-disabled=true] { opacity: .42; cursor: default; }
+.wallpaper-picker-empty { padding: 20px 12px; text-align: center; font-size: calc(12px * var(--ui-text-scale, 1)); }
+.wallpaper-picker-empty > p { margin: 0 0 12px; }
+@container wallpaper-choices (min-width: 620px) { .wallpaper-picker-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container wallpaper-choices (max-width: 460px) { .wallpaper-picker-pages { grid-template-columns: 1fr; } .wallpaper-picker-pages > div { justify-self: start; } }
+@container wallpaper-choices (max-width: 340px) { .wallpaper-picker-tools > * { flex: 1 1 100%; } .wallpaper-picker-tones > button { flex: 1; } }
+[data-reduce-motion=true] .wallpaper-picker-grid { animation: none; }
+@media (prefers-reduced-motion: reduce) { .wallpaper-picker-grid { animation: none; } }

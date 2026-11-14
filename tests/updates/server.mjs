@@ -34,9 +34,10 @@ async function productionReleases() {
   }));
   next.set('/assets/update-test.bin', Buffer.alloc(512 * 1024, 71));
   const b = release(build, next); b.manifest.version = manifest.version;
+  b.manifest.models = manifest.models;
   return { a: { files, manifest }, b };
 }
-let state = { mode: 'fixture', release: 'a', corrupt: false, delay: 0 };
+let state = { mode: 'fixture', release: 'a', corrupt: false, delay: 0, modelUpdates: false };
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://127.0.0.1');
@@ -57,7 +58,12 @@ const server = createServer(async (request, response) => {
       response.end(await readFile(resolve(root, 'public/lope-sw.js'))); return;
     }
     const selected = (state.mode === 'production' ? production : fixtures)[state.release];
-    if (pathname === '/__lope/version.json') { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(selected.manifest)); return; }
+    if (pathname === '/__lope/version.json') {
+      const manifest = state.modelUpdates && state.release === 'b' && selected.manifest.models
+        ? { ...selected.manifest, models: selected.manifest.models.map((model, index) => index === 0 ? { ...model, fingerprint: hash('updated-test-model') } : model) }
+        : selected.manifest;
+      response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(manifest)); return;
+    }
     if (pathname.startsWith('/api/')) {
       response.setHeader('Content-Type', 'application/json');
       if (pathname === '/api/identity') { response.end(JSON.stringify({ userId: 'update-test', workspaceId: 'update-tests' })); return; }

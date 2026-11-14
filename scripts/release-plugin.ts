@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import type { Plugin, ResolvedConfig } from 'vite';
+import { getModelReleases } from '../apps/web/src/updates/model-updates.ts';
 
 /** Describe the exact published bytes, including Vite's copied public assets. */
 export function releasePlugin(version: string, build: string): Plugin {
@@ -35,7 +36,8 @@ export function releasePlugin(version: string, build: string): Plugin {
       await walk(output);
       assets.sort((a, b) => a.url.localeCompare(b.url));
       if (!assets.some(asset => asset.url === '/index.html')) throw new Error('The LopeOS release is missing index.html.');
-      const release = { format: 1, version, build, releasedAt: build, totalBytes: assets.reduce((sum, asset) => sum + asset.size, 0), assets };
+      const models = await getModelReleases();
+      const release = { format: 1, version, build, releasedAt: build, totalBytes: assets.reduce((sum, asset) => sum + asset.size, 0), assets, models };
       await mkdir(join(output, '__lope'), { recursive: true });
       await writeFile(join(output, '__lope/version.json'), JSON.stringify(release));
     },

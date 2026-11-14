@@ -54,12 +54,16 @@
 }
 .category-icon {
   display: inline-flex; align-items: center; justify-content: center;
-  width: calc(var(--sidebar-icon-size, 17px) + 5px); height: calc(var(--sidebar-icon-size, 17px) + 5px);
-  flex: 0 0 calc(var(--sidebar-icon-size, 17px) + 5px);
-  border-radius: 6px; color: #fff; background-image: linear-gradient(145deg, #ffffff24, #00000008);
-  box-shadow: inset 0 1px #ffffff54, 0 1px 2px #12323b16;
+  width: calc(var(--sidebar-icon-size, 17px) + 9px); height: calc(var(--sidebar-icon-size, 17px) + 9px);
+  flex: 0 0 calc(var(--sidebar-icon-size, 17px) + 9px);
+  border-radius: 8px; color: var(--system-icon-ink, color-mix(in srgb, var(--category-color) 65%, var(--glass-text)));
 }
-.category-icon svg { width: var(--sidebar-icon-size, 17px); height: var(--sidebar-icon-size, 17px); stroke-width: 1.8; }
+.category-icon svg { width: var(--sidebar-icon-size, 17px); height: var(--sidebar-icon-size, 17px); stroke-width: 1.9; }
+.category-icon--account svg { width: 100%; height: 100%; }
+.settings-nav nav button.is-selected .category-icon { color: inherit; }
+.settings-category-symbol { display: grid; place-items: center; color: var(--system-icon-ink, color-mix(in srgb, var(--category-color) 65%, var(--glass-text))); }
+.settings-category-symbol svg { stroke-width: 1.7; }
+.settings-app-v2 .profile-monogram { background: transparent; border: 0; box-shadow: none; }
 .settings-nav-footer { padding: 11px 8px 0; border-top: 1px solid var(--separator); color: var(--text-muted); font-size: 10px; }
 .settings-nav-footer small { display: none; }
 .saved-dot { display: inline-block; width: 5px; height: 5px; margin-right: 6px; border-radius: 50%; background: var(--accent); vertical-align: middle; }
@@ -74,7 +78,7 @@
 .settings-scroll { flex: 1; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 25px 28px 32px; }
 .settings-page { max-width: 740px; margin: auto; }
 .settings-page-heading { display: flex; align-items: center; gap: 13px; margin-bottom: 23px; }
-.settings-page-icon { display: grid; place-items: center; width: 43px; height: 43px; flex: 0 0 43px; border-radius: 12px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--separator)); background: color-mix(in srgb, var(--accent) 8%, var(--row-material)); box-shadow: inset 0 1px var(--settings-highlight); }
+.settings-page-icon { display: grid; place-items: center; width: 43px; height: 43px; flex: 0 0 43px; border-radius: 12px; color: var(--glass-icon-ink); border: 1px solid var(--glass-inset-border); background: var(--glass-inset-background); box-shadow: var(--glass-inset-shadow); }
 .settings-page h1 { margin: 0 0 5px; font-size: calc(23px * var(--ui-text-scale, 1)); font-weight: 650; letter-spacing: -.045em; line-height: 1.2; }
 .settings-page-heading p { margin: 0; font-size: calc(11.5px * var(--ui-text-scale, 1)); line-height: 1.5; color: var(--text-muted); }
 .settings-group { margin: 23px 0; }
@@ -199,11 +203,6 @@
 .menu-bar-preview { display: flex; align-items: center; gap: 13px; height: 35px; padding: 0 12px; border-radius: 9px; font-size: 10px; }
 .menu-bar-preview > div { flex: 1; }
 .settings-row textarea, .settings-textarea { width: 100%; min-height: 66px; resize: vertical; border: 1px solid var(--separator); border-radius: 7px; background: var(--input); color: var(--text); padding: 9px; font: 11px/1.6 ui-monospace, monospace; }
-.wallpaper-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 14px; }
-.wallpaper-gallery .choice-preview { max-width: none; }
-.wallpaper-sample { display: block; width: 100%; height: 122px; border-radius: 6px; background-position: center; background-size: cover; }
-.wallpaper-sample--night { filter: brightness(.35) saturate(1.4) hue-rotate(18deg); }
-.wallpaper-gallery .choice-preview-label { font-size: 11px; }
 .settings-information { display: flex; gap: 9px; padding: 15px 2px; color: var(--text-muted); font-size: 11px; line-height: 1.6; }
 .settings-information strong { color: var(--text); }
 .settings-information p { margin: 5px 0; }
@@ -214,6 +213,7 @@
 .profile-card > span { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 17px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .profile-card strong { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
 .profile-card p { margin: 6px 0 0; font-size: 11px; color: var(--text-muted); }
+.settings-app-v2 :is(.profile-monogram, .profile-card > span) > img { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
 .settings-location { padding: 16px; }
 .settings-location > strong { font-size: 16px; }
 .settings-location > p { font-size: 11px; color: var(--text-muted); margin: 5px 0 15px; }
@@ -292,7 +292,6 @@
   .glass-preview-window { top: 13px; height: 97px; }
   .glass-preview-menu { width: 120px; top: 29px; }
   .glass-preview-dock { bottom: 5px; }
-  .wallpaper-sample { height: 100px; }
   .privacy-introduction { padding: 14px; }
   .privacy-introduction p { font-size: 11px; }
   .menu-bar-preview { gap: 9px; }
@@ -319,3 +318,7 @@
 .desktop[data-increase-contrast=true] .settings-row-label { font-weight: 600; }
 .desktop[data-reduce-motion=true] .settings-app-v2 *, .desktop[data-reduce-motion=true] .settings-app-v2 *::before { transition: none; }
 @media (prefers-reduced-motion: reduce) { .settings-app-v2 *, .settings-app-v2 *::before { transition: none; } }
+
+/* Icon finishes follow the same inherited tokens as Dock and account artwork. */
+.settings-app-v2 .category-icon.glass-inset { background: var(--system-icon-surface, var(--glass-inset-background)); }
+.settings-app-v2 .settings-page-icon { background: var(--system-icon-surface, var(--glass-inset-background)); }

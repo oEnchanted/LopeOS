@@ -4,6 +4,10 @@ Production builds keep a complete LopeOS application release in this browser. Af
 
 The update screen uses the black reset-screen treatment, the LopeOS mark, a progress bar, release details, and download progress. The shell checks applications for unsaved work before installation. Application updates preserve accounts, preferences, documents, and local recovery data. Remote workspace files, remote browsing, weather, and other network services still require their respective connections; caching the OS does not make those services work offline.
 
+Before downloading, the update screen refreshes and validates the approved release, checks the cache worker and available browser storage, and compares the release's model catalog with the running app. Each check, verification, and installation stage stays visible for at least one second, followed by a brief restart pause. Overall progress reserves its final portion for verification and installation and reaches 100% only after the release commits. Reset cancels pending pauses and checks before they can continue installation.
+
+Release manifests include optional model fingerprints for Spotlight AI, photo denoise, and portrait cutouts, derived from their configured models and runtimes. The model check reports catalog changes without downloading weights or deleting existing models. It does not search upstream providers for newer models. Older manifests without model metadata, unavailable catalogs, and model checks exceeding 15 seconds display an informational result and allow the OS update to continue. Browser storage estimates are advisory when unavailable or when the worker may reclaim older releases; actual cache quota and file verification remain enforced by the worker.
+
 ## Release generation and deployment
 
 Run `npm run build`. `scripts/release-plugin.ts` writes `dist/__lope/version.json` after Vite has written both bundled files and copied public assets. The manifest contains the package version, a unique build identifier and release time, the total decoded byte size, and every included file's URL, size, and SHA-256 digest. Deploy the complete `dist` directory, including `lope-sw.js` and `__lope/version.json`, over HTTPS (localhost also works).
@@ -28,7 +32,7 @@ The worker's message protocol is version 1. Worker script changes use the browse
 
 ## Verification
 
-`node --test tests/updates/worker.test.mjs` covers consent-gated activation, cached/offline navigation, per-tab release pinning, reused-asset byte counts, corrupt and invalid releases, missing cached files, cache repair, reused build identifiers, cancellation during the final cache write, and storage quota failures with retry. The browser tests in `tests/updates` exercise the actual worker and application against changing deployments.
+`node --test tests/updates/*.test.mjs tests/updates/*.test.ts` covers consent-gated activation, cached/offline navigation, per-tab release pinning, reused-asset byte counts, corrupt and invalid releases, missing cached files, cache repair, reused build identifiers, cancellation during the final cache write, storage quota failures with retry, model catalog comparisons, and cancellable preflight checks. The browser tests in `tests/updates` exercise the actual worker and application against changing deployments, including visible phase order, pacing, model changes, and insufficient storage before downloading.
 
 Run `npm run test:updates` to build and run both suites. The browser fixture serves two distinct releases and checks offline startup, postponing an update, multiple tabs, successful installation without clearing user data, failure recovery, and unsaved-document decisions.
 

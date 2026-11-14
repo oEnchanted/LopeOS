@@ -1,0 +1,128 @@
+import { chromium, expect } from '@playwright/test';
+import { mkdir, writeFile } from 'node:fs/promises';
+
+const base = process.env.MOVIE_TEST_URL || 'http://127.0.0.1:5188';
+const browser = await chromium.launch({ headless: true });
+const checks = [], errors = [], screenshots = [];
+const captureDirectory = 'docs/movie-maker/screenshots';
+await mkdir(captureDirectory, { recursive: true });
+try {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 });
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(`${base}/tests/movie-maker/harness.html`);
+  const app = page.getByTestId('movie-maker-app');
+  await expect(app).toBeVisible({ timeout: 30000 });
+  await expect(app.getByRole('button', { name: 'Try a sample movie', exact: true })).toBeEnabled();
+  const capture = async name => { const path = `${captureDirectory}/2012-${name}-1280.png`; await app.screenshot({ path }); screenshots.push(path); };
+  const tab = name => app.getByRole('tab', { name, exact: true });
+  const button = name => app.getByRole('button', { name, exact: true });
+  const groups = () => app.locator('.mm-ribbon-group > .mm-group-label').allTextContents();
+  const clips = app.getByRole('listbox', { name: 'Storyboard', exact: true }).getByRole('option');
+  const setNumber = async (label, value) => { const input = app.getByLabel(label, { exact: true }); await input.fill(String(value)); await input.press('Enter'); };
+
+  await expect(app.locator('.mm-tab-slot [role=tab]')).toHaveText(['Home', 'Animations', 'Visual Effects', 'Project', 'View']);
+  expect(await groups()).toEqual(['Clipboard', 'Add', 'AutoMovie themes', 'Editing', 'Share']);
+  await expect(app.locator('.mm-context-tool')).toHaveCount(0);
+  await expect(app.locator('.mm-inspector')).toHaveCount(0);
+  await capture('empty');
+  await button('Try a sample movie').click();
+  await expect(clips).toHaveCount(12, { timeout: 30000 });
+  await expect(app.locator('.mm-busy')).toHaveCount(0, { timeout: 30000 });
+  await expect(app.locator('.mm-storyboard img')).toHaveCount(10, { timeout: 30000 });
+  const photo = app.locator('[data-clip-id="sample-clip-1"]');
+  await photo.click(); await tab('Home').click();
+  const positions = await app.evaluate(element => {
+    const rect = selector => { const value = element.querySelector(selector).getBoundingClientRect(); return { x: value.x, y: value.y, width: value.width, height: value.height }; };
+    return { quick: rect('.mm-documentbar'), tabs: rect('.mm-tabs'), ribbon: rect('.mm-ribbon'), preview: rect('.mm-preview-pane'), storyboard: rect('.mm-storyboard-pane') };
+  });
+  expect(positions.quick.y + positions.quick.height).toBeLessThanOrEqual(positions.tabs.y + 1);
+  expect(positions.tabs.y + positions.tabs.height).toBeLessThanOrEqual(positions.ribbon.y + 1);
+  expect(positions.preview.x + positions.preview.width).toBeLessThan(positions.storyboard.x);
+  expect(Math.abs(positions.preview.y - positions.storyboard.y)).toBeLessThan(2);
+  await expect(app.locator('.mm-preview-pane textarea')).toHaveCount(0);
+  checks.push('2012 hierarchy: quick access, five primary tabs, grouped ribbon, left preview and right storyboard; no permanent inspector');
+  await capture('home');
+
+  await tab('Animations').click();
+  expect(await groups()).toEqual(['Transitions', 'Pan and zoom']);
+  await expect(button('Apply transitions to all')).toBeVisible();
+  await expect(button('Apply pan and zoom to all')).toBeVisible();
+  await capture('animations');
+  await button('More transitions').click();
+  const gallery = page.getByRole('dialog', { name: 'Transitions', exact: true });
+  await expect(gallery).toBeVisible();
+  expect(await gallery.getByRole('button').count()).toBeGreaterThan(15);
+  await page.keyboard.press('Escape'); await expect(gallery).toHaveCount(0);
+  await tab('Visual Effects').click();
+  await expect(app.getByLabel('Brightness', { exact: true })).toBeVisible();
+  await expect(button('Multiple effects')).toBeVisible();
+  await capture('visual-effects');
+  await tab('Project').click();
+  expect(await groups()).toEqual(['Audio', 'Aspect ratio']);
+  for (const name of ['Emphasize narration', 'Emphasize video', 'Emphasize music', 'No emphasis', 'Fit to music']) await expect(button(name)).toBeVisible();
+  await capture('project');
+  await tab('View').click();
+  expect(await groups()).toEqual(['Time scale', 'Thumbnail size', 'Preview', 'Waveforms']);
+  await capture('view');
+  checks.push('Reference ribbon groups and working expanded galleries are present across the five primary tabs');
+
+  const contextTab = async (name, text) => {
+    await expect(tab(name)).toHaveText(text);
+    const above = await tab(name).evaluate(element => { const label = element.parentElement.querySelector('span').getBoundingClientRect(); return label.bottom <= element.getBoundingClientRect().top + 1; });
+    expect(above).toBe(true);
+    await tab(name).click();
+  };
+  await contextTab('Video Tools', 'Edit'); await capture('video-tools');
+  await app.locator('.mm-music').first().click();
+  await contextTab('Music Tools', 'Options'); await expect(tab('Video Tools')).toHaveCount(0); await capture('music-tools');
+  await app.locator('.mm-narration').first().click();
+  await contextTab('Narration Tools', 'Options'); await expect(tab('Music Tools')).toHaveCount(0); await capture('narration-tools');
+  await app.locator('.mm-caption').first().click();
+  await contextTab('Text Tools', 'Format'); await capture('text-tools');
+  checks.push('Selection reveals two-level Video Tools/Edit, Music Tools/Options, Narration Tools/Options and Text Tools/Format tabs');
+
+  await photo.click(); await tab('Home').click();
+  await button('Copy').click(); await expect(button('Paste')).toBeEnabled(); await button('Paste').click();
+  await expect(clips).toHaveCount(13); await button('Undo').click(); await expect(clips).toHaveCount(12);
+  checks.push('Clipboard copy/paste produces an editable segment and remains undoable');
+
+  await photo.click(); await tab('Video Tools').click(); await setNumber('Duration', 120);
+  const fragments = app.locator('[data-fragment-clip-id="sample-clip-1"]');
+  expect(await fragments.count()).toBeGreaterThan(2);
+  await expect(app.locator('[data-clip-id="sample-clip-1"]')).toHaveCount(1);
+  const totalWidth = () => fragments.evaluateAll(elements => elements.reduce((sum, element) => sum + element.getBoundingClientRect().width, 0));
+  const initialWidth = await totalWidth();
+  const firstHeight = await fragments.first().locator('.mm-film').evaluate(element => element.getBoundingClientRect().height);
+  const rowGaps = await app.locator('.mm-story-row').evaluateAll(rows => rows.flatMap(row => [...row.children].slice(1).map((element, index) => element.getBoundingClientRect().left - row.children[index].getBoundingClientRect().right)));
+  expect(rowGaps.every(gap => Math.abs(gap) <= 2)).toBe(true);
+  await tab('View').click(); await button('Extra large').click();
+  expect(await fragments.first().locator('.mm-film').evaluate(element => element.getBoundingClientRect().height)).toBeGreaterThan(firstHeight);
+  expect(await totalWidth()).toBeCloseTo(initialWidth, 0);
+  const enlargedHeight = await fragments.first().locator('.mm-film').evaluate(element => element.getBoundingClientRect().height);
+  await button('Zoom in').click();
+  expect(await totalWidth()).toBeGreaterThan(initialWidth);
+  expect(await fragments.first().locator('.mm-film').evaluate(element => element.getBoundingClientRect().height)).toBe(enlargedHeight);
+  await capture('long-clip-wrap');
+  await button('Reset').click(); await button('Medium').click(); await button('Undo').click();
+  checks.push('Long clips continue across contiguous rows with one selectable clip; thumbnail sizing changes height independently of time zoom');
+
+  const video = app.locator('[data-clip-id="sample-clip-3"]');
+  await video.click(); await tab('Video Tools').click(); const original = await video.getAttribute('aria-label');
+  await button('Trim tool').click();
+  await expect(tab('Video Tools')).toHaveText('Trim');
+  await expect(app.getByLabel('Start point', { exact: true })).toBeVisible();
+  await expect(app.getByLabel('End point', { exact: true })).toBeVisible();
+  await setNumber('Start point', 1);
+  await expect(video).toHaveAttribute('aria-label', original);
+  await capture('trim');
+  await button('Cancel trim').click(); await expect(video).toHaveAttribute('aria-label', original);
+  await expect(tab('Video Tools')).toHaveText('Edit');
+  checks.push('Trim uses its own ribbon with draft start/end points and Save/Cancel; cancelling preserves the original edit');
+  await tab('Home').click(); await button('Minimize ribbon').click(); await expect(app.locator('.mm-ribbon')).toHaveCount(0);
+  await button('Expand ribbon').click(); await expect(app.locator('.mm-ribbon')).toBeVisible();
+  checks.push('Ribbon can be minimized and restored');
+  expect(errors).toEqual([]);
+  const report = { date: '2026-11-13', browser: 'Playwright Chromium', target: base, passed: true, viewport: { width: 1280, height: 800, deviceScaleFactor: 1 }, referenceManifest: 'reference-manifest.json', checks, errors, screenshots, scope: 'Structural comparison against directly inspected Movie Maker 2012 captures; modern materials retained; no claim of native Windows pixel parity' };
+  await writeFile('docs/movie-maker/2012-layout-verification.json', JSON.stringify(report, null, 2) + '\n');
+  console.log(JSON.stringify({ passed: true, checks, screenshots }, null, 2));
+} finally { await browser.close(); }

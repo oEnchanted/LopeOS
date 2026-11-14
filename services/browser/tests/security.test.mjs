@@ -6,10 +6,34 @@ import { createHash } from 'node:crypto';
 import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { fileURLToPath } from 'node:url';
 import { publicAddress, publicDestination } from '../src/network.mjs';
 import { createBrowserServer } from '../src/server.mjs';
 import { createRuntimeFileBridge } from '../src/files.mjs';
 import { destination, displayAddress } from '../../../packages/browser-client/src/navigation.ts';
+
+test('worker seccomp permits the Chromium namespace jail with no outer capabilities and keeps host restrictions', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'lope-seccomp-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const output = join(root, 'seccomp.json');
+  await promisify(execFile)(process.execPath, [
+    fileURLToPath(new URL('../hosting/linux/make-seccomp.mjs', import.meta.url)),
+    fileURLToPath(new URL('../hosting/linux/docker-default-seccomp.json', import.meta.url)),
+    output,
+  ]);
+  const profile = JSON.parse(await readFile(output, 'utf8'));
+  assert.equal(profile.defaultAction, 'SCMP_ACT_ERRNO');
+  const unrestricted = profile.syscalls.filter(rule => rule.action === 'SCMP_ACT_ALLOW' && !rule.includes && !rule.excludes && !rule.args);
+  for (const syscall of ['clone', 'setns', 'unshare', 'chroot']) {
+    assert.ok(unrestricted.some(rule => rule.names.includes(syscall)), `${syscall} must work after the worker drops all outer capabilities`);
+  }
+  for (const syscall of ['mount', 'bpf', 'keyctl', 'perf_event_open']) {
+    assert.ok(!unrestricted.some(rule => rule.names.includes(syscall)), `${syscall} must retain Docker's host restrictions`);
+  }
+  assert.ok(profile.syscalls.some(rule => rule.names.includes('clone3') && rule.action === 'SCMP_ACT_ERRNO' && rule.errnoRet === 38));
+});
 
 test('URL parsing rejects executable/file schemes and credentials, and encodes searches', () => {
   assert.equal(destination('example.com/path?q=a'), 'https://example.com/path?q=a');

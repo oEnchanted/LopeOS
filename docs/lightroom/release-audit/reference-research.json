@@ -1,0 +1,177 @@
+{
+  "date": "2026-11-13",
+  "sources": [
+    {
+      "id": "L1",
+      "url": "https://helpx.adobe.com/lightroom/desktop/introduction/whats-new.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Confirms November 2026 desktop version 10.0. Advanced features remain in the contract; Open Eyes retains Early Access status."
+    },
+    {
+      "id": "L2",
+      "url": "https://helpx.adobe.com/lightroom/desktop/introduction/customize-lightroom-workspace.html",
+      "pageUpdated": null,
+      "fetchStatus": "FETCH_FAILED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Repeated direct and linked fetches timed out. Earlier repository research is retained but not promoted to fresh verification."
+    },
+    {
+      "id": "L3",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/edit-photos.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Edit controls appear in Detail; histogram accompanies current rendering; Cloud and direct Local access are distinct. Controls have no independently measured CSS geometry."
+    },
+    {
+      "id": "L4",
+      "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/organize-photos.html",
+      "pageUpdated": "2026-04-16",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Photo Grid omits borders and badges; Square Grid includes metadata badges. F opens photo fullscreen with F/Escape restoring layout. Albums and smart albums are distinct."
+    },
+    {
+      "id": "L5",
+      "url": "https://helpx.adobe.com/lightroom-classic/desktop/kb/lightroom-feature-comparison.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Mixed-product comparison only. Desktop Lightroom and Classic differ in catalog, Local access, import, keyboard and UI. No Classic-only behavior is used as the target."
+    },
+    {
+      "id": "L6",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/crop-rotate-geometry.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Crop includes aspect orientation/lock, guides, straighten and flips; Geometry includes Upright and Projection. Fit/100% transform alignment must be observed."
+    },
+    {
+      "id": "L7",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/masking.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Manual and computed selections coexist; source-relative editable components and additive/subtractive refinements require actual processing."
+    },
+    {
+      "id": "L8",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/remove-tool.html",
+      "pageUpdated": "2025-10-27",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Clone, blended Heal and generative replacement are separate; spot visualization, object detection and result alternatives are described. Older article does not establish newer provider eligibility."
+    },
+    {
+      "id": "L9",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/presets.html",
+      "pageUpdated": "2026-04-16",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Categories, favorites, list/thumbnail modes and group behavior are documented. Existing original Lope presets do not establish Adobe preset parity."
+    },
+    {
+      "id": "L10",
+      "url": "https://helpx.adobe.com/lightroom/desktop/using/keyboard-shortcuts.html",
+      "pageUpdated": "2025-06-17",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Desktop keys establish G/D/E/C, rating/flag and export behavior. Modifier combinations, text entry and platform distinctions require runtime checks."
+    },
+    {
+      "id": "L11",
+      "url": "https://helpx.adobe.com/lightroom/desktop/add-import-and-capture-photos/add-photos.html",
+      "pageUpdated": "2025-04-24",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Review distinguishes importing managed copies from directly accessing local photos. Select All and per-photo inclusion controls are documented."
+    },
+    {
+      "id": "L12",
+      "url": "https://helpx.adobe.com/lightroom/desktop/save-share-and-export/save-share-photos.html",
+      "pageUpdated": "2025-04-24",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Custom export and previous-settings export differ. Published numeric limits are JPEG 10\u2013100 percent and maximum dimension 65000; exact 10.0 controls still need captures. Overview and detailed format lists are not identical."
+    },
+    {
+      "id": "L13",
+      "url": "https://helpx.adobe.com/lightroom-classic/desktop/introduction-to-lightroom-classic/supported-file-formats.html",
+      "pageUpdated": "2026-04-16",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Shared format article includes Classic-specific language; use only explicitly common format claims. A tested camera/compression fixture is needed for each claimed decoder path."
+    },
+    {
+      "id": "L14",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/hdr-panorama.html",
+      "pageUpdated": null,
+      "fetchStatus": "FETCH_FAILED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Direct and linked fetches timed out. Merge pipeline requirements are retained from assignment and prior feature matrix."
+    },
+    {
+      "id": "L15",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/hdr-output.html",
+      "pageUpdated": null,
+      "fetchStatus": "FETCH_FAILED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Direct and linked fetches timed out. HDR display/output remains independently unverified; float TIFF headroom alone is insufficient."
+    },
+    {
+      "id": "L16",
+      "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/assisted-culling.html",
+      "pageUpdated": null,
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Retrieved official page; exact eligibility and thresholds require installed-app observation. Existing edge/luminance heuristic cannot establish eye-state equivalence."
+    },
+    {
+      "id": "L17",
+      "url": "https://helpx.adobe.com/lightroom/desktop/organize-photos/compare-photos.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Two-up, before/after and Survey have separate controls. Survey supports up to 100 photos; linked zoom applies to at most 25. Independent active editing, layout orientation and reorder remain to verify."
+    },
+    {
+      "id": "L18",
+      "url": "https://helpx.adobe.com/lightroom/desktop/add-import-and-capture-photos/capture-photos-in-lightroom-with-tethered-capture.html",
+      "pageUpdated": "2026-11-10",
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Real compatible-camera sessions have capture settings, Live View and camera-dependent controls. Webcam access is not equivalent."
+    },
+    {
+      "id": "L19",
+      "url": "https://helpx.adobe.com/lightroom/desktop/edit-photos/check-color-accuracy-with-vectorscope.html",
+      "pageUpdated": null,
+      "fetchStatus": "RETRIEVED",
+      "observedAt": "2026-11-13",
+      "method": "web.run open/click; no installed Adobe application",
+      "summary": "Official linked vectorscope page retrieved; required UI/processing remain unavailable in existing feature matrix."
+    }
+  ],
+  "policy": "Only official Adobe documentation. No page image is treated as a matched screenshot; no reference version upgrade. Earlier repository citations are historical unless re-fetched here."
+}

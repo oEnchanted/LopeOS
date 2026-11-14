@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-13T23:54:09.176Z",
+  "browser": "158.0.8127.18",
+  "hardware": {
+    "cpu": "Apple M1 Pro",
+    "arch": "arm64",
+    "memoryBytes": 17179869184
+  },
+  "sync": {
+    "duration": 600,
+    "frames": 18000,
+    "packets": 18000,
+    "samples": 28800000,
+    "bytes": 3578894,
+    "elapsedMs": 8011.199999999255,
+    "measurements": [
+      {
+        "second": 1,
+        "audioOnset": 0.9995416666666667,
+        "errorMs": -0.45833333333333837,
+        "flash": 255,
+        "nonFlash": 0
+      },
+      {
+        "second": 300,
+        "audioOnset": 299.9995416666667,
+        "errorMs": -0.4583333333130213,
+        "flash": 255,
+        "nonFlash": 0
+      },
+      {
+        "second": 599,
+        "audioOnset": 598.9995416666667,
+        "errorMs": -0.4583333333130213,
+        "flash": 255,
+        "nonFlash": 0
+      }
+    ],
+    "nativeMeasurements": [
+      {
+        "second": 1,
+        "onset": 0.9995416666666667,
+        "errorMs": -0.45833333333333837
+      },
+      {
+        "second": 599,
+        "onset": 598.9995416666667,
+        "errorMs": -0.4583333333130213
+      }
+    ],
+    "driftMs": 2.0317081350640365e-11,
+    "nativeDriftMs": 2.0317081350640365e-11
+  },
+  "benchmarks": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "frames": 30,
+      "previewMs": [
+        11,
+        20.600000001490116,
+        17.300000000745058,
+        21.799999997019768,
+        32,
+        26,
+        25.300000000745058,
+        24.099999997764826,
+        19.900000002235174,
+        18.5
+      ],
+      "exportMs": 4615.699999999255,
+      "bytes": 260590,
+      "fixture": "one synthetic shape layer with animated rotation; no camera decode; not a general realtime guarantee"
+    },
+    {
+      "width": 3840,
+      "height": 2160,
+      "frames": 30,
+      "previewMs": [
+        45.100000001490116,
+        75.60000000149012,
+        73.19999999925494,
+        65.59999999776483,
+        74.30000000074506,
+        58,
+        71.30000000074506,
+        67.39999999850988,
+        53.20000000298023,
+        74.89999999850988
+      ],
+      "exportMs": 6701,
+      "bytes": 407430,
+      "fixture": "one synthetic shape layer with animated rotation; no camera decode; not a general realtime guarantee"
+    }
+  ],
+  "passed": true
+}

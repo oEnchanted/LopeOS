@@ -1,0 +1,46 @@
+import { chromium } from '@playwright/test';
+import assert from 'node:assert/strict';
+import { writeFile } from 'node:fs/promises';
+const browser = await chromium.launch({ headless: true });
+try {
+  const page = await browser.newPage(); const errors = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto(`${process.env.MOVIE_TEST_URL || 'http://127.0.0.1:5191'}/tests/movie-maker/engine.html`); await page.waitForFunction(() => window.engineReady);
+  const result = await page.evaluate(async () => {
+    const M = window.movieModel, E = window.movieEngine;
+    const G = await import('/packages/movie-maker/src/galleries.ts');
+    const { LocalMediaService } = await import('/packages/media-service/src/index.ts');
+    const original = document.createElement('canvas'); original.width = 320; original.height = 180; const draw = original.getContext('2d');
+    const gradient = draw.createLinearGradient(0, 0, 320, 180); gradient.addColorStop(0, '#de4823'); gradient.addColorStop(.5, '#498d6d'); gradient.addColorStop(1, '#164cbd'); draw.fillStyle = gradient; draw.fillRect(0, 0, 320, 180); draw.fillStyle = '#ffca74'; draw.fillRect(24, 16, 72, 43); draw.fillStyle = '#eef8f0'; draw.beginPath(); draw.arc(245, 130, 28, 0, 2 * Math.PI); draw.fill();
+    const blob = await new Promise(resolve => original.toBlob(resolve, 'image/png'));
+    const source = await E.importMedia(new File([blob], 'Feature pattern.png', { type: 'image/png' }));
+    const p = M.createProject('Gallery rendering'); p.assets[source.asset.id] = source.asset; p.clips = [M.createClip(source.asset)]; p.clips[0].duration = 120; p.clips[0].sourceOut = 120;
+    const library = new E.MediaLibrary(new Map([[source.asset.id, blob]]));
+    const canvas = document.createElement('canvas'); canvas.width = 320; canvas.height = 180; const context = canvas.getContext('2d');
+    const pixels = () => context.getImageData(0, 0, 320, 180).data;
+    const hash = data => { let value = 2166136261; for (let i = 0; i < data.length; i++) value = Math.imul(value ^ data[i], 16777619); return value >>> 0; };
+    const difference = (a, b) => { let sum = 0; for (let i = 0; i < a.length; i += 4) sum += Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]); return sum / (a.length / 4 * 3); };
+    await E.renderFrame(p, 15, canvas, library); const baseline = new Uint8ClampedArray(pixels()); const effectResults = [];
+    for (const preset of G.effectPresets) { p.clips[0].effect = preset.id; await E.renderFrame(p, preset.id.includes('fade-out') ? 110 : 15, canvas, library); const delta = difference(baseline, pixels()); if (preset.id !== 'none' && delta < .01) throw new Error(`Effect ${preset.id} produced no visible change`); effectResults.push({ id: preset.id, difference: delta, hash: hash(pixels()) }); }
+    p.clips[0].effect = 'none'; p.clips[0].effects = ['grayscale', 'negative']; p.clips[0].brightness = -.2; await E.renderFrame(p, 30, canvas, library); const composed = new Uint8ClampedArray(pixels()); let grayError = 0; for (let i = 0; i < composed.length; i += 4) grayError = Math.max(grayError, Math.abs(composed[i] - composed[i + 1]), Math.abs(composed[i + 1] - composed[i + 2])); if (grayError > 1) throw new Error('Ordered grayscale/negative stack did not stay grayscale');
+    p.clips[0].effects = ['threshold', 'sepia']; p.clips[0].brightness = undefined; await E.renderFrame(p, 30, canvas, library); const firstOrder = new Uint8ClampedArray(pixels()); p.clips[0].effects = ['sepia', 'threshold']; await E.renderFrame(p, 30, canvas, library); const stackOrderDifference = difference(firstOrder, pixels()); if (stackOrderDifference < 1) throw new Error('Changing effect stack order did not change output');
+    p.clips[0].effects = undefined; p.clips[0].brightness = undefined;
+    const panResults = []; for (const preset of G.panZoomPresets) { p.clips[0].panZoom = preset.id; await E.renderFrame(p, 0, canvas, library); const before = new Uint8ClampedArray(pixels()); await E.renderFrame(p, 119, canvas, library); const delta = difference(before, pixels()); if (preset.id !== 'none' && delta < .01) throw new Error(`Pan/zoom ${preset.id} did not move`); panResults.push({ id: preset.id, difference: delta }); }
+    p.clips[0].panZoom = 'none'; const first = { ...M.createClip(), id: 'black-first', duration: 60, sourceOut: 60, text: M.defaultText('') }; p.clips.unshift(first); p.clips[1].duration = 60; p.clips[1].sourceOut = 60;
+    const transitionResults = []; for (const preset of G.transitionPresets) { p.clips[1].transition = { kind: preset.id, duration: 30 }; await E.renderFrame(p, 60, canvas, library); const before = new Uint8ClampedArray(pixels()); await E.renderFrame(p, 75, canvas, library); const middle = new Uint8ClampedArray(pixels()); await E.renderFrame(p, 90, canvas, library); const after = new Uint8ClampedArray(pixels()); if (preset.id !== 'none' && difference(middle, after) < .01) throw new Error(`Transition ${preset.id} has no intermediate state`); transitionResults.push({ id: preset.id, middleHash: hash(middle), startToEnd: difference(before, after) }); }
+    const title = M.createClip(); title.id = 'rich-title'; title.duration = 60; title.sourceOut = 60; title.text = { ...M.defaultText('Drag this title'), animation: 'none', bold: true, italic: true, alignment: 'left', opacity: .7, outlineColor: '#ff0022', outline: 5, x: .3, y: .7, boxWidth: .5, start: 30, duration: 90 };
+    p.clips = [title, { ...p.clips[1], id: 'after-title', duration: 120, sourceOut: 120, transition: { kind: 'none', duration: 0 } }];
+    const textTiming = []; for (const frame of [15, 45, 75, 135]) { await E.renderFrame(p, frame, canvas, library); const withText = new Uint8ClampedArray(pixels()); const without = structuredClone(p); without.clips[0].text.text = ''; await E.renderFrame(without, frame, canvas, library); textTiming.push({ frame, difference: difference(withText, pixels()) }); }
+    if (textTiming[0].difference !== 0 || textTiming[1].difference < .1 || textTiming[2].difference < .1 || textTiming[3].difference !== 0) throw new Error('Title text start/duration or spill-over differs from authored timing');
+    const textAnimationResults = []; title.text.start = 0; title.text.duration = 60; for (const preset of G.textAnimationPresets) { title.text.animation = preset.id; await E.renderFrame(p, 0, canvas, library); const a = new Uint8ClampedArray(pixels()); await E.renderFrame(p, 15, canvas, library); const b = new Uint8ClampedArray(pixels()); if (preset.id !== 'none' && difference(a, b) < .01) throw new Error(`Text animation ${preset.id} did not animate`); textAnimationResults.push({ id: preset.id, difference: difference(a, b) }); }
+    p.clips = [0, 1, 2].map((_, index) => ({ ...M.createClip(source.asset), id: `export-clip-${index}`, duration: 30, sourceOut: 30, effects: index === 0 ? ['grayscale', 'negative'] : index === 2 ? ['posterize', 'warm'] : undefined, brightness: index === 0 ? .2 : 0, panZoom: index === 1 ? 'in-bottom-right' : 'none', transition: { kind: index === 1 ? 'wipe-down' : index === 2 ? 'iris' : 'none', duration: index ? 12 : 0 } }));
+    p.overlays = [{ ...M.defaultText('New tools'), id: 'rich-caption', start: 0, duration: 80, animation: 'slide-left', bold: true, italic: true, outlineColor: '#c50052', outline: 4, opacity: .85, x: .6, y: .75, boxWidth: .5 }];
+    const output = await E.exportMovie(p, library, { width: 320, height: 180, fps: { num: 30, den: 1 }, bitrate: 2500000, audioBitrate: 128000, includeAudio: false, format: 'webm' });
+    const decoder = new LocalMediaService(async () => output.blob); const decoded = document.createElement('canvas'); decoded.width = 320; decoded.height = 180; const comparisons = [];
+    try { for (const frame of [5, 20, 35, 45, 65, 80]) { await E.renderFrame(p, frame, canvas, library); const expected = new Uint8ClampedArray(pixels()); const actual = await decoder.frame('output', frame / 30 + .00051, 320); decoded.getContext('2d').drawImage(actual, 0, 0); const delta = difference(expected, decoded.getContext('2d').getImageData(0, 0, 320, 180).data); if (delta > 12) throw new Error(`Preview/export discrepancy ${delta} at ${frame}`); comparisons.push({ frame, meanAbsoluteChannelError: delta }); } } finally { decoder.release(); library.dispose(); }
+    return { effects: effectResults, panZoom: panResults, transitions: transitionResults, textAnimations: textAnimationResults, orderedStackGrayError: grayError, stackOrderDifference, independentTitleTextTiming: textTiming, export: output.validation, comparisons, outputBytes: Array.from(new Uint8Array(await output.blob.arrayBuffer())) };
+  });
+  assert.deepEqual(errors, []); const outputBytes = result.outputBytes; delete result.outputBytes;
+  await writeFile('docs/movie-maker/features-output.webm', Buffer.from(outputBytes));
+  await writeFile('docs/movie-maker/features-verification.json', JSON.stringify({ date: '2026-11-13', passed: true, browser: 'Playwright Chromium', ...result, errors }, null, 2) + '\n');
+  console.log(JSON.stringify({ passed: true, effects: result.effects.length, transitions: result.transitions.length, panZoom: result.panZoom.length, textAnimations: result.textAnimations.length, export: result.export, comparisons: result.comparisons }, null, 2));
+} finally { await browser.close(); }

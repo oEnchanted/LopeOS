@@ -1,0 +1,378 @@
+{
+  "date": "2026-11-13",
+  "baseline": "a3c817f81d6528885ea04120ae4b702a9f2b19ee",
+  "scope": "Targeted component pointer/keyboard controls and source-relative geometry; not a matched Adobe screenshot audit.",
+  "environment": {
+    "host": "macOS-27.2-arm64-arm-64bit",
+    "browser": "Chromium 158.0.8127.18 bundled by Playwright 1.65.0",
+    "react": "19.3.1",
+    "vite": "8.3.8",
+    "typescript": "7.0.2",
+    "viewportCSSPixels": [
+      1000,
+      800
+    ],
+    "deviceScaleFactor": 1
+  },
+  "fixture": "Original procedural 400x300 color ramp generated in controls-harness.tsx; no private originals or reference screenshot reused as editable media.",
+  "checks": {
+    "passed": 13,
+    "failed": 0,
+    "consoleErrors": 0,
+    "typecheck": "PASS"
+  },
+  "commands": [
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5191 node tests/lightroom/controls-audit.mjs",
+    "node node_modules/typescript/bin/tsc --noEmit",
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5191 LOPE_AUDIT_PHASE=development node tests/lightroom/controls-integration.mjs",
+    "LOPE_PHOTO_BASE=http://127.0.0.1:5193 LOPE_AUDIT_PHASE=production node tests/lightroom/controls-integration.mjs"
+  ],
+  "issues": [
+    {
+      "id": "LR-CTRL-001",
+      "severity": "P1",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Select exposure number; type -0.75 one key at a time; commit.",
+      "expected": "-0.75 persisted.",
+      "actualBefore": "00.75 displayed; negative sign lost.",
+      "cause": "Controlled numeric input immediately replaced incomplete negative/decimal text.",
+      "fix": "Retain editable text independently; update finite bounded draft values.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/controls.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CTRL-001-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-CTRL-002",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Commit 1.25; type 3.4; press Escape.",
+      "expected": "Restore 1.25 without applying canceled numeric edit.",
+      "actualBefore": "Escape retained 3.4.",
+      "cause": "Escape invoked commit instead of restoring the focus-entry value.",
+      "fix": "Restore captured initial numeric value before finishing the gesture.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/controls.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CTRL-002-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-CTRL-003",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Enter 0.123 exposure; commit, then inspect displayed value.",
+      "expected": "Display stored fine adjustment accurately.",
+      "actualBefore": "Displayed 0.12 despite stored 0.123.",
+      "cause": "Two-decimal display rounded finer supported arrow modifiers.",
+      "fix": "Keep three decimal places, matching finest implemented modifier. Also retest bounds/empty values.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/controls.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CTRL-003-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-VIEW-001",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Drag image 80px horizontally and 35px vertically over 12 pointer moves.",
+      "expected": "Image follows pointer delta within 1 CSS px.",
+      "actualBefore": "Image moved 40px horizontally.",
+      "cause": "Pointer displacement measured against the moving photo frame.",
+      "fix": "Compute pan from initial client pointer coordinates.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-VIEW-001-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-VIEW-002",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Show original while mask tool active; drag -40px,+15px.",
+      "expected": "Inspect original without changing recipe or showing edit overlays.",
+      "actualBefore": "Original preview could not pan.",
+      "cause": "Before-preview guard rejected every pointer gesture.",
+      "fix": "Allow a read-only pan gesture; hide crop/mask/retouch overlays and show inspection cursor/caption.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx"
+      ],
+      "beforeEvidence": "controls-before-LR-VIEW-002.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-VIEW-002-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-VIEW-003",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Pan, then change asset ID while retaining the same filename.",
+      "expected": "New asset starts centered.",
+      "actualBefore": "Source inspection showed reset keyed only by name.",
+      "cause": "Different assets may share filenames.",
+      "fix": "Optional assetId prop keys pan/gesture reset; app passes active ID.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx"
+      ],
+      "beforeEvidence": "a3c817f:apps/web/src/apps/lightroom/viewport.tsx",
+      "baselineEvidenceType": "source inspection; no before runtime capture",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-VIEW-003-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-MASK-001",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Create radial mask centered .3,.4 with end .4,.6; crop .1,.1,.5,.8; rotate 90 degrees.",
+      "expected": "Projected outline bounds 50 by 40 in normalized 100-unit output.",
+      "actualBefore": "Old ellipse width 40 instead of 50; axes were not rotated.",
+      "cause": "Only center used geometry; radii were divided by unrotated crop dimensions.",
+      "fix": "Project sampled source outline through same transform as image pixels.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx",
+        "apps/web/src/apps/lightroom/mask-outline.ts"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-MASK-001-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-MASK-002",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Place radius .04 brush stamp; crop .1,.1,.5,.8; rotate 90 degrees.",
+      "expected": "Projected brush boundary width10,height16 in normalized 100-unit output.",
+      "actualBefore": "Brush stroke width stayed fixed in output space.",
+      "cause": "Stroke width ignored crop and rotation while point centers transformed.",
+      "fix": "Project source brush capsule polygons and round caps.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx",
+        "apps/web/src/apps/lightroom/mask-outline.ts"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-MASK-002-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-MASK-003",
+      "severity": "P1",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Straighten 45 degrees; click brush near output corner outside original source.",
+      "expected": "No invalid source coordinates or failed commit.",
+      "actualBefore": "Invalid mask component uncaught error.",
+      "cause": "Output-to-source conversion can leave [0,1] on transformed background.",
+      "fix": "Reject interactions outside source for masks, retouch and sampler; skip invalid brush movement coordinates.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-MASK-003-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-CROP-001",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Drag southeast crop handle inward; press Escape before mouse release.",
+      "expected": "Restore crop at gesture start.",
+      "actualBefore": "Changed crop persisted.",
+      "cause": "Viewport lacked transient gesture cancellation and a focused editing area.",
+      "fix": "Restore captured recipe on Escape/pointercancel; Enter commits.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CROP-001-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-CROP-002",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Focus southeast crop handle; ArrowLeft and Shift+ArrowUp.",
+      "expected": "Adjust current crop without app-level photo navigation.",
+      "actualBefore": "Source inspection showed Arrow events bubbling to app navigation.",
+      "cause": "Handle buttons lacked keyboard handlers.",
+      "fix": "Source-relative resize: 1 rendered-preview pixel per Arrow, Shift10; stop propagation. Native step size unverified.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/viewport.tsx"
+      ],
+      "beforeEvidence": "a3c817f:apps/web/src/apps/lightroom/viewport.tsx",
+      "baselineEvidenceType": "source inspection; no before runtime capture",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CROP-002-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-CURVE-001",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Drag middle tone-curve point; Escape before releasing pointer.",
+      "expected": "Restore original point coordinates.",
+      "actualBefore": "Moved point persisted.",
+      "cause": "Curve drag lacked cancellation and pointer focus.",
+      "fix": "Capture curve at gesture start; restore on Escape/pointercancel.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/controls.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CURVE-001-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    },
+    {
+      "id": "LR-CURVE-002",
+      "severity": "P2",
+      "owner": "Agent 1 / lightroom_controls",
+      "reproduction": "Focus a non-endpoint curve point and press Delete.",
+      "expected": "Delete the focused interior point while retaining endpoints.",
+      "actualBefore": "Point remained.",
+      "cause": "Removal implemented only as double-click.",
+      "fix": "Handle Delete/Backspace with propagation stopped.",
+      "changedFiles": [
+        "apps/web/src/apps/lightroom/controls.tsx"
+      ],
+      "beforeEvidence": "controls-before.json",
+      "baselineEvidenceType": "runtime reproduced",
+      "afterEvidence": "controls-after.json",
+      "screenshot": "evidence/LR-CURVE-002-after.png",
+      "status": "FIXED_RETESTED",
+      "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    }
+  ],
+  "sourceHashes": {
+    "apps/web/src/apps/lightroom/controls.tsx": "eb9bc60039b5359ceece18aaee544762e33c429793858e219749d31a8742c522",
+    "apps/web/src/apps/lightroom/viewport.tsx": "4d41d0fef78535afcfa41f99d5df96e371218c3170dd9bd891ffaabf9e1740c5",
+    "apps/web/src/apps/lightroom/mask-outline.ts": "382697d4527b0fdf81089e6c5897b5daefd8be9a372c4fabe414894065d9c7ab",
+    "apps/web/src/apps/lightroom/lightroom.css": "a2880bcdd44e9aa0facb4840716a6a60ab829f721f94ddf656284e10c54bfaf0"
+  },
+  "otherChanges": [
+    {
+      "description": "Parent-requested Photo Grid has no card padding, border, background or metadata decoration; focused selection uses an inset outline. Square Grid retains decorations.",
+      "file": "apps/web/src/apps/lightroom/lightroom.css",
+      "verification": "Parent full-app workflow and layout audit owns verification."
+    },
+    {
+      "description": "Album buttons and names can shrink/truncate while recursive indentation remains visible.",
+      "file": "apps/web/src/apps/lightroom/lightroom.css",
+      "verification": "Parent album audit owns verification."
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "LR-CROP-GAP-001",
+      "severity": "P2",
+      "status": "UNRESOLVED",
+      "description": "Aspect ratio selector applies an initial crop but does not lock ratio across subsequent handle drags; orientation/lock controls absent."
+    },
+    {
+      "id": "LR-CROP-GAP-002",
+      "severity": "P2",
+      "status": "UNRESOLVED",
+      "description": "Escape cancels an active viewport gesture; whole crop-tool-session revert/commit behavior remains incomplete and reference-unverified."
+    },
+    {
+      "id": "LR-MASK-GAP-001",
+      "severity": "P2",
+      "status": "UNVERIFIED",
+      "description": "Outline is a manual component boundary, not full reference mask coverage/feather/add/subtract/intersection overlay. No matched Adobe source screenshots, extreme-geometry subpixel rasterization comparison, or all mask-component states verified."
+    },
+    {
+      "id": "LR-CTRL-REFERENCE",
+      "severity": "P2",
+      "status": "UNVERIFIED",
+      "description": "Control geometry, numeric reference ranges, exact keyboard step sizes, font metrics and all interaction states lack authorized Lightroom 10.0 captures."
+    },
+    {
+      "id": "LR-CROP-ENGINE",
+      "severity": "P2",
+      "status": "UNVERIFIED",
+      "description": "Non-square source straighten uses normalized-coordinate engine rotation; physical angle/aspect behavior requires separate engine/reference verification."
+    },
+    {
+      "id": "LR-BROWSER-CTRL",
+      "severity": "P2",
+      "status": "UNVERIFIED",
+      "description": "Targeted controls checked in installed Chromium only; bundled browser version is recorded, not asserted to be current stable Chrome/Safari/Firefox."
+    }
+  ],
+  "evidenceLimits": [
+    "Before/after PNGs are LopeOS regression evidence, not Adobe reference captures. No pixel-identity or reference anchor tolerance claim.",
+    "The script performs sequential interactions; screenshots from separate checks are not a matched reference overlay set.",
+    "Controls harness executes real shipped components and recipe validation but bypasses durable library and export; parent integrated workflow checks are required.",
+    "Component harness screenshots omit shared shell font styling; they document pointer geometry/data states only. Real-shell typography and styling are visible in controls-integration captures."
+  ],
+  "integrationReview": {
+    "source": "index.tsx changes reviewed against a3c817f",
+    "coordinatedRepairs": [
+      "Modifier deselection changes active mask to the retained active asset.",
+      "Panel resizer Arrow keys stop photo-navigation propagation.",
+      "Select All initializes active selection after complete deselection.",
+      "Pending preview requests capture resolution independently of stale drain-loop zoom closures.",
+      "Filter Escape returns focus to actual opener."
+    ],
+    "validation": {
+      "test": "tests/lightroom/controls-integration.mjs",
+      "setup": "Real shell in fresh guest context with actual JPEG imports, no service mocks or source-module imports.",
+      "passed": 6,
+      "failed": 0,
+      "pageErrors": 0,
+      "evidence": "evidence/controls-integration-development/results.json",
+      "productionRetest": "PASS against integrated commit 7136412011e06dcb2cbee96ccff8419fe0ff3ba2"
+    }
+  },
+  "finalVerification": {
+    "commit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+    "productionArtifactTreeSha256": "c49f2d655da41552b3e9043bbbae92a7358d245aa55d113fb6b3bd49b0ae3ec2",
+    "sourceHashesMatchPreviouslyTestedFixes": {
+      "apps/web/src/apps/lightroom/controls.tsx": true,
+      "apps/web/src/apps/lightroom/viewport.tsx": true,
+      "apps/web/src/apps/lightroom/mask-outline.ts": true,
+      "apps/web/src/apps/lightroom/lightroom.css": true
+    },
+    "componentResult": "13 PASS; 0 FAIL; 0 page errors; same source commit via Vite dev harness",
+    "componentEvidence": "controls-after.json",
+    "productionResult": "6 PASS; 0 FAIL; 0 page errors; fresh guest session on actual production preview",
+    "productionEvidence": "evidence/controls-integration-production/results.json",
+    "productionURL": "http://127.0.0.1:5193",
+    "publication": "None; local preview only"
+  }
+}

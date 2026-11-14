@@ -1,0 +1,9 @@
+{
+  "checks": 45,
+  "maxChannelError": 0,
+  "transport": {
+    "firstFrameBytes": 131072,
+    "repeatBytes": 0
+  },
+  "errors": []
+}

@@ -1,0 +1,47 @@
+✔ inference receives normalized planar sRGB and normalized noise level; originals stay unchanged (11.653166ms)
+✔ global tile origins, halo and valid cores reproduce a region from a full render without seams (71.291708ms)
+✔ zero amount is an exact copy and does not run a model (0.207875ms)
+✔ amount blends in linear precision and preserves alpha (1.869542ms)
+✔ preview regions clamp to original dimensions without rescaling (0.182833ms)
+✔ HDR, transparency, invalid parameters and invalid model results fail explicitly (12.94025ms)
+✔ progress counts only finished image cores and model errors do not report completion (9.594459ms)
+✔ linear development preserves immutable source and highlight headroom (4.914459ms)
+✔ one edit transaction, undo and redo preserve exact recipe state (2.794875ms)
+✔ source-relative masks survive crop, rotation, flip, perspective and straightening (3.940291ms)
+✔ clone and heal produce distinct, reversible source-preserving pixels (11.114333ms)
+✔ TIFF 8-bit has valid tags, dimensions, profile and bounded round-trip error (2.505958ms)
+✔ TIFF 16-bit has valid tags, dimensions, profile and bounded round-trip error (1.769333ms)
+✔ TIFF 32-bit has valid tags, dimensions, profile and bounded round-trip error (2.03175ms)
+✔ 16-bit PNG retains >8-bit precision, real signature and source pixels (32.604833ms)
+✔ original comparison comes from source, not progressively rendered pixels (1.813333ms)
+✔ histogram and auto changes respond to real image luminance (1.457792ms)
+✔ recipe validation rejects nonfinite controls and malformed masks (0.239625ms)
+✔ album removal is distinct from originals, smart filters combine with search and stacks (0.391333ms)
+✔ sRGB transfer functions are inverse for known midtones and headroom (0.056ms)
+✔ standard luminance reduction lowers measured noise while preserving a sharp edge (26.640334ms)
+✔ standard color reduction lowers chroma noise independently of luminance (13.327208ms)
+✔ zero settings are exact; alpha and HDR headroom remain intact without transparent color bleed (1.746292ms)
+✔ standard sliders feed the regular development and export rendering graph (6.3465ms)
+✔ PNG16 grayscale tRNS compares the full 16-bit sample and preserves transparency (42.457583ms)
+✔ PNG16 RGB tRNS requires all three channels to match (0.960583ms)
+✔ PNG16 rejects unsupported PQ transfer instead of silently interpreting it as sRGB (0.593ms)
+✔ PNG16 rejects unsupported HLG transfer instead of silently interpreting it as sRGB (0.228666ms)
+✔ PNG16 rejects unsupported narrow range instead of silently interpreting it as sRGB (0.126459ms)
+✔ PNG16 rejects unsupported RGB matrix mismatch instead of silently interpreting it as sRGB (0.116875ms)
+✔ PNG16 honors sRGB cICP precedence over lower-precedence color metadata (3.688583ms)
+✔ PNG16 rejects unsupported chromaticities when no higher-precedence sRGB declaration exists (0.3335ms)
+✔ PNG16 accepts the standard sRGB chromaticities (1.155042ms)
+✔ TIFF rejects RGB data with fewer than three samples per pixel (0.857125ms)
+✔ TIFF rejects absent strip byte counts rather than reading bytes outside the declared strip (0.375875ms)
+✔ TIFF associated alpha is unpremultiplied before conversion to linear RGB (0.313083ms)
+✔ TIFF unassociated alpha preserves the unmultiplied color samples (0.062333ms)
+✔ TIFF unspecified extra data is not silently interpreted as transparency (0.049625ms)
+✔ TIFF associated transparent pixels have zero color rather than division artifacts (0.410417ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 300.822042

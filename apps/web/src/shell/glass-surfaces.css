@@ -52,14 +52,3 @@
   --text: var(--glass-text);
   --muted: var(--glass-muted);
 }
-
-/* A window being dragged must not repeatedly sample the entire desktop. */
-.desktop[data-theme]:has(.os-window.is-moving) .os-window {
-  background: var(--glass-solid);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-.desktop[data-theme] .os-window.is-moving .glass-preview :is(.glass-preview-window, .glass-preview-menu, .glass-preview-dock) {
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}

@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5191",
+  "fixtures": "Original procedural 16-bit editable PNG/TIFF files. Gray/RGB tRNS uses distinct low bits; TIFF covers associated/unassociated/unspecified extra samples.",
+  "results": [
+    {
+      "name": "gray16-trns.png",
+      "metadata": {
+        "orientation": 1,
+        "width": 2,
+        "height": 1,
+        "bitDepth": 16,
+        "format": "png",
+        "decoder": "Lope PNG16 1.0",
+        "colorSpace": "linear sRGB",
+        "warnings": [],
+        "raw": false
+      },
+      "width": 2,
+      "height": 1,
+      "pixels": [
+        18,
+        18,
+        18,
+        0,
+        18,
+        18,
+        18,
+        255
+      ],
+      "sourceSha256": "85d1c91c0fb2bcc4c36a6994c261420b21c9f5fc5dc6f6924a67faffa4039afd",
+      "outputSha256": "d0d5d37ff111da7fa77ebac723cf781351a6a5a485547ce11373942deb953e6b",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/gray16-trns.png.export.png",
+      "passed": true
+    },
+    {
+      "name": "rgb16-trns.png",
+      "metadata": {
+        "orientation": 1,
+        "width": 2,
+        "height": 1,
+        "bitDepth": 16,
+        "format": "png",
+        "decoder": "Lope PNG16 1.0",
+        "colorSpace": "linear sRGB",
+        "warnings": [],
+        "raw": false
+      },
+      "width": 2,
+      "height": 1,
+      "pixels": [
+        4,
+        8,
+        12,
+        0,
+        4,
+        8,
+        12,
+        255
+      ],
+      "sourceSha256": "b65afbca28e5c0799a6004fb38241ea551f304da8cb1712adc63c2c384556325",
+      "outputSha256": "e4eb600551f0d7cea510c0d1afe2e53d2564e4ad156574d461a41af6f83b5966",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/rgb16-trns.png.export.png",
+      "passed": true
+    },
+    {
+      "name": "associated-alpha16.tif",
+      "metadata": {
+        "orientation": 1,
+        "width": 1,
+        "height": 1,
+        "bitDepth": 16,
+        "format": "tiff",
+        "decoder": "Lope TIFF 1.0",
+        "colorSpace": "linear sRGB",
+        "warnings": [],
+        "raw": false
+      },
+      "width": 1,
+      "height": 1,
+      "pixels": [
+        102,
+        51,
+        26,
+        128
+      ],
+      "sourceSha256": "96b1c7a03fbbf2be23bf2d40952dfeb23dda528666f64048495c16d06298dfa1",
+      "outputSha256": "a87980444ef75f31c20af7e7546d48857522f4dd316729bb75a622fa2a424971",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/associated-alpha16.tif.export.png",
+      "passed": true
+    },
+    {
+      "name": "unassociated-alpha16.tif",
+      "metadata": {
+        "orientation": 1,
+        "width": 1,
+        "height": 1,
+        "bitDepth": 16,
+        "format": "tiff",
+        "decoder": "Lope TIFF 1.0",
+        "colorSpace": "linear sRGB",
+        "warnings": [],
+        "raw": false
+      },
+      "width": 1,
+      "height": 1,
+      "pixels": [
+        51,
+        26,
+        13,
+        128
+      ],
+      "sourceSha256": "5178c1ca11803f3a92edfbeaa4b7dce29bdb2f41ce3e13a089707c5624712865",
+      "outputSha256": "468320caabd48b5ec47aa87b87d00021831e4d4405d36d2aab1f70467b593425",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/unassociated-alpha16.tif.export.png",
+      "passed": true
+    },
+    {
+      "name": "unspecified-extra16.tif",
+      "metadata": {
+        "orientation": 1,
+        "width": 1,
+        "height": 1,
+        "bitDepth": 16,
+        "format": "tiff",
+        "decoder": "Lope TIFF 1.0",
+        "colorSpace": "linear sRGB",
+        "warnings": [],
+        "raw": false
+      },
+      "width": 1,
+      "height": 1,
+      "pixels": [
+        51,
+        26,
+        13,
+        255
+      ],
+      "sourceSha256": "f0952a86f7c93a249fed921ba51221bce6290e6ed1baa3047ee409f02a1bf276",
+      "outputSha256": "8beae91a5f45befb45e103e90ec5bab946cf5ee14e03eb2396573948ac5c9614",
+      "outputPath": "docs/lightroom/release-audit/evidence/codec-fixtures/unspecified-extra16.tif.export.png",
+      "passed": true
+    },
+    {
+      "name": "pq-transfer16.png",
+      "error": "Error: PNG color characteristics require an additional color transform; only full-range sRGB is supported.",
+      "sourceSha256": "1084a13cb8d73ef605f28a7113fe311ceb184555ce5ea42cceeda8642b884d58",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

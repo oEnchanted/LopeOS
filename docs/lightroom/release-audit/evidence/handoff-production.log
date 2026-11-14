@@ -1,0 +1,101 @@
+{
+  "phase": "production",
+  "checks": [
+    {
+      "id": "LR-07-IMPORT",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-HANDOFF",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-EDIT-SAVE",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-RETURN",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-EXPORT",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-RELOAD",
+      "result": "PASSED"
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "failedResponses": [
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/visitor",
+      "status": 403
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5193/api/visitor",
+      "status": 403
+    }
+  ]
+}

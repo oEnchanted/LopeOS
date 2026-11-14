@@ -1,0 +1,7 @@
+.setup-background--incoming {
+  pointer-events: none;
+  animation: setup-background-enter 420ms ease-in-out both;
+}
+@keyframes setup-background-enter { from { opacity: 0; } to { opacity: 1; } }
+[data-reduce-motion=true] .setup-background--incoming { animation: none; }
+@media (prefers-reduced-motion: reduce) { .setup-background--incoming { animation: none; } }

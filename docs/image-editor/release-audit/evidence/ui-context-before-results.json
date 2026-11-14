@@ -1,0 +1,33 @@
+{
+  "buildId": "a541957198019a6db2ff85a8b7518a270c425ae392e063f2f6edad1eba5078f0",
+  "base": "http://127.0.0.1:5189",
+  "entry": "/tests/image-editor/release.html",
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "id": "PS-UI-09-context-command-disabled",
+      "expected": true,
+      "actual": false,
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-10-context-initial-focus",
+      "expected": true,
+      "actual": false,
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-10-context-escape-dismisses",
+      "expected": 0,
+      "actual": 1,
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-context-no-page-errors",
+      "expected": [],
+      "actual": [],
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

@@ -2,42 +2,58 @@
   "date": "2026-11-13",
   "browser": "Chromium headless on macOS arm64",
   "primarySuite": {
-    "passed": 62,
+    "passed": 93,
     "failed": 0,
     "skipped": 0,
-    "distinctScenarios": 62,
-    "manualRerunScenarios": 2,
-    "notes": "Final distinct coverage from the feature audit plus the clean 15-case compact Preferences recheck; this is not a single clean 62-case run.",
+    "distinctScenarios": 93,
+    "notes": "Latest results across the combined 93-case run and targeted rechecks; this is not a single clean 93-case run. The combined run passed 82; manifest label expectations were updated after the shared Quill rename. Rechecks identified and fixed a native single-paragraph indentation batch conflict.",
     "runs": [
       {
         "kind": "combined",
-        "startTime": "2026-11-13T19:14:28.978Z",
-        "duration": 228991.795,
-        "expected": 59,
+        "startTime": "2026-11-13T23:03:07.295Z",
+        "duration": 422878.852,
+        "expected": 82,
+        "skipped": 0,
+        "unexpected": 11,
+        "flaky": 0
+      },
+      {
+        "kind": "manifest-label and Preferences recheck",
+        "startTime": "2026-11-13T23:08:36.203Z",
+        "duration": 81812.27100000001,
+        "expected": 14,
         "skipped": 0,
         "unexpected": 2,
         "flaky": 0
       },
       {
-        "kind": "targeted shell rerun",
-        "startTime": "2026-11-13T19:18:41.405Z",
-        "duration": 9402.707,
-        "expected": 2,
+        "kind": "focused formatting and recovery recheck",
+        "startTime": "2026-11-13T23:11:23.949Z",
+        "duration": 21481.779000000002,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      {
+        "kind": "final unit preference regression",
+        "startTime": "2026-11-13T23:14:21.664Z",
+        "duration": 11429.607,
+        "expected": 1,
         "skipped": 0,
         "unexpected": 0,
         "flaky": 0
       },
       {
-        "kind": "compact Preferences final recheck",
-        "startTime": "2026-11-13T19:38:04.853Z",
-        "duration": 54207,
-        "expected": 15,
+        "kind": "final independent indentation regression",
+        "startTime": "2026-11-13T23:15:30.381Z",
+        "duration": 6137.397,
+        "expected": 1,
         "skipped": 0,
         "unexpected": 0,
         "flaky": 0
       }
-    ],
-    "environmentIssue": "The two shell-based scenarios could not load while an unrelated shared Accounts module was missing. Both passed after it became available."
+    ]
   },
   "browserCases": [
     {
@@ -98,7 +114,7 @@
       "name": "Paragraph supports right indentation without resetting left indentation",
       "source": "document-audit.spec.ts",
       "status": "expected",
-      "attempts": 1
+      "attempts": 2
     },
     {
       "name": "formatting dialogs cannot apply changes while Viewing",
@@ -179,58 +195,253 @@
       "attempts": 1
     },
     {
+      "name": "new pictures keep their natural proportions and independent crop handles save real percent values",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "cancelling a crop draft leaves image geometry and saved source crop unchanged",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "dropping an image file in document text inserts a naturally sized native picture with undo",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Layout Options applies square, front, behind and inline placement to the selected picture",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Layout Options accepts precise page positions without intercepting input arrow keys",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "dragging near the workspace edge scrolls and reanchors a floating picture onto the next page",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "picture controls follow OS theme, text size and contrast without changing the document",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Picture Format edits alt text and resets crop on the selected picture",
+      "source": "image-actions.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "native image hit mapping distinguishes two canonical identities and floating frames",
+      "source": "image-adapter.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "identical reopened pictures in one images-only paragraph retain independent canonical hits",
+      "source": "image-adapter.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "floating positions use document pixels, survive native history, and stay correct at zoom",
+      "source": "image-adapter.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "inline drag reanchors the actual picture across paragraphs with one undo and a stable saved identity",
+      "source": "image-adapter.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "native image size, crop percentages and rotation export actual Word structures and undo independently",
+      "source": "image-adapter.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "image drag helpers reject read mode, invalid positions, and stale native reads without moving pictures",
+      "source": "image-adapter.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "native corner resize remains usable for inline pictures at 100% and preserves DOCX history",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "native corner resize remains usable for inline pictures at 150% and preserves DOCX history",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "native corner resize remains usable for floating pictures at 100% and preserves DOCX history",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "native corner resize remains usable for floating pictures at 150% and preserves DOCX history",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "clicking either reopened picture activates its context and targets that picture in the dialog",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "dragging a floating picture at 100% commits page offsets once and native Undo/Redo restores them",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "dragging a floating picture at 150% commits page offsets once and native Undo/Redo restores them",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "dragging an inline picture shows a text caret and moves the native image into the target paragraph",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Escape cancels an active picture drag without changing the document",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "Viewing ignores picture drag and leaves the saved image unchanged",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "crop handles edit one edge and native Undo restores the original crop",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "cancelling crop handles preserves the original image data",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "a large asymmetric crop remains editable in Picture Properties and survives an unrelated size change",
+      "source": "image-pointer.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "public crop percentages visibly change native image pixels at 100% without changing its hit box",
+      "source": "image-presentation.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "public crop percentages visibly change native image pixels at 150% without changing its hit box",
+      "source": "image-presentation.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "crop mirrors cache reads, clear stale sources, follow native asset arrival, and clean up on disposal",
+      "source": "image-presentation.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "name": "read-only print mount reflects cropped pictures before cloning complete print pages",
+      "source": "image-presentation.spec.ts",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
       "name": "Preferences follows live LopeOS theme and the device theme in System mode",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "category grid, history, search, File Options and keyboard shortcut open the same Preferences",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "view and unit preferences persist without resetting editing history",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 4,
+      "initialStatus": "unexpected"
     },
     {
       "name": "author changes apply to new comments and survive DOCX saving",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "custom AutoCorrect replacements are real, persistent and undoable",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "animation controls honor both system and device Reduce Motion",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "Save preferences update AutoSave and recovery controls",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "picture and print preferences change saved wrapping and actual print output",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "closing animations return typing focus immediately",
       "source": "preferences.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "super/subscript toggles preserve text and unrelated formatting through DOCX export and undo",
@@ -266,13 +477,13 @@
       "name": "Font dialog changes size without clearing color or strike, then returns to editing",
       "source": "second-pass.spec.ts",
       "status": "expected",
-      "attempts": 1
+      "attempts": 2
     },
     {
       "name": "Paragraph dialog centers every selected paragraph",
       "source": "second-pass.spec.ts",
       "status": "expected",
-      "attempts": 1
+      "attempts": 2
     },
     {
       "name": "File Print refreshes the preview after document edits",
@@ -332,7 +543,8 @@
       "name": "Preferences search finds actual option labels before their panes have been visited",
       "source": "settings-audit.spec.ts",
       "status": "expected",
-      "attempts": 2
+      "attempts": 2,
+      "initialStatus": "unexpected"
     },
     {
       "name": "AutoCorrect tabs and replacement list support arrow keys and roving focus",
@@ -360,11 +572,16 @@
       "attempts": 2
     },
     {
+      "name": "Preferences is a compact utility window with readable category labels in the real shell",
+      "source": "settings-audit.spec.ts",
+      "status": "expected",
+      "attempts": 2
+    },
+    {
       "name": "LopeOS manifest, window, global menus, and lifecycle use the same Writer commands",
       "source": "shell.spec.ts",
       "status": "expected",
-      "attempts": 2,
-      "initialStatus": "unexpected"
+      "attempts": 2
     },
     {
       "name": "native text input, ribbon selection, semantic save/reload, recovery and close guard",
@@ -407,12 +624,6 @@
       "source": "writer.spec.ts",
       "status": "expected",
       "attempts": 1
-    },
-    {
-      "name": "Preferences is a compact utility window with readable category labels in the real shell",
-      "source": "settings-audit.spec.ts",
-      "status": "expected",
-      "attempts": 1
     }
   ],
   "packageUnitTests": {
@@ -438,6 +649,8 @@
       "Saved OOXML text and bold run",
       "Preferences opens from the app and follows live system Light/Dark changes",
       "Closing Preferences retains the saved document",
+      "Picture selection, layout and actual mouse dragging update page position",
+      "Per-edge crop visibly renders and saves native OOXML percentages",
       "No browser page errors"
     ],
     "errors": []
@@ -448,10 +661,11 @@
   },
   "sourceFingerprint": {
     "algorithm": "SHA-256 over sorted product paths and contents, each NUL-separated",
-    "files": 19,
-    "digest": "d9b9e2f694b6d82fc2cdbffdeecf4086d75ca699dbf95633926e368ee701cc6e",
+    "files": 23,
+    "digest": "04b9bf75e89b4ba957ca486749d44d206ef06267b6c881a5ce0d7acc99b090e6",
     "paths": [
       "apps/web/src/apps/writer/Backstage.tsx",
+      "apps/web/src/apps/writer/PictureInteractions.tsx",
       "apps/web/src/apps/writer/PreferencesWindow.tsx",
       "apps/web/src/apps/writer/Prompt.tsx",
       "apps/web/src/apps/writer/Ribbon.tsx",
@@ -462,12 +676,15 @@
       "apps/web/src/apps/writer/manifest.ts",
       "apps/web/src/apps/writer/motion.css",
       "apps/web/src/apps/writer/motion.ts",
+      "apps/web/src/apps/writer/pictures.css",
+      "apps/web/src/apps/writer/pictures.ts",
       "apps/web/src/apps/writer/preferences.css",
       "apps/web/src/apps/writer/preferences.ts",
       "apps/web/src/apps/writer/print.ts",
       "apps/web/src/apps/writer/recovery.ts",
       "apps/web/src/apps/writer/systemAppearance.ts",
       "apps/web/src/apps/writer/writer.css",
+      "packages/document-engine/src/image-presentation.ts",
       "packages/document-engine/src/index.ts",
       "packages/document-engine/src/package.ts"
     ]
@@ -558,7 +775,33 @@
       "narrowWindow": true,
       "productionSmoke": true
     },
-    "investigation": "An earlier affected-suite run saw one native paragraph batch reject a revision change. The specific workflow passed three repeats, then the final 15-case suite passed clean. No retry or delay was added to the product.",
+    "investigation": "The image review re-exercised the unit/view workflow and reproduced a native single-paragraph batch conflict. A single indentation update now uses its native setter; multi-paragraph and multi-property changes retain native batches. The final focused preference and left/right indentation checks passed.",
     "screenshots": "screenshots/production-preferences-light.png"
+  },
+  "images": {
+    "request": "Improve dragging and image interactions toward Word",
+    "scenariosPassed": 31,
+    "failed": 0,
+    "coverage": "image-interactions.md",
+    "checks": [
+      "Native eight-handle resizing at 100% and 150% zoom, Undo and DOCX extents",
+      "Clicked picture identity after reopen, including duplicate images",
+      "Inline caret reanchoring and floating body drag with axis lock, center guides and edge auto-scroll",
+      "Cross-page reanchoring, Escape cancellation and Viewing guards",
+      "Five wrapping/layer choices and exact page position fields",
+      "Independent per-edge crop, pointer crop, Reset Crop and native OOXML percentages",
+      "Natural image proportions, file drop, selected image alt text and native media persistence",
+      "Visible crop mirrors on screen and offscreen print pages",
+      "Live OS Light/Dark, larger text, increased contrast and unchanged document revision"
+    ],
+    "captures": {
+      "path": "screenshots/",
+      "pageErrors": []
+    },
+    "remaining": [
+      "Native image rotation does not paint reliably and has no enabled UI",
+      "Tight/Through wrapping, grouping and full anchor/z-order controls remain unavailable",
+      "Cross-page floating moves can require two Undo steps"
+    ]
   }
 }

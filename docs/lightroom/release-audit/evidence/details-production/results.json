@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "7136412011e06dcb2cbee96ccff8419fe0ff3ba2",
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "id": "LR-UI-002",
+      "result": "PASS",
+      "assertions": "Photo Grid has no metadata/flag/rating badges; Square retains all four metadata/rating rows and picked flag."
+    },
+    {
+      "id": "LR-UI-003",
+      "result": "PASS",
+      "assertions": "JPEG quality10–100; long edge<=65000; out-of-bounds entries clamp to documented limits."
+    },
+    {
+      "id": "LR-UI-004",
+      "result": "PASS",
+      "assertions": "Local-save tooltip discloses account sync; Cloud opens actual Settings account destination. Signed-in transfer behavior not tested."
+    }
+  ],
+  "errors": []
+}

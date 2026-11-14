@@ -1,3 +1,4 @@
+import { AppIcon } from '../../shell/Icons';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, GripVertical, MoreHorizontal, Pin, X } from 'lucide-react';
 import { BrushStroke, SelectionStroke, CanvasRenderer, SceneEncoder, addLayer, allLayers, color, context2d, cropDocument, straightenDocument, feather, findLayer, fromPixels, hexColor, identity, layer, newPixelLayer, pixel, selectPolygon, selectShape, selectionBounds, around, transformSelected, createTextLayer, surface, toDocument, toLocal, transformedBounds, translateLayer, uid, updateLayer, type RenderViewport, type BrushSettings, type ImageDocument, type Layer, type Point } from '../../../../../packages/image-engine/src';
@@ -17,7 +18,7 @@ export function CanvasView(props: Props) {
   const [size, setSize] = useState({ width: 800, height: 600 }); const [space, setSpace] = useState(false); const [crop, setCrop] = useState<{ x: number; y: number; width: number; height: number } | null>(null); const [pen, setPen] = useState<Point[]>([]); const [revision, setRevision] = useState(0); const [taskMenu, setTaskMenu] = useState(false);
   const cloneSource = useRef<{ point: Point; layerId: string } | null>(null); const transformBase = useRef<ImageDocument | null>(null); const paintFrame = useRef(0); const documentId = useRef('');
   const renderWorker=useRef(new ImageWorker());const renderPending=useRef(false);const renderQueued=useRef<{document:ImageDocument;view:{x:number;y:number;width:number;height:number;scale:number};baseDocument?:ImageDocument;epoch:number}|null>(null);const encoder=useRef(new SceneEncoder());const mounted=useRef(true);
-  const [textEdit,setTextEdit]=useState<InlineTypeState|null>(null);const inlineEdit=useRef(textEdit);inlineEdit.current=textEdit;const previewEpoch=useRef(0);
+  const [textEdit,setTextEdit]=useState<InlineTypeState|null>(null);const inlineEdit=useRef(textEdit);inlineEdit.current=textEdit;const previewEpoch=useRef(0);const capturedPointer=useRef<number|null>(null);
   const overlayDraw=useRef<()=>void>(()=>{});
   const lastPaint=useRef<{point:Point;id:string;target:string}|null>(null);
   const latest = useRef(props); latest.current = props;
@@ -68,6 +69,21 @@ export function CanvasView(props: Props) {
     if (commit && preview.current && transformBase.current) current.onCommit('Free Transform', preview.current);
     preview.current = null; transformBase.current = null; current.setTransforming(false); gesture.current = null; draw(current.doc); setRevision(v => v + 1);
   }, [draw]);
+  const cancelGesture = useCallback(() => {
+    const g = gesture.current;
+    if (!g) return;
+    gesture.current = null;
+    previewEpoch.current++;
+    renderQueued.current = null;
+    cancelAnimationFrame(paintFrame.current); paintFrame.current = 0;
+    // A cancelled handle drag returns to its starting transform. Other gestures
+    // return to the committed document and never create a history entry.
+    preview.current = latest.current.transforming ? g.document : null;
+    const pointer = capturedPointer.current; capturedPointer.current = null;
+    if (pointer !== null && area.current?.hasPointerCapture(pointer)) area.current.releasePointerCapture(pointer);
+    draw(preview.current || latest.current.doc);
+    setRevision(v => v + 1);
+  }, [draw]);
   useEffect(() => {
     const typing = (target: EventTarget | null) => target instanceof HTMLElement && Boolean(target.closest('input,textarea,select,[contenteditable="true"]'));
     const keyDown = (event: KeyboardEvent) => {
@@ -82,10 +98,10 @@ export function CanvasView(props: Props) {
       }
     };
     const keyUp = (event: KeyboardEvent) => { if (event.code === 'Space') setSpace(false); };
-    const blur = () => setSpace(false);
+    const blur = () => { setSpace(false); cancelGesture(); };
     window.addEventListener('keydown', keyDown); window.addEventListener('keyup', keyUp); window.addEventListener('blur', blur);
     return () => { window.removeEventListener('keydown', keyDown); window.removeEventListener('keyup', keyUp); window.removeEventListener('blur', blur); };
-  }, [crop, pen, finishTransform, draw]);
+  }, [crop, pen, finishTransform, draw, cancelGesture]);
   const finishText=useCallback((commit:boolean)=>{
     const edit=inlineEdit.current;if(!edit)return;inlineEdit.current=null;previewEpoch.current++;setTextEdit(null);latest.current.onTypeDraft?.(undefined);latest.current.onPendingEdit?.(null);
     const document=latest.current.doc;if(!document||document.id!==edit.documentId)return;
@@ -129,12 +145,12 @@ export function CanvasView(props: Props) {
   overlayDraw.current=drawOverlay;
   function start(event: React.PointerEvent<HTMLDivElement>) {
     if (!doc || props.busy || event.button > 1) return; event.preventDefault(); area.current?.focus(); const point = toPoint(event); let document = doc;
-    if (space || tool === 'hand' || event.button === 1) { gesture.current = { kind: 'pan', document, start: { x: event.clientX, y: event.clientY }, last: point, points: [], pan: { ...pan } }; event.currentTarget.setPointerCapture(event.pointerId); return; }
+    if (space || tool === 'hand' || event.button === 1) { gesture.current = { kind: 'pan', document, start: { x: event.clientX, y: event.clientY }, last: point, points: [], pan: { ...pan } }; capturedPointer.current=event.pointerId; event.currentTarget.setPointerCapture(event.pointerId); return; }
     if (tool === 'zoom') { zoomAt(point, event.altKey ? 1 / 1.5 : 1.5); return; }
     if (tool === 'eyedropper' || event.altKey && (tool === 'brush' || tool === 'pencil')) { if(point.x>=0&&point.y>=0&&point.x<doc.width&&point.y<doc.height){renderer.current ||= new CanvasRenderer();const sampled=renderer.current.renderViewport(doc,{x:Math.floor(point.x),y:Math.floor(point.y),width:1,height:1,scale:1});props.onColor(hexColor([...context2d(sampled).getImageData(0,0,1,1).data]));}return; }
     if(tool==='type'){const hit=hitTest(point,document);const existing=hit?.kind==='text'?hit:undefined;if(existing?.locked){props.onError('Unlock this type layer before editing it.');return;}const style=existing?.text||props.typeStyle||{content:'',font:'Arial',size:72,color:foreground,bold:false,italic:false,align:'left' as const,leading:1.2,tracking:0};const edit:InlineTypeState={documentId:document.id,layerId:existing?.id,point:existing?{x:existing.transform.x,y:existing.transform.y}:point,text:{...style,content:existing?.text?.content||''},transform:existing?.transform||{...identity(),x:point.x,y:point.y}};inlineEdit.current=edit;previewEpoch.current++;setTextEdit(edit);if(existing)props.onSelect([existing.id],'pixels');drawSoon(document);return;}
     if (tool === 'pen' || tool === 'polygon') { setPen(previous => [...previous, point]); return; }
-    if (tool === 'path-select') { let found = false; document.paths.forEach((path, pathIndex) => path.points.forEach((p, pointIndex) => { if (!found && Math.hypot(p.x - point.x, p.y - point.y) * zoom < 10) { found = true; gesture.current = { kind: 'anchor', document, start: point, last: point, points: [], pathIndex, pointIndex }; } })); if (found) event.currentTarget.setPointerCapture(event.pointerId); return; }
+    if (tool === 'path-select') { let found = false; document.paths.forEach((path, pathIndex) => path.points.forEach((p, pointIndex) => { if (!found && Math.hypot(p.x - point.x, p.y - point.y) * zoom < 10) { found = true; gesture.current = { kind: 'anchor', document, start: point, last: point, points: [], pathIndex, pointIndex }; } })); if (found) { capturedPointer.current=event.pointerId; event.currentTarget.setPointerCapture(event.pointerId); } return; }
     if (tool === 'wand') { props.onOperation('Magic Wand', 'wand', { document, point, tolerance: options.tolerance, contiguous: options.contiguous, mode: selectionMode(event) }); return; }
     if (tool === 'fill') { props.onOperation('Paint Bucket', 'fill', { document, point, color: foreground, tolerance: options.tolerance }); return; }
     if (['brush', 'pencil', 'eraser', 'clone', 'heal','blur','sharpen','smudge','dodge','burn','sponge'].includes(tool)) {
@@ -160,7 +176,7 @@ export function CanvasView(props: Props) {
       const kind = ['marquee', 'ellipse-select', 'lasso'].includes(tool) ? 'select' : tool === 'crop' ? 'crop' : tool === 'gradient' ? 'gradient' : 'shape';
       gesture.current = { kind, document, start: point, last: point, points: [point], mode: selectionMode(event) };
     }
-    event.currentTarget.setPointerCapture(event.pointerId); setRevision(v => v + 1);
+    capturedPointer.current=event.pointerId; event.currentTarget.setPointerCapture(event.pointerId); setRevision(v => v + 1);
   }
   function selectionMode(event: { shiftKey: boolean; altKey: boolean }) { return event.shiftKey && event.altKey ? 'intersect' : event.shiftKey ? 'add' : event.altKey ? 'subtract' : options.selectionMode; }
   function move(event: React.PointerEvent<HTMLDivElement>) {
@@ -180,6 +196,7 @@ export function CanvasView(props: Props) {
   }
   function end(event: React.PointerEvent<HTMLDivElement>) {
     const g = gesture.current; if (!g) return;
+    gesture.current = null; capturedPointer.current = null;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     try {
       if (g.kind === 'brush') {props.onCommit(g.document.quickMask?'Paint Quick Mask':tool === 'clone' ? 'Clone Stamp' : tool === 'heal' ? 'Healing Brush (sample correction)' : doc?.target === 'mask' ? 'Brush on Layer Mask' : tool === 'eraser' ? 'Eraser' : ['blur','sharpen','smudge','dodge','burn','sponge'].includes(tool)?tool[0].toUpperCase()+tool.slice(1)+' Tool':'Brush Tool', g.brush!.finish());lastPaint.current={point:g.last,id:g.brush!.layerId,target:g.document.target};}
@@ -197,7 +214,7 @@ export function CanvasView(props: Props) {
     event.stopPropagation(); event.preventDefault(); if (!doc || !bounds || active?.locked) return; if (!props.transforming) { transformBase.current = doc; props.setTransforming(true); }
     const point = toPoint(event); const base = preview.current || doc;
     const anchor = index === 4 ? { x: bounds.x+bounds.width/2, y: bounds.y+bounds.height/2 } : { x: bounds.x + (index === 0 || index === 3 ? bounds.width : 0), y: bounds.y + (index === 0 || index === 1 ? bounds.height : 0) };
-    gesture.current = { kind: index === 4 ? 'rotate' : 'scale', document: base, start: point, last: point, points: [], anchor, bounds }; area.current?.setPointerCapture(event.pointerId);
+    gesture.current = { kind: index === 4 ? 'rotate' : 'scale', document: base, start: point, last: point, points: [], anchor, bounds }; capturedPointer.current=event.pointerId; area.current?.setPointerCapture(event.pointerId);
   }
   const paintTool = ['brush', 'pencil', 'eraser', 'clone', 'heal','blur','sharpen','smudge','dodge','burn','sponge'].includes(tool) && !space;
   const taskBounds=useMemo(()=>doc?selectionBounds(doc):null,[doc?.selection,doc?.width,doc?.height]);
@@ -208,11 +225,11 @@ export function CanvasView(props: Props) {
   };
   return <div className={`ie-canvas-shell ${w.rulers ? 'has-rulers' : ''}`}>
     {w.rulers && <><div className="ie-ruler-origin"/><div className="ie-ruler ie-ruler-top" title="Click to add a vertical guide" onClick={event => { if (doc) { const rect = event.currentTarget.getBoundingClientRect(); props.onCommit('New Guide', { ...doc, guides: [...doc.guides, { axis: 'x', position: (event.clientX - rect.left - origin.x) / zoom }] }); } }}>{ruler(false)}</div><div className="ie-ruler ie-ruler-left" title="Click to add a horizontal guide" onClick={event => { if (doc) { const rect = event.currentTarget.getBoundingClientRect(); props.onCommit('New Guide', { ...doc, guides: [...doc.guides, { axis: 'y', position: (event.clientY - rect.top - origin.y) / zoom }] }); } }}>{ruler(true)}</div></>}
-    <div ref={area} className={`ie-canvas-area ie-cursor-${space ? 'hand' : tool}`} tabIndex={0} aria-label="Image canvas" data-testid="image-canvas-area" onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; preview.current = null; draw(doc); setRevision(v => v + 1); }} onPointerLeave={() => {if(brushCursor.current)brushCursor.current.style.visibility='hidden';}} onWheel={event => { event.preventDefault(); if (event.ctrlKey || event.metaKey || tool === 'zoom') zoomAt(toPoint(event), Math.exp(-event.deltaY * .002)); else props.onView(zoom, { x: pan.x - (event.shiftKey ? event.deltaY : event.deltaX), y: pan.y - (event.shiftKey ? event.deltaX : event.deltaY) }); }} onDoubleClick={() => { if (tool === 'polygon' && pen.length >= 3 && doc) { props.onCommit('Polygonal Selection', selectPolygon(doc, pen, options.selectionMode)); setPen([]); } }}>
+    <div ref={area} className={`ie-canvas-area ie-cursor-${space ? 'hand' : tool}`} tabIndex={0} aria-label="Image canvas" data-testid="image-canvas-area" onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={cancelGesture} onLostPointerCapture={cancelGesture} onPointerLeave={() => {if(brushCursor.current)brushCursor.current.style.visibility='hidden';}} onWheel={event => { event.preventDefault(); if (event.ctrlKey || event.metaKey || tool === 'zoom') zoomAt(toPoint(event), Math.exp(-event.deltaY * .002)); else props.onView(zoom, { x: pan.x - (event.shiftKey ? event.deltaY : event.deltaX), y: pan.y - (event.shiftKey ? event.deltaX : event.deltaY) }); }} onDoubleClick={() => { if (tool === 'polygon' && pen.length >= 3 && doc) { props.onCommit('Polygonal Selection', selectPolygon(doc, pen, options.selectionMode)); setPen([]); } }}>
       {doc ? <><div className="ie-document-canvas ie-checkerboard" style={{ left: origin.x, top: origin.y, width: doc.width * zoom, height: doc.height * zoom }}><canvas ref={canvas} data-testid="image-composite"/></div><canvas className="ie-canvas-overlay" ref={overlay}/>{textEdit&&<InlineType edit={textEdit} zoom={zoom} origin={origin} onChange={content=>{const next={...textEdit,text:{...textEdit.text,content}};inlineEdit.current=next;setTextEdit(next);}} onFinish={finishText}/>}
         {showHandles && bounds && <div className="ie-transform-box" style={{ left: origin.x + bounds.x * zoom, top: origin.y + bounds.y * zoom, width: Math.max(1, bounds.width * zoom), height: Math.max(1, bounds.height * zoom) }}>{[0,1,2,3,4].map(i => <button key={i} className={`ie-transform-handle ie-transform-handle-${i}`} aria-label={i === 4 ? 'Rotate layer handle' : `Scale layer handle ${i + 1}`} onPointerDown={e => beginHandle(e, i)}/>)}</div>}
         {paintTool && <div ref={brushCursor} className="ie-brush-cursor" style={{visibility:'hidden',width:Math.max(2,brush.size*zoom),height:Math.max(2,brush.size*zoom)}}/>}
-      </> : <div className="ie-empty-canvas"><span className="ie-empty-mark">L<span>i</span></span><h2>Image Editor</h2><button onClick={() => props.onCommand('image.new')}>Create new…</button><button onClick={() => props.onCommand('image.open')}>Open…</button><button className="ie-text-button" onClick={() => props.onCommand('image.sample')}>Open the layered sample</button></div>}
+      </> : <div className="ie-empty-canvas"><AppIcon name="image-editor" size={64}/><h2>Prism</h2><button onClick={() => props.onCommand('image.new')}>Create new…</button><button onClick={() => props.onCommand('image.open')}>Open…</button><button className="ie-text-button" onClick={() => props.onCommand('image.sample')}>Open the layered sample</button></div>}
     </div>
     {doc && w.taskBar && <div className={`ie-contextual-bar ${w.taskPinned ? 'is-pinned' : ''}`} aria-label="Contextual Task Bar" style={w.taskPosition ? { left: w.taskPosition.x, top: w.taskPosition.y, bottom: 'auto', transform: 'none' } : undefined} onPointerDown={e => e.stopPropagation()}><span className="ie-task-grip" onPointerDown={event => { const bar = event.currentTarget.parentElement!; const rect = bar.getBoundingClientRect(); const rootRect = bar.parentElement!.getBoundingClientRect(); const offset = { x: event.clientX - rect.left, y: event.clientY - rect.top }; const grip = event.currentTarget; grip.setPointerCapture(event.pointerId); grip.onpointermove = e => { if (grip.hasPointerCapture(e.pointerId)) setWorkspace({ ...w, taskPosition: { x: Math.max(0, e.clientX - rootRect.left - offset.x), y: Math.max(0, e.clientY - rootRect.top - offset.y) }, taskPinned: true }); }; }}><GripVertical size={14}/></span>{props.transforming || crop ? <><button onClick={() => { if (props.transforming) finishTransform(true); else if (crop) { try { props.onCommit('Crop', cropDocument(doc, crop)); setCrop(null); } catch (error) { props.onError((error as Error).message); } } }}><Check size={15}/>Done</button><button onClick={() => { finishTransform(false); setCrop(null); }}><X size={14}/>Cancel</button></> : taskBounds ? <><button onClick={()=>props.onCommand('image.ai-fill')}>Generative Fill</button><button disabled={!active||active.locked||Boolean(active.mask)} onClick={() => props.onCommand('image.mask')}>Add layer mask</button><button onClick={() => props.onCommand('image.invert')}>Invert selection</button><button onClick={() => props.onCommand('image.deselect')}>Deselect</button></> : active?.text ? <><button onClick={() => props.onText({ x: active.transform.x, y: active.transform.y }, active.id)}>Edit type</button><button onClick={() => props.onCommand('image.transform')}>Transform</button></> : <><button onClick={() => props.onCommand('image.new-layer')}>New layer</button><button onClick={() => props.onCommand('image.transform')}>Transform</button><button onClick={() => props.onCommand('image.local-ai')}>Local AI</button><button onClick={() => props.onCommand('image.adjust-brightness')}>Adjust colors</button></>}<i className="ie-separator"/><button aria-label="Contextual Task Bar options" onClick={() => setTaskMenu(!taskMenu)}><MoreHorizontal size={17}/></button>{taskMenu && <div className="ie-task-menu"><button onClick={() => { setWorkspace({ ...w, taskPinned: !w.taskPinned }); setTaskMenu(false); }}><Pin size={13}/>{w.taskPinned ? 'Unpin bar position' : 'Pin bar position'}</button><button onClick={() => { setWorkspace({ ...w, taskPosition: null, taskPinned: false }); setTaskMenu(false); }}>Reset bar position</button><button onClick={() => { setWorkspace({ ...w, taskBar: false }); setTaskMenu(false); }}>Hide bar</button></div>}</div>}
   </div>;

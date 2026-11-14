@@ -2,10 +2,16 @@ import { SuperDoc, type BorrowedSuperDocUI } from 'superdoc';
 import type { OperationId, OperationInput, OperationOutput, SelectionCapture as EngineSelectionCapture, SelectionTarget, SuperDocUIState } from 'superdoc/ui';
 import 'superdoc/style.layered.css';
 import { createDocument, DOCX_MIME, documentWordCount } from './package';
+import { ImagePresentation, waitForPaintedImages } from './image-presentation';
 export * from './package';
 export type { SuperDocUIState } from 'superdoc/ui';
 export type SelectionCapture = EngineSelectionCapture & { writerRevision?: number };
 export type ParagraphTarget = Extract<OperationInput<'format.paragraph.applyBatch'>['targets'][number], { kind: 'block' }>;
+export type WriterImage = OperationOutput<'images.get'>;
+/** Image crop values use percentages: 10 means ten percent. */
+export type WriterImageCrop = NonNullable<WriterImage['properties']['crop']>;
+/** Page-relative CSS pixels at 100% document zoom (96 pixels per inch). */
+export interface WriterImagePosition { horizontal: number; top: number }
 export interface EnginePreferences {
   ruler: boolean; formattingMarks: boolean; bookmarks: boolean; measurementUnit: 'in' | 'cm';
   user: { name: string; email: string }; autoCorrect: boolean; replacements: Array<{ from: string; to: string }>;
@@ -45,6 +51,9 @@ export class WriterEngine {
   private transactionCarets = new Map<string, { undo: SelectionTarget; redo: SelectionTarget }>();
   private historyGesture: number | null = null;
   private historyCaretWork: Promise<unknown> = Promise.resolve();
+  private imageFrames = new Map<string, HTMLElement>();
+  private imagePresentation: ImagePresentation | null = null;
+  private imageAssetsAbort = new AbortController();
   snapshot: WriterSnapshot = { ...emptySnapshot };
   constructor(private changed: (snapshot: WriterSnapshot) => void, private failed: (error: unknown) => void, private preferences?: EnginePreferences) {}
   get ui(): BorrowedSuperDocUI | null { return this.superdoc?.ui ?? null; }
@@ -105,7 +114,7 @@ export class WriterEngine {
           this.releases.push(ui.select(s => s).subscribe(() => this.publish()));
           this.releases.push(ui.comments.observe(() => this.publish()), ui.trackChanges.observe(() => this.publish()), ui.styles.observe(() => this.publish()));
           this.releases.push(ui.document.onChange(change => {
-            this.snapshot.revision++; this.scheduleCount(); this.publish();
+            this.snapshot.revision++; this.scheduleCount(); this.publish(); this.imagePresentation?.schedule();
             if ((change.cause === 'undo' || change.cause === 'redo') && change.txId && this.historyGesture === this.typingSequence) {
               const caret = this.transactionCarets.get(change.txId)?.[change.cause];
               if (caret) this.historyCaretWork = ui.selection.applyAndWait(caret).then(async result => { if (result.ok) await this.revealSelection(caret); }).catch(() => {});
@@ -126,6 +135,16 @@ export class WriterEngine {
           }).catch(() => {});
           this.snapshot.ready = true;
           if (this.preferences) await this.applyPreferences(this.preferences);
+          if (print) {
+            try {
+              const images = await this.api.images.list({ limit: 10000 });
+              await waitForPaintedImages(element, images.total, this.imageAssetsAbort.signal);
+            } catch (error) { fail(error); return; }
+          }
+          if (this.disposed) { fail(new Error('The document was closed.')); return; }
+          this.imagePresentation = new ImagePresentation(element, { revision: () => this.snapshot.revision, resolve: frame => this.resolveImageAt(frame), get: async imageId => this.api.images.get({ imageId }) });
+          this.releases.push(ui.viewport.observe(() => this.imagePresentation?.schedule()));
+          if (print) await this.imagePresentation.refresh(); else this.imagePresentation.schedule();
           this.publish();
           settled = true; resolve();
         },
@@ -247,6 +266,107 @@ export class WriterEngine {
     const receipt = await this.api.insert({ target: selection, value });
     assertReceipt(receipt);
     await this.placeInsertedCaret(receipt, selection, false, value);
+  }
+  /** Resolve a native painted hit to its canonical public image identity. */
+  async resolveImageAt(element: HTMLElement): Promise<WriterImage | null> {
+    if (!this.snapshot.ready || !this.element?.contains(element) || !element.isConnected) return null;
+    const revision = this.snapshot.revision, rect = element.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    const floatingBlock = element.dataset.floatPara, floatingOffset = element.dataset.floatOffset;
+    const layoutStory = element.closest<HTMLElement>('[data-layout-story]')?.dataset.layoutStory;
+    const hit = await this.ui?.viewport.positionAt({ x: rect.left + Math.min(1, rect.width / 2), y: rect.top + rect.height / 2 });
+    const point = hit?.status === 'resolved' ? hit.target.start : null;
+    let story = hit?.status === 'resolved' ? hit.target.story || (point?.kind === 'text' ? point.story : undefined) : undefined;
+    if (layoutStory === 'body') story = { kind: 'story', storyType: 'body' };
+    // A floating header can cover body text. That underlying text is not proof
+    // of the picture's story, so do not guess a cross-story image identity.
+    if (layoutStory && layoutStory !== 'body' && (!story || story.storyType === 'body')) return null;
+    const paragraph = element.closest<HTMLElement>('[data-layout-block-ref]');
+    const blockId = floatingBlock || paragraph?.dataset.layoutBlockRef || (point?.kind === 'text' ? point.blockId : null);
+    const offset = floatingBlock && floatingOffset !== undefined && /^\d+$/.test(floatingOffset) ? Number(floatingOffset) : point?.kind === 'text' && point.blockId === blockId ? point.offset : null;
+    if (!blockId) return null;
+    const [images, nodes] = await Promise.all([
+      this.api.images.list({ limit: 10000 }),
+      this.api.find({ select: { type: 'node', nodeType: 'image' }, in: story, limit: 10000 }),
+    ]);
+    const storyIds = new Set(nodes.items.map(item => item.node.id));
+    const candidates = images.items.filter(image => {
+      // The browser's public list facade adds these semantic hit coordinates;
+      // full image properties are read separately through images.get below.
+      const address = image.address as unknown as { blockId?: unknown; offset?: unknown };
+      return storyIds.has(image.sdImageId) && address.blockId === blockId && (offset === null || address.offset === offset);
+    });
+    let image: WriterImage | undefined;
+    if (candidates.length > 1) {
+      // Images-only paragraphs can give several pictures the same browser text
+      // offset. Match this painted hit's accessible description and unzoomed
+      // size against the public models; never select an arbitrary candidate.
+      const original = element instanceof HTMLImageElement ? element : element.querySelector('img');
+      const description = original?.getAttribute('alt') || '';
+      const models = await Promise.all(candidates.map(candidate => Promise.resolve(this.api.images.get({ imageId: candidate.sdImageId }))));
+      const described = description ? models.filter(model => (model.properties.alt || model.properties.description || '') === description) : models;
+      if (description && described.length === 1) image = described[0];
+      else {
+        const computed = getComputedStyle(element), width = parseFloat(computed.width), height = parseFloat(computed.height);
+        const sized = described.filter(model => {
+          const size = model.properties.size, factor = size?.unit === 'pt' ? 96 / 72 : size?.unit === 'twip' ? 96 / 1440 : 1;
+          return size?.width !== undefined && size.height !== undefined && Math.abs(size.width * factor - width) < 1 && Math.abs(size.height * factor - height) < 1;
+        });
+        if (sized.length === 1) image = sized[0];
+      }
+      if (!image && story?.storyType === 'body' && (!layoutStory || layoutStory === 'body') && element instanceof HTMLImageElement) {
+        // Identical pictures need identity from document order. Only use this
+        // join when the complete body's paragraph is painted: virtualization,
+        // repeated stories or missing fragments must fail closed.
+        const orderedIds = nodes.items.filter(item => item.address.kind === 'inline' && item.address.anchor.start.blockId === blockId)
+          .sort((a, b) => a.address.kind === 'inline' && b.address.kind === 'inline' ? a.address.anchor.start.offset - b.address.anchor.start.offset : 0).map(item => item.node.id);
+        const painted = [...this.element!.querySelectorAll<HTMLImageElement>('img[data-sd-image-id],img.superdoc-inline-image')].filter(frame => {
+          const paragraph = frame.closest<HTMLElement>('[data-layout-block-ref]');
+          return paragraph?.dataset.layoutBlockRef === blockId && paragraph.dataset.layoutStory === 'body' && frame.getBoundingClientRect().width > 0;
+        });
+        const index = painted.indexOf(element);
+        if (index >= 0 && painted.length === orderedIds.length && new Set(orderedIds).size === orderedIds.length) image = models.find(model => model.sdImageId === orderedIds[index]);
+      }
+    } else if (candidates.length === 1) image = await this.api.images.get({ imageId: candidates[0].sdImageId });
+    if (!image) return null;
+    if (revision !== this.snapshot.revision || !element.isConnected) return null;
+    this.imageFrames.set(image.sdImageId, element);
+    return image;
+  }
+  private assertImageEditable() {
+    if (!this.snapshot.ready) throw new Error('The document is still opening.');
+    if (this.readOnly || this.ui?.state.documentMode === 'viewing') throw new Error('Switch to Editing or Reviewing mode to change pictures.');
+  }
+  async moveImageToSelection(imageId: string, target: SelectionTarget): Promise<void> {
+    this.assertImageEditable();
+    if (target.start.kind !== 'text' || target.end.kind !== 'text' || target.start.blockId !== target.end.blockId || target.start.offset !== target.end.offset || target.coordinateSpace === 'tracked') throw new Error('Drop the picture at a text insertion point.');
+    const revision = this.snapshot.revision, point = target.start, story = target.story || point.story;
+    const [info, node] = await Promise.all([
+      this.api.info({}),
+      this.api.getNodeById({ nodeId: point.blockId, story }),
+      this.api.images.get({ imageId }),
+    ]);
+    if (revision !== this.snapshot.revision || this.disposed) throw new Error('The document changed during the drag. Try again.');
+    this.assertImageEditable();
+    if (node.address.kind !== 'block' || !['paragraph', 'heading', 'listItem'].includes(node.address.nodeType)) throw new Error('Drop the picture into a paragraph.');
+    assertReceipt(await this.api.images.move({ imageId, to: { kind: 'inParagraph', target: { ...node.address, ...(story && { story }) }, offset: point.offset } }, { expectedRevision: info.revision }));
+  }
+  async positionImage(imageId: string, position: WriterImagePosition): Promise<void> {
+    this.assertImageEditable();
+    if (!Number.isFinite(position.horizontal) || !Number.isFinite(position.top) || position.horizontal < 0 || position.top < 0) throw new Error('Keep the picture position within the page.');
+    const revision = this.snapshot.revision;
+    const [info, image, sections] = await Promise.all([this.api.info({}), this.api.images.get({ imageId }), this.api.sections.list({})]);
+    if (revision !== this.snapshot.revision || this.disposed) throw new Error('The document changed during the drag. Try again.');
+    this.assertImageEditable();
+    if (image.properties.placement !== 'floating') throw new Error('Choose a floating text-wrapping option before positioning this picture.');
+    const frame = this.imageFrames.get(imageId), page = frame?.isConnected ? frame.closest<HTMLElement>('.superdoc-page') : null;
+    const zoom = (this.ui?.state.zoom.value || 100) / 100, bounds = page?.getBoundingClientRect();
+    const width = bounds ? bounds.width / zoom : (sections.items[0]?.pageSetup?.width || 8.5) * 96;
+    const height = bounds ? bounds.height / zoom : (sections.items[0]?.pageSetup?.height || 11) * 96;
+    const unit = image.properties.size?.unit, unitScale = unit === 'pt' ? 96 / 72 : unit === 'twip' ? 96 / 1440 : 1;
+    const imageWidth = (image.properties.size?.width || 0) * unitScale, imageHeight = (image.properties.size?.height || 0) * unitScale;
+    if (position.horizontal + imageWidth > width + .5 || position.top + imageHeight > height + .5) throw new Error('Keep the picture within the page edges.');
+    assertReceipt(await this.api.images.setPosition({ imageId, position: { hRelativeFrom: 'page', vRelativeFrom: 'page', marginOffset: position } }, { expectedRevision: info.revision }));
   }
   async updateExistingFields() {
     const tables = await this.api.toc.list({});
@@ -414,6 +534,9 @@ export class WriterEngine {
     this.disposed = true; this.loaded = false; cancelAnimationFrame(this.frame); clearTimeout(this.timer); clearTimeout(this.correctionTimer);
     this.releases.forEach(fn => fn()); this.releases = [];
     this.transactionCarets.clear();
+    this.imageFrames.clear();
+    this.imageAssetsAbort.abort();
+    this.imagePresentation?.destroy(); this.imagePresentation = null;
     this.superdoc?.destroy(); this.superdoc = null;
   }
 }

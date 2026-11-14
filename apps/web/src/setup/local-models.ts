@@ -29,8 +29,8 @@ export interface LocalModelDependencies {
 }
 const definitions = [
   { id: 'spotlight', title: 'Spotlight AI', modelName: MODEL_NAME, purpose: 'Chat in Spotlight', description: 'Answer questions and draft text using a local model. Requires WebGPU. It has no live web access and can give incorrect answers.', sizeBytes: null, sizeLabel: MODEL_DOWNLOAD_LABEL },
-  { id: 'denoise', title: 'Photo denoise', modelName: DENOISE_PACKAGE.name, purpose: 'Reduce noise in Lightroom photos', description: 'Reduce grain and color noise. Saves the result as a separate copy and keeps the original photo.', sizeBytes: DENOISE_PACKAGE.totalBytes, sizeLabel: '18.4 MB' },
-  { id: 'portrait', title: 'Portrait cutouts', modelName: AI_MODEL.name, purpose: 'Remove portrait backgrounds in Image Editor', description: 'Select people or remove portrait backgrounds. The model is trained for people; other subjects need manual selection.', sizeBytes: AI_DOWNLOAD_BYTES, sizeLabel: '37.2 MB' },
+  { id: 'denoise', title: 'Photo denoise', modelName: DENOISE_PACKAGE.name, purpose: 'Reduce noise in Luma photos', description: 'Reduce grain and color noise. Saves the result as a separate copy and keeps the original photo.', sizeBytes: DENOISE_PACKAGE.totalBytes, sizeLabel: '18.4 MB' },
+  { id: 'portrait', title: 'Portrait cutouts', modelName: AI_MODEL.name, purpose: 'Remove portrait backgrounds in Prism', description: 'Select people or remove portrait backgrounds. The model is trained for people; other subjects need manual selection.', sizeBytes: AI_DOWNLOAD_BYTES, sizeLabel: '37.2 MB' },
 ] as const;
 const emptyState = (): LocalModelsSnapshot => ({ checking: false, busy: false, activeId: null, models: definitions.map(model => ({ ...model, status: 'checking', received: 0, total: model.sizeBytes, bytesPerSecond: 0, error: '', message: 'Checking saved downloads…', file: '' })) });
 const asMessage = (error: unknown) => error instanceof Error ? error.message : 'The model could not be downloaded. Check your connection and available browser storage, then try again.';

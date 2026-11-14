@@ -1,0 +1,535 @@
+{
+  "schemaVersion": 1,
+  "revision": "2.0.0",
+  "reviewedOn": "2026-11-13",
+  "product": "Windows Movie Maker 2012",
+  "suite": "Windows Essentials 2012",
+  "locale": "en-US",
+  "target": "LopeOS Movie Maker adaptation",
+  "exactVisualParity": "UNVERIFIED: native capture scale, original window geometry and complete preset catalogue are not established",
+  "referenceWindow": {
+    "width": null,
+    "height": null,
+    "deviceScaleFactor": null,
+    "reason": "Retrieved institutional reference images are cropped/resized to 480px or smaller. Their delivered dimensions are known; native window size, DPI and resizing factor are not."
+  },
+  "sources": [
+    {
+      "id": "microsoft-2012-introduction",
+      "url": "https://blogs.windows.com/windowsexperience/2012/08/07/introducing-the-new-windows-photo-gallery-and-movie-maker/",
+      "publishedOn": "2012-08-07",
+      "authority": "Microsoft primary historical announcement",
+      "establishes": [
+        "Windows Essentials 2012 product generation",
+        "Separate source, music and narration audio",
+        "Music and video waveforms",
+        "Audio emphasis",
+        "Recorded and imported narration",
+        "Text outlines",
+        "H.264 default export",
+        "Windows 8 video stabilization"
+      ],
+      "doesNotEstablish": [
+        "Exact ribbon geometry",
+        "Complete tab labels and groups",
+        "Screenshot scaling"
+      ],
+      "status": "READ"
+    },
+    {
+      "id": "microsoft-2010-background",
+      "url": "https://blogs.windows.com/windowsexperience/2010/06/24/my-thoughts-on-the-new-windows-live-essentials/",
+      "publishedOn": "2010-06-24",
+      "authority": "Microsoft earlier-generation feature background",
+      "establishes": [
+        "AutoMovie themes",
+        "720p and 1080p output",
+        "Custom dimensions, bitrate, frame rate and audio"
+      ],
+      "useFor2012Geometry": false,
+      "status": "READ"
+    },
+    {
+      "id": "microsoft-historical-index",
+      "url": "https://blogs.windows.com/windowsexperience/tag/movie-maker/",
+      "authority": "Microsoft article index",
+      "establishes": [
+        "Date and provenance of the 2012 introduction"
+      ],
+      "status": "READ"
+    },
+    {
+      "id": "microsoft-essentials-status",
+      "url": "https://support.microsoft.com/en-us/windows/apps/support-for-windows-essentials-apps",
+      "authority": "Microsoft support",
+      "establishes": [
+        "Windows Essentials 2012 discontinued January 10, 2017",
+        "Official downloads unavailable"
+      ],
+      "status": "READ"
+    },
+    {
+      "id": "microsoft-modern-editor",
+      "url": "https://support.microsoft.com/en-us/clipchamp/windows-photos-app/create-films-with-a-video-editor",
+      "authority": "Microsoft support",
+      "establishes": [
+        "Clipchamp and the former Photos Video Editor are different products"
+      ],
+      "useFor2012Geometry": false,
+      "status": "READ"
+    },
+    {
+      "id": "chrome-webcodecs",
+      "url": "https://developer.chrome.com/docs/web-platform/best-practices/webcodecs",
+      "authority": "Browser implementer documentation",
+      "establishes": [
+        "Frame-based encoding",
+        "Runtime encoder capability checks",
+        "Explicit muxing required",
+        "Bound queues and close frames"
+      ],
+      "status": "READ"
+    },
+    {
+      "id": "ffmpegwasm-overview",
+      "url": "https://ffmpegwasm.netlify.app/docs/overview/",
+      "authority": "Project documentation",
+      "establishes": [
+        "Local WebAssembly media processing alternative",
+        "Worker architecture"
+      ],
+      "usedInThisBuild": false,
+      "status": "READ"
+    },
+    {
+      "id": "ffmpegwasm-faq",
+      "url": "https://ffmpegwasm.netlify.app/docs/faq/",
+      "authority": "Project documentation",
+      "establishes": [
+        "Performance and memory limitations of the WebAssembly alternative"
+      ],
+      "usedInThisBuild": false,
+      "status": "READ"
+    },
+    {
+      "id": "bw-2012-import",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/import.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Home ribbon group order",
+        "Quick access above tabs",
+        "Audio and aspect-ratio Project groups"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "bw-2012-edit",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/anordnen.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Left preview and right wrapping filmstrip",
+        "Video tools/Edit contextual tab",
+        "Temporary Trim tool workspace"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "bw-2012-transitions",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/uebergang.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Transitions left, duration and apply-to-all middle, pan/zoom right",
+        "Expandable preset galleries"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "bw-2012-effects",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/anzeigeeffekt.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Effect gallery left with brightness and apply-to-all right",
+        "Effect live preview and selected-clip indicators"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "bw-2012-audio",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/ton.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Music Tools/Options structure",
+        "Music insertion from start or current point",
+        "Audio trim/split/timing and draggable strip beginnings",
+        "Waveform and filename presentation"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "bw-2012-text",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/text.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Text Tools/Format contextual structure",
+        "Font, paragraph, adjustment and effects groups",
+        "Text editing in preview",
+        "Text may extend beyond one visual clip"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "bw-2012-export",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/rendern.html",
+      "authority": "Zentrum für Schulqualität und Lehrerbildung Baden-Württemberg: institutional tutorial explicitly titled Windows Movie Maker 2012; directly authored annotated screenshots",
+      "locale": "de-DE",
+      "establishes": [
+        "Home ribbon Share and Save movie positions",
+        "Project/movie distinction"
+      ],
+      "status": "READ_AND_SCREENSHOTS_INSPECTED",
+      "historicalDownloadAdviceUsed": false
+    },
+    {
+      "id": "microsoft-community-2012-new",
+      "url": "https://learn.microsoft.com/en-us/answers/questions/2554842/whats-new-in-movie-maker-2012",
+      "publishedOn": "2012-08-08",
+      "authority": "Release-era Microsoft-hosted community answer, corroborated by official 2012 announcement; not presented as a Microsoft-authored manual",
+      "establishes": [
+        "Narration while viewing playback",
+        "Video files as music/narration sources",
+        "Audio mix of non-emphasized tracks",
+        "Windows 8-only stabilization and rolling-shutter distinction",
+        "Autosave and lower-resolution preview preparation"
+      ],
+      "status": "READ"
+    },
+    {
+      "id": "microsoft-community-multiple-effects",
+      "url": "https://learn.microsoft.com/en-nz/answers/questions/2553023/windows-movie-maker-animations-transitions",
+      "authority": "Microsoft-hosted community discussion; 2013 response explicitly identifies Movie Maker 2012; earlier 2012 response establishes inherited multiple-effects workflow",
+      "establishes": [
+        "Multiple Effects command beneath expanded Visual Effects gallery",
+        "Transitions on Animations tab"
+      ],
+      "status": "READ"
+    },
+    {
+      "id": "microsoft-community-view",
+      "url": "https://learn.microsoft.com/en-us/answers/questions/2658469/windows-movie-maker-audio-waveforms-disappeared",
+      "publishedOn": "2015-08-18",
+      "authority": "Firsthand Microsoft-hosted community discussion explicitly naming Movie Maker 2012",
+      "establishes": [
+        "View tab Waveforms control",
+        "Time zoom and thumbnail size are separate controls"
+      ],
+      "status": "READ",
+      "screenshotStatus": "Historical image host no longer resolves; screenshot not counted as inspected"
+    },
+    {
+      "id": "aberdeen-editing-2017",
+      "url": "https://www.abdn.ac.uk/toolkit/documents/uploads/movie-maker-editing.pdf",
+      "publishedOn": "2017-09-28",
+      "authority": "University of Aberdeen authored editing guide; version number not explicit, used only to corroborate ribbon-generation behavior",
+      "establishes": [
+        "Separate time zoom and thumbnail size",
+        "Movable timeline playhead",
+        "Selected clip outlined",
+        "Split and trim workflow"
+      ],
+      "status": "INDEXED_PDF_TEXT_READ",
+      "screenshotStatus": "Cached PDF text available; live URL 404 and screenshot retrieval failed, so full-image geometry not claimed"
+    },
+    {
+      "id": "cuesta-2016-manual-mirror",
+      "url": "https://manualzz.com/doc/28789725/microsoft-movie-maker-user-manual",
+      "publishedOn": "2016-01-27",
+      "authority": "Mirror of a Cuesta College instructional handout explicitly titled Windows Movie Maker 2012; original Cuesta URL was not found",
+      "establishes": [
+        "English contextual subtab names Edit, Options and Format",
+        "Dedicated Trim tool save/cancel workflow",
+        "Snapshot command",
+        "Narration point controls"
+      ],
+      "status": "READ",
+      "confidence": "Corroboration only; mirrored institutional text, not a Microsoft manual"
+    },
+    {
+      "id": "microsoft-community-2012-audio-only",
+      "url": "https://learn.microsoft.com/en-us/answers/questions/2526130/how-to-edit-cut-and-save-only-music-using-movie-ma",
+      "publishedOn": "2014-03-14",
+      "authority": "Microsoft-hosted community answer explicitly distinguishing Movie Maker 2012 from 2011; corroborative firsthand usage, not Microsoft-authored documentation",
+      "establishes": [
+        "Audio-only Save movie output in M4A or WMA",
+        "Requires a visual element and permits Fit to music"
+      ],
+      "status": "READ"
+    }
+  ],
+  "referenceScreenshots": [
+    {
+      "id": "bw-startansicht",
+      "sourceId": "bw-2012-import",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/startansicht.PNG",
+      "description": "Home ribbon crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 57
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Clipboard",
+        "Add media/record/snapshot/text",
+        "AutoMovie themes",
+        "Editing",
+        "Share"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-men_projekt",
+      "sourceId": "bw-2012-import",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/men_projekt.PNG",
+      "description": "Project ribbon crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 121
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Audio mix and four emphasis choices",
+        "Fit to music",
+        "16:9 and 4:3 aspect ratios"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-videoschnitt_r",
+      "sourceId": "bw-2012-edit",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/videoschnitt_r.PNG",
+      "description": "Workspace and Video Tools/Edit capture",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 249
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Preview left",
+        "Wrapping contiguous filmstrip right",
+        "Audio/Adjust/Editing group order",
+        "No persistent inspector"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-zuschnitt",
+      "sourceId": "bw-2012-edit",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/zuschnitt.PNG",
+      "description": "Trim tool workspace crop",
+      "deliveredPixelDimensions": {
+        "width": 240,
+        "height": 314
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Trim start/end fields",
+        "Save trim and Cancel",
+        "Two range handles below preview"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-effekte_auswahl",
+      "sourceId": "bw-2012-transitions",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/effekte_auswahl.PNG",
+      "description": "Animations ribbon crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 82
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Transitions gallery",
+        "Duration and Apply to all",
+        "Pan and zoom gallery"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-men_visuell",
+      "sourceId": "bw-2012-effects",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/men_visuell.PNG",
+      "description": "Visual Effects ribbon crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 69
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Effects gallery",
+        "Brightness",
+        "Apply to all"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-toneinstellungen",
+      "sourceId": "bw-2012-audio",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/toneinstellungen.PNG",
+      "description": "Music Tools/Options ribbon crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 105
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Volume and fades",
+        "Split and start/end commands",
+        "Start time/source endpoints"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-musik_ton_mix",
+      "sourceId": "bw-2012-audio",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/musik_ton_mix.PNG",
+      "description": "Video Tools and filmstrip crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 177
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Video sound settings",
+        "Timing-aligned waveform strip",
+        "Selected segment border"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-spurenansicht",
+      "sourceId": "bw-2012-audio",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/spurenansicht.PNG",
+      "description": "Storyboard strips crop",
+      "deliveredPixelDimensions": {
+        "width": 154,
+        "height": 155
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Music, narration and text in separate colored horizontal strips"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    },
+    {
+      "id": "bw-textwerkzeug",
+      "sourceId": "bw-2012-text",
+      "url": "https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/multimedia/video/moviemaker/material/textwerkzeug.PNG",
+      "description": "Text Tools/Format ribbon crop",
+      "deliveredPixelDimensions": {
+        "width": 480,
+        "height": 64
+      },
+      "nativeCaptureDimensions": null,
+      "deviceScaleFactor": null,
+      "resizeFactor": null,
+      "inspectedOn": "2026-11-13",
+      "locale": "de-DE",
+      "observed": [
+        "Contextual label above Format tab",
+        "Clipboard/font/paragraph/adjustment/effects group sequence",
+        "Outline controls at right"
+      ],
+      "use": "Layout/grouping reference; modern colors, type, spacing and accessibility intentionally differ"
+    }
+  ],
+  "assumptions": [
+    {
+      "detail": "Main tab sequence Home, Animations, Visual Effects, Project, View",
+      "basis": "Directly inspected German-localized institutional screenshots; English names corroborated by release-era documents",
+      "parity": "STRUCTURE_VERIFIED"
+    },
+    {
+      "detail": "Contextual category labels sit above Edit, Options and Format subtabs",
+      "basis": "Directly inspected Music/Video/Text screenshots; Narration Options corroborated by version-labeled Cuesta handout",
+      "parity": "STRUCTURE_VERIFIED"
+    },
+    {
+      "detail": "Left preview and wrapping time-scaled filmstrip at right, audio/text aligned below each row",
+      "basis": "Directly inspected videoschnitt_r.PNG, musik_ton_mix.PNG and spurenansicht.PNG",
+      "parity": "STRUCTURE_VERIFIED"
+    },
+    {
+      "detail": "Exact native spacing, preset counts/order and Windows8-specific controls",
+      "basis": "Source images are resized/cropped and do not show every expanded gallery or platform variant",
+      "parity": "UNVERIFIED"
+    }
+  ],
+  "adaptations": [
+    "LopeOS outer window and shared glass material; opaque light editing workspace",
+    "Save to Files and Download replace obsolete social publishing services",
+    "Explicit LopeOS project format; no claim of WLMP compatibility",
+    "Capability-tested MP4/H.264/AAC export with WebM/VP8/Opus alternatives",
+    "Portrait project preset is labeled as a modern addition",
+    "No simulated stabilization control"
+  ],
+  "captureProtocol": {
+    "appWindowCssPixels": {
+      "width": 1280,
+      "height": 800
+    },
+    "deviceScaleFactor": 1,
+    "browserZoom": "100%",
+    "theme": "light",
+    "font": "LopeOS system font stack",
+    "comparison": "Compare tab/group hierarchy, preview/storyboard split, wrapping strips and contextual tools against the inspected reference crops. Do not claim exact pixel parity from resized German screenshots with unknown native DPI."
+  },
+  "layoutEvidence": "VERIFIED: version-labeled institutional 2012 tutorial captures inspected directly; modern materials intentionally retained"
+}

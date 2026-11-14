@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-13",
+  "passed": true,
+  "browser": "Playwright Chromium",
+  "skipped": false,
+  "capabilities": {
+    "video": true,
+    "audio": true,
+    "supported": true,
+    "formats": [
+      "MP4 (H.264 / AAC)",
+      "WebM (VP8 / Opus)"
+    ],
+    "reason": "",
+    "mp4": true
+  },
+  "extension": "mp4",
+  "mime": "video/mp4",
+  "magic": "ftyp",
+  "bytes": 1739466,
+  "validation": {
+    "duration": 9.022666666666666,
+    "width": 1280,
+    "height": 720,
+    "videoCodec": "avc",
+    "audioCodec": "aac",
+    "frameCount": 270,
+    "framesPerSecond": 30,
+    "audioPeak": 0.20713530480861664
+  },
+  "audioRms": 0.04824705108172272,
+  "audioDuration": 9.022666666666666
+}

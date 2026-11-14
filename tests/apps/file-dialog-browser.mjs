@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict';
+import { chromium, expect } from '@playwright/test';
+import { installContractRuntime } from '../integration/contract-runtime-fixture.ts';
+const browser = await chromium.launch({ headless: true });
+const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+try {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const fs = await installContractRuntime(page);
+  fs.externalMkdir('/Documents/Project');
+  await page.addInitScript(() => {
+    localStorage.setItem('lope.preferences.user.desktop-test-user.v2', JSON.stringify({ version: 2, preferences: { pinned: ['lope.editor'], reduceMotion: true } }));
+  });
+  await page.goto(process.env.LOPE_QA_URL || 'http://127.0.0.1:5173');
+  await page.getByRole('button', { name: 'Open Text Editor', exact: true }).click();
+  await page.getByLabel('Document content').fill('Saved through the global browser.');
+  await page.keyboard.press(`${mod}+Shift+s`);
+  const dialog = page.getByRole('dialog', { name: 'Save As', exact: true });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: 'Documents', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Project, directory', exact: true }).click();
+  await expect(dialog.getByLabel('Folder path')).toHaveValue('/Documents/Project');
+  await dialog.getByRole('button', { name: 'Back', exact: true }).click();
+  await expect(dialog.getByLabel('Folder path')).toHaveValue('/Documents');
+  await dialog.getByRole('button', { name: 'Forward', exact: true }).click();
+  await dialog.getByRole('button', { name: 'New folder', exact: true }).click();
+  await dialog.getByLabel('New folder name').fill('Drafts');
+  await dialog.getByRole('button', { name: 'Create', exact: true }).click();
+  await expect(dialog.getByLabel('Folder path')).toHaveValue('/Documents/Project/Drafts');
+  await dialog.getByLabel('File name', { exact: true }).fill('../invalid.txt');
+  await expect(dialog.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+  await dialog.getByLabel('File name', { exact: true }).fill('draft.txt');
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+  await expect(page.locator('.document-name')).toContainText('draft.txt');
+  assert.equal(fs.text('/Documents/Project/Drafts/draft.txt'), 'Saved through the global browser.');
+  await page.keyboard.press(`${mod}+Shift+s`);
+  await expect(dialog.getByLabel('Folder path')).toHaveValue('/Documents/Project/Drafts');
+  await expect(dialog.getByLabel('File name', { exact: true })).toHaveValue('draft.txt');
+  await dialog.getByRole('button', { name: 'Documents', exact: true }).click();
+  await dialog.getByLabel('Search this folder').fill('no-match');
+  await expect(dialog.getByText('No matching files or folders.')).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 700 });
+  const box = await dialog.boundingBox();
+  if (!box || box.x < 0 || box.x + box.width > 390 || box.y + box.height > 700) throw new Error('Dialog overflows compact viewport');
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  console.log('PASS: global Save As navigation, creation, validation, saving, search, compact layout, and Escape');
+} finally { await browser.close(); }

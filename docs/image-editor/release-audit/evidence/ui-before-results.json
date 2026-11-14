@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-13",
+  "browser": "158.0.8127.18",
+  "base": "http://127.0.0.1:5188",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "dpr": 1,
+  "checks": [
+    {
+      "id": "PS-UI-01-empty-numeric-draft",
+      "expected": "",
+      "actual": "1600",
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-02-negative-numeric-draft",
+      "expected": "-25",
+      "actual": "025",
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-03-shortcut-selects-pencil",
+      "expected": "pencil",
+      "actual": "pencil",
+      "status": "PASS"
+    },
+    {
+      "id": "PS-UI-03-group-retains-last-tool",
+      "expected": 1,
+      "actual": 0,
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-04-focus-loss-cancels-move",
+      "expected": true,
+      "actual": false,
+      "status": "FAIL"
+    },
+    {
+      "id": "PS-UI-no-page-errors",
+      "expected": [],
+      "actual": [],
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "conditions": "The focus-loss case used the Move tool. The initial screenshot filename says stroke, but the interrupted gesture is a layer move; numeric and toolbar cases are unchanged."
+}

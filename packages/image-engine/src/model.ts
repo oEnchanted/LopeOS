@@ -49,7 +49,11 @@ export function allLayers(layers: Layer[]): Layer[] { return layers.flatMap(item
 export function findLayer(doc: ImageDocument, id = doc.activeIds[0]): Layer | undefined { return allLayers(doc.layers).find(item => item.id === id); }
 export function updateLayer(doc: ImageDocument, id: string, updater: (value: Layer) => Layer): ImageDocument {
   const walk = (items: Layer[]): Layer[] => items.map(item => item.id === id ? updater(item) : item.children ? { ...item, children: walk(item.children) } : item);
-  return { ...doc, layers: walk(doc.layers) };
+  const next = { ...doc, layers: walk(doc.layers) };
+  // Removing an active mask must also leave mask editing. Otherwise the next
+  // brush stroke can apply grayscale mask paint to the layer's color pixels.
+  if (next.target === 'mask' && !findLayer(next)?.mask) next.target = 'pixels';
+  return next;
 }
 export function removeLayers(doc: ImageDocument, ids: string[]): ImageDocument {
   const walk = (items: Layer[]): Layer[] => items.filter(item => !ids.includes(item.id)).map(item => item.children ? { ...item, children: walk(item.children) } : item);

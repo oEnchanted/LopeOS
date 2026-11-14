@@ -1,6 +1,11 @@
 import type { BrowserService, BrowserSession, Unsubscribe } from '../../../../../packages/contracts/src';
 import { BrowserClient } from '../../../../../packages/browser-client/src';
-export const browserClient = new BrowserClient();
+import { cloudAccount } from '../../accounts/service';
+export const browserClient = new BrowserClient((input, init = {}) => {
+  const headers = new Headers(init.headers);
+  headers.set('X-Lope-Browser-Account', cloudAccount.getSnapshot().account?.id ?? 'guest');
+  return fetch(input, { ...init, headers });
+});
 const shared = (state: Awaited<ReturnType<BrowserClient['get']>>): BrowserSession => ({
   id: state.id, tabs: state.tabs, activeTabId: state.activeTabId ?? undefined,
 });

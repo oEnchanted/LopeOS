@@ -1,0 +1,122 @@
+ .gitignore                                         |    1 +
+ apps/web/src/accounts/AccountPanel.tsx             |  166 +-
+ apps/web/src/accounts/accounts.css                 |  119 +-
+ apps/web/src/apps/browser/Browser.tsx              |   72 +-
+ apps/web/src/apps/browser/service.ts               |    7 +-
+ apps/web/src/apps/image-editor/CanvasView.tsx      |   35 +-
+ .../web/src/apps/image-editor/ai/LocalAiDialog.tsx |    2 +-
+ apps/web/src/apps/image-editor/index.tsx           |   16 +-
+ apps/web/src/apps/image-editor/manifest.ts         |    2 +-
+ apps/web/src/apps/image-editor/menus.tsx           |   99 +-
+ apps/web/src/apps/image-editor/panels.tsx          |   67 +-
+ apps/web/src/apps/image-editor/session.ts          |    2 +-
+ apps/web/src/apps/image-editor/tools.tsx           |   27 +-
+ apps/web/src/apps/lightroom/backup.ts              |   24 +-
+ apps/web/src/apps/lightroom/controls.tsx           |   13 +-
+ apps/web/src/apps/lightroom/grid-layout.ts         |    2 +-
+ apps/web/src/apps/lightroom/index.tsx              |  101 +-
+ apps/web/src/apps/lightroom/library.ts             |   52 +-
+ apps/web/src/apps/lightroom/lightroom.css          |    4 +-
+ apps/web/src/apps/lightroom/manifest.ts            |    2 +-
+ apps/web/src/apps/lightroom/viewport.tsx           |   52 +-
+ apps/web/src/apps/lightroom/worker-client.ts       |    2 +-
+ apps/web/src/apps/settings/catalog.ts              |    7 +-
+ apps/web/src/apps/settings/index.tsx               |   25 +-
+ apps/web/src/apps/settings/settings.css            |   27 +-
+ apps/web/src/apps/text-editor/index.tsx            |    2 +-
+ apps/web/src/apps/weather/ConditionIcon.tsx        |    2 +-
+ apps/web/src/apps/weather/index.tsx                |   12 +-
+ apps/web/src/apps/weather/weather.css              |   68 +-
+ apps/web/src/apps/writer/Backstage.tsx             |    4 +-
+ apps/web/src/apps/writer/PreferencesWindow.tsx     |   28 +-
+ apps/web/src/apps/writer/Ribbon.tsx                |    9 +-
+ apps/web/src/apps/writer/WriterDialog.tsx          |   69 +-
+ apps/web/src/apps/writer/index.tsx                 |   24 +-
+ apps/web/src/apps/writer/manifest.ts               |    4 +-
+ apps/web/src/apps/writer/print.ts                  |    2 +-
+ apps/web/src/backup/local-data.ts                  |    7 +-
+ apps/web/src/setup/LocalModelsStep.tsx             |    2 +-
+ apps/web/src/setup/SetupAssistant.tsx              |   29 +-
+ apps/web/src/setup/local-models.ts                 |    4 +-
+ apps/web/src/setup/photo.ts                        |    9 +-
+ apps/web/src/setup/setup.css                       |   15 +-
+ apps/web/src/shell/Icons.tsx                       |  154 +-
+ apps/web/src/shell/Shell.tsx                       |   30 +-
+ apps/web/src/shell/Welcome.tsx                     |    4 +-
+ apps/web/src/shell/dock.css                        |    3 +-
+ apps/web/src/shell/extensions.ts                   |    4 +-
+ apps/web/src/shell/glass-surfaces.css              |   11 -
+ apps/web/src/shell/materials.css                   |   97 +-
+ apps/web/src/shell/wallpapers.ts                   |   24 +-
+ apps/web/src/updates/UpdateUI.tsx                  |   31 +-
+ apps/web/src/updates/service.ts                    |   94 +-
+ docs/accounts.md                                   |    5 +
+ docs/accounts/account-1440.png                     |  Bin 1013193 -> 1027402 bytes
+ docs/accounts/account-390.png                      |  Bin 154083 -> 156127 bytes
+ docs/accounts/account-signin-mobile.png            |  Bin 148392 -> 136407 bytes
+ docs/accounts/lopedrive-1440.png                   |  Bin 1080849 -> 1081772 bytes
+ docs/accounts/lopedrive-390.png                    |  Bin 209134 -> 208998 bytes
+ docs/agent-4-status.md                             |   31 +
+ docs/browser.md                                    |   20 +
+ docs/lightroom/README.md                           |    2 +
+ docs/settings-revision/wallpaper-credits.md        |   24 +
+ docs/software-updates.md                           |    6 +-
+ docs/writer/README.md                              |    1 +
+ docs/writer/architecture-decision.md               |    2 +-
+ docs/writer/feature-inventory.md                   |    6 +-
+ docs/writer/parity-report.md                       |    6 +-
+ docs/writer/production-verification.json           |    2 +
+ docs/writer/sample-output.pdf                      |  Bin 59287 -> 59286 bytes
+ docs/writer/screenshots/lopeos-integration.png     |  Bin 426604 -> 437865 bytes
+ .../screenshots/production-preferences-dark.png    |  Bin 444461 -> 454652 bytes
+ .../screenshots/production-preferences-light.png   |  Bin 452848 -> 469046 bytes
+ docs/writer/screenshots/production.png             |  Bin 412519 -> 433196 bytes
+ docs/writer/verification.json                      |  325 +++-
+ docs/writer/word-feature-audit.md                  |    2 +-
+ package.json                                       |    4 +-
+ packages/browser-client/src/contracts.ts           |    1 +
+ packages/browser-client/src/index.ts               |   10 +-
+ packages/contracts/src/preferences.ts              |    2 +-
+ packages/document-engine/src/index.ts              |  125 +-
+ packages/image-engine/src/clipboard.ts             |    4 +-
+ packages/image-engine/src/model.ts                 |    6 +-
+ packages/image-engine/src/native.ts                |   34 +-
+ packages/image-engine/src/operations.ts            |    6 +-
+ packages/image-engine/src/pixels.ts                |   21 +-
+ packages/image-engine/src/selection.ts             |    4 +-
+ packages/photo-engine/src/png.ts                   |   38 +-
+ packages/photo-engine/src/tiff.ts                  |   15 +-
+ packages/sdk/src/preferences.ts                    |    4 +-
+ pnpm-lock.yaml                                     | 1638 ++++++++++++++++++++
+ scripts/release-plugin.ts                          |    4 +-
+ services/browser/infra/Dockerfile                  |    2 +-
+ services/browser/infra/entrypoint.sh               |    3 +
+ services/browser/package.json                      |    2 +-
+ services/browser/src/engine.mjs                    |   13 +-
+ services/browser/src/main.mjs                      |    5 +-
+ services/browser/src/network.mjs                   |    2 +-
+ services/browser/src/server.mjs                    |    6 +
+ services/browser/tests/engine.test.mjs             |   16 +-
+ tests/accounts/acceptance.mjs                      |   26 +
+ tests/accounts/ui.spec.ts                          |  199 ++-
+ tests/integration/wallpaper.spec.ts                |   10 +-
+ tests/lightroom/browser.mjs                        |    8 +-
+ tests/lightroom/denoise-browser.mjs                |    2 +-
+ tests/lightroom/handoff.tsx                        |    2 +-
+ tests/lightroom/production.mjs                     |    2 +-
+ tests/settings/settings.spec.ts                    |    4 +-
+ tests/setup/setup.spec.ts                          |    3 +
+ tests/shell/windows.mjs                            |   45 +
+ tests/updates/server.mjs                           |   10 +-
+ tests/updates/updates.spec.ts                      |   74 +-
+ tests/writer/fixtures/review-roundtrip.docx        |  Bin 4179 -> 4179 bytes
+ tests/writer/fixtures/roundtrip.docx               |  Bin 3170 -> 3171 bytes
+ tests/writer/fixtures/structures-roundtrip.docx    |  Bin 5174 -> 5174 bytes
+ tests/writer/harness.tsx                           |    3 +
+ tests/writer/preferences-capture.mjs               |    3 +-
+ tests/writer/preferences.spec.ts                   |    5 +-
+ tests/writer/production.mjs                        |   26 +-
+ tests/writer/settings-audit.spec.ts                |    5 +-
+ tests/writer/shell.spec.ts                         |    7 +-
+ vite.config.ts                                     |    2 +-
+ 121 files changed, 3905 insertions(+), 596 deletions(-)

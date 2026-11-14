@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-13",
+  "scopedCheck": {
+    "command": "npm run test:movie-maker",
+    "passed": true,
+    "typescript": "Movie Maker app, project model, media adapter and their transitive shared dependencies",
+    "unitTestsPassed": 23
+  },
+  "desktopIntegration": {
+    "command": "node tests/movie-maker/shell-browser.mjs",
+    "passed": true,
+    "report": "shell-verification.json"
+  },
+  "productionBundle": {
+    "scope": "Actual Movie Maker and shared dependencies through an isolated SDK test host",
+    "script": "tests/movie-maker/production.mjs",
+    "report": "production-ui-verification.json"
+  },
+  "repositoryTypecheck": {
+    "command": "npx tsc --noEmit --pretty false",
+    "passed": false,
+    "blockingDiagnostics": [
+      "apps/web/src/apps/video-editor/manifest.ts(4,20): TS2307 Cannot find module './index' or its corresponding type declarations."
+    ],
+    "note": "Concurrent professional-editor work was incomplete at the final whole-repository check. Movie Maker's scoped check and live desktop integration pass."
+  },
+  "deployed": false
+}

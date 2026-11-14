@@ -1,0 +1,10 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import VideoEditor from '../../apps/web/src/apps/video-editor';
+import {Commands} from '../../apps/web/src/shell/commands';
+import {fileService} from '../../packages/runtime-client/src';
+import type {AppContext} from '../../packages/contracts/src';
+import '../../packages/ui/src/glass.css';
+const commands=new Commands();
+const context={windowId:'video-test',launchArgs:{},services:{commands,files:fileService,settings:{get:(k:string,v:unknown)=>JSON.parse(localStorage.getItem(k)||'null')??v,set:(k:string,v:unknown)=>localStorage.setItem(k,JSON.stringify(v)),subscribe:()=>()=>{}},notify:console.info,dialogs:{openFile:async()=>null,saveFile:async()=>null},launch:()=>{},openURL:()=>{},statusItems:{register:()=>()=>{}}},lifecycle:{setTitle:(s:string)=>document.title=s,close:()=>{},onBeforeClose:(fn:unknown)=>{Object.assign(window,{closeGuard:fn});return()=>{};}}} as unknown as AppContext;
+Object.assign(window,{commands});createRoot(document.getElementById('root')!).render(<VideoEditor context={context}/>);

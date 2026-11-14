@@ -1,0 +1,115 @@
+Error: expect(received).toMatchObject(expected)
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+-   "unique": 2,
++   "unique": 4,
+  }
+
+Call Log:
+- Timeout 30000ms exceeded while waiting on the predicate
+    at captureRawStack (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright-core@1.65.0/node_modules/playwright-core/lib/coreBundle.js:9551:17)
+    at callMatcherAsStep (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13342:57)
+    at Object.toMatchObject (/Users/luke/Documents/LopeOS 100/node_modules/.pnpm/playwright@1.65.0/node_modules/playwright/lib/matchers/expect.js:13334:23)
+    at /private/tmp/lopeos-lightroom-release-audit/tests/lightroom/release-handoff.mjs:58:225
+{
+  "phase": "development",
+  "checks": [
+    {
+      "id": "LR-07-IMPORT",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-HANDOFF",
+      "result": "PASSED"
+    },
+    {
+      "id": "LR-07-FAILURE",
+      "result": "FAILED"
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "method": "GET",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "failedResponses": [
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/fs/list?path=%2F.Trash",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/identity",
+      "status": 401
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/visitor",
+      "status": 403
+    },
+    {
+      "url": "http://127.0.0.1:5191/api/health",
+      "status": 401
+    }
+  ]
+}

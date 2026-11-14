@@ -1,0 +1,125 @@
+{
+  "engine": "chromium",
+  "base": "http://127.0.0.1:4190",
+  "ranAt": "2026-11-13T23:46:33.226Z",
+  "pass": 4,
+  "fail": 10,
+  "results": [
+    {
+      "id": "state-01",
+      "title": "Malformed restored window record does not blank the desktop",
+      "result": "FAIL",
+      "ms": 15062,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: locator('.desktop') | Expected: visible | Timeout: 15000ms | Error: element(s) not found",
+      "pageErrors": [
+        "Minified React error #31; visit https://react.dev/errors/31?args[]=object%20with%20keys%20%7Binjected%7D for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "id": "state-02",
+      "title": "Non-array recent-apps history does not crash the Dock or block launches",
+      "result": "FAIL",
+      "ms": 15048,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: locator('.desktop') | Expected: visible | Timeout: 15000ms | Error: element(s) not found",
+      "pageErrors": [
+        "Jt(...).filter is not a function"
+      ]
+    },
+    {
+      "id": "state-03",
+      "title": "Malformed notification history entries do not crash the notification centre",
+      "result": "FAIL",
+      "ms": 5461,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: getByRole('region', { name: 'Notification history' }) | Expected: visible | Timeout: 5000ms | Error: element(s) not found",
+      "pageErrors": [
+        "Minified React error #31; visit https://react.dev/errors/31?args[]=object%20with%20keys%20%7Bobject%7D for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "id": "state-04",
+      "title": "Personal wallpaper data URL cannot inject extra CSS image layers",
+      "result": "FAIL",
+      "ms": 933,
+      "error": "background must not contain an injected url() layer |  | expect(received).toBe(expected) // Object.is equality |  | Expected: false | Received: true",
+      "pageErrors": []
+    },
+    {
+      "id": "life-01",
+      "title": "Retrying an app whose code chunk failed to load actually reloads it",
+      "result": "FAIL",
+      "ms": 8842,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: getByTestId('calculator-app') | Expected: visible | Timeout: 8000ms | Error: element(s) not found",
+      "pageErrors": []
+    },
+    {
+      "id": "life-02",
+      "title": "A failed desktop (Shell) chunk shows a recovery path instead of a blank page",
+      "result": "FAIL",
+      "ms": 10397,
+      "error": "expect(locator).toBeVisible() failed |  | Locator: getByRole('alert') | Expected: visible | Timeout: 10000ms | Error: element(s) not found",
+      "pageErrors": [
+        "Failed to fetch dynamically imported module: http://127.0.0.1:4190/assets/Shell-j865si10.js"
+      ]
+    },
+    {
+      "id": "app-01",
+      "title": "App cannot execute another window’s scoped commands or privileged shell commands",
+      "result": "FAIL",
+      "ms": 6076,
+      "error": "expect(locator).toHaveCount(expected) failed |  | Locator:  locator('[data-window-id] [data-testid=\"fixture-log\"]').filter({ hasText: 'ping' }) | Expected: 0 | Received: 1 | Timeout:  5000ms",
+      "pageErrors": []
+    },
+    {
+      "id": "app-02",
+      "title": "File access revoked in Settings is denied at operation time via the API",
+      "result": "PASS",
+      "ms": 678,
+      "pageErrors": []
+    },
+    {
+      "id": "app-03",
+      "title": "Notification storm from one app stays bounded and does not freeze the shell",
+      "result": "PASS",
+      "ms": 1497,
+      "pageErrors": []
+    },
+    {
+      "id": "app-04",
+      "title": "Window-launch storm from one app is capped",
+      "result": "FAIL",
+      "ms": 16779,
+      "error": "open windows after a 200-launch storm |  | expect(received).toBeLessThanOrEqual(expected) |  | Expected: <= 40 | Received:    201",
+      "pageErrors": []
+    },
+    {
+      "id": "app-05",
+      "title": "App notifications are attributed so an app cannot impersonate the OS",
+      "result": "FAIL",
+      "ms": 6342,
+      "error": "expect(locator).toContainText(expected) failed |  | Locator: locator('.toast').last() | Expected substring: \"Audit Fixture\" | Received string:    \"LopeOS SecurityYour session expired. Re-enter your password.\" | Timeout: 5000ms",
+      "pageErrors": []
+    },
+    {
+      "id": "app-06",
+      "title": "Closed window context cannot open OS file dialogs or register commands",
+      "result": "FAIL",
+      "ms": 2122,
+      "error": "no file dialog for a closed window |  | expect(received).toBe(expected) // Object.is equality |  | Expected: false | Received: true",
+      "pageErrors": []
+    },
+    {
+      "id": "a11y-01",
+      "title": "Spotlight keeps Tab focus inside the dialog for 25 presses",
+      "result": "PASS",
+      "ms": 2487,
+      "pageErrors": []
+    },
+    {
+      "id": "ui-01",
+      "title": "PerfectHue credit is visible, unobstructed, and uses the manifest credit URL",
+      "result": "PASS",
+      "ms": 602,
+      "pageErrors": []
+    }
+  ]
+}

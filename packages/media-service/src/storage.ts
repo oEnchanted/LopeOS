@@ -1,0 +1,13 @@
+/** Local storage shared by editor adapters; media bytes and disposable caches are separate. */
+export class MediaStore {
+  private opening?:Promise<IDBDatabase>;
+  constructor(readonly scope='local'){}
+  private db(){return this.opening??=new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open(`lope.video.${this.scope}.v1`,1);r.onupgradeneeded=()=>{for(const n of ['media','cache','projects','meta'])r.result.createObjectStore(n);};r.onsuccess=()=>{r.result.onversionchange=()=>{r.result.close();this.opening=undefined;};resolve(r.result);};r.onerror=()=>{this.opening=undefined;reject(r.error);};r.onblocked=()=>reject(new Error('Close other Video Editor tabs to update storage.'));});}
+  async get<T>(store:string,key:string):Promise<T|undefined>{const db=await this.db();return new Promise((resolve,reject)=>{const r=db.transaction(store).objectStore(store).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+  async put(store:string,key:string,value:unknown){const db=await this.db();await new Promise<void>((resolve,reject)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).put(value,key);tx.oncomplete=()=>resolve();tx.onabort=tx.onerror=()=>reject(tx.error||new Error('Local storage write failed.'));});}
+  async blob(key:string){const b=await this.get<Blob>('media',key);if(!(b instanceof Blob))throw new Error('Media offline. Use Link Media to locate the original.');return b;}
+  async save(project:{id:string},previous?:unknown) {const db=await this.db();await new Promise<void>((resolve,reject)=>{const tx=db.transaction(['projects','meta'],'readwrite');tx.objectStore('projects').put({project,previous,saved:new Date().toISOString()},project.id);tx.objectStore('meta').put(project.id,'lastProject');tx.oncomplete=()=>resolve();tx.onabort=tx.onerror=()=>reject(tx.error||new Error('Autosave failed. Download a project copy to preserve edits.'));});}
+  async recent<T>() {const db=await this.db();return new Promise<T[]>((resolve,reject)=>{const r=db.transaction('projects').objectStore('projects').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+  async clearCache(){const db=await this.db();return new Promise<void>((resolve,reject)=>{const tx=db.transaction('cache','readwrite');tx.objectStore('cache').clear();tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);});}
+  async removeMedia(key:string){const db=await this.db();return new Promise<void>((resolve,reject)=>{const tx=db.transaction('media','readwrite');tx.objectStore('media').delete(key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);});}
+}

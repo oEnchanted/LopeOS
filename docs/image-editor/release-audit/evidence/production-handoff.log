@@ -1,0 +1,33 @@
+{
+  files: [
+    {
+      path: '/Images/yosemite-edit.lopeimage',
+      size: 13985830,
+      version: '7eebb24d-324c-4d63-beb6-e6fdc0f067a6'
+    }
+  ],
+  photoError: undefined,
+  imageError: undefined
+}
+{
+  "checks": [
+    "A native layered project is written through the shared file service and opened by the real Image Editor",
+    "Saving Image Editor changes creates a separate returned derivative with its source relationship and immutable native-project snapshot",
+    "Original photo checksum and nondestructive recipe remain unchanged through the round trip"
+  ],
+  "returned": {
+    "source": {
+      "hash": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+      "actual": "96e1589b2a311ece794cdfc822100d8ab0f157cb258a41455b0ed480a98312a7",
+      "exposure": 0.5
+    },
+    "child": {
+      "name": "yosemite-edit.lopeimage",
+      "format": "lopeimage",
+      "parentId": "f6a8021f-9a5a-4c23-85c9-16f9ea180034",
+      "depth": 8,
+      "hash": "4ada53e0c1d1d44b23da3783e8b475157521b475f1a9ba5ec1030f79d046d1ab",
+      "actual": "4ada53e0c1d1d44b23da3783e8b475157521b475f1a9ba5ec1030f79d046d1ab"
+    }
+  }
+}

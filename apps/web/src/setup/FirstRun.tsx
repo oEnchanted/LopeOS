@@ -5,9 +5,9 @@ import { Button } from '../../../../packages/ui/src';
 import { LopeMark } from '../shell/Icons';
 import { appearanceAttributes, appearanceStyle, syncDocumentAppearance } from '../shell/appearance';
 import { resolveDesktopBackground } from '../shell/background';
-import { wallpapers } from '../shell/wallpapers';
-import { isPerfectHue, type PersonalWallpaper } from '../apps/settings/wallpaper-policy';
+import type { PersonalWallpaper } from '../apps/settings/wallpaper-policy';
 import { ResetScreen } from './ResetScreen';
+import { SetupBackground } from './SetupBackground';
 import { softwareUpdates } from '../updates/service';
 import { parseFactoryResetRequest, readFactoryResetRequest, rememberFactoryResetForTab, RESET_STORAGE_KEY, type FactoryResetRequest } from '../../../../packages/sdk/src/reset';
 import { cloudAccount } from '../accounts/service';
@@ -21,11 +21,7 @@ const SetupAssistant = lazy(() => loadSetup().then(module => ({ default: module.
 function SetupBackdrop({ children, }: { children: ReactNode }) {
   const p = usePreferences();
   const background = resolveDesktopBackground(p, preferences.get<PersonalWallpaper | null>('personalWallpaper', null));
-  const aurora = background.id === 'perfecthue-light' || background.id === 'perfecthue-dark';
-  // Keep both variants loaded so the first theme change and rapid reversals crossfade smoothly.
-  const lightWallpaper = wallpapers.find(wallpaper => wallpaper.id === 'perfecthue-light')!;
-  const darkWallpaper = wallpapers.find(wallpaper => wallpaper.id === 'perfecthue-dark')!;
-  return <main className="setup-screen" {...appearanceAttributes(p)} style={appearanceStyle(p)}><div className={'setup-background wallpaper--' + (aurora ? lightWallpaper.id : background.id)} style={{ backgroundImage: aurora ? `url("${lightWallpaper.asset}")` : background.backgroundImage }} aria-hidden="true"/>{aurora && <div className="setup-background setup-background--dark" style={{ backgroundImage: `url("${darkWallpaper.asset}")`, opacity: background.id === darkWallpaper.id ? 1 : 0 }} aria-hidden="true"/>}<header className="setup-masthead"><div className="setup-brand"><LopeMark size={25}/><div>Lope<span>OS</span></div></div><span>Setup Assistant</span></header>{children}{background.wallpaper && isPerfectHue(background.wallpaper) && <a className="setup-credit" href="https://perfecthue.com/wallpapers/" target="_blank" rel="noreferrer">Wallpaper by Perfect Hue</a>}</main>;
+  return <main className="setup-screen" {...appearanceAttributes(p)} style={appearanceStyle(p)}><SetupBackground background={background} reduceMotion={p.reduceMotion}/><header className="setup-masthead"><div className="setup-brand"><LopeMark size={25}/><div>Lope<span>OS</span></div></div><span>Setup Assistant</span></header>{children}</main>;
 }
 export function FirstRun() {
   const p = usePreferences();

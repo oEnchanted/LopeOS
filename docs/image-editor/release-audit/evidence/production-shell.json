@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "buildId": "eb7162f3f059f8f50dd992f8a7ca232bcd8de2aa9feabf123de3e9d6e4d53d07",
+  "browser": "158.0.8127.18",
+  "checks": [
+    "Prism launches from production shell application search and renders worker-backed canvas",
+    "Active shell command shortcuts create and undo a layer"
+  ],
+  "errors": [],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:5189/api/fs/list?path=%2F.Trash",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:5189/api/identity",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "scope": "Actual compiled shell; local disposable account. Backend runtime and native file permissions excluded."
+}

@@ -1,0 +1,46 @@
+{
+  "kind": "SOURCE_INVENTORY_NOT_RUNTIME_CERTIFICATION",
+  "generatedDate": "2026-11-13",
+  "uniqueCommands": 120,
+  "toolCount": 28,
+  "topLevelMenus": 11,
+  "staticOrExpressionLabelControls": 237,
+  "featureFamilies": 125,
+  "rows": 1246,
+  "counts": {
+    "UNVERIFIED": 1144,
+    "FAIL": 94,
+    "NOT_APPLICABLE": 8
+  },
+  "functionalObservationRows": 23,
+  "sourceHashes": {
+    "apps/web/src/apps/image-editor/menu-model.ts": "4ebb7aa4ac36b4c1f03c9487ba221904517142ac88ea2e47dadc6612db23e4b3",
+    "apps/web/src/apps/image-editor/index.tsx": "89cc1f81a8715dd8f58e50fc720aba1b1fa64fd25e69296df1572ceb540a473b",
+    "apps/web/src/apps/image-editor/tool-model.ts": "86f35b200ecf30d16fdfe82a33b31134af3fd6a7f63da0490c2ae9840dede978",
+    "apps/web/src/apps/image-editor/tools.tsx": "3bcf00aa4fcdacfbdef77295ca04131b626e0f01bf6d721a6a171aaed2f7a0f3",
+    "apps/web/src/apps/image-editor/panels.tsx": "c6c22194c0914dd6e8166b8dbb6251ea0ab5e27545402202fc9a4189ef9efe26",
+    "apps/web/src/apps/image-editor/dialogs.tsx": "9bedac4bc7b56ca5f3c50ad6e2c55f3606857bb412d092aa2463bcb40d5d1ad8",
+    "apps/web/src/apps/image-editor/InlineType.tsx": "bda68c464bd6ac576399c47fb2c708dcb3e850eb7f91422da3022df4b986a8a0",
+    "apps/web/src/apps/image-editor/CanvasView.tsx": "45fd15d97e836b59b8097bcdc02364d96ac6863d74387499a9f325d035f41996",
+    "apps/web/src/apps/image-editor/ai/LocalAiDialog.tsx": "853f719167d92d86ade4d1822c1c2aa4e660a87c09f093d404ceba9054ac1861"
+  },
+  "limitations": [
+    "A row is not a checklist pass. All source-declared controls remain UNVERIFIED until actual required states are exercised.",
+    "Functional observation columns state only the exercised subset and evidence build; they do not change parity status.",
+    "FAIL feature rows preserve known incomplete/missing implementation; only user/product owner can authorize deliberate differences.",
+    "Exact Adobe visual identity remains UNVERIFIED for every applicable row without matched licensed reference captures.",
+    "NOT_APPLICABLE rows are CS6 Extended or post-CS6 baseline scope determinations; separately shipped extensions still require functional verification.",
+    "The 125-family historical matrix is not an exhaustive enumeration of the missing Adobe interface. Missing authorized reference prevents claiming a complete Adobe state denominator."
+  ],
+  "countsAreInventoryRowsNotUniqueDefects": true,
+  "retainedCs6StandardFeatureStatus": {
+    "partial": 40,
+    "implemented": 34,
+    "missing": 44
+  },
+  "knownGapRows": {
+    "missingOrPartialCs6Families": 84,
+    "missingOrPartialPanels": 10,
+    "note": "Panel rows overlap capability families; do not report as 94 distinct defects."
+  }
+}

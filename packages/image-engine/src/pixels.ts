@@ -1,5 +1,5 @@
 import { TILE, clamp, color, findLayer, identity, maskTransform, surface, toDocument, toLocal, updateLayer, type ImageDocument, type Point, type RGBA, type Surface } from './model.ts';
-import { matrixOf } from './matrix.ts';
+import { inverse, matrixOf, transformOf } from './matrix.ts';
 import { blendRGB } from './composite.ts';
 
 const keyOf = (x: number, y: number) => `${Math.floor(x / TILE)},${Math.floor(y / TILE)}`;
@@ -125,6 +125,9 @@ export function paintFill(doc: ImageDocument, value: string, at?: Point, toleran
   const out = new SurfaceWriter(source); const paint = color(value); const start = at ? toLocal(at, transform) : { x: 0, y: 0 }; const target = pixel(source, start.x, start.y);
   let allowed: Uint8Array | null = null;
   if (at && !gradient) {
+    // Validate both coordinates before flattening them into an index: an x
+    // outside the source otherwise aliases a valid pixel in an adjacent row.
+    if (start.x < 0 || start.y < 0 || start.x >= source.width || start.y >= source.height) return doc;
     allowed = new Uint8Array(source.width * source.height); const stack = [Math.floor(start.y) * source.width + Math.floor(start.x)];
     while (stack.length) {
       const index = stack.pop()!; if (index < 0 || index >= allowed.length || allowed[index]) continue;
@@ -149,14 +152,22 @@ export function paintFill(doc: ImageDocument, value: string, at?: Point, toleran
 }
 export function addMask(doc: ImageDocument): ImageDocument {
   const active = findLayer(doc); if (!active) return doc;
-  let pixels = surface(doc.width, doc.height, [255, 255, 255, 255]);
+  // Raster/shape masks live in the source's coordinates, which can be larger
+  // than the document after a non-destructive scale or crop. Document-sized
+  // masks would silently hide the rest of that source.
+  const source = active.kind === 'embedded' ? active.source : active.pixels;
+  const width = source?.width || (active.shape ? Math.ceil(active.shape.width) : doc.width);
+  const height = source?.height || (active.shape ? Math.ceil(active.shape.height) : doc.height);
+  const documentSpace = !source && !active.shape;
+  const transform = documentSpace ? identity() : active.transform;
+  let pixels = surface(width, height, [255, 255, 255, 255]);
   if (doc.selection) {
     const writer = new SurfaceWriter(pixels);
-    for (let y = 0; y < doc.height; y++) for (let x = 0; x < doc.width; x++) {
-      const p = toDocument({ x, y }, active.transform); const dx = Math.floor(p.x); const dy = Math.floor(p.y);
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+      const p = toDocument({ x: x + .5, y: y + .5 }, transform); const dx = Math.floor(p.x); const dy = Math.floor(p.y);
       const v = dx >= 0 && dy >= 0 && dx < doc.width && dy < doc.height ? doc.selection[dy * doc.width + dx] : 0; if (v !== 255) writer.set(x, y, [v, v, v, 255]);
     }
     pixels = writer.value;
   }
-  return { ...updateLayer(doc, active.id, item => ({ ...item, mask: { pixels, linked: true, enabled: true, transform: identity() } })), target: 'mask' };
+  return { ...updateLayer(doc, active.id, item => ({ ...item, mask: { pixels, linked: true, enabled: true, transform: identity(), ...(documentSpace ? { offset: transformOf(inverse(matrixOf(active.transform))) } : {}) } })), target: 'mask' };
 }
