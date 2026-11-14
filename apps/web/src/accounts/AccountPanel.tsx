@@ -47,6 +47,36 @@ export function AccountStatus({ compact = false }: { compact?: boolean }) {
   </section>;
 }
 
+/** Redeems a storage code that raises the signed-in account to 10 GB. */
+function StorageUnlock() {
+  const state = useCloudAccount();
+  const id = useId();
+  const [open, setOpen] = useState(false);
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  if (!state.account || state.quotaBytes >= 10_000_000_000) return null;
+  const submit = async () => {
+    if (busy) return;
+    setError('');
+    if (!code.trim()) { setError('Enter your unlock code.'); return; }
+    setBusy(true);
+    try { await cloudAccount.unlockStorage(code); setCode(''); setOpen(false); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'That code could not be used.'); }
+    finally { setBusy(false); }
+  };
+  return <section className="account-security glass-inset" aria-labelledby={`${id}-heading`} aria-busy={busy}>
+    <div className="account-security-heading"><span className="account-row-icon" aria-hidden="true"><Cloud size={21}/></span><div><h3 id={`${id}-heading`}>Unlock 10 GB</h3><p>Have a code? Raise your LopeDrive storage to 10 GB.</p></div></div>
+    {open ? <div className="account-form" onKeyDown={event => { if (event.key === 'Enter' && event.target instanceof HTMLInputElement) { event.preventDefault(); event.stopPropagation(); void submit(); } }}>
+      <div className="account-fields"><label className="account-wide" htmlFor={`${id}-code`}>Unlock code
+        <Input id={`${id}-code`} name="unlockCode" autoComplete="off" spellCheck={false} maxLength={200} value={code} disabled={busy} onChange={event => setCode(event.target.value)}/>
+      </label></div>
+      {error && <p className="account-error" role="alert">{error}</p>}
+      <Button type="button" variant="primary" disabled={busy} onClick={() => void submit()}>{busy ? 'Unlocking…' : 'Unlock 10 GB'}<ArrowRight size={16} aria-hidden="true"/></Button>
+    </div> : <Button type="button" onClick={() => setOpen(true)}>Enter a code</Button>}
+  </section>;
+}
+
 function AccountEmblem({ small = false }: { small?: boolean }) {
   return <div className={`account-emblem${small ? ' account-emblem--small' : ''}`} aria-hidden="true">
     <span className="account-emblem-mark"><AccountIcon size={small ? 58 : 78}/></span>
@@ -61,7 +91,7 @@ function AccountPrivacy() {
       <p>Files, filenames, and supported app data are encrypted in your browser before syncing to LopeDrive. The server can still see your account name, display name, storage use, item counts, and access times.</p>
       <p>Signing out stops sync but leaves local files on this device. Use a separate browser profile on shared computers. Clearing browser storage can erase unsynced files.</p>
       <p>This encryption protects cloud data, not local browser storage. An unlocked account can be accessed by a compromised device or modified application. The encryption implementation has not had an independent security review.</p>
-      <p>Storage is limited to 1 GB per account, including encryption overhead, and 1 GB per synced item. Sync needs an internet connection; keep another copy of important files. Remote browser sessions, credentials, and downloaded AI models are managed separately.</p>
+      <p>Accounts include 1 GB of storage (10 GB with an unlock code), including encryption overhead, and up to 1 GB per synced item. Sync needs an internet connection; keep another copy of important files. Remote browser sessions, credentials, and downloaded AI models are managed separately.</p>
       <p>We do not collect an email for recovery. Keep your password and recovery key safe, outside LopeOS. If you lose both, even the server administrator cannot recover encrypted cloud data. Backups made before an older account was upgraded may still contain unencrypted data.</p>
     </div>
   </details>;
@@ -158,6 +188,7 @@ export function AccountPanel({ embedded = false, onAuthenticated, onBusyChange }
     </> : state.account ? <>
       <header className="account-identity account-intro"><span className="account-avatar">{picture ? <img src={picture} alt="Profile picture"/> : <AccountIcon size={64}/>}</span><div><h2 ref={introHeading} tabIndex={-1}>{state.account.displayName}</h2><p>@{state.account.accountName}</p></div><ProfilePictureEditor disabled={busy}/><span className="account-plan"><Cloud size={13} aria-hidden="true"/>Free account · 1 GB</span></header>
       <div className="account-storage"><div className="account-section-heading"><h3>LopeDrive</h3><span>Your files, connected</span></div><AccountStatus/></div>
+      <StorageUnlock/>
       {state.encryption !== 'unlocked' && <AccountEncryption mode={state.encryption === 'locked' ? 'unlock' : 'upgrade'} accountName={state.account.accountName} embedded={embedded} onRecoveryKey={showKey} onBusyChange={setBusy}/>}
       {state.encryption === 'unlocked' && <section className="account-security glass-inset" aria-label="Account recovery">
         <div className="account-security-heading"><span className="account-row-icon" aria-hidden="true"><KeyRound size={21}/></span><div><h3>Password & recovery</h3><p>A spare key for your account, kept safely with you.</p></div></div>

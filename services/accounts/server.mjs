@@ -7,6 +7,10 @@ import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
 export const QUOTA_BYTES = 1_000_000_000;
+export const UNLOCKED_QUOTA_BYTES = 10_000_000_000;
+// "Unlock 10 GB" code. This repository is public, so only a salted scrypt hash is stored.
+const STORAGE_UNLOCK = { salt: '0a9be21c4765937d9be07dd4561a1ed4', hash: '0b48bf2bc34eacf74e6ed2dea403d1980821811ea554e432e1d45ba29d07646d' };
+const gigabytes = bytes => `${Math.round(bytes / 1e9)} GB`;
 export const MAX_BLOB_BYTES = 1024 * 1024 * 1024 + 28;
 const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 const STAGING_MS = 60 * 60 * 1000;
@@ -82,6 +86,8 @@ export async function createAccountServer(options = {}) {
   const origins = options.origins ?? (process.env.LOPE_ACCOUNTS_ORIGINS || (production ? '' : 'http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:4173,http://localhost:4173')).split(',').map(value => value.trim()).filter(Boolean);
   if (!origins.length || origins.some(value => { try { const url = new URL(value); return url.origin !== value || (production && url.protocol !== 'https:'); } catch { return true; } })) throw new Error('Configure LOPE_ACCOUNTS_ORIGINS with exact HTTPS website origins for production.');
   const quotaBytes = options.quotaBytes ?? QUOTA_BYTES;
+  // Accounts that redeemed an unlock code keep a larger quota in the registry.
+  const quotaFor = account => { const stored = account ? registry.accounts.find(value => value.id === account.id)?.quotaBytes : undefined; return Number.isSafeInteger(stored) && stored > 0 ? stored : quotaBytes; };
   const trustProxy = options.trustProxy ?? process.env.LOPE_ACCOUNTS_TRUST_PROXY === '1';
   const cookieName = production ? '__Host-lope-account' : 'lope-account';
   const cookie = (token, maxAge = SESSION_MS / 1000) => `${cookieName}=${token}; Path=${production ? '/' : '/api/accounts'}; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${production ? '; Secure' : ''}`;
@@ -163,7 +169,7 @@ export async function createAccountServer(options = {}) {
   }
   async function summary(account) {
     const usedBytes = account ? await serial(account.id, async () => [...(await blobInventory(account)).values()].reduce((sum, info) => sum + info.size, 0)) : 0;
-    return { account: account ? publicAccount(account) : null, vault: account?.vault ?? null, quotaBytes, usedBytes };
+    return { account: account ? publicAccount(account) : null, vault: account?.vault ?? null, quotaBytes: quotaFor(account), usedBytes };
   }
   function identity(req, required = true) {
     const cookies = String(req.headers.cookie ?? '').split(';').map(value => value.trim());
@@ -287,7 +293,7 @@ export async function createAccountServer(options = {}) {
               const previous = await readManifest(account), inventory = await blobInventory(account), unique = new Map();
               if (previous.revision !== input.baseRevision) fail(409, 'REVISION_CONFLICT', 'Another device changed your files. Retry the upgrade.');
               for (const entry of entries) { if (inventory.get(entry.hash)?.size !== entry.size) fail(400, 'MISSING_BLOB', 'An encrypted file is missing.'); unique.set(entry.hash, entry.size); }
-              if ([...unique.values()].reduce((sum, size) => sum + size, 0) > quotaBytes) fail(413, 'QUOTA_EXCEEDED', 'Make room for encryption overhead before upgrading.');
+              if ([...unique.values()].reduce((sum, size) => sum + size, 0) > quotaFor(account)) fail(413, 'QUOTA_EXCEEDED', 'Make room for encryption overhead before upgrading.');
               await saveRegistry(next => {
                 const current = next.accounts.find(value => value.id === account.id);
                 if (current.vault || current.passwordHash !== account.passwordHash) fail(409, 'SESSION_CHANGED', 'Your account changed. Sign in again.');
@@ -327,8 +333,27 @@ export async function createAccountServer(options = {}) {
       if (account.vault && req.headers['x-lope-encryption'] !== '1') fail(409, 'ENCRYPTION_REQUIRED', 'Unlock your encrypted account in an updated LopeOS client.');
       const expectedAccount = req.headers['x-lope-account'];
       if (expectedAccount !== undefined && expectedAccount !== account.id) fail(409, 'SESSION_CHANGED', 'Your account session changed. Sign in again before syncing.');
+      if (url.pathname === '/api/accounts/storage/unlock' && req.method === 'POST') {
+        const input = await jsonBody(req);
+        const direct = req.socket.remoteAddress ?? 'unknown', forwarded = req.headers['x-forwarded-for'];
+        const address = trustProxy && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(direct) && typeof forwarded === 'string' && isIP(forwarded) ? forwarded : direct;
+        rate(`unlock:${account.id}`, 10, 15 * 60_000); rate(`unlock-ip:${address}`, 30, 15 * 60_000);
+        const code = typeof input.code === 'string' ? input.code.trim() : '';
+        if (!code || code.length > 200) fail(400, 'INVALID_CODE', 'Enter an unlock code.');
+        if (authActive >= 4) fail(429, 'BUSY', 'The account service is busy. Try again shortly.');
+        authActive++;
+        let supplied;
+        try { supplied = await derive(code, STORAGE_UNLOCK.salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }); }
+        finally { authActive--; }
+        if (!timingSafeEqual(supplied, Buffer.from(STORAGE_UNLOCK.hash, 'hex'))) fail(403, 'INVALID_CODE', 'That code is not valid.');
+        await saveRegistry(next => {
+          const current = next.accounts.find(value => value.id === account.id);
+          if (current) current.quotaBytes = Math.max(Number.isSafeInteger(current.quotaBytes) ? current.quotaBytes : quotaBytes, UNLOCKED_QUOTA_BYTES);
+        });
+        return json(res, 200, await summary(account));
+      }
       if (url.pathname === '/api/accounts/manifest' && req.method === 'GET') {
-        return await serial(account.id, async () => { assertSession(req, account); const manifest = await readManifest(account); json(res, 200, { ...manifest, quotaBytes, usedBytes: await collect(account) }); });
+        return await serial(account.id, async () => { assertSession(req, account); const manifest = await readManifest(account); json(res, 200, { ...manifest, quotaBytes: quotaFor(account), usedBytes: await collect(account) }); });
       }
       if (url.pathname === '/api/accounts/manifest' && req.method === 'PUT') {
         const input = await jsonBody(req, 24 * 1024 * 1024), entries = validateManifest(input);
@@ -341,7 +366,7 @@ export async function createAccountServer(options = {}) {
             if (inventory.get(entry.hash)?.size !== entry.size) fail(400, 'MISSING_BLOB', 'A synced item is missing or has the wrong size. Upload it again before saving.');
             unique.set(entry.hash, entry.size);
           }
-          if ([...unique.values()].reduce((sum, size) => sum + size, 0) > quotaBytes) fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full. Free space before syncing more data.');
+          if ([...unique.values()].reduce((sum, size) => sum + size, 0) > quotaFor(account)) fail(413, 'QUOTA_EXCEEDED', `Your ${gigabytes(quotaFor(account))} LopeDrive is full. Free space before syncing more data.`);
           const next = { revision: previous.revision + 1, entries };
           const current = registry.accounts.find(value => value.id === account.id);
           if (current.vault) {
@@ -350,12 +375,12 @@ export async function createAccountServer(options = {}) {
             await saveRegistry(registry => { registry.accounts.find(value => value.id === account.id).encryptedManifest = next; });
           } else await atomicJSON(join(accountDir(account), 'manifest.json'), next);
           const usedBytes = await collect(account, { previous: previous.entries });
-          return json(res, 200, { ...next, quotaBytes, usedBytes });
+          return json(res, 200, { ...next, quotaBytes: quotaFor(account), usedBytes });
         });
       }
       if (url.pathname === '/api/accounts/cleanup' && req.method === 'POST') {
         await jsonBody(req);
-        return await serial(account.id, async () => { assertSession(req, account); return json(res, 200, { quotaBytes, usedBytes: await collect(account, { allStaged: true }) }); });
+        return await serial(account.id, async () => { assertSession(req, account); return json(res, 200, { quotaBytes: quotaFor(account), usedBytes: await collect(account, { allStaged: true }) }); });
       }
       const match = /^\/api\/accounts\/blobs\/([a-f0-9]{64})$/.exec(url.pathname);
       if (match && req.method === 'PUT') {
@@ -363,26 +388,26 @@ export async function createAccountServer(options = {}) {
         return await serial(account.id, async () => {
           assertSession(req, account);
           const used = await collect(account), inventory = await blobInventory(account), present = inventory.has(hash);
-          const uploadQuota = !account.vault && req.headers['x-lope-encryption-upgrade'] === '1' ? quotaBytes * 2 + 2_800_000 : quotaBytes;
+          const accountQuota = quotaFor(account), uploadQuota = !account.vault && req.headers['x-lope-encryption-upgrade'] === '1' ? accountQuota * 2 + 2_800_000 : accountQuota;
           const available = present ? MAX_BLOB_BYTES : Math.min(MAX_BLOB_BYTES, uploadQuota - used);
-          if (Number(req.headers['content-length'] ?? 0) > available) fail(413, 'QUOTA_EXCEEDED', 'This upload exceeds the free space in your 1 GB LopeDrive or the 1 GB item limit.');
+          if (Number(req.headers['content-length'] ?? 0) > available) fail(413, 'QUOTA_EXCEEDED', `This upload exceeds the free space in your ${gigabytes(accountQuota)} LopeDrive or the 1 GB item limit.`);
           const temporary = join(accountDir(account), 'blobs', `${randomUUID()}.upload`), handle = await open(temporary, 'wx', 0o600);
           const checksum = createHash('sha256'); let size = 0;
           try {
             for await (const chunk of req.iterator({ destroyOnReturn: false })) {
               size += chunk.length;
-              if (size > available) { req.resume(); fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full or this item exceeds 1 GB.'); }
+              if (size > available) { req.resume(); fail(413, 'QUOTA_EXCEEDED', `Your ${gigabytes(accountQuota)} LopeDrive is full or this item exceeds 1 GB.`); }
               checksum.update(chunk); await handle.writeFile(chunk);
             }
             if (checksum.digest('hex') !== hash) fail(400, 'HASH_MISMATCH', 'The uploaded item did not match its checksum. Try again.');
             const usedBytes = used - (inventory.get(hash)?.size ?? 0) + size;
-            if (usedBytes > uploadQuota) fail(413, 'QUOTA_EXCEEDED', 'Your 1 GB LopeDrive is full. Free space before syncing more data.');
+            if (usedBytes > uploadQuota) fail(413, 'QUOTA_EXCEEDED', `Your ${gigabytes(accountQuota)} LopeDrive is full. Free space before syncing more data.`);
             await handle.sync(); await handle.close();
             // Replace even an existing hash with the verified upload: retries can
             // repair a damaged stored object without changing its logical entry.
             await rename(temporary, blobPath(account, hash));
             await syncDirectory(dirname(blobPath(account, hash)));
-            json(res, 200, { hash, size, quotaBytes, usedBytes });
+            json(res, 200, { hash, size, quotaBytes: accountQuota, usedBytes });
           } catch (error) { await handle.close().catch(() => {}); await unlink(temporary).catch(() => {}); throw error; }
         });
       }

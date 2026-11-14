@@ -238,6 +238,14 @@ export class CloudAccountService {
       return { recoveryKey: secured.recoveryKey };
     } finally { vault.destroy(); }
   }
+  /** Redeem a storage code; the server raises this account's quota. */
+  async unlockStorage(code: string) {
+    if (!this.state.account) throw new Error('Sign in to unlock more storage.');
+    const accountId = this.state.account.id;
+    const session = validateSession(await this.api<Session>('/storage/unlock', { method: 'POST', body: JSON.stringify({ code }) }));
+    if (session.account?.id !== accountId) throw new Error('Your session changed. Sign in again.');
+    this.update({ quotaBytes: session.quotaBytes, usedBytes: session.usedBytes });
+  }
   /** Explicit legacy upgrade: the old password is sent once to authenticate the old account. */
   async upgradeEncryption(accountName: string, password: string, newPassword: string): Promise<{ recoveryKey: string }> {
     if (!newPassword || newPassword.length < 12 || newPassword === password) throw new Error('Choose a new password of at least 12 characters, different from your old password, so the legacy server never receives your encryption password.');

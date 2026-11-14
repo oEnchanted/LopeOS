@@ -228,3 +228,18 @@ test('new account registration requires encryption by default', async t => {
   const f = await fixture(t, { allowLegacyRegistration: false });
   assert.equal((await f.call('/register', { method: 'POST', data: { accountName: 'alice', displayName: 'Alice', password } })).status, 400);
 });
+
+test('an unlock code raises only that account to 10 GB, persists, and wrong codes are refused', async t => {
+  const f = await fixture(t);
+  const alice = (await f.register('alice')).cookie, bob = (await f.register('bob')).cookie;
+  assert.equal((await f.call('/storage/unlock', { method: 'POST', data: { code: 'not the code' }, cookie: alice })).status, 403);
+  assert.equal((await f.call('/storage/unlock', { method: 'POST', data: { code: 'TheFutureOfEntertainment' } })).status, 401);
+  const unlocked = await f.call('/storage/unlock', { method: 'POST', data: { code: ' TheFutureOfEntertainment ' }, cookie: alice });
+  assert.equal(unlocked.status, 200, JSON.stringify(unlocked.body));
+  assert.equal(unlocked.body.quotaBytes, 10_000_000_000);
+  assert.equal((await f.call('/manifest', { cookie: alice })).body.quotaBytes, 10_000_000_000);
+  assert.equal((await f.call('/session', { cookie: bob })).body.quotaBytes, 1_000_000_000);
+  assert.equal((await readFile(join(f.directory, 'registry.json'), 'utf8')).includes('TheFutureOfEntertainment'), false);
+  await f.restart();
+  assert.equal((await f.call('/session', { cookie: alice })).body.quotaBytes, 10_000_000_000);
+});
